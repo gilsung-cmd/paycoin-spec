@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -49,7 +50,7 @@ body {
   color: var(--text);
   font-family: 'Noto Sans KR', sans-serif;
   min-height: 100vh;
-  overflow: hidden;
+  overflow: clip;
 }
 
 /* ══ TOP NAV ══ */
@@ -114,7 +115,7 @@ body {
   justify-content: center;   /* 전체를 가로 중앙 */
   height: 100vh;
   padding-top: 52px;
-  overflow: hidden;
+  overflow: clip;
 }
 
 /* 중앙 고정 래퍼: 폰 + description 묶음 */
@@ -2165,6 +2166,89 @@ GET /api/v1/payment/recent?limit=5</div>
 </div><!-- /policy-panel -->
 </div><!-- /layout-inner -->
 </div><!-- /layout -->
+<!-- ══ QnA FLOATING BUTTON + PANEL ══ -->
+
+<!-- 설정 패널 (초기 API URL 입력) -->
+<div class="qna-setup" id="qna-setup">
+  <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:4px">💬 QnA 설정</div>
+  <div style="font-size:11px;color:var(--text3);margin-bottom:14px;line-height:1.5">
+    Google Apps Script 배포 URL을 입력하면 질문/답변이 저장됩니다.
+  </div>
+  <input id="qna-api-url-input" placeholder="https://script.google.com/macros/s/..." 
+         style="width:100%;padding:9px 11px;background:var(--card2);border:1px solid var(--border2);
+                border-radius:9px;font-size:11px;font-family:'Noto Sans KR',sans-serif;
+                outline:none;margin-bottom:8px;color:var(--text)">
+  <button onclick="saveQnaApiUrl()"
+          style="width:100%;padding:10px;background:var(--primary);color:#fff;border:none;
+                 border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;
+                 font-family:'Noto Sans KR',sans-serif">
+    저장하고 시작하기
+  </button>
+  <div style="margin-top:8px;text-align:center">
+    <button onclick="document.getElementById('qna-setup').classList.remove('show')"
+            style="background:none;border:none;font-size:11px;color:var(--text4);
+                   cursor:pointer;font-family:'Noto Sans KR',sans-serif">
+      나중에 설정
+    </button>
+  </div>
+</div>
+
+<!-- QnA 플로팅 버튼 -->
+<button class="qna-toggle-btn" onclick="toggleQna()" title="질문/답변 열기">
+  💬
+  <div class="qna-badge" id="qna-badge" style="display:none">0</div>
+</button>
+
+<!-- QnA 패널 -->
+<div class="qna-panel" id="qna-panel">
+  <div class="qna-header">
+    <div>
+      <div class="qna-header-title">
+        💬 질문 & 답변
+        <span id="qna-count-tag" style="font-size:10px;font-weight:600;color:var(--text4)"></span>
+      </div>
+      <div class="qna-header-sub">현재 화면: <span id="qna-current-screen" style="color:var(--primary);font-weight:600"></span></div>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button onclick="loadQna()" title="새로고침"
+              style="width:28px;height:28px;border-radius:8px;background:var(--card2);
+                     border:1px solid var(--border);font-size:13px;cursor:pointer;">↻</button>
+      <div class="qna-close-btn" onclick="toggleQna()">✕</div>
+    </div>
+  </div>
+
+  <!-- 필터: 전체 / 현재 화면 -->
+  <div style="display:flex;padding:8px 16px;gap:6px;border-bottom:1px solid var(--border);flex-shrink:0">
+    <div class="chip active" id="qfilter-all"     onclick="setQFilter('all')"     style="font-size:10px;padding:4px 10px">전체</div>
+    <div class="chip"        id="qfilter-current" onclick="setQFilter('current')" style="font-size:10px;padding:4px 10px">이 화면만</div>
+    <div class="chip"        id="qfilter-unanswered" onclick="setQFilter('unanswered')" style="font-size:10px;padding:4px 10px">미답변</div>
+  </div>
+
+  <!-- 질문 목록 -->
+  <div class="qna-list" id="qna-list">
+    <div class="qna-empty">
+      <div class="qna-empty-icon">💬</div>
+      <div>아직 등록된 질문이 없습니다.</div>
+      <div style="font-size:11px;margin-top:4px">아래에서 첫 질문을 남겨보세요!</div>
+    </div>
+  </div>
+
+  <!-- 질문 입력 폼 -->
+  <div class="qna-form">
+    <div class="qna-form-label">
+      질문 등록
+      <span class="qna-screen-indicator" id="qna-form-screen">메인 홈</span>
+    </div>
+    <textarea class="qna-input" id="qna-question-input" rows="2"
+              placeholder="궁금한 점이나 확인이 필요한 사항을 입력하세요..."></textarea>
+    <div class="qna-submit-row">
+      <input class="qna-author-input" id="qna-author-input" placeholder="이름 (예: 홍길동 개발자)">
+      <button class="qna-submit-btn" id="qna-submit-btn" onclick="submitQuestion()">등록</button>
+    </div>
+    <div class="qna-status" id="qna-status"></div>
+  </div>
+</div>
+
 
 <script>
 /* ══ NAVIGATION ══ */
@@ -2806,89 +2890,6 @@ setTimeout(() => {
 }, 500);
 
 </script>
-
-<!-- ══ QnA FLOATING BUTTON + PANEL ══ -->
-
-<!-- 설정 패널 (초기 API URL 입력) -->
-<div class="qna-setup" id="qna-setup">
-  <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:4px">💬 QnA 설정</div>
-  <div style="font-size:11px;color:var(--text3);margin-bottom:14px;line-height:1.5">
-    Google Apps Script 배포 URL을 입력하면 질문/답변이 저장됩니다.
-  </div>
-  <input id="qna-api-url-input" placeholder="https://script.google.com/macros/s/..." 
-         style="width:100%;padding:9px 11px;background:var(--card2);border:1px solid var(--border2);
-                border-radius:9px;font-size:11px;font-family:'Noto Sans KR',sans-serif;
-                outline:none;margin-bottom:8px;color:var(--text)">
-  <button onclick="saveQnaApiUrl()"
-          style="width:100%;padding:10px;background:var(--primary);color:#fff;border:none;
-                 border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;
-                 font-family:'Noto Sans KR',sans-serif">
-    저장하고 시작하기
-  </button>
-  <div style="margin-top:8px;text-align:center">
-    <button onclick="document.getElementById('qna-setup').classList.remove('show')"
-            style="background:none;border:none;font-size:11px;color:var(--text4);
-                   cursor:pointer;font-family:'Noto Sans KR',sans-serif">
-      나중에 설정
-    </button>
-  </div>
-</div>
-
-<!-- QnA 플로팅 버튼 -->
-<button class="qna-toggle-btn" onclick="toggleQna()" title="질문/답변 열기">
-  💬
-  <div class="qna-badge" id="qna-badge" style="display:none">0</div>
-</button>
-
-<!-- QnA 패널 -->
-<div class="qna-panel" id="qna-panel">
-  <div class="qna-header">
-    <div>
-      <div class="qna-header-title">
-        💬 질문 & 답변
-        <span id="qna-count-tag" style="font-size:10px;font-weight:600;color:var(--text4)"></span>
-      </div>
-      <div class="qna-header-sub">현재 화면: <span id="qna-current-screen" style="color:var(--primary);font-weight:600"></span></div>
-    </div>
-    <div style="display:flex;gap:6px;align-items:center">
-      <button onclick="loadQna()" title="새로고침"
-              style="width:28px;height:28px;border-radius:8px;background:var(--card2);
-                     border:1px solid var(--border);font-size:13px;cursor:pointer;">↻</button>
-      <div class="qna-close-btn" onclick="toggleQna()">✕</div>
-    </div>
-  </div>
-
-  <!-- 필터: 전체 / 현재 화면 -->
-  <div style="display:flex;padding:8px 16px;gap:6px;border-bottom:1px solid var(--border);flex-shrink:0">
-    <div class="chip active" id="qfilter-all"     onclick="setQFilter('all')"     style="font-size:10px;padding:4px 10px">전체</div>
-    <div class="chip"        id="qfilter-current" onclick="setQFilter('current')" style="font-size:10px;padding:4px 10px">이 화면만</div>
-    <div class="chip"        id="qfilter-unanswered" onclick="setQFilter('unanswered')" style="font-size:10px;padding:4px 10px">미답변</div>
-  </div>
-
-  <!-- 질문 목록 -->
-  <div class="qna-list" id="qna-list">
-    <div class="qna-empty">
-      <div class="qna-empty-icon">💬</div>
-      <div>아직 등록된 질문이 없습니다.</div>
-      <div style="font-size:11px;margin-top:4px">아래에서 첫 질문을 남겨보세요!</div>
-    </div>
-  </div>
-
-  <!-- 질문 입력 폼 -->
-  <div class="qna-form">
-    <div class="qna-form-label">
-      질문 등록
-      <span class="qna-screen-indicator" id="qna-form-screen">메인 홈</span>
-    </div>
-    <textarea class="qna-input" id="qna-question-input" rows="2"
-              placeholder="궁금한 점이나 확인이 필요한 사항을 입력하세요..."></textarea>
-    <div class="qna-submit-row">
-      <input class="qna-author-input" id="qna-author-input" placeholder="이름 (예: 홍길동 개발자)">
-      <button class="qna-submit-btn" id="qna-submit-btn" onclick="submitQuestion()">등록</button>
-    </div>
-    <div class="qna-status" id="qna-status"></div>
-  </div>
-</div>
 
 </body>
 </html>
