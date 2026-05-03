@@ -1,0 +1,2894 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paycoin App v2.0 — 기능 명세 뷰어</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ══ DESIGN TOKENS — LIGHT THEME ══ */
+:root {
+  --bg-root:   #F0F2F7;
+  --bg-nav:    rgba(255,255,255,0.95);
+  --bg-phone:  #E8EBF3;
+  --phone-bg:  #FFFFFF;
+  --screen-bg: #F7F8FC;
+  --card:      #FFFFFF;
+  --card2:     #F4F5FA;
+  --border:    #E2E5EF;
+  --border2:   #D0D5E8;
+  --primary:   #1A56DB;
+  --primary-l: #EBF2FF;
+  --primary-d: #1140B0;
+  --gold:      #F59E0B;
+  --gold-l:    #FFFBEB;
+  --green:     #059669;
+  --green-l:   #ECFDF5;
+  --red:       #DC2626;
+  --red-l:     #FEF2F2;
+  --purple:    #7C3AED;
+  --text:      #111827;
+  --text2:     #374151;
+  --text3:     #6B7280;
+  --text4:     #9CA3AF;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.12);
+  --shadow-phone: 0 40px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.06);
+  --radius:    14px;
+  --radius-sm: 10px;
+  --radius-lg: 22px;
+  --phone-w:   390px;
+  --phone-h:   780px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg-root);
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* ══ TOP NAV ══ */
+.top-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 52px;
+  background: var(--bg-nav);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  display: flex; justify-content: center;
+}
+.nav-inner {
+  display: flex; align-items: center;
+  width: 100%; height: 100%;
+}
+.nav-logo {
+  padding: 0 20px;
+  font-size: 15px; font-weight: 800;
+  color: var(--primary); letter-spacing: -0.5px;
+  white-space: nowrap;
+  border-right: 1px solid var(--border);
+  height: 100%; display: flex; align-items: center;
+  flex-shrink: 0;
+}
+.nav-logo em { color: var(--text3); font-weight: 400; font-style: normal; font-size: 12px; margin-left: 6px; }
+.nav-screens-wrap {
+  flex: 1; position: relative; height: 100%; overflow: hidden;
+}
+.nav-screens-wrap::after {
+  content: '';
+  position: absolute; top: 0; right: 0; width: 48px; height: 100%;
+  background: linear-gradient(to right, transparent, var(--bg-nav) 80%);
+  pointer-events: none;
+  transition: opacity .2s;
+}
+.nav-screens-wrap.at-end::after { opacity: 0; }
+.nav-screens-arrow {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--border); display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: var(--text3); pointer-events: none;
+  transition: opacity .2s;
+}
+.nav-screens-wrap.at-end .nav-screens-arrow { opacity: 0; }
+.nav-screens { display: flex; align-items: center; height: 100%; overflow-x: auto; scrollbar-width: none; }
+.nav-screens::-webkit-scrollbar { display: none; }
+.nav-btn {
+  padding: 0 15px; height: 52px;
+  font-size: 12px; font-weight: 500; color: var(--text3);
+  background: none; border: none; cursor: pointer;
+  white-space: nowrap; transition: all .18s;
+  border-bottom: 2px solid transparent;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.nav-btn:hover { color: var(--text2); background: var(--card2); }
+.nav-btn.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 700; }
+
+/* ══ LAYOUT ══ */
+.layout {
+  display: flex;
+  justify-content: center;   /* 전체를 가로 중앙 */
+  height: 100vh;
+  padding-top: 52px;
+  overflow: hidden;
+}
+
+/* 중앙 고정 래퍼: 폰 + description 묶음 */
+.layout-inner {
+  display: flex;
+  width: 960px;        /* 폰(480) + description(480) */
+  max-width: 100%;
+  height: 100%;
+}
+
+/* ══ PHONE PANEL ══ */
+.phone-panel {
+  width: 480px;
+  min-width: 480px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-phone);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+.phone-label {
+  position: absolute; top: 16px; left: 0; right: 0; text-align: center;
+  font-size: 10px; font-weight: 600; color: var(--text4);
+  letter-spacing: 1.5px; text-transform: uppercase;
+}
+.phone-frame {
+  width: var(--phone-w); height: var(--phone-h);
+  background: var(--phone-bg);
+  border-radius: 44px;
+  border: 2px solid #C8CEDF;
+  box-shadow: var(--shadow-phone), 0 0 0 6px rgba(255,255,255,0.7);
+  position: relative; overflow: hidden;
+}
+.phone-notch {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 110px; height: 28px;
+  background: #1A1A2E;
+  border-radius: 0 0 18px 18px;
+  z-index: 30;
+}
+.phone-screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; border-radius: 42px; }
+
+.screen {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  overflow: hidden;
+  display: none; background: var(--screen-bg);
+  flex-direction: column;
+}
+.screen.active { display: flex; animation: slideIn .28s cubic-bezier(.16,1,.3,1); }
+@keyframes slideIn { from { transform: translateX(16px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+/* ══ POLICY PANEL ══ */
+.policy-panel {
+  width: 480px;
+  min-width: 480px;
+  overflow-y: auto; padding: 28px 36px;
+  background: var(--bg-root);
+  scrollbar-width: thin; scrollbar-color: var(--border2) transparent;
+}
+.policy-section { display: none; }
+
+/* ══ UI 하이라이트 ══ */
+.ui-highlight-box {
+  position: absolute;
+  border: 2.5px solid #F59E0B;
+  border-radius: 12px;
+  background: rgba(245, 158, 11, 0.08);
+  pointer-events: none;
+  z-index: 100;
+  transition: opacity .25s;
+  box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
+}
+.ui-highlight-label {
+  position: absolute;
+  top: -22px; left: 0;
+  background: #F59E0B;
+  color: #000;
+  font-size: 10px; font-weight: 800;
+  padding: 2px 8px; border-radius: 5px;
+  white-space: nowrap;
+  font-family: 'Noto Sans KR', sans-serif;
+  letter-spacing: -0.3px;
+}
+/* description 항목에 클릭 커서 + hover 효과 */
+.policy-item.has-zone,
+.policy-group-title.has-zone {
+  cursor: pointer;
+}
+.policy-item.has-zone:hover {
+  background: #FEFCE8;
+  border-color: #FDE68A;
+}
+.policy-group-title.has-zone:hover {
+  color: #D97706;
+}
+.policy-section.active { display: block; animation: fadeUp .25s ease; }
+@keyframes fadeUp { from { transform: translateY(6px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.policy-header { margin-bottom: 24px; padding-bottom: 18px; border-bottom: 2px solid var(--border); }
+.policy-screen-id { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--primary); letter-spacing: 1px; margin-bottom: 6px; }
+.policy-title { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; color: var(--text); }
+.policy-desc { font-size: 13px; color: var(--text3); line-height: 1.65; }
+
+.policy-group { margin-bottom: 22px; }
+.policy-group-title {
+  font-size: 11px; font-weight: 700; color: var(--primary);
+  letter-spacing: 1.2px; text-transform: uppercase;
+  margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.policy-group-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.policy-item {
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 9px 13px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 9px;
+  margin-bottom: 5px; font-size: 12.5px; line-height: 1.55;
+  color: var(--text2);
+}
+.policy-item:hover { border-color: var(--border2); background: #FAFBFF; }
+.pd { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.pd       { background: var(--primary); }
+.pd.g     { background: var(--green); }
+.pd.r     { background: var(--red); }
+.pd.o     { background: var(--gold); }
+.pd.p     { background: var(--purple); }
+
+.policy-warn {
+  padding: 10px 14px; background: #FFFBEB;
+  border: 1px solid #FDE68A; border-radius: 9px;
+  font-size: 12px; color: #92400E; line-height: 1.55; margin-bottom: 6px;
+}
+.policy-code {
+  padding: 11px 14px; background: #F8FAFF;
+  border: 1px solid var(--border2); border-radius: 9px;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  color: #1D4ED8; line-height: 1.65; margin-bottom: 6px; white-space: pre-wrap;
+}
+.ptag {
+  display: inline-block; padding: 1px 7px; border-radius: 5px;
+  font-size: 10px; font-weight: 700; margin-left: 6px; vertical-align: middle;
+}
+.ptag.p1 { background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; }
+.ptag.p2 { background: #DBEAFE; color: #1E40AF; border: 1px solid #BFDBFE; }
+.ptag.tbd { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+
+/* ══ APP STATUS BAR ══ */
+.sbar {
+  flex-shrink: 0;
+  height: 28px; padding: 4px 20px 0;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 11px; font-weight: 600; color: var(--text);
+  background: var(--screen-bg); z-index: 20;
+}
+
+/* ══ APP HEADER ══ */
+.aheader {
+  flex-shrink: 0;
+  padding: 2px 16px 12px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.aheader .logo { font-size: 17px; font-weight: 900; color: var(--primary); letter-spacing: -0.5px; }
+.aheader .htitle { font-size: 16px; font-weight: 700; color: var(--text); }
+.aheader .hicons { display: flex; align-items: center; gap: 8px; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 10px;
+  background: var(--card); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 14px; box-shadow: var(--shadow-sm);
+  position: relative; transition: background .12s;
+}
+.icon-btn:active { background: var(--card2); }
+.notif-dot {
+  position: absolute; top: -3px; right: -3px;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--red); font-size: 8px; font-weight: 700;
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--screen-bg);
+}
+
+/* ══ SCREEN BODY ══ */
+.sbody {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  padding-bottom: 16px;
+}
+.sbody::-webkit-scrollbar { display: none; }
+
+/* ══ CARD ══ */
+.card {
+  margin: 0 14px 10px; background: var(--card);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 14px; box-shadow: var(--shadow-sm);
+}
+
+/* ══ ASSET CARD ══ */
+.asset-card {
+  margin: 0 14px 14px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-d) 100%);
+  border-radius: 20px; padding: 18px 20px; cursor: pointer;
+  box-shadow: 0 8px 24px rgba(26,86,219,0.25);
+}
+.asset-card .alabel { font-size: 11px; color: rgba(255,255,255,0.7); margin-bottom: 2px; font-weight: 500; }
+.asset-card .aamt { font-size: 26px; font-weight: 800; color: #fff; letter-spacing: -0.8px; margin-bottom: 4px; }
+.asset-card .achange { font-size: 12px; color: rgba(255,255,255,0.85); display: flex; align-items: center; gap: 8px; }
+.asset-card .abtn { font-size: 11px; color: rgba(255,255,255,0.7); display: flex; justify-content: flex-end; margin-top: 10px; }
+.up { color: var(--red); }
+.dn { color: #1D4ED8; }
+
+/* ══ ROLLING BANNER ══ */
+.banner-container { margin: 0 14px 12px; position: relative; border-radius: var(--radius); overflow: hidden; }
+.banner-track { display: flex; transition: transform .5s cubic-bezier(.4,0,.2,1); }
+.banner-slide {
+  min-width: 100%; height: 96px;
+  border-radius: var(--radius); padding: 0 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; flex-shrink: 0;
+}
+.bslide-1 { background: linear-gradient(120deg, #1C3A6E, #1A56DB); border: 1px solid rgba(26,86,219,0.2); }
+.bslide-2 { background: linear-gradient(120deg, #14532D, #059669); border: 1px solid rgba(5,150,105,0.2); }
+.bslide-3 { background: linear-gradient(120deg, #78350F, #D97706); border: 1px solid rgba(217,119,6,0.2); }
+.b-text-s { font-size: 10px; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+.b-text-m { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.b-text-xs { font-size: 11px; color: rgba(255,255,255,0.6); }
+.bcta {
+  font-size: 11px; font-weight: 700; color: #fff;
+  background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);
+  padding: 7px 14px; border-radius: 8px; white-space: nowrap;
+}
+.banner-dots { position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; }
+.bdot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.4); transition: all .3s; }
+.bdot.active { background: #fff; width: 14px; border-radius: 3px; }
+
+/* ══ TILE MENU ══ */
+.tile-section { padding: 0 14px; margin-bottom: 14px; }
+.tile-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.tile-row-scroll { display: flex; gap: 8px; overflow-x: auto; padding-right: 0; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.tile-row-scroll::-webkit-scrollbar { display: none; }
+.tile {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  padding: 12px 4px 10px; background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); cursor: pointer; transition: all .15s;
+  box-shadow: var(--shadow-sm); flex-shrink: 0;
+}
+.tile:active { transform: scale(.96); background: var(--card2); }
+.tile-icon { font-size: 22px; }
+.tile-lbl { font-size: 10px; color: var(--text2); font-weight: 500; text-align: center; white-space: nowrap; }
+.tile-1-3 { flex: 1; } /* 1/3 width in 3-col row */
+.tile-2-3 { flex: 2; } /* 2/3 width (wide tile) */
+.tile-scroll-item { min-width: calc((100% / 3) - 6px); } /* scrollable row item */
+
+/* ══ SECTION TITLE ══ */
+.stitle {
+  padding: 0 14px 8px; font-size: 13px; font-weight: 700; color: var(--text2);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.see-all { font-size: 11px; color: var(--primary); cursor: pointer; font-weight: 500; }
+
+/* ══ NEWS ══ */
+.news-item {
+  padding: 11px 14px; display: flex; align-items: flex-start; gap: 10px;
+  border-bottom: 1px solid var(--border); cursor: pointer; background: var(--card);
+  transition: background .1s;
+}
+.news-item:first-child { border-top: 1px solid var(--border); }
+.news-item:active { background: var(--card2); }
+.news-date { font-size: 10px; color: var(--text4); min-width: 56px; margin-top: 1px; }
+.news-txt { font-size: 12px; line-height: 1.4; flex: 1; color: var(--text2); }
+.news-arr { font-size: 11px; color: var(--text4); margin-top: 1px; }
+
+/* ══ BOTTOM TAB BAR ══ */
+.tab-bar {
+  flex-shrink: 0;
+  height: 68px; background: var(--card);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+  display: flex; align-items: flex-start; padding-top: 8px;
+  position: relative; z-index: 10;
+}
+.tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
+.tab-icon { font-size: 20px; }
+.tab-lbl { font-size: 9px; font-weight: 600; color: var(--text4); }
+.tab-item.active .tab-lbl { color: var(--primary); }
+.tab-item.active .tab-icon { filter: none; }
+
+/* ══ WALLET ROW ══ */
+.wallet-row {
+  display: flex; align-items: center; gap: 11px;
+  padding: 13px 14px; cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  background: var(--card); transition: background .1s;
+}
+.wallet-row:active { background: var(--card2); }
+.coin-icon {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0; position: relative;
+  background: var(--primary-l); border: 1px solid var(--border);
+}
+.exch-ovl {
+  position: absolute; bottom: -2px; right: -2px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #F57C00; border: 1.5px solid var(--screen-bg);
+  font-size: 7px; display: flex; align-items: center; justify-content: center;
+  font-weight: 800; color: #fff;
+}
+.winfo { flex: 1; }
+.wname { font-size: 13px; font-weight: 600; margin-bottom: 1px; color: var(--text); }
+.wprice { font-size: 11px; color: var(--text4); }
+.wright { text-align: right; }
+.wkrw { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 1px; }
+.wqty { font-size: 11px; color: var(--text4); }
+.chg { font-size: 10px; margin-left: 4px; }
+
+/* ══ TAB FILTER ══ */
+.tab-filter { display: flex; gap: 6px; padding: 8px 14px; overflow-x: auto; scrollbar-width: none; }
+.tab-filter::-webkit-scrollbar { display: none; }
+.chip {
+  padding: 5px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; white-space: nowrap;
+  background: var(--card); border: 1px solid var(--border);
+  color: var(--text3); cursor: pointer; transition: all .15s;
+}
+.chip.active { background: var(--primary-l); border-color: var(--primary); color: var(--primary); }
+
+/* ══ BUTTON ══ */
+.btn { width: 100%; padding: 13px; border-radius: 11px; border: none; cursor: pointer; font-size: 14px; font-weight: 700; font-family: 'Noto Sans KR', sans-serif; transition: all .15s; letter-spacing: -0.3px; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:active { background: var(--primary-d); }
+.btn-secondary { background: var(--card); border: 1px solid var(--border2); color: var(--text2); box-shadow: var(--shadow-sm); }
+.btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text3); font-size: 12px; padding: 10px; }
+.btn-danger { background: var(--red-l); border: 1px solid #FECACA; color: var(--red); }
+
+/* ══ INFO ROW ══ */
+.info-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.info-row:last-child { border: none; }
+.ilbl { font-size: 12px; color: var(--text3); }
+.ival { font-size: 12px; font-weight: 600; color: var(--text); }
+
+/* ══ VOTE BUTTON ══ */
+.vote-btn { flex: 1; padding: 16px 0; border-radius: 13px; border: 2px solid; font-size: 16px; font-weight: 900; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; transition: all .2s; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.vote-sub { font-size: 10px; font-weight: 500; opacity: .7; }
+.vote-up { background: var(--red-l); border-color: #FECACA; color: var(--red); }
+.vote-down { background: var(--primary-l); border-color: #BFDBFE; color: var(--primary); }
+.vote-up.sel { background: #FEE2E2; border-color: var(--red); box-shadow: 0 2px 8px rgba(220,38,38,0.2); }
+.vote-down.sel { background: #DBEAFE; border-color: var(--primary); box-shadow: 0 2px 8px rgba(26,86,219,0.2); }
+
+/* ══ DIVIDER ══ */
+.divider { height: 8px; background: var(--bg-root); }
+
+/* ══ BACK HEADER ══ */
+.back-header { flex-shrink: 0; padding: 4px 14px 10px; display: flex; align-items: center; gap: 10px; }
+.back-btn { font-size: 13px; color: var(--primary); cursor: pointer; padding: 4px 0; font-weight: 500; }
+
+/* ══ OVERLAY / MODAL ══ */
+.overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(2px); display: none; align-items: flex-end; z-index: 50; border-radius: 42px; }
+.overlay.show { display: flex; animation: fadeIn .2s; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal { width: 100%; background: var(--card); border-top: 1px solid var(--border); border-radius: 22px 22px 0 0; padding: 18px; box-shadow: 0 -8px 24px rgba(0,0,0,0.1); animation: slideUp .3s cubic-bezier(.16,1,.3,1); }
+@keyframes slideUp { from { transform: translateY(40px); } to { transform: translateY(0); } }
+.modal-handle { width: 38px; height: 4px; background: var(--border2); border-radius: 2px; margin: 0 auto 14px; }
+.modal-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; color: var(--text); }
+
+/* ══ EXCHANGE ROW ══ */
+.exch-row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--border); cursor: pointer; background: var(--card); }
+.exch-row:active { background: var(--card2); }
+.exch-logo-box { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; border: 1px solid var(--border); }
+.exch-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.exch-vol { font-size: 10px; color: var(--text4); }
+.exch-right { text-align: right; }
+.exch-price { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 1px; }
+.conn-tag { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 5px; background: var(--green-l); color: var(--green); border: 1px solid #A7F3D0; }
+
+/* ══ NEWS CARD ══ */
+.news-card { margin: 0 14px 8px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 13px; cursor: pointer; box-shadow: var(--shadow-sm); transition: box-shadow .15s; }
+.news-card:active { box-shadow: var(--shadow-md); }
+.news-cat { font-size: 10px; font-weight: 700; color: var(--primary); margin-bottom: 5px; }
+.news-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; line-height: 1.35; color: var(--text); }
+.news-preview { font-size: 11px; color: var(--text3); line-height: 1.45; margin-bottom: 7px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.news-meta { font-size: 10px; color: var(--text4); display: flex; gap: 8px; }
+
+/* ══ PAYMENT BUTTONS ══ */
+.pay-btns { display: flex; gap: 8px; margin: 0 14px 10px; }
+.pay-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: all .15s; box-shadow: var(--shadow-sm); }
+.pay-btn:active { border-color: var(--primary); background: var(--primary-l); }
+.pay-icon { font-size: 26px; }
+.pay-label { font-size: 12px; font-weight: 700; color: var(--text); }
+.pay-desc { font-size: 10px; color: var(--text4); text-align: center; line-height: 1.3; }
+
+/* ══ MERCHANT SLIDE ══ */
+.merchant-track-wrap { overflow: hidden; margin-bottom: 12px; }
+.merchant-track { display: flex; gap: 10px; padding: 0 14px; transition: transform .4s ease; }
+.merchant-card { min-width: 120px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; box-shadow: var(--shadow-sm); flex-shrink: 0; }
+.m-logo { font-size: 22px; margin-bottom: 5px; }
+.m-name { font-size: 11px; font-weight: 700; margin-bottom: 2px; color: var(--text); }
+.m-benefit { font-size: 10px; color: var(--gold); font-weight: 600; }
+.m-ch { font-size: 9px; color: var(--text4); margin-top: 2px; }
+
+/* ══ PROGRESS ══ */
+.prog-wrap { background: var(--border); border-radius: 8px; height: 8px; overflow: hidden; }
+.prog-bar { height: 100%; border-radius: 8px; }
+
+/* ══ RANK TABLE ══ */
+.rank-header { display: flex; align-items: center; padding: 7px 14px; background: var(--card2); border-bottom: 1px solid var(--border); }
+.rank-row { display: flex; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--card); }
+.rk-num { font-size: 13px; font-weight: 700; width: 28px; color: var(--text3); flex-shrink: 0; }
+.rk-num.gold { color: #D97706; }
+.rk-code { flex: 1.2; font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--text2); }
+.rk-cnt { flex: 0.8; text-align: center; font-size: 12px; font-weight: 700; color: var(--text); }
+.rk-pct { flex: 0.8; text-align: center; font-size: 11px; color: var(--text3); }
+.rk-choice { flex: 0.8; text-align: center; font-size: 11px; font-weight: 600; }
+.rk-hd { font-size: 10px; font-weight: 700; color: var(--text3); }
+
+/* ══ CALENDAR ══ */
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; padding: 0 14px; }
+.cal-day { aspect-ratio: 1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; cursor: pointer; transition: transform .1s; position: relative; }
+.cal-day:active { transform: scale(.9); }
+.cal-correct { background: #DBEAFE; color: #1D4ED8; }
+.cal-wrong { background: #FEE2E2; color: var(--red); }
+.cal-flat { background: #EEF2FF; color: #4338CA; }
+.cal-none { color: var(--text4); }
+.cal-tooltip { position: absolute; bottom: calc(100% + 5px); left: 50%; transform: translateX(-50%); background: var(--text); color: #fff; font-size: 10px; white-space: nowrap; padding: 4px 8px; border-radius: 6px; display: none; z-index: 10; pointer-events: none; }
+.cal-tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: var(--text); }
+.cal-day.show-tip .cal-tooltip { display: block; }
+
+/* ══ APP INPUT ══ */
+.app-input { width: 100%; padding: 11px 13px; background: var(--card2); border: 1px solid var(--border2); border-radius: 10px; color: var(--text); font-size: 13px; font-family: 'Noto Sans KR', sans-serif; outline: none; }
+.app-input::placeholder { color: var(--text4); }
+.app-input:focus { border-color: var(--primary); background: #fff; }
+
+/* ══ MINI CHART ══ */
+.mini-chart { height: 76px; }
+.cline { stroke-dasharray: 400; stroke-dashoffset: 400; animation: drawLine 1.5s ease forwards .3s; }
+@keyframes drawLine { to { stroke-dashoffset: 0; } }
+
+/* ══ DIST ROW ══ */
+.dist-row { display: flex; align-items: center; gap: 9px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+.dist-row:last-child { border: none; }
+.dist-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.dist-lbl { flex: 1; font-size: 12px; color: var(--text2); }
+.dist-pct { font-size: 12px; font-weight: 700; color: var(--text); }
+.dist-amt { font-size: 11px; color: var(--text3); margin-left: 6px; }
+
+/* ══ CONNECTED WALLET CARD ══ */
+.connected-card { background: var(--primary-l); border: 1px solid #BFDBFE; border-radius: var(--radius); padding: 14px; margin: 0 14px 10px; }
+
+/* ══ MORE BTN ══ */
+.more-btn { display: block; text-align: center; padding: 11px; font-size: 12px; font-weight: 600; color: var(--primary); background: var(--card); border: 1px solid var(--border); border-radius: 0 0 10px 10px; cursor: pointer; }
+.more-btn:active { background: var(--card2); }
+
+/* ══ PRED BOTTOM TABS ══ */
+.pred-bottom-tabs { flex-shrink: 0; background: var(--card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: flex; z-index: 10; }
+.pbt { flex: 1; padding: 10px 0; text-align: center; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text3); border-bottom: 2px solid transparent; transition: all .2s; }
+.pbt.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+/* ══ BADGE ══ */
+.badge { display: inline-block; padding: 2px 7px; border-radius: 20px; font-size: 9px; font-weight: 700; }
+.badge-new { background: var(--green-l); color: var(--green); }
+
+/* ══ QnA PANEL ══ */
+.qna-toggle-btn {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff; font-size: 20px;
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(26,86,219,0.4);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 500; transition: all .2s;
+}
+.qna-toggle-btn:hover { transform: scale(1.08); background: var(--primary-d); }
+.qna-toggle-btn .qna-badge {
+  position: absolute; top: -4px; right: -4px;
+  background: var(--red); color: #fff;
+  font-size: 10px; font-weight: 700;
+  width: 18px; height: 18px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--bg-root);
+}
+
+.qna-panel {
+  position: fixed;
+  bottom: 92px; right: 28px;
+  width: 380px;
+  max-height: 600px;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+  z-index: 499;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  animation: qnaIn .25s cubic-bezier(.16,1,.3,1);
+}
+.qna-panel.open { display: flex; }
+@keyframes qnaIn {
+  from { transform: translateY(12px) scale(.97); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+.qna-header {
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.qna-header-title {
+  font-size: 14px; font-weight: 800; color: var(--text);
+  display: flex; align-items: center; gap: 7px;
+}
+.qna-header-sub {
+  font-size: 10px; color: var(--text4); font-weight: 400; margin-top: 1px;
+}
+.qna-close-btn {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--card2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 14px; color: var(--text3);
+}
+.qna-list {
+  flex: 1; overflow-y: auto; padding: 12px 0;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+.qna-empty {
+  padding: 32px 20px; text-align: center;
+  font-size: 13px; color: var(--text4);
+}
+.qna-empty-icon { font-size: 32px; margin-bottom: 8px; }
+.qna-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.qna-item:last-child { border-bottom: none; }
+.qna-item-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 6px; gap: 8px;
+}
+.qna-screen-tag {
+  font-size: 9px; font-weight: 700; padding: 2px 7px;
+  border-radius: 20px; background: var(--primary-l);
+  color: var(--primary); border: 1px solid #BFDBFE;
+  white-space: nowrap; flex-shrink: 0;
+}
+.qna-ts { font-size: 9px; color: var(--text4); flex-shrink: 0; }
+.qna-q {
+  font-size: 12px; font-weight: 600; color: var(--text);
+  line-height: 1.5; margin-bottom: 6px;
+  display: flex; gap: 6px;
+}
+.qna-q::before { content: 'Q'; font-weight: 800; color: var(--primary); flex-shrink: 0; }
+.qna-a {
+  font-size: 12px; color: var(--text2);
+  line-height: 1.55;
+  background: var(--card2); border-radius: 8px;
+  padding: 8px 10px;
+  display: flex; gap: 6px;
+}
+.qna-a::before { content: 'A'; font-weight: 800; color: var(--green); flex-shrink: 0; }
+.qna-a-pending {
+  font-size: 11px; color: var(--text4); font-style: italic;
+  background: var(--card2); border-radius: 8px; padding: 6px 10px;
+  display: flex; gap: 6px; align-items: center;
+}
+.qna-a-pending::before { content: 'A'; font-weight: 800; color: var(--text4); }
+
+/* 답변 입력 영역 (기획자용) */
+.qna-reply-btn {
+  font-size: 10px; font-weight: 600; color: var(--primary);
+  background: none; border: none; cursor: pointer;
+  padding: 2px 0; font-family: 'Noto Sans KR', sans-serif;
+  margin-top: 4px; display: inline-flex; align-items: center; gap: 3px;
+}
+.qna-reply-area {
+  margin-top: 8px; display: none;
+}
+.qna-reply-area.open { display: block; }
+.qna-reply-input {
+  width: 100%; padding: 8px 10px;
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: 8px; font-size: 12px;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--text); resize: none; outline: none;
+  line-height: 1.5;
+}
+.qna-reply-input:focus { border-color: var(--green); }
+.qna-reply-submit {
+  margin-top: 5px; width: 100%; padding: 8px;
+  background: var(--green); color: #fff;
+  border: none; border-radius: 8px; cursor: pointer;
+  font-size: 12px; font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 질문 입력 폼 */
+.qna-form {
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--card);
+}
+.qna-form-label {
+  font-size: 11px; font-weight: 600; color: var(--text3);
+  margin-bottom: 6px; display: flex; align-items: center; gap: 5px;
+}
+.qna-screen-indicator {
+  font-size: 10px; font-weight: 700; color: var(--primary);
+  background: var(--primary-l); padding: 1px 7px;
+  border-radius: 10px; border: 1px solid #BFDBFE;
+}
+.qna-input {
+  width: 100%; padding: 9px 11px;
+  background: var(--card2); border: 1px solid var(--border2);
+  border-radius: 9px; font-size: 12px; resize: none;
+  font-family: 'Noto Sans KR', sans-serif; color: var(--text);
+  outline: none; line-height: 1.5; margin-bottom: 7px;
+}
+.qna-input:focus { border-color: var(--primary); background: #fff; }
+.qna-submit-row { display: flex; gap: 6px; align-items: center; }
+.qna-author-input {
+  flex: 1; padding: 8px 10px;
+  background: var(--card2); border: 1px solid var(--border2);
+  border-radius: 8px; font-size: 11px; outline: none;
+  font-family: 'Noto Sans KR', sans-serif; color: var(--text);
+}
+.qna-author-input:focus { border-color: var(--primary); }
+.qna-submit-btn {
+  padding: 8px 16px; background: var(--primary); color: #fff;
+  border: none; border-radius: 8px; cursor: pointer;
+  font-size: 12px; font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif; white-space: nowrap;
+}
+.qna-submit-btn:hover { background: var(--primary-d); }
+.qna-submit-btn:disabled { background: var(--text4); cursor: not-allowed; }
+.qna-status {
+  font-size: 10px; color: var(--text4); text-align: center;
+  padding: 4px 0; display: none;
+}
+.qna-status.show { display: block; }
+
+/* 설정 패널 (API URL 입력) */
+.qna-setup {
+  position: fixed; bottom: 92px; right: 28px;
+  width: 360px; background: var(--card);
+  border: 1px solid var(--border2); border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  padding: 20px; z-index: 498; display: none;
+}
+.qna-setup.show { display: block; animation: qnaIn .2s ease; }
+
+</style>
+
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+<div class="nav-inner">
+  <div class="nav-logo">PAYCOIN <em>v2.0 기능명세 뷰어</em></div>
+  <div class="nav-screens-wrap" id="nav-screens-wrap">
+  <div class="nav-screens" id="nav-screens">
+    <button class="nav-btn active" onclick="nav('home')">🏠 메인 홈</button>
+    <button class="nav-btn" onclick="nav('wallet')">👛 지갑 (연결됨)</button>
+    <button class="nav-btn" onclick="nav('wallet-empty')">👛 지갑 (미연결)</button>
+    <button class="nav-btn" onclick="nav('wallet-pci')">📋 지갑상세 (PCI)</button>
+    <button class="nav-btn" onclick="nav('wallet-other')">📋 지갑상세 (기타)</button>
+    <button class="nav-btn" onclick="nav('asset')">📊 자산현황</button>
+    <button class="nav-btn" onclick="nav('pci-info')">🪙 PCI 정보</button>
+    <button class="nav-btn" onclick="nav('token-detail')">🏦 토큰 상세</button>
+    <button class="nav-btn" onclick="nav('benefits')">🎁 혜택</button>
+    <button class="nav-btn" onclick="nav('prediction')">🔮 등락 예측</button>
+    <button class="nav-btn" onclick="nav('news')">📰 최근 소식</button>
+    <button class="nav-btn" onclick="nav('news-detail')">📄 소식 상세</button>
+    <button class="nav-btn" onclick="nav('payment')">💳 결제</button>
+  </div>
+  </div><!-- /nav-screens -->
+  <div class="nav-screens-arrow">›</div>
+  </div><!-- /nav-screens-wrap -->
+</div><!-- /nav-inner -->
+</nav>
+
+<div class="layout">
+<div class="layout-inner">
+<div class="phone-panel">
+  <div class="phone-label">MOBILE PREVIEW · 375 × 780</div>
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-screen">
+
+<!-- ═══════════════ HOME ═══════════════ -->
+<div class="screen active" id="sc-home">
+  <div class="sbar" data-zone="home-header"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● WiFi 🔋</span></div>
+  <div class="aheader" data-zone="home-header">
+    <div class="logo">PAYCOIN</div>
+    <div class="hicons">
+      <div class="icon-btn">🔔<div class="notif-dot">3</div></div>
+      <div class="icon-btn">☰</div>
+    </div>
+  </div>
+  <div class="sbody">
+    <!-- Asset Card -->
+    <div class="asset-card" data-zone="home-asset" onclick="nav('asset')">
+      <div class="alabel">총 보유 자산</div>
+      <div class="aamt">12,345,678<span style="font-size:15px;font-weight:500;opacity:.8"> 원</span></div>
+      <div class="achange"><span class="up" style="color:#FCA5A5">▲ +1,234원</span><span style="opacity:.4">|</span><span style="color:#FCA5A5">▲ 0.43%</span><span style="font-size:10px;opacity:.6;margin-left:2px">전일 대비</span></div>
+      <div class="abtn">자산현황 보기 →</div>
+    </div>
+
+    <!-- Rolling Banner -->
+    <div class="banner-container" id="banner-container" data-zone="home-banner">
+      <div class="banner-track" id="banner-track">
+        <div class="banner-slide bslide-1" onclick="nav('prediction')">
+          <div><div class="b-text-s">🎯 매일 참여 이벤트</div><div class="b-text-m">PCI 등락 예측하고 에어드랍!</div><div class="b-text-xs">빗썸 종가 기준 · 매일 자정 판정</div></div>
+          <div class="bcta">참여하기</div>
+        </div>
+        <div class="banner-slide bslide-2" onclick="nav('benefits')">
+          <div><div class="b-text-s">🌸 5월 한정 이벤트</div><div class="b-text-m">봄맞이 PCI 에어드랍 진행 중</div><div class="b-text-xs">5월 31일까지</div></div>
+          <div class="bcta">혜택 보기</div>
+        </div>
+        <div class="banner-slide bslide-3" onclick="nav('payment')">
+          <div><div class="b-text-s">💳 결제 혜택</div><div class="b-text-m">PCI로 결제하면 최대 15% 할인</div><div class="b-text-xs">가맹점별 상이</div></div>
+          <div class="bcta">지금 결제</div>
+        </div>
+      </div>
+      <div class="banner-dots" id="banner-dots">
+        <div class="bdot active" id="bd0"></div>
+        <div class="bdot" id="bd1"></div>
+        <div class="bdot" id="bd2"></div>
+      </div>
+    </div>
+
+    <!-- Tile Menu -->
+    <div class="tile-section" data-zone="home-tiles">
+      <!-- Row 1: 출석체크, 혜택, PCI 정보 (3 equal) -->
+      <div class="tile-row">
+        <div class="tile tile-1-3" onclick="nav('benefits')">
+          <div class="tile-icon">✅</div>
+          <div class="tile-lbl">출석체크</div>
+        </div>
+        <div class="tile tile-1-3" onclick="nav('benefits')">
+          <div class="tile-icon">🎁</div>
+          <div class="tile-lbl">혜택</div>
+        </div>
+        <div class="tile tile-1-3" onclick="nav('pci-info')">
+          <div class="tile-icon">🪙</div>
+          <div class="tile-lbl">PCI 정보</div>
+        </div>
+      </div>
+      <!-- Row 2: 쇼핑(2/3, 1행 동일 높이) + 우측 1/3 세로 2분할(월렛커넥트/지갑) -->
+      <div class="tile-row" style="height:63px;align-items:stretch">
+        <!-- 쇼핑 타일 -->
+        <div class="tile tile-2-3"
+             style="flex-direction:row;gap:10px;justify-content:flex-start;padding:0 14px;height:63px">
+          <div style="font-size:22px;line-height:1">🛍️</div>
+          <div style="text-align:left">
+            <div class="tile-lbl" style="font-size:12px;font-weight:700;color:var(--text)">쇼핑</div>
+            <div style="font-size:9px;color:var(--text4);margin-top:2px">PCI 쇼핑몰</div>
+          </div>
+        </div>
+        <!-- 우측: 월렛커넥트(위) + 지갑(아래) — 행 높이를 반씩 나눔 -->
+        <div class="tile-1-3" style="display:flex;flex-direction:column;gap:8px">
+          <!-- 월렛커넥트 -->
+          <div class="tile" onclick=""
+               style="flex:1;flex-direction:row;gap:0;padding:0 8px;justify-content:center;min-height:0;border-radius:6px">
+            <span class="tile-lbl" style="font-size:9px;font-weight:600;color:var(--text2)">월렛커넥트</span>
+          </div>
+          <!-- 지갑 -->
+          <div class="tile" onclick="nav('wallet')"
+               style="flex:1;flex-direction:row;gap:0;padding:0 8px;justify-content:center;min-height:0;border-radius:6px">
+            <span class="tile-lbl" style="font-size:10px;font-weight:600;color:var(--text2)">지갑</span>
+          </div>
+        </div>
+      </div>
+      <!-- Row 3: 스와이프 — 결제 가맹점/혜택 안내 & Wallet Pay 가이드 (동일 크기) -->
+      <div style="position:relative;overflow:hidden;border-radius:var(--radius)">
+        <!-- 스와이프 뷰포트: 딱 1개 타일만 보이게 clip -->
+        <div id="tile-row3-viewport" style="overflow:hidden;border-radius:var(--radius)">
+          <div id="tile-row3" style="display:flex;gap:8px;transition:transform .35s cubic-bezier(.4,0,.2,1);will-change:transform">
+            <!-- 타일 1: 결제 가맹점/혜택 안내 -->
+            <div class="tile" onclick="nav('payment')" id="tile-r3-0"
+                 style="flex-shrink:0;width:calc(100% - 28px);flex-direction:row;gap:12px;justify-content:flex-start;padding:13px 16px;border:1.5px solid var(--primary);background:var(--primary-l)">
+              <div style="font-size:26px">🏪</div>
+              <div style="text-align:left">
+                <div style="font-size:12px;font-weight:700;color:var(--primary)">결제 가맹점 / 혜택 안내</div>
+                <div style="font-size:9px;color:var(--text3);margin-top:2px">PCI 결제 가능 가맹점 및 할인 혜택 확인</div>
+              </div>
+            </div>
+            <!-- 타일 2: Wallet Pay 가이드 -->
+            <div class="tile" id="tile-r3-1"
+                 style="flex-shrink:0;width:calc(100% - 28px);flex-direction:row;gap:12px;justify-content:flex-start;padding:13px 16px;border:1.5px solid var(--gold);background:var(--gold-l)">
+              <div style="font-size:26px">💡</div>
+              <div style="text-align:left">
+                <div style="font-size:12px;font-weight:700;color:#92400E">Wallet Pay 가이드</div>
+                <div style="font-size:9px;color:var(--text3);margin-top:2px">페이코인 월렛 페이 사용 방법 안내</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 스와이프 인디케이터 -->
+        <div style="display:flex;justify-content:center;gap:5px;margin-top:5px">
+          <div id="r3-dot-0" style="width:16px;height:4px;border-radius:2px;background:var(--primary);transition:all .3s"></div>
+          <div id="r3-dot-1" style="width:5px;height:4px;border-radius:2px;background:var(--border2);transition:all .3s"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- News -->
+    <div data-zone="home-news">
+      <div class="stitle" style="margin-top:10px">최근 소식 <span class="see-all" onclick="nav('news')">전체 보기</span></div>
+      <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.30</div><div class="news-txt">페이코인, 1분기 결제 거래량 전년比 230% 성장</div><div class="news-arr">›</div></div>
+      <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.29</div><div class="news-txt">다날핀테크, PCI 글로벌 결제 확대 파트너십 체결</div><div class="news-arr">›</div></div>
+      <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.27</div><div class="news-txt">페이코인 앱 v2.0 업데이트 출시 안내</div><div class="news-arr">›</div></div>
+      <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.25</div><div class="news-txt">페이프로토콜, 분산형 결제 인프라 기술 특허 취득</div><div class="news-arr">›</div></div>
+      <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.22</div><div class="news-txt">다날, 2025 핀테크 혁신대상 수상</div><div class="news-arr">›</div></div>
+    </div><!-- /home-news zone -->
+  </div><!-- /sbody -->
+  <div class="tab-bar">
+    <div class="tab-item active" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
+    <div class="tab-item" onclick="nav('wallet')"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
+    <div class="tab-item" onclick="nav('payment')"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
+    <div class="tab-item" onclick="nav('benefits')"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
+    <div class="tab-item" onclick=""><div class="tab-icon">🛍️</div><div class="tab-lbl">쇼핑</div></div>
+  </div>
+</div><!-- /sc-home -->
+
+<!-- ═══════════════ WALLET ═══════════════ -->
+<div class="screen" id="sc-wallet">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="aheader"><div class="htitle">지갑</div><div class="hicons"><div class="icon-btn">🔔</div><div class="icon-btn">☰</div></div></div>
+  <div class="sbody">
+
+    <!-- 자산 요약 (탭에 따라 금액 변동) -->
+    <div class="card" data-zone="wallet-summary" style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-size:11px;color:var(--text4);margin-bottom:2px" id="wt-label">총 보유 자산</div>
+          <div style="font-size:22px;font-weight:800;margin:2px 0;color:var(--text)" id="wt-amount">12,345,678원</div>
+          <div style="font-size:10px;color:var(--text4)">2026.04.30 09:41 KST 기준</div>
+        </div>
+        <button onclick="" style="font-size:11px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:6px 11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;margin-top:2px">거래내역 보기</button>
+      </div>
+    </div>
+
+    <!-- 탭 필터 -->
+    <div class="tab-filter" data-zone="wallet-tabs">
+      <div class="chip active" id="wchip-all"    onclick="walletTab('all')">전체</div>
+      <div class="chip"        id="wchip-self"   onclick="walletTab('self')">내 지갑</div>
+      <div class="chip"        id="wchip-bithumb" onclick="walletTab('bithumb')">빗썸</div>
+      <div class="chip"        id="wchip-coinone" onclick="walletTab('coinone')">코인원</div>
+      <div class="chip"        id="wchip-korbit"  onclick="walletTab('korbit')">코빗</div>
+    </div>
+
+    <!-- 등락 예측 배너 -->
+    <div style="margin:6px 14px 4px" id="wt-banner" data-zone="wallet-pred-banner">
+      <div style="height:48px;background:linear-gradient(120deg,#1C3A6E,#1A56DB);border-radius:10px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;cursor:pointer" onclick="nav('prediction')">
+        <div><div style="font-size:9px;color:rgba(255,255,255,.7)">🎯 오늘의 이벤트</div><div style="font-size:12px;font-weight:700;color:#fff">PCI 등락 예측 참여하기</div></div>
+        <div style="font-size:11px;font-weight:700;color:#fff;background:rgba(255,255,255,.2);padding:5px 10px;border-radius:7px">참여</div>
+      </div>
+    </div>
+
+    <!-- 지갑 리스트 동적 영역 -->
+    <div id="wt-list" data-zone="wallet-list"></div>
+
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
+    <div class="tab-item active"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
+    <div class="tab-item" onclick="nav('payment')"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
+    <div class="tab-item" onclick="nav('benefits')"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
+    <div class="tab-item" onclick=""><div class="tab-icon">🛍️</div><div class="tab-lbl">쇼핑</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════ WALLET (거래소 미연결) ═══════════════ -->
+<div class="screen" id="sc-wallet-empty">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="aheader"><div class="htitle">지갑</div><div class="hicons"><div class="icon-btn">🔔</div><div class="icon-btn">☰</div></div></div>
+  <div class="sbody">
+
+    <!-- 자산 요약 -->
+    <div class="card" style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-size:11px;color:var(--text4);margin-bottom:2px">총 보유 자산</div>
+          <div style="font-size:22px;font-weight:800;margin:2px 0;color:var(--text)">8,245,000원</div>
+          <div style="font-size:10px;color:var(--text4)">2026.04.30 09:41 KST 기준</div>
+        </div>
+        <button onclick="" style="font-size:11px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:6px 11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;margin-top:2px">거래내역 보기</button>
+      </div>
+    </div>
+
+    <!-- 탭 필터: 전체·내지갑만 활성, 거래소 탭은 + 버튼으로 대체 -->
+    <div style="display:flex;align-items:center;gap:6px;padding:8px 14px;overflow-x:auto;scrollbar-width:none">
+      <div class="chip active">전체</div>
+      <div class="chip">내 지갑</div>
+      <!-- 거래소 연결 유도 버튼 -->
+      <div onclick="showModal('walletconnect-modal')"
+           style="display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;
+                  background:var(--primary-l);border:1.5px dashed var(--primary);
+                  color:var(--primary);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">
+        <span style="font-size:14px;font-weight:700;line-height:1">+</span>
+        거래소 연결
+      </div>
+    </div>
+
+    <!-- 등락 예측 배너 -->
+    <div style="margin:6px 14px 4px">
+      <div style="height:48px;background:linear-gradient(120deg,#1C3A6E,#1A56DB);border-radius:10px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;cursor:pointer" onclick="nav('prediction')">
+        <div><div style="font-size:9px;color:rgba(255,255,255,.7)">🎯 오늘의 이벤트</div><div style="font-size:12px;font-weight:700;color:#fff">PCI 등락 예측 참여하기</div></div>
+        <div style="font-size:11px;font-weight:700;color:#fff;background:rgba(255,255,255,.2);padding:5px 10px;border-radius:7px">참여</div>
+      </div>
+    </div>
+
+    <!-- 자체 지갑 PCI (기본 보유) -->
+    <div class="wallet-row" onclick="nav('wallet-pci')">
+      <div class="coin-icon">🪙</div>
+      <div class="winfo"><div class="wname">페이코인 PCI</div><div class="wprice">82.45원 · 내 지갑</div></div>
+      <div class="wright"><div class="wkrw">8,245,000원</div><div class="wqty">100,000 PCI <span class="chg up">▲ 5.23%</span></div></div>
+    </div>
+
+    <!-- 거래소 미연결 유도 섹션 -->
+    <div style="margin:12px 14px 0" data-zone="wallet-empty-connect">
+      <div style="background:var(--card2);border:1.5px dashed var(--border2);border-radius:var(--radius);padding:20px 16px;text-align:center">
+        <div style="font-size:28px;margin-bottom:8px">🔗</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">거래소 지갑을 연결해보세요</div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.6;margin-bottom:14px">
+          빗썸, 코인원, 코빗 지갑을 연결하면<br>보유 자산을 한 화면에서 통합 조회할 수 있어요.
+        </div>
+        <!-- 거래소 3개 로고 힌트 -->
+        <div style="display:flex;justify-content:center;gap:8px;margin-bottom:14px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;opacity:0.5">
+            <div style="width:36px;height:36px;border-radius:10px;background:#FFF3E0;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#E65100">빗</div>
+            <div style="font-size:9px;color:var(--text4)">빗썸</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;opacity:0.5">
+            <div style="width:36px;height:36px;border-radius:10px;background:#E3F2FD;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#0D47A1">원</div>
+            <div style="font-size:9px;color:var(--text4)">코인원</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;opacity:0.5">
+            <div style="width:36px;height:36px;border-radius:10px;background:#F3E8FF;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#6B21A8">빗</div>
+            <div style="font-size:9px;color:var(--text4)">코빗</div>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="padding:11px;font-size:13px" onclick="showModal('walletconnect-modal')">
+          + 거래소 지갑 연결하기
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="tab-bar">
+    <div class="tab-item" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
+    <div class="tab-item active"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
+    <div class="tab-item" onclick="nav('payment')"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
+    <div class="tab-item" onclick="nav('benefits')"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
+    <div class="tab-item" onclick=""><div class="tab-icon">🛍️</div><div class="tab-lbl">쇼핑</div></div>
+  </div>
+
+  <!-- WalletConnect 모달 -->
+  <div class="overlay" id="walletconnect-modal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+
+      <!-- 아이콘 + 타이틀 -->
+      <div style="text-align:center;margin-bottom:18px">
+        <div style="width:52px;height:52px;border-radius:16px;background:var(--primary-l);border:1.5px solid #BFDBFE;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 10px">🔗</div>
+        <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:4px">거래소 지갑 연결하기</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.65">
+          WalletConnect를 통해 거래소 지갑을 연결하면<br>보유 자산을 페이코인 앱에서 통합 조회할 수 있어요.
+        </div>
+      </div>
+
+      <!-- 안내 항목 -->
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+        <div style="display:flex;align-items:flex-start;gap:10px;padding:11px 13px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px">1</div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px">연결 가능 거래소</div>
+            <div style="font-size:11px;color:var(--text3);line-height:1.5">빗썸(PCI) · 코인원(PCI, BTC, ETH 외) · 코빗(PCI, BTC, ETH 외)</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;padding:11px 13px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px">2</div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px">연결 방법</div>
+            <div style="font-size:11px;color:var(--text3);line-height:1.5">연결하려는 거래소를 선택한 후, 거래소에서 제공하는 인증 방식(로그인·본인인증 등)을 완료하면 연결됩니다.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;padding:11px 13px;background:var(--card2);border-radius:10px;border:1px solid var(--border)">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px">3</div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px">조회 전용</div>
+            <div style="font-size:11px;color:var(--text3);line-height:1.5">연결 지갑은 잔액·시세 조회만 가능하며, 출금은 지원하지 않습니다.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA 버튼 -->
+      <button class="btn btn-primary" style="margin-bottom:8px"
+              onclick="closeModal('walletconnect-modal');alert('WalletConnect 연결 플로우 시작
+
+거래소 선택 → QR코드 표시 → 거래소 앱 스캔 → 연결 완료')">
+        🔗 거래소 지갑 연결하기
+      </button>
+      <button class="btn btn-ghost" onclick="closeModal('walletconnect-modal')">다음에 하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ WALLET DETAIL — PCI 자체 지갑 ═══════════════ -->
+<div class="screen" id="sc-wallet-pci">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="back-header"><span class="back-btn" onclick="nav('wallet')">‹ 지갑</span></div>
+  <div class="sbody">
+    <div data-zone="wpci-header" style="text-align:center;padding:8px 14px 18px">
+      <div style="font-size:44px;margin-bottom:6px">🪙</div>
+      <div style="font-size:13px;color:var(--text3);margin-bottom:2px">페이코인 PCI · 내 지갑</div>
+      <div style="font-size:26px;font-weight:800;margin-bottom:3px;color:var(--text)">100,000 PCI</div>
+      <div style="font-size:17px;font-weight:600;color:var(--text2);margin-bottom:5px">8,245,000원</div>
+      <div class="up" style="font-size:12px">▲ 5.23% (24h)</div>
+    </div>
+    <div data-zone="wpci-actions" style="display:flex;gap:8px;margin:0 14px 14px">
+      <button class="btn btn-primary" style="flex:1" onclick="showModal('withdraw-modal')">출금하기</button>
+      <button class="btn btn-secondary" style="flex:1" onclick="nav('pci-info')">PCI 정보</button>
+    </div>
+    <div class="card" data-zone="wpci-address">
+      <div style="font-size:11px;color:var(--text4);margin-bottom:6px;font-weight:600">지갑 주소</div>
+      <div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text2);word-break:break-all;margin-bottom:8px">0x742d35Cc6634C0532925a3b8D4C9C2F1e7b3fA4a</div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost" style="flex:1;padding:8px">📋 주소 복사</button>
+        <button class="btn btn-ghost" style="flex:1;padding:8px">⬛ QR 코드</button>
+      </div>
+    </div>
+    <div class="card" data-zone="wpci-price">
+      <div style="font-size:11px;color:var(--text4);margin-bottom:10px;font-weight:600;letter-spacing:.5px">시세 정보</div>
+      <div class="info-row"><span class="ilbl">현재 시세</span><span class="ival">82.45원</span></div>
+      <div class="info-row"><span class="ilbl">24h 고가</span><span class="ival up">88.00원</span></div>
+      <div class="info-row"><span class="ilbl">24h 저가</span><span class="ival dn">79.20원</span></div>
+    </div>
+    <div class="stitle" style="margin-top:2px">최근 거래 내역 <span class="see-all">전체 내역 보기</span></div>
+    <div data-zone="wpci-txlist" style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--border)">
+        <div><div style="font-size:12px;font-weight:600;color:var(--text)">↑ 출금</div><div style="font-size:10px;color:var(--text4)">04.28 14:32</div></div>
+        <div style="text-align:right"><div style="font-size:12px;font-weight:700;color:var(--red)">-5,000 PCI</div><div style="font-size:10px;color:var(--text4)">완료</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--border)">
+        <div><div style="font-size:12px;font-weight:600;color:var(--text)">↓ 수신 (에어드랍)</div><div style="font-size:10px;color:var(--text4)">04.25 09:11</div></div>
+        <div style="text-align:right"><div style="font-size:12px;font-weight:700;color:var(--green)">+12.50 PCI</div><div style="font-size:10px;color:var(--text4)">완료</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:11px 14px">
+        <div><div style="font-size:12px;font-weight:600;color:var(--text)">↓ 수신 (에어드랍)</div><div style="font-size:10px;color:var(--text4)">04.01 00:05</div></div>
+        <div style="text-align:right"><div style="font-size:12px;font-weight:700;color:var(--green)">+8.30 PCI</div><div style="font-size:10px;color:var(--text4)">완료</div></div>
+      </div>
+    </div>
+  </div>
+  <!-- Withdraw Modal -->
+  <div class="overlay" id="withdraw-modal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">PCI 출금</div>
+      <div style="margin-bottom:10px"><div style="font-size:11px;color:var(--text3);margin-bottom:5px">출금 주소</div><input class="app-input" placeholder="PCI 주소 입력 또는 QR 스캔"></div>
+      <div style="margin-bottom:10px"><div style="font-size:11px;color:var(--text3);margin-bottom:5px">출금 수량</div><input class="app-input" placeholder="0.00000000" type="number"></div>
+      <div style="padding:9px 0;margin-bottom:12px;border-top:1px solid var(--border)"><div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--text3)">예상 수수료</span><span style="font-weight:600">5.00000000 PCI</span></div></div>
+      <button class="btn btn-primary" onclick="closeModal('withdraw-modal')">다음 단계</button>
+      <button class="btn btn-ghost" style="margin-top:7px" onclick="closeModal('withdraw-modal')">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ WALLET DETAIL — 기타 (거래소 PCI / BTC 등) ═══════════════ -->
+<div class="screen" id="sc-wallet-other">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="back-header"><span class="back-btn" onclick="nav('wallet')">‹ 지갑</span></div>
+  <div class="sbody">
+    <div data-zone="wother-header" style="text-align:center;padding:8px 14px 18px">
+      <div style="font-size:44px;margin-bottom:6px">₿</div>
+      <div style="font-size:13px;color:var(--text3);margin-bottom:2px">비트코인 BTC · 코인원</div>
+      <div style="font-size:26px;font-weight:800;margin-bottom:3px;color:var(--text)">0.01752100 BTC</div>
+      <div style="font-size:17px;font-weight:600;color:var(--text2);margin-bottom:5px">1,637,432원</div>
+      <div class="dn" style="font-size:12px">▼ 1.20% (24h)</div>
+    </div>
+    <!-- 거래소 이동 + 코인 정보 -->
+    <div data-zone="wother-actions" style="display:flex;gap:8px;margin:0 14px 14px">
+      <button class="btn btn-secondary" style="flex:1">코인원으로 이동 ↗</button>
+      <button class="btn btn-primary" style="flex:1" onclick="nav('token-detail')">BTC 정보</button>
+    </div>
+    <div class="card">
+      <div style="font-size:11px;color:var(--text4);margin-bottom:6px;font-weight:600">지갑 주소</div>
+      <div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text2);word-break:break-all;margin-bottom:8px">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost" style="flex:1;padding:8px">📋 주소 복사</button>
+        <button class="btn btn-ghost" style="flex:1;padding:8px">⬛ QR 코드</button>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:11px;color:var(--text4);margin-bottom:10px;font-weight:600;letter-spacing:.5px">시세 정보</div>
+      <div class="info-row"><span class="ilbl">현재 시세</span><span class="ival">93,450,000원</span></div>
+      <div class="info-row"><span class="ilbl">24h 고가</span><span class="ival up">95,200,000원</span></div>
+      <div class="info-row"><span class="ilbl">24h 저가</span><span class="ival dn">91,800,000원</span></div>
+    </div>
+    <!-- 거래 내역 안내 (자체지갑 아닌 경우) -->
+    <div data-zone="wother-txguide" style="margin:0 14px 10px;padding:16px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);text-align:center">
+      <div style="font-size:22px;margin-bottom:8px">🏦</div>
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">거래 내역은 거래소에서 확인</div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:12px;line-height:1.5">연결 지갑의 거래 내역은 해당 거래소 앱에서 확인할 수 있습니다.</div>
+      <button class="btn btn-secondary" style="padding:10px;font-size:12px">코인원 앱으로 이동 ↗</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ASSET STATUS ═══════════════ -->
+<div class="screen" id="sc-asset">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="aheader"><div class="htitle">자산현황</div><div class="hicons"><div class="icon-btn">🔔</div><div class="icon-btn">☰</div></div></div>
+  <div class="sbody">
+    <div class="asset-card" data-zone="asset-summary" style="margin-bottom:10px">
+      <div class="alabel">총 자산</div>
+      <div class="aamt">12,345,678<span style="font-size:15px;font-weight:500;opacity:.8"> 원</span></div>
+      <div class="achange"><span style="color:#FCA5A5">▲ +1,234원 (0.43%)</span></div>
+      <div class="abtn" style="font-size:10px;opacity:.6">2026.04.30 03:00 KST 기준</div>
+    </div>
+    <div class="card" data-zone="asset-chart" style="padding:12px">
+      <div style="display:flex;gap:5px;margin-bottom:10px">
+        <div class="chip active" style="font-size:10px;padding:3px 10px">1D</div>
+        <div class="chip" style="font-size:10px;padding:3px 10px">1W</div>
+        <div class="chip" style="font-size:10px;padding:3px 10px">1M</div>
+        <div class="chip" style="font-size:10px;padding:3px 10px">3M</div>
+      </div>
+      <div class="mini-chart">
+        <svg width="100%" height="76" viewBox="0 0 300 76" preserveAspectRatio="none">
+          <defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1A56DB" stop-opacity="0.15"/><stop offset="100%" stop-color="#1A56DB" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0,58 C20,52 40,66 60,46 S100,18 140,28 S180,52 220,32 S260,18 300,22 L300,76 L0,76Z" fill="url(#cg)"/>
+          <path class="cline" d="M0,58 C20,52 40,66 60,46 S100,18 140,28 S180,52 220,32 S260,18 300,22" fill="none" stroke="#1A56DB" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="stitle" data-zone="asset-distribution">자산 비중</div>
+    <div class="card" data-zone="asset-distribution">
+      <div style="display:flex;gap:5px;margin-bottom:10px">
+        <div class="chip active" style="font-size:10px;padding:3px 10px">자산별</div>
+        <div class="chip" style="font-size:10px;padding:3px 10px">거래소별</div>
+      </div>
+      <div style="display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;gap:4px;height:120px;border-radius:10px;overflow:hidden;margin-bottom:10px">
+        <div style="background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;grid-row:span 2"><div style="font-size:14px;font-weight:800;color:var(--primary)">PCI</div><div style="font-size:11px;color:var(--primary)">66.8%</div></div>
+        <div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="font-size:12px;font-weight:700;color:#D97706">BTC</div><div style="font-size:10px;color:#D97706">13.3%</div></div>
+        <div style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="font-size:12px;font-weight:700;color:#4338CA">ETH</div><div style="font-size:10px;color:#4338CA">1.9%</div></div>
+      </div>
+      <div class="dist-row"><div class="dist-dot" style="background:var(--primary)"></div><div class="dist-lbl">PCI</div><div class="dist-pct">66.8%</div><div class="dist-amt">8,245,000원</div></div>
+      <div class="dist-row"><div class="dist-dot" style="background:#D97706"></div><div class="dist-lbl">BTC</div><div class="dist-pct">13.3%</div><div class="dist-amt">1,637,000원</div></div>
+      <div class="dist-row"><div class="dist-dot" style="background:#4338CA"></div><div class="dist-lbl">ETH</div><div class="dist-pct">1.9%</div><div class="dist-amt">240,000원</div></div>
+    </div>
+    <div class="stitle" data-zone="asset-list">보유 자산</div>
+    <div class="wallet-row" onclick="nav('wallet-pci')"><div class="coin-icon">🪙</div><div class="winfo"><div class="wname">페이코인 PCI</div><div class="wprice">내 지갑</div></div><div class="wright"><div class="wkrw">8,245,000원</div><div class="wqty">100,000 PCI · 66.8%</div></div></div>
+    <div class="wallet-row" onclick="nav('wallet-other')"><div class="coin-icon" style="background:#FEF3C7">₿</div><div class="winfo"><div class="wname">비트코인 BTC</div><div class="wprice">코인원</div></div><div class="wright"><div class="wkrw">1,637,432원</div><div class="wqty">0.01752100 · 13.3%</div></div></div>
+    <div style="margin:14px"><button class="btn btn-ghost">+ 거래소 연결하기</button></div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
+    <div class="tab-item active"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
+    <div class="tab-item" onclick="nav('payment')"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
+    <div class="tab-item" onclick="nav('benefits')"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
+    <div class="tab-item" onclick=""><div class="tab-icon">🛍️</div><div class="tab-lbl">쇼핑</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════ PCI INFO ═══════════════ -->
+<div class="screen" id="sc-pci-info">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="aheader"><div class="htitle">PCI 정보</div><div class="hicons"><div class="icon-btn">🔔</div><div class="icon-btn">☰</div></div></div>
+  <div class="sbody">
+    <div data-zone="pci-price" style="margin:0 14px 12px;background:linear-gradient(135deg,var(--primary),var(--primary-d));border-radius:20px;padding:20px;text-align:center;box-shadow:0 8px 24px rgba(26,86,219,.25)">
+      <div style="font-size:13px;color:rgba(255,255,255,.7);margin-bottom:2px">Coin Market Cap 기준</div>
+      <div style="font-size:30px;font-weight:800;color:#fff;letter-spacing:-1px;margin:6px 0">82.45<span style="font-size:18px;font-weight:500;opacity:.8"> 원</span></div>
+      <div style="font-size:13px;color:#FCA5A5">▲ 5.23% &nbsp;|&nbsp; <span style="color:rgba(255,255,255,.7)">+4.10원 (24h)</span></div>
+    </div>
+    <div data-zone="pci-pred-banner" style="margin:0 14px 12px">
+      <div style="height:52px;background:linear-gradient(120deg,#1C3A6E,#1A56DB);border-radius:12px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;cursor:pointer" onclick="nav('prediction')">
+        <div><div style="font-size:9px;color:rgba(255,255,255,.7)">🎯 매일 참여</div><div style="font-size:13px;font-weight:700;color:#fff">오늘의 PCI 등락을 예측하세요!</div></div>
+        <div style="font-size:11px;font-weight:700;color:#fff;background:rgba(255,255,255,.2);padding:6px 12px;border-radius:7px">참여하기</div>
+      </div>
+    </div>
+    <div class="stitle" data-zone="pci-exchanges">상장 거래소</div>
+    <div class="exch-row" data-zone="pci-exchanges" onclick="nav('token-detail')">
+      <div class="exch-logo-box" style="background:#FFF3E0">빗</div>
+      <div style="flex:1"><div class="exch-name">빗썸 <span class="conn-tag">연결됨</span></div><div class="exch-vol">1,234,567 PCI</div></div>
+      <div class="exch-right"><div class="exch-price">82.12원</div><div class="up" style="font-size:10px">▲ 4.91%</div></div>
+    </div>
+    <div class="exch-row" onclick="nav('token-detail')">
+      <div class="exch-logo-box" style="background:#E3F2FD">원</div>
+      <div style="flex:1"><div class="exch-name">코인원</div><div class="exch-vol">890,234 PCI</div></div>
+      <div class="exch-right"><div class="exch-price">82.67원</div><div class="up" style="font-size:10px">▲ 5.42%</div></div>
+    </div>
+    <div class="exch-row" onclick="nav('token-detail')">
+      <div class="exch-logo-box" style="background:#F3E8FF">빗</div>
+      <div style="flex:1"><div class="exch-name">코빗</div><div class="exch-vol">234,567 PCI</div></div>
+      <div class="exch-right"><div class="exch-price">82.30원</div><div class="dn" style="font-size:10px">▼ 0.21%</div></div>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
+    <div class="tab-item" onclick="nav('wallet')"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
+    <div class="tab-item" onclick="nav('payment')"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
+    <div class="tab-item" onclick="nav('benefits')"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
+    <div class="tab-item" onclick=""><div class="tab-icon">🛍️</div><div class="tab-lbl">쇼핑</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════ TOKEN DETAIL (거래소 상세 / 코인 상세 공통 템플릿) ═══════════════ -->
+<div class="screen" id="sc-token-detail">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="back-header"><span class="back-btn" onclick="nav('pci-info')">‹ PCI 정보</span></div>
+  <div class="sbody">
+    <div data-zone="token-header" style="padding:0 14px 16px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div class="exch-logo-box" style="width:44px;height:44px;border-radius:12px;font-size:16px;background:#FFF3E0">빗</div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:var(--text)">빗썸 · PCI</div>
+          <span class="conn-tag">연결됨</span>
+        </div>
+      </div>
+      <div style="font-size:28px;font-weight:800;color:var(--text);margin-bottom:3px">82.12<span style="font-size:16px;font-weight:500;color:var(--text3)"> 원</span></div>
+      <div class="up" style="font-size:13px">▲ 4.91% (전일 대비)</div>
+    </div>
+    <div class="card" data-zone="token-price">
+      <div class="info-row"><span class="ilbl">24h 고가</span><span class="ival up">88.00원</span></div>
+      <div class="info-row"><span class="ilbl">24h 저가</span><span class="ival dn">79.20원</span></div>
+      <div class="info-row"><span class="ilbl">거래량 (24h)</span><span class="ival">1,234,567 PCI</span></div>
+      <div class="info-row"><span class="ilbl">시가총액</span><span class="ival">–</span></div>
+    </div>
+    <div style="margin:0 14px 10px">
+      <button class="btn btn-secondary" style="font-size:12px;padding:11px">빗썸으로 이동하기 ↗</button>
+    </div>
+    <div class="stitle" data-zone="token-wallet">연결된 내 지갑</div>
+    <div class="connected-card" data-zone="token-wallet">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+        <div>
+          <div style="font-size:17px;font-weight:800;color:var(--primary)">30,000 PCI</div>
+          <div style="font-size:13px;color:var(--text2)">2,463,600원</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:10px;color:var(--text4);font-family:'JetBrains Mono',monospace;margin-bottom:3px">0x7f3c…a4b2</div>
+          <button style="font-size:10px;color:var(--primary);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif">📋 복사</button>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="font-size:12px;padding:10px" onclick="nav('wallet-other')">지갑 상세 보기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ BENEFITS ═══════════════ -->
+<div class="screen" id="sc-benefits">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="aheader"><div class="htitle">혜택</div><div class="hicons"><div class="icon-btn">🔔</div><div class="icon-btn">☰</div></div></div>
+  <div class="sbody">
+    <div data-zone="ben-banner" style="margin:0 14px 12px;height:64px;background:linear-gradient(120deg,#14532D,#059669);border-radius:14px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;cursor:pointer" onclick="nav('prediction')">
+      <div><div style="font-size:10px;color:rgba(255,255,255,.7)">🎉 이벤트 진행 중</div><div style="font-size:13px;font-weight:700;color:#fff">봄맞이 PCI 에어드랍 이벤트</div></div>
+      <div style="font-size:11px;font-weight:700;color:#fff;background:rgba(255,255,255,.2);padding:5px 10px;border-radius:7px">참여</div>
+    </div>
+    <div class="stitle" data-zone="ben-daily">매일 참여</div>
+    <div data-zone="ben-prediction" style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:var(--shadow-sm)" onclick="nav('prediction')">
+      <div style="font-size:26px">🔮</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:700;margin-bottom:2px;color:var(--text)">PCI 등락 예측</div><div style="font-size:11px;color:var(--text3)">등락 예측 맞추면 PCI 에어드랍</div></div>
+      <button class="btn btn-primary" style="width:auto;padding:8px 13px;font-size:11px">참여하기</button>
+    </div>
+    <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:var(--shadow-sm)">
+      <div style="font-size:26px">✅</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:700;margin-bottom:2px;color:var(--text)">출석체크</div><div style="font-size:11px;color:var(--text3)">매일 출석하고 PCI 받기</div></div>
+      <button class="btn btn-primary" style="width:auto;padding:8px 13px;font-size:11px">참여하기</button>
+    </div>
+    <div class="stitle" data-zone="ben-referral" style="margin-top:6px">추천/공유</div>
+    <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:var(--shadow-sm)">
+      <div style="font-size:26px">👥</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:700;margin-bottom:2px;color:var(--text)">친구 추천</div><div style="font-size:11px;color:var(--text3)">친구 초대하고 함께 혜택 받기</div></div>
+      <button class="btn btn-secondary" style="width:auto;padding:8px 13px;font-size:11px;box-shadow:none">공유하기</button>
+    </div>
+    <div class="stitle" data-zone="ben-payment" style="margin-top:6px">결제/쇼핑 혜택</div>
+    <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:var(--shadow-sm)" onclick="nav('payment')">
+      <div style="font-size:26px">💳</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:700;margin-bottom:2px;color:var(--text)">결제 혜택</div><div style="font-size:11px;color:var(--text3)">페이코인 앱으로 결제하면 할인</div></div>
+      <button class="btn btn-ghost" style="width:auto;padding:8px 13px;font-size:11px">혜택 보기</button>
+    </div>
+    <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:var(--shadow-sm)">
+      <div style="font-size:26px">🛍️</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:700;margin-bottom:2px;color:var(--text)">쇼핑 혜택</div><div style="font-size:11px;color:var(--text3)">쇼핑 구매 시 추가 PCI 적립</div></div>
+      <button class="btn btn-ghost" style="width:auto;padding:8px 13px;font-size:11px">혜택 보기</button>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
+    <div class="tab-item" onclick="nav('wallet')"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
+    <div class="tab-item" onclick="nav('payment')"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
+    <div class="tab-item active"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
+    <div class="tab-item" onclick=""><div class="tab-icon">🛍️</div><div class="tab-lbl">쇼핑</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════ PREDICTION ═══════════════ -->
+<div class="screen" id="sc-prediction">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="aheader"><div class="htitle">PCI 등락 예측</div><div class="hicons"><div class="icon-btn">🔔</div><div class="icon-btn">☰</div></div></div>
+
+  <!-- 이벤트 소개 화면 (첫 참여자 / 미참여자) -->
+  <div id="pred-intro" style="display:none;flex:1;overflow-y:auto;scrollbar-width:none;padding-bottom:16px">
+    <div style="padding:20px 14px;text-align:center">
+      <div style="font-size:48px;margin-bottom:12px">🔮</div>
+      <div style="font-size:18px;font-weight:800;color:var(--text);margin-bottom:6px">PCI 등락 예측 이벤트</div>
+      <div style="font-size:13px;color:var(--text3);line-height:1.6;margin-bottom:20px">매일 PCI 시세 등락을 예측하고<br>맞추면 PCI를 에어드랍으로 받아가세요!</div>
+    </div>
+    <div style="margin:0 14px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-sm)">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px">📋 이벤트 규칙</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">1</div><div style="font-size:12px;color:var(--text2);line-height:1.5">기준 거래소: <strong>빗썸</strong> · 매일 KST 00:00 종가 비교</div></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">2</div><div style="font-size:12px;color:var(--text2);line-height:1.5">참여 시간: 매일 <strong>KST 00:00 ~ 23:59</strong></div></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">3</div><div style="font-size:12px;color:var(--text2);line-height:1.5">1일 1회 참여 · <strong>선택 변경 가능</strong> (광고 시청 필요)</div></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">4</div><div style="font-size:12px;color:var(--text2);line-height:1.5">정답 시 PCI 보상 누적 → <strong>익월 1~2주차 일괄 지급</strong></div></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">5</div><div style="font-size:12px;color:var(--text2);line-height:1.5">지급 지갑: 페이코인 앱 <strong>자체 지갑</strong> 자동 지급</div></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">6</div><div style="font-size:12px;color:var(--text2);line-height:1.5">결과 확인: <strong>다음날 KST 00:00 이후</strong></div></div>
+      </div>
+    </div>
+    <div style="margin:0 14px 20px;background:var(--primary-l);border:1px solid #BFDBFE;border-radius:12px;padding:12px;text-align:center">
+      <div style="font-size:11px;color:var(--primary)">참여 기간: <strong>2026.05.01 ~ 2026.05.31</strong></div>
+    </div>
+    <div style="margin:0 14px">
+      <button class="btn btn-primary" onclick="startPred()">시작하기</button>
+    </div>
+  </div>
+
+  <!-- 투표 + 탭 화면 (참여 이력 있는 사용자) -->
+  <div id="pred-main" style="display:none;flex:1;flex-direction:column;overflow:hidden">
+    <!-- 상단 고정 영역: 결과카드 + 기준가 + 현황바 + 투표버튼 + 결과안내 -->
+    <div id="pred-top-area" style="flex-shrink:0;scrollbar-width:none">
+
+      <!-- 어제 결과 카드 -->
+      <div data-zone="pred-yesterday" style="margin:8px 14px;background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border:1px solid #6EE7B7;border-radius:var(--radius);padding:13px">
+        <div style="font-size:10px;color:var(--green);font-weight:600;margin-bottom:8px">📅 04.29 어제 결과</div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">내 선택</div><div style="font-size:15px;font-weight:800;color:var(--red)">▲ 상승</div></div>
+          <div style="font-size:20px;color:var(--text4)">→</div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">실제 결과</div><div style="font-size:15px;font-weight:800;color:var(--red)">▲ 상승</div></div>
+          <div style="background:#fff;border:1px solid #6EE7B7;border-radius:10px;padding:8px 12px;text-align:center">
+            <div style="font-size:10px;color:var(--green);font-weight:600">정답!</div>
+            <div style="font-size:13px;font-weight:800;color:var(--green)">+0.69 PCI</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;padding-top:9px;border-top:1px solid #A7F3D0;font-size:11px;color:var(--text3)">당월 누적 <span style="color:var(--green);font-weight:700">12.50 PCI</span> &nbsp;·&nbsp; 정답률 72% (13/18회) &nbsp;·&nbsp; 당월 정답 13회</div>
+      </div>
+
+      <!-- 오늘 기준가 -->
+      <div data-zone="pred-base-price" style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;text-align:center;box-shadow:var(--shadow-sm)">
+        <div style="font-size:11px;color:var(--text4);margin-bottom:3px">04.29 빗썸 종가 (오늘의 기준값)</div>
+        <div style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:2px">78.45원</div>
+        <div style="font-size:10px;color:var(--text4)">이 금액보다 오늘(04.30) 종가가 높으면 상승</div>
+      </div>
+
+      <!-- 현황 바 -->
+      <div data-zone="pred-stats-bar" style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;margin-bottom:6px">
+          <span class="up">▲ 상승 62.3%</span><span style="color:var(--text4)">14,832명 참여</span><span class="dn">▼ 하락 37.7%</span>
+        </div>
+        <div style="display:flex;gap:3px">
+          <div class="prog-wrap" style="flex:62"><div class="prog-bar" style="width:100%;background:var(--red)"></div></div>
+          <div class="prog-wrap" style="flex:38"><div class="prog-bar" style="width:100%;background:var(--primary)"></div></div>
+        </div>
+      </div>
+
+      <!-- 투표 버튼 -->
+      <div data-zone="pred-vote-btns" style="display:flex;gap:8px;margin:0 14px 6px" id="vote-btns">
+        <button class="vote-btn vote-up" onclick="castVote('up')">▲<br><span class="vote-sub">상승</span></button>
+        <button class="vote-btn vote-down" onclick="castVote('down')">▼<br><span class="vote-sub">하락</span></button>
+      </div>
+      <div id="change-btn-area"></div>
+
+      <!-- 결과 안내 -->
+      <div style="text-align:center;font-size:10px;color:var(--text4);padding:6px 0 0">결과는 내일 KST 00:00 이후 확인 가능합니다</div>
+
+      <!-- 하단 탭 (참여내역 / 랭킹) -->
+      <div data-zone="pred-tabs" style="display:flex;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--card);margin-top:8px">
+        <div class="pbt active" id="pbt-history" onclick="showPredTab('history')" style="flex:1;padding:10px 0;text-align:center;font-size:12px;font-weight:600;cursor:pointer;color:var(--primary);border-bottom:2px solid var(--primary)">참여 내역</div>
+        <div class="pbt" id="pbt-ranking" onclick="showPredTab('ranking')" style="flex:1;padding:10px 0;text-align:center;font-size:12px;font-weight:600;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent">랭킹</div>
+      </div>
+    </div>
+
+    <!-- 탭 콘텐츠 (스크롤 영역) -->
+    <div style="flex:1;overflow-y:auto;scrollbar-width:none;padding-bottom:8px">
+
+      <!-- 참여 내역 탭 -->
+      <div id="pred-history">
+        <div style="margin:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;box-shadow:var(--shadow-sm)">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;text-align:center">
+            <div><div style="font-size:9px;color:var(--text4);margin-bottom:2px">당월 PCI</div><div style="font-size:16px;font-weight:800;color:var(--green)">12.50</div></div>
+            <div><div style="font-size:9px;color:var(--text4);margin-bottom:2px">정답률</div><div style="font-size:16px;font-weight:800">72%</div></div>
+            <div><div style="font-size:9px;color:var(--text4);margin-bottom:2px">참여</div><div style="font-size:16px;font-weight:800">18회</div></div>
+            <div><div style="font-size:9px;color:var(--text4);margin-bottom:2px">정답</div><div style="font-size:16px;font-weight:800">13회</div></div>
+          </div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:11px;color:var(--text3)">지난달 획득 PCI: <strong>8.30</strong></div>
+            <div style="font-size:10px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;padding:2px 8px;border-radius:20px;font-weight:600">지급 완료</div>
+          </div>
+        </div>
+        <div style="padding:0 14px;margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <span style="font-size:13px;cursor:pointer;color:var(--primary);padding:4px">‹</span>
+            <span style="font-size:13px;font-weight:700;color:var(--text)">2026년 4월</span>
+            <span style="font-size:13px;cursor:pointer;color:var(--text4);padding:4px">›</span>
+          </div>
+          <div class="cal-grid">
+            <div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">일</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">월</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">화</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">수</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">목</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">금</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">토</div>
+            <div class="cal-day cal-none"></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">1<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-wrong" onclick="showTip(this,'▲ 상승 · ▼ 하락')">2<div class="cal-tooltip">▲ 상승 · ▼ 하락</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▼ 하락 · ▼ 하락')">3<div class="cal-tooltip">▼ 하락 · ▼ 하락</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">4<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▼ 하락 · ▼ 하락')">5<div class="cal-tooltip">▼ 하락 · ▼ 하락</div></div>
+            <div class="cal-day cal-none">6</div><div class="cal-day cal-none">7</div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">8<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▼ 하락 · ▼ 하락')">9<div class="cal-tooltip">▼ 하락 · ▼ 하락</div></div>
+            <div class="cal-day cal-wrong" onclick="showTip(this,'▼ 하락 · ▲ 상승')">10<div class="cal-tooltip">▼ 하락 · ▲ 상승</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">11<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-flat" onclick="showTip(this,'▲ 상승 · 변동 없음')">12<div class="cal-tooltip">▲ 상승 · 변동 없음</div></div>
+            <div class="cal-day cal-none">13</div><div class="cal-day cal-none">14</div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">15<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-wrong" onclick="showTip(this,'▼ 하락 · ▲ 상승')">16<div class="cal-tooltip">▼ 하락 · ▲ 상승</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">17<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▼ 하락 · ▼ 하락')">18<div class="cal-tooltip">▼ 하락 · ▼ 하락</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">19<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-none">20</div><div class="cal-day cal-none">21</div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▼ 하락 · ▼ 하락')">22<div class="cal-tooltip">▼ 하락 · ▼ 하락</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">23<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-wrong" onclick="showTip(this,'▲ 상승 · ▼ 하락')">24<div class="cal-tooltip">▲ 상승 · ▼ 하락</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">25<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▼ 하락 · ▼ 하락')">26<div class="cal-tooltip">▼ 하락 · ▼ 하락</div></div>
+            <div class="cal-day cal-none">27</div><div class="cal-day cal-none">28</div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">29<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-none">30</div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:3px;background:#DBEAFE"></div>정답</div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:3px;background:#FEE2E2"></div>오답</div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:3px;background:#EEF2FF"></div>변동없음</div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:3px;background:var(--border)"></div>미참여</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 랭킹 탭 -->
+      <div id="pred-ranking" style="display:none">
+        <div style="margin:10px 14px 6px;background:var(--primary-l);border:1px solid #BFDBFE;border-radius:var(--radius);padding:12px">
+          <div style="font-size:10px;color:var(--primary);font-weight:600;margin-bottom:6px">내 순위</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="font-size:20px;font-weight:900;color:var(--primary)">#7</div>
+            <div><div style="font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace">AB12***</div><div style="font-size:10px;color:var(--text3)">13회 · 72.2% · 오늘: ▲ 상승</div></div>
+          </div>
+        </div>
+        <div style="margin:0 14px 4px;display:flex;align-items:center;padding:7px 0;gap:4px">
+          <div style="font-size:10px;color:var(--text4)">※ 집계기준: 누적 정답 횟수 → 정답률 → 참여 시간 빠른 순 · 상위 50명</div>
+        </div>
+        <div data-zone="pred-ranking-table" style="background:var(--card2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+          <div style="display:flex;padding:7px 14px;gap:2px">
+            <div style="width:28px;font-size:10px;font-weight:700;color:var(--text3)">순위</div>
+            <div style="flex:1.4;font-size:10px;font-weight:700;color:var(--text3)">구분(mycode)</div>
+            <div style="flex:0.9;text-align:center;font-size:10px;font-weight:700;color:var(--text3)">참여횟수</div>
+            <div style="flex:0.9;text-align:center;font-size:10px;font-weight:700;color:var(--text3)">적중률</div>
+            <div style="flex:1;text-align:center;font-size:10px;font-weight:700;color:var(--text3)">오늘의 선택</div>
+          </div>
+        </div>
+        <div style="background:var(--card)">
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#D97706">🥇</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">XK93***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">18회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">90%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div>
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#9CA3AF">🥈</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">PQ47***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">17회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">85%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div>
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#CD7F32">🥉</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">TY28***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">17회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">85%</div><div style="flex:1;text-align:center;font-size:11px;color:var(--text4)">미참여</div></div>
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">4</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">MN56***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">16회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">80%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div>
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">5</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">LR81***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">15회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">78%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div>
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">6</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">CD90***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">15회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">75%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div>
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center;background:#FEFCE8;border-left:3px solid #FDE047"><div style="width:28px;font-size:13px;font-weight:800;color:var(--primary)">7</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700">AB12***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">13회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">72%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div>
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">8</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">EF23***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">13회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">70%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div>
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">9</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">GH45***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">12회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">68%</div><div style="flex:1;text-align:center;font-size:11px;color:var(--text4)">미참여</div></div>
+          <div style="display:flex;padding:10px 14px;align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">10</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">IJ67***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">12회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">65%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div>
+        </div>
+        <div style="padding:8px 14px;text-align:center;font-size:10px;color:var(--text4);background:var(--card);border-top:1px solid var(--border)">상위 50명 · 매월 1일 집계 중 → KST 2일 00:00 정식 전환</div>
+      </div>
+
+    </div><!-- /탭 콘텐츠 -->
+  </div><!-- /pred-main -->
+
+  <div class="tab-bar">
+    <div class="tab-item" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
+    <div class="tab-item" onclick="nav('wallet')"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
+    <div class="tab-item" onclick="nav('payment')"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
+    <div class="tab-item" onclick="nav('benefits')"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
+    <div class="tab-item" onclick=""><div class="tab-icon">🛍️</div><div class="tab-lbl">쇼핑</div></div>
+  </div>
+
+  <!-- Vote modal -->
+  <div class="overlay" id="vote-modal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">투표 확인</div>
+      <div style="text-align:center;padding:14px 0">
+        <div style="font-size:42px;margin-bottom:8px" id="vmi">▲</div>
+        <div style="font-size:15px;font-weight:700;color:var(--text)" id="vmt">오늘의 선택: 상승</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:4px">참여하시겠습니까?</div>
+      </div>
+      <button class="btn btn-primary" onclick="confirmVote()">확인</button>
+      <button class="btn btn-ghost" style="margin-top:6px" onclick="closeModal('vote-modal')">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ NEWS LIST ═══════════════ -->
+<div class="screen" id="sc-news">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="aheader"><div class="htitle">최근 소식</div><div class="hicons"><div class="icon-btn">🔔</div><div class="icon-btn">☰</div></div></div>
+  <div class="sbody">
+    <div data-zone="news-search" style="padding:0 14px 10px">
+      <input class="app-input" placeholder="🔍  제목, 내용 검색" style="margin-bottom:8px">
+      <div style="display:flex;gap:5px">
+        <div class="chip active" style="font-size:10px;padding:4px 10px">전체</div>
+        <div class="chip" style="font-size:10px;padding:4px 10px">보도자료</div>
+        <div class="chip" style="font-size:10px;padding:4px 10px">미디어</div>
+      </div>
+    </div>
+    <!-- 카드 1 -->
+    <div class="news-card" data-zone="news-list" onclick="nav('news-detail')">
+      <div class="news-cat">📄 보도자료</div>
+      <div class="news-title">페이코인, 1분기 결제 거래량 전년 동기 대비 230% 성장</div>
+      <div class="news-preview">페이코인이 올해 1분기 결제 거래량이 전년 동기 대비 230% 성장했다고 발표했다. 온라인 결제 가맹점 확대와 오프라인 결제 활성화에 따른 결과로 분석된다...</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="news-meta">
+          <span style="font-weight:600;color:var(--primary)">연합뉴스</span>
+          <span>2026.04.30</span>
+        </div>
+        <span style="font-size:10px;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;padding:2px 7px;border-radius:5px;cursor:pointer">원문 보기 ↗</span>
+      </div>
+    </div>
+    <!-- 카드 2 -->
+    <div class="news-card" onclick="nav('news-detail')">
+      <div class="news-cat">📺 미디어</div>
+      <div class="news-title">다날핀테크, 동남아시아 글로벌 결제 확대 MOU 체결</div>
+      <div class="news-preview">다날핀테크가 동남아시아 주요 결제사업자와 글로벌 PCI 결제 확대를 위한 MOU를 체결했다고 밝혔다...</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="news-meta"><span style="font-weight:600;color:var(--primary)">코인데스크</span><span>2026.04.29</span></div>
+        <span style="font-size:10px;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;padding:2px 7px;border-radius:5px;cursor:pointer">원문 보기 ↗</span>
+      </div>
+    </div>
+    <!-- 카드 3 -->
+    <div class="news-card" onclick="nav('news-detail')">
+      <div class="news-cat">📄 보도자료</div>
+      <div class="news-title">페이코인 앱 v2.0 업데이트 — 자산현황 및 PCI 예측 기능 출시</div>
+      <div class="news-preview">페이코인이 앱 v2.0 업데이트를 출시했다. 자산현황 포트폴리오 분석, PCI 등락 예측 이벤트, 실시간 환율 알림 등 다양한 신규 기능이 추가됐다...</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="news-meta"><span style="font-weight:600;color:var(--primary)">페이코인 공식</span><span>2026.04.27</span></div>
+        <span style="font-size:10px;color:var(--text4);background:var(--card2);border:1px solid var(--border);padding:2px 7px;border-radius:5px">공식 공지</span>
+      </div>
+    </div>
+    <!-- 카드 4 -->
+    <div class="news-card" onclick="nav('news-detail')">
+      <div class="news-cat">📄 보도자료</div>
+      <div class="news-title">페이프로토콜, 분산형 결제 인프라 기술 특허 취득</div>
+      <div class="news-preview">페이프로토콜이 분산형 결제 인프라 관련 기술 특허를 취득했다. 블록체인 기반 결제 처리 효율화 기술을 포함한다...</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="news-meta"><span style="font-weight:600;color:var(--primary)">전자신문</span><span>2026.04.25</span></div>
+        <span style="font-size:10px;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;padding:2px 7px;border-radius:5px;cursor:pointer">원문 보기 ↗</span>
+      </div>
+    </div>
+    <!-- 카드 5 -->
+    <div class="news-card" onclick="nav('news-detail')">
+      <div class="news-cat">📺 미디어</div>
+      <div class="news-title">다날, 2025 핀테크 혁신대상 수상</div>
+      <div class="news-preview">다날이 한국핀테크산업협회가 주관하는 2025 핀테크 혁신대상을 수상했다고 밝혔다...</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="news-meta"><span style="font-weight:600;color:var(--primary)">파이낸셜뉴스</span><span>2026.04.22</span></div>
+        <span style="font-size:10px;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;padding:2px 7px;border-radius:5px;cursor:pointer">원문 보기 ↗</span>
+      </div>
+    </div>
+    <div class="more-btn" data-zone="news-more">더보기 (총 24건)</div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
+    <div class="tab-item" onclick="nav('wallet')"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
+    <div class="tab-item" onclick="nav('payment')"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
+    <div class="tab-item" onclick="nav('benefits')"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
+    <div class="tab-item" onclick=""><div class="tab-icon">🛍️</div><div class="tab-lbl">쇼핑</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════ NEWS DETAIL ═══════════════ -->
+<div class="screen" id="sc-news-detail">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="back-header"><span class="back-btn" onclick="nav('news')">‹ 최근 소식</span></div>
+  <div class="sbody">
+    <div data-zone="newsdet-header" style="padding:0 14px 16px">
+      <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:8px">📄 보도자료</div>
+      <div style="font-size:17px;font-weight:800;color:var(--text);line-height:1.35;margin-bottom:10px">페이코인, 1분기 결제 거래량 전년 동기 대비 230% 성장</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)">
+        <div style="display:flex;gap:8px;align-items:center">
+          <span style="font-size:11px;font-weight:700;color:var(--primary)">연합뉴스</span>
+          <span style="font-size:11px;color:var(--text4)">2026.04.30</span>
+        </div>
+        <a href="#" onclick="alert('연합뉴스 원문으로 이동')" style="font-size:11px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;padding:5px 10px;border-radius:7px;text-decoration:none;display:flex;align-items:center;gap:3px">원문 보기 ↗</a>
+      </div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:16px">
+        <p style="margin-bottom:12px">페이코인(대표 한정수)이 2026년 1분기 결제 거래량이 전년 동기 대비 230% 성장했다고 30일 밝혔다. 이는 온라인 결제 가맹점 확대와 오프라인 결제 활성화에 따른 결과다.</p>
+        <p style="margin-bottom:12px">페이코인 관계자는 "올해 들어 주요 편의점 체인과 외식 프랜차이즈를 중심으로 가맹점이 빠르게 확대되고 있으며, PCI 토큰 결제의 편의성을 경험한 사용자들의 재이용률이 높게 나타나고 있다"고 말했다.</p>
+        <p>회사 측은 2026년 하반기까지 가맹점 3만 개소 확대를 목표로 마케팅 투자를 지속할 계획이라고 밝혔다. PCI 토큰 시세도 이번 발표에 힘입어 소폭 상승세를 보였다.</p>
+      </div>
+    </div>
+    <!-- 이전/다음 + 목록 -->
+    <div data-zone="newsdet-nav" style="border-top:1px solid var(--border)">
+      <!-- 이전/다음 글 -->
+      <div style="display:flex">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
+                    padding:13px 10px;border-right:1px solid var(--border);cursor:pointer;
+                    color:var(--primary);font-size:13px;font-weight:600;
+                    transition:background .12s"
+             onclick="nav('news')"
+             onmouseover="this.style.background='var(--primary-l)'"
+             onmouseout="this.style.background=''">
+          <span style="font-size:15px">‹</span>
+          <span>이전 글</span>
+        </div>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
+                    padding:13px 10px;cursor:pointer;
+                    color:var(--primary);font-size:13px;font-weight:600;
+                    transition:background .12s"
+             onclick="nav('news')"
+             onmouseover="this.style.background='var(--primary-l)'"
+             onmouseout="this.style.background=''">
+          <span>다음 글</span>
+          <span style="font-size:15px">›</span>
+        </div>
+      </div>
+      <!-- 목록으로 -->
+      <div style="border-top:1px solid var(--border);padding:12px 14px">
+        <div onclick="nav('news')"
+             style="display:flex;align-items:center;justify-content:center;gap:6px;
+                    padding:11px;background:var(--card2);border:1px solid var(--border);
+                    border-radius:10px;cursor:pointer;transition:all .12s"
+             onmouseover="this.style.background='var(--border)'"
+             onmouseout="this.style.background='var(--card2)'">
+          <span style="font-size:13px">☰</span>
+          <span style="font-size:13px;font-weight:600;color:var(--text2)">목록으로</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PAYMENT ═══════════════ -->
+<div class="screen" id="sc-payment">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="aheader"><div class="htitle">결제</div><div class="hicons"><div class="icon-btn">🔔</div><div class="icon-btn">☰</div></div></div>
+  <div class="sbody">
+    <!-- Monthly Summary -->
+    <div data-zone="pay-summary" style="margin:0 14px 12px;background:linear-gradient(135deg,var(--primary),var(--primary-d));border-radius:20px;padding:18px 20px;box-shadow:0 8px 24px rgba(26,86,219,.25)">
+      <div style="font-size:11px;color:rgba(255,255,255,.7);margin-bottom:2px">이번달 누적 결제 금액</div>
+      <div style="font-size:26px;font-weight:800;color:#fff;letter-spacing:-0.5px;margin-bottom:4px">32,400원</div>
+      <div style="font-size:13px;color:#86EFAC;font-weight:600">💰 이번달 4,800원 혜택을 받았어요!</div>
+    </div>
+
+    <!-- Payment Buttons (side by side) -->
+    <div class="pay-btns" data-zone="pay-buttons">
+      <div class="pay-btn" onclick="alert('QR 카메라 활성화')">
+        <div class="pay-icon">📷</div>
+        <div class="pay-label">QR 결제</div>
+        <div class="pay-desc">PC·키오스크 QR 스캔</div>
+      </div>
+      <div class="pay-btn">
+        <div class="pay-icon">🔲</div>
+        <div class="pay-label">바코드 결제</div>
+        <div class="pay-desc">단말기에 바코드 제시</div>
+      </div>
+    </div>
+
+    <!-- Event Banner -->
+    <div data-zone="pay-event-banner" style="margin:2px 14px 12px;height:56px;background:linear-gradient(120deg,#2d1b4e,#7C3AED);border-radius:12px;display:flex;align-items:center;justify-content:space-between;padding:0 14px">
+      <div><div style="font-size:9px;color:rgba(255,255,255,.7)">🛍️ 결제 프로모션</div><div style="font-size:12px;font-weight:700;color:#fff">5월 PCI 결제 시 5% 추가 적립!</div></div>
+      <div style="font-size:11px;font-weight:700;color:#C4B5FD;background:rgba(255,255,255,.15);padding:5px 10px;border-radius:7px">보기</div>
+    </div>
+
+    <!-- Merchant Slides (infinite auto-loop) -->
+    <div class="stitle" data-zone="pay-merchants">가맹점 혜택</div>
+    <div data-zone="pay-merchants" style="overflow:hidden;margin-bottom:12px;position:relative">
+      <div id="merchant-track" style="display:flex;gap:10px;padding:4px 14px;will-change:transform">
+        <!-- Original 10 cards -->
+        <div class="merchant-card"><div class="m-logo">🍕</div><div class="m-name">도미노피자</div><div class="m-benefit">상시 15% 할인</div><div class="m-ch">온·오프라인</div></div>
+        <div class="merchant-card"><div class="m-logo">☕</div><div class="m-name">스타벅스</div><div class="m-benefit">10% 할인</div><div class="m-ch">오프라인</div></div>
+        <div class="merchant-card"><div class="m-logo">🛒</div><div class="m-name">쿠팡</div><div class="m-benefit">5% PCI 적립</div><div class="m-ch">온라인</div></div>
+        <div class="merchant-card"><div class="m-logo">🍔</div><div class="m-name">맥도날드</div><div class="m-benefit">8% 할인</div><div class="m-ch">오프라인</div></div>
+        <div class="merchant-card"><div class="m-logo">🎬</div><div class="m-name">CGV</div><div class="m-benefit">1,000원 할인</div><div class="m-ch">온·오프라인</div></div>
+        <div class="merchant-card"><div class="m-logo">🍜</div><div class="m-name">BBQ치킨</div><div class="m-benefit">12% 할인</div><div class="m-ch">온·오프라인</div></div>
+        <div class="merchant-card"><div class="m-logo">✈️</div><div class="m-name">티몬</div><div class="m-benefit">3% PCI 적립</div><div class="m-ch">온라인</div></div>
+        <div class="merchant-card"><div class="m-logo">📱</div><div class="m-name">11번가</div><div class="m-benefit">5% 할인쿠폰</div><div class="m-ch">온라인</div></div>
+        <div class="merchant-card"><div class="m-logo">🍱</div><div class="m-name">CU편의점</div><div class="m-benefit">7% 할인</div><div class="m-ch">오프라인</div></div>
+        <div class="merchant-card"><div class="m-logo">🎮</div><div class="m-name">넥슨</div><div class="m-benefit">캐시 5% 추가</div><div class="m-ch">온라인</div></div>
+        <!-- Duplicate for seamless loop -->
+        <div class="merchant-card"><div class="m-logo">🍕</div><div class="m-name">도미노피자</div><div class="m-benefit">상시 15% 할인</div><div class="m-ch">온·오프라인</div></div>
+        <div class="merchant-card"><div class="m-logo">☕</div><div class="m-name">스타벅스</div><div class="m-benefit">10% 할인</div><div class="m-ch">오프라인</div></div>
+        <div class="merchant-card"><div class="m-logo">🛒</div><div class="m-name">쿠팡</div><div class="m-benefit">5% PCI 적립</div><div class="m-ch">온라인</div></div>
+        <div class="merchant-card"><div class="m-logo">🍔</div><div class="m-name">맥도날드</div><div class="m-benefit">8% 할인</div><div class="m-ch">오프라인</div></div>
+        <div class="merchant-card"><div class="m-logo">🎬</div><div class="m-name">CGV</div><div class="m-benefit">1,000원 할인</div><div class="m-ch">온·오프라인</div></div>
+      </div>
+    </div>
+
+    <!-- Recent Payments -->
+    <div class="stitle" data-zone="pay-recent">최근 결제 내역 <span class="see-all" onclick="alert('거래내역 페이지로 이동')">전체 보기</span></div>
+    <div style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--border)">
+        <div><div style="font-size:12px;font-weight:600;color:var(--text)">도미노피자 강남점</div><div style="font-size:10px;color:var(--text4)">04.30 12:34</div></div>
+        <div style="text-align:right"><div style="font-size:12px;font-weight:700;color:var(--text)">18,000원</div><div style="font-size:10px;color:var(--green)">-2,700원 할인</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--border)">
+        <div><div style="font-size:12px;font-weight:600;color:var(--text)">스타벅스 역삼점</div><div style="font-size:10px;color:var(--text4)">04.29 09:15</div></div>
+        <div style="text-align:right"><div style="font-size:12px;font-weight:700;color:var(--text)">14,400원</div><div style="font-size:10px;color:var(--green)">-1,600원 할인</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--border)">
+        <div><div style="font-size:12px;font-weight:600;color:var(--text)">쿠팡 온라인</div><div style="font-size:10px;color:var(--text4)">04.28 20:05</div></div>
+        <div style="text-align:right"><div style="font-size:12px;font-weight:700;color:var(--text)">52,000원</div><div style="font-size:10px;color:var(--text4)">할인 없음</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--border)">
+        <div><div style="font-size:12px;font-weight:600;color:var(--text)">맥도날드 신촌점</div><div style="font-size:10px;color:var(--text4)">04.27 13:22</div></div>
+        <div style="text-align:right"><div style="font-size:12px;font-weight:700;color:var(--text)">9,800원</div><div style="font-size:10px;color:var(--green)">-784원 할인</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:11px 14px">
+        <div><div style="font-size:12px;font-weight:600;color:var(--text)">CGV 강남</div><div style="font-size:10px;color:var(--text4)">04.26 18:40</div></div>
+        <div style="text-align:right"><div style="font-size:12px;font-weight:700;color:var(--text)">14,000원</div><div style="font-size:10px;color:var(--green)">-1,000원 할인</div></div>
+      </div>
+    </div>
+    <div style="height:14px"></div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
+    <div class="tab-item" onclick="nav('wallet')"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
+    <div class="tab-item active"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
+    <div class="tab-item" onclick="nav('benefits')"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
+    <div class="tab-item" onclick=""><div class="tab-icon">🛍️</div><div class="tab-lbl">쇼핑</div></div>
+  </div>
+</div>
+
+    </div><!-- /phone-screen -->
+  </div><!-- /phone-frame -->
+</div><!-- /phone-panel -->
+
+<!-- ══════════════════════════════════════════
+     POLICY PANEL
+══════════════════════════════════════════════ -->
+<div class="policy-panel">
+
+<!-- ── HOME ── -->
+<div class="policy-section active" id="pol-home">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_HOME <span class="ptag p1">P1</span></div>
+    <div class="policy-title">메인 홈</div>
+    <div class="policy-desc">앱 실행 후 첫 진입 화면. 자산 현황 요약, 롤링 배너, 타일 메뉴, 최근 소식으로 구성. 모든 주요 기능으로의 진입 허브 역할.</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-tiles','타일 메뉴')">⚠️ 개발 주의사항</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-tiles','타일 메뉴')" data-zone-ref="home-tiles"><div class="pd r"></div><strong>타일 메뉴 하드코딩 절대 금지.</strong> 서버 JSON을 파싱해 렌더링. 타일 수·순서·노출 여부 모두 어드민에서 관리.</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-banner','롤링 배너')" data-zone-ref="home-banner"><div class="pd r"></div>롤링 배너는 자동 3초 순환 + 수동 스와이프 모두 지원. 배너 없으면 영역 자체 미표시(레이아웃 재배치).</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-asset','자산 합계')" data-zone-ref="home-asset"><div class="pd r"></div>자산 합계 API 실패 시 "자산 정보를 불러오지 못했습니다 + 다시 시도" — 빈 화면 노출 금지.</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-asset','자산 합계')" data-zone-ref="home-asset"><div class="pd"></div>앱 실행 시 로컬 캐시를 즉시 표시 → 백그라운드 API 완료 시 실시간 값으로 교체(애니메이션 처리).</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-banner','롤링 배너')">롤링 배너</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-banner','롤링 배너')"><div class="pd"></div>자동 3초 롤링, 인디케이터 점 표시. 배너 이미지 로드 실패 시 기본 플레이스홀더 표시.</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-banner','롤링 배너')"><div class="pd"></div>탭 → 지정 딥링크 또는 외부 웹뷰 이동. 링크 없으면 탭 이벤트 무반응.</div>
+    <div class="policy-code">GET /api/v1/home/banners → Banner[]</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-tiles','타일 메뉴')">타일 메뉴 구성 규칙</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-tiles','타일 메뉴')"><div class="pd"></div>1행: 1/3 너비 × 3개 / 2행: 2/3(넓은 타일) + 1/3 / 3행: 가로 스크롤, 우측 끝 타일이 화면에 걸쳐 '더 있음'을 암시.</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-tiles','타일 메뉴')"><div class="pd"></div>비활성 타일 제거 후 나머지 레이아웃 자동 재배치. 네트워크 오류 시 마지막 캐시 구성 사용.</div>
+    <div class="policy-code">GET /api/v1/home/tiles → Tile[]
+  tile.row_type: "1x1" | "2x1" | "scroll"</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-asset','자산 합계')">자산 합계 영역</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-asset','자산 합계')"><div class="pd"></div>합계 = 자체 지갑 + 모든 연결 지갑 KRW 합산 (실시간 시세 기준)</div>
+    <div class="policy-warn">⚠️ 변동 금액·변동률 기준 시점 미확정 (전일 0시 vs 마지막 로그인) — 필드 예약, null 시 UI 미표시</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-asset','자산 합계')"><div class="pd r"></div>is_stale=true: 금액 옆 ⚠ 아이콘 + "시세가 최신이 아닐 수 있습니다" 안내</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-asset','자산 합계')"><div class="pd"></div>영역 탭 → 지갑 화면 / "자산현황 보기" 탭 → 자산현황 화면</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-header','상단 헤더 / 알림 뱃지')">알림 뱃지</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-header','상단 헤더 / 알림 뱃지')"><div class="pd"></div>미확인 알림 수 표시, 99 초과 시 "99+" 고정. 포그라운드 전환 시 1회 재조회.</div>
+    <div class="policy-code">GET /api/v1/notifications/unread-count</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-news','최근 소식')">최근 소식</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-news','최근 소식')"><div class="pd"></div>최신 소식 5건(게시일자 DESC). "전체 보기" → 소식 리스트 화면</div>
+    <div class="policy-code">GET /api/v1/news?limit=5</div>
+  </div>
+</div>
+
+<!-- ── WALLET ── -->
+<div class="policy-section" id="pol-wallet">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_WALLET <span class="ptag p1">P1</span></div>
+    <div class="policy-title">지갑</div>
+    <div class="policy-desc">보유 코인 잔액·시세를 코인 단위로 실시간 조회. "지금 내가 얼마를 갖고 있나"에 집중. 분석·비중은 자산현황 화면에서 제공(역할 분리).</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
+    <div class="policy-item has-zone" onclick="hlZone('wallet-list','지갑 목록')"><div class="pd r"></div>자체 지갑 PCI는 항상 최상단 고정. 연결 지갑은 connected_at ASC 정렬.</div>
+    <div class="policy-item has-zone" onclick="hlZone('wallet-tabs','탭 필터')"><div class="pd r"></div>연결 지갑이 없는 거래소 탭: 회색 + "연결하기" 버튼 → WalletConnect 플로우 진입.</div>
+    <div class="policy-item has-zone" onclick="hlZone('wallet-list','변동률')"><div class="pd"></div>▲(상승) 빨간색, ▼(하락) 파란색 — 한국 주식 UI 관행. FLAT은 회색 '-'.</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('wallet-list','지갑 목록')">아이콘 표시 규칙</div>
+    <div class="policy-item has-zone" onclick="hlZone('wallet-list','지갑 아이콘')"><div class="pd g"></div>자체 지갑: 코인 심볼 아이콘만 (거래소 오버레이 없음)</div>
+    <div class="policy-item has-zone" onclick="hlZone('wallet-list','지갑 목록')"><div class="pd"></div>연결 지갑: 코인 아이콘 + 거래소 로고 우하단 오버레이 (24px)</div>
+    <div class="policy-item has-zone" onclick="hlZone('wallet-list','지갑 목록')"><div class="pd"></div>동일 코인 복수 거래소: 각각 별도 행으로 독립 표시</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('wallet-tabs','탭 필터')">탭 필터 로직</div>
+    <div class="policy-code">전체 | 내 지갑(SELF) | 빗썸 | 코인원 | 코빗
+GET /api/v1/wallets?source={tab_filter}</div>
+  </div>
+</div>
+
+<!-- ── WALLET PCI ── -->
+<div class="policy-section" id="pol-wallet-pci">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_WALLET_DETAIL (자체 PCI) <span class="ptag p1">P1</span></div>
+    <div class="policy-title">지갑 상세 — PCI 자체 지갑</div>
+    <div class="policy-desc">PCI 자체 지갑 전용 화면. 출금하기 버튼, PCI 정보 보기, 최근 거래 내역(5건)이 이 화면에서만 표시됨.</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
+    <div class="policy-item has-zone" onclick="hlZone('wpci-actions','출금 버튼')"><div class="pd r"></div><strong>출금하기 버튼: 자체 지갑(wallet_type=SELF, coin=PCI)에만</strong> 표시. 다른 지갑 유형에서는 절대 노출 안 됨.</div>
+    <div class="policy-item has-zone" onclick="hlZone('wpci-txlist','거래 내역')"><div class="pd r"></div>최근 거래 내역도 자체 지갑에만 표시. 연결 지갑은 "거래소 앱에서 확인" 안내문으로 대체.</div>
+    <div class="policy-item has-zone" onclick="hlZone('wpci-header','헤더')"><div class="pd"></div>referrer 파라미터로 뒤로가기 레이블 동적 변경 (지갑/자산현황/PCI거래소상세 등).</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('wpci-actions','출금 플로우')">출금 플로우 검증</div>
+    <div class="policy-item has-zone" onclick="hlZone('wpci-actions','출금 검증')"><div class="pd r"></div>PCI 주소 형식 regex 실시간 검증. 자기 자신 주소 출금 불가.</div>
+    <div class="policy-item has-zone" onclick="hlZone('wpci-actions','출금 검증')"><div class="pd"></div>amount + fee ≤ balance 검증. 최소 출금 수량 이상.</div>
+    <div class="policy-item has-zone" onclick="hlZone('wpci-actions','출금 플로우')"><div class="pd"></div>PIN/생체인증 → 최종 확인 팝업 → 네트워크 제출.</div>
+    <div class="policy-item has-zone" onclick="hlZone('wpci-actions','출금 햅틱')"><div class="pd"></div>햅틱: PIN 입력 Light / PIN 오류 Error(강한 진동).</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title">API 명세</div>
+    <div class="policy-code">GET  /api/v1/wallets/{id}
+GET  /api/v1/wallets/{id}/transactions?limit=5
+GET  /api/v1/wallets/{id}/withdraw-info
+POST /api/v1/wallets/{id}/withdraw</div>
+  </div>
+</div>
+
+<!-- ── WALLET OTHER ── -->
+<div class="policy-section" id="pol-wallet-other">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_WALLET_DETAIL (연결 지갑) <span class="ptag p1">P1</span></div>
+    <div class="policy-title">지갑 상세 — 연결 지갑 (PCI/기타 코인)</div>
+    <div class="policy-desc">WalletConnect로 연결된 거래소 지갑 상세. 출금하기 없음. "거래소로 이동하기" 버튼 제공. 거래 내역은 거래소 앱에서 확인 안내.</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
+    <div class="policy-item has-zone" onclick="hlZone('wother-actions','버튼 영역')"><div class="pd r"></div><strong>출금하기 버튼 없음.</strong> 대신 "거래소로 이동하기" 버튼 표시.</div>
+    <div class="policy-item has-zone" onclick="hlZone('wother-txguide','거래 내역 안내')"><div class="pd r"></div>거래 내역 미표시. "거래 내역은 거래소 앱에서 확인" 안내 영역으로 대체.</div>
+    <div class="policy-item has-zone" onclick="hlZone('wother-actions','거래소 이동')"><div class="pd"></div>거래소 이동: 거래소 앱 딥링크 우선, 미설치 시 웹 URL fallback.</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('wother-actions','코인 정보 버튼')">코인 정보 버튼</div>
+    <div class="policy-item has-zone" onclick="hlZone('wother-actions','코인 정보 버튼')"><div class="pd"></div>PCI 거래소 연결 지갑: "PCI 정보" 버튼 없음 (자체 지갑만 제공)</div>
+    <div class="policy-item has-zone" onclick="hlZone('wother-actions','코인 정보 버튼')"><div class="pd"></div>기타 코인(BTC/ETH 등): "[심볼명] 정보" 버튼 → SCREEN_TOKEN_DETAIL(exchange, coin_symbol)</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('wpci-address','지갑 주소')">2차 주소 표시 조건</div>
+    <div class="policy-item has-zone" onclick="hlZone('wpci-address','지갑 주소')"><div class="pd"></div>XRP: Destination Tag / 빗썸 PCI·코인원 PCI: Memo / 기타: 미표시</div>
+  </div>
+</div>
+
+<!-- ── ASSET ── -->
+<div class="policy-section" id="pol-asset">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_ASSET_STATUS <span class="ptag p2">P2</span></div>
+    <div class="policy-title">자산현황</div>
+    <div class="policy-desc">포트폴리오 변동 추이·비중·손익 분석. 지갑 화면이 실시간 잔액이라면, 이 화면은 시각화된 분석 제공. 두 화면의 역할을 명확히 분리할 것.</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('asset-summary','자산 요약')">⚠️ 미확정 항목</div>
+    <div class="policy-warn">⚠️ 변동률 기준 시점 미확정 (전일 0시 vs 마지막 로그인) — change_amount, change_rate 필드 예약</div>
+    <div class="policy-warn">⚠️ 자산 표시 UX: 캐시→실시간 Toss 방식 구현 방법 개발팀 협의 필요</div>
+    <div class="policy-warn">⚠️ 그래프 제공 기간 구간 미확정 (1D/1W/1M/3M) — period 파라미터 예약</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('asset-distribution','자산 비중')">비중 그래프 섹션 조건</div>
+    <div class="policy-item has-zone" onclick="hlZone('asset-distribution','비중 그래프')"><div class="pd g"></div>코인 2종+ → 자산별 탭 + 거래소별 탭 모두 표시</div>
+    <div class="policy-item has-zone" onclick="hlZone('asset-distribution','비중 그래프')"><div class="pd"></div>코인 1종 + 거래소 2개+ → 거래소별 탭만 표시</div>
+    <div class="policy-item has-zone" onclick="hlZone('asset-distribution','비중 그래프')"><div class="pd r"></div>코인 1종 + 거래소 1개 → 섹션 전체 미표시. 서버가 show_by_asset/show_by_exchange boolean으로 판단해서 내려줄 것.</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('asset-chart','자산 차트')">API 명세</div>
+    <div class="policy-code">GET /api/v1/asset-status/chart?period=1D
+GET /api/v1/asset-status/distribution
+  → show_by_asset, show_by_exchange, by_asset[], by_exchange[]
+GET /api/v1/asset-status/wallets</div>
+  </div>
+</div>
+
+<!-- ── PCI INFO ── -->
+<div class="policy-section" id="pol-pci-info">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_PCI_INFO <span class="ptag p2">P2</span></div>
+    <div class="policy-title">PCI 정보</div>
+    <div class="policy-desc">PCI 시장 정보 허브. 내 보유와 무관하게 PCI 전체 시장 정보 제공. 시세 출처는 반드시 "Coin Market Cap 기준"으로 명시. "실시간" 텍스트 사용 금지.</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
+    <div class="policy-item has-zone" onclick="hlZone('pci-price','대표 시세')"><div class="pd r"></div>시세 출처 표기: <strong>"Coin Market Cap 기준"</strong> 명시 필수. "실시간" 단어 사용 금지.</div>
+    <div class="policy-item has-zone" onclick="hlZone('pci-price','대표 시세')"><div class="pd r"></div>CMC API 장애 시: 이전 캐시 데이터 표시 + 수집 시각 명시 + 재시도 버튼.</div>
+    <div class="policy-item has-zone" onclick="hlZone('pci-price','PCI 시세')"><div class="pd"></div>알림 PUSH 딥링크 진입 시 이 화면으로 랜딩: paycoin://pci-info</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('pci-exchanges','상장 거래소')">상장 거래소 리스트</div>
+    <div class="policy-item has-zone" onclick="hlZone('pci-exchanges','거래소 리스트')"><div class="pd g"></div>앱 연결 지갑 있는 거래소: "연결됨" 뱃지 + 상단 정렬</div>
+    <div class="policy-item has-zone" onclick="hlZone('pci-exchanges','거래소 리스트')"><div class="pd"></div>정렬: is_connected=true 우선 → 거래량 DESC</div>
+    <div class="policy-item has-zone" onclick="hlZone('pci-exchanges','거래소 리스트')"><div class="pd"></div>행 탭 → SCREEN_TOKEN_DETAIL(exchange, 'PCI')</div>
+    <div class="policy-code">GET /api/v1/pci/summary
+GET /api/v1/pci/exchanges</div>
+  </div>
+</div>
+
+<!-- ── TOKEN DETAIL ── -->
+<div class="policy-section" id="pol-token-detail">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_TOKEN_DETAIL <span class="ptag p2">P2</span></div>
+    <div class="policy-title">토큰 상세 (공통 템플릿)</div>
+    <div class="policy-desc">PCI 거래소 상세와 거래소별 코인 정보를 하나의 공통 템플릿으로 구현. coin_symbol + exchange 파라미터로 동일 화면 재사용.</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('token-header','화면 헤더')">⚠️ 개발 주의사항</div>
+    <div class="policy-item has-zone" onclick="hlZone('token-header','화면 헤더')"><div class="pd r"></div>PCI 거래소 상세: coin_symbol='PCI' 고정 / 기타 코인: coin_symbol 동적 (BTC/ETH/XRP/USDT/SOL/POL)</div>
+    <div class="policy-item has-zone" onclick="hlZone('token-header','공통 템플릿')"><div class="pd"></div>동일 API + 동일 템플릿 컴포넌트 재사용. 파라미터만 다름.</div>
+    <div class="policy-item has-zone" onclick="hlZone('token-header','거래소 이동')"><div class="pd"></div>거래소 이동: 거래소 앱 딥링크 우선, 미설치 시 웹 URL fallback.</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('token-wallet','연결 지갑')">연결 지갑 섹션</div>
+    <div class="policy-item has-zone" onclick="hlZone('token-wallet','연결 지갑')"><div class="pd g"></div>연결 시: 수량 + 원화 환산 + 주소 마스킹(앞6…뒤4) + "지갑 상세 보기"</div>
+    <div class="policy-item has-zone" onclick="hlZone('token-wallet','연결 지갑')"><div class="pd"></div>미연결 시: "이 거래소 지갑 연결하기" → WalletConnect 플로우 (exchange 파라미터 전달)</div>
+    <div class="policy-code">GET /api/v1/market/{exchange}/{coin_symbol}
+  → price, high/low, volume, change,
+    exchange_url, app_scheme, wallet{masked}</div>
+  </div>
+</div>
+
+<!-- ── BENEFITS ── -->
+<div class="policy-section" id="pol-benefits">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_BENEFITS <span class="ptag p1">P1</span></div>
+    <div class="policy-title">혜택</div>
+    <div class="policy-desc">모든 혜택·이벤트 진입 허브. 카테고리/항목 구성 전체가 어드민 동적 관리. 카테고리 추가·수정·삭제는 DB 저장 목록에서만 선택 가능(신규 생성 불가).</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('ben-daily','혜택 목록')">⚠️ 개발 주의사항</div>
+    <div class="policy-item has-zone" onclick="hlZone('ben-daily','혜택 목록')"><div class="pd r"></div>카테고리 하드코딩 금지. 어드민 API에서 카테고리·항목 모두 동적 수신.</div>
+    <div class="policy-item has-zone" onclick="hlZone('ben-daily','혜택 목록')"><div class="pd"></div>is_active=false 또는 노출 기간 외: 목록에서 제거 (빈 슬롯 없이 재배치)</div>
+    <div class="policy-item has-zone" onclick="hlZone('ben-banner','이벤트 배너')"><div class="pd"></div>이벤트 배너 없으면 배너 영역 전체 미표시 (레이아웃 자동 조정)</div>
+    <div class="policy-code">GET /api/v1/benefits/banners
+GET /api/v1/benefits/list → categories[].items[]</div>
+  </div>
+</div>
+
+<!-- ── PREDICTION ── -->
+<div class="policy-section" id="pol-prediction">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_PREDICTION <span class="ptag p1">P1</span></div>
+    <div class="policy-title">PCI 등락 예측</div>
+    <div class="policy-desc">매일 빗썸 PCI KST 00:00 종가 기준 등락 예측 이벤트. 탭은 하단에 위치(투표/참여내역/랭킹). 선택 변경 시 AdMob 광고 시청 필수.</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
+    <div class="policy-item has-zone" onclick="hlZone('pred-tabs','하단 탭')"><div class="pd r"></div>탭 바 위치: <strong>화면 하단</strong> (상단 아님). 투표 탭은 기본 선택이나, 탭 레이블로는 노출하지 않아도 됨 (내용 자체가 투표 영역).</div>
+    <div class="policy-item has-zone" onclick="hlZone('pred-vote-btns','선택 변경')"><div class="pd r"></div>AdMob 광고 완료 판정: Android onAdDismissedFullScreenContent / iOS adDidDismissFullScreenContent. 스킵(닫기 탭) = 변경 권한 미부여.</div>
+    <div class="policy-item has-zone" onclick="hlZone('pred-vote-btns','선택 변경')"><div class="pd r"></div>광고 로드 실패 → "광고를 불러오지 못했습니다" 토스트, 변경 불가. 기존 선택 유지.</div>
+    <div class="policy-item has-zone" onclick="hlZone('pred-vote-btns','투표 버튼')"><div class="pd"></div>햅틱: 투표 버튼 탭 시 Medium 피드백.</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('pred-yesterday','어제 결과 카드')">진입 시나리오 4가지</div>
+    <div class="policy-item has-zone" onclick="hlZone('pred-yesterday','결과 카드')"><div class="pd"></div>① 전날 미참여 → 이벤트 소개 화면 → 시작하기 → 투표 영역</div>
+    <div class="policy-item"><div class="pd"></div>② 전날 참여 + 결과 미집계 → 투표 영역만 (결과 카드 없음)</div>
+    <div class="policy-item"><div class="pd g"></div>③ 전날 참여 + 결과 집계 완료 → 투표 영역 상단에 전날 결과 카드</div>
+    <div class="policy-item"><div class="pd"></div>④ 오늘 이미 투표 → 완료 상태 + "선택 변경하기" 버튼</div>
+    <div class="policy-code">GET /api/v1/prediction/status
+  → today_voted, yesterday_participated,
+    yesterday_result_ready, yesterday_result{}</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('pred-base-price','기준가')">판정 정책</div>
+    <div class="policy-item has-zone" onclick="hlZone('pred-base-price','기준가')"><div class="pd g"></div>상승: 당일 종가 > 전일 종가 / 하락: 당일 종가 &lt; 전일 종가</div>
+    <div class="policy-warn">⚠️ 변동 없음(FLAT): 당일 = 전일 → 보상 지급 여부 미확정. verdict=FLAT UI 미리 구현 후 보상 로직만 대기.</div>
+    <div class="policy-item"><div class="pd"></div>빗썸 장애 시: 판정 보류 → 정상화 후 소급, 앱 내 공지 노출.</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('pred-calendar','캘린더')">캘린더 말풍선 정책</div>
+    <div class="policy-item has-zone" onclick="hlZone('pred-calendar','캘린더')"><div class="pd"></div>날짜 탭 → 말풍선: "[내 선택] · [실제 결과]" 형식, 2~3초 후 자동 소멸</div>
+    <div class="policy-item has-zone" onclick="hlZone('pred-calendar','캘린더')"><div class="pd r"></div>미참여 날짜 탭 시 말풍선 미표시</div>
+    <div class="policy-item has-zone" onclick="hlZone('pred-calendar','캘린더 색상')"><div class="pd"></div>색상: 정답=파랑 / 오답=빨강 / 변동없음=연파랑 / 미참여=색상없음</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('pred-ranking-table','랭킹')">랭킹 정책</div>
+    <div class="policy-item has-zone" onclick="hlZone('pred-ranking-table','랭킹')"><div class="pd"></div>상위 50명 표시. 정렬: ① 누적 정답 횟수 → ② 정답률 → ③ 전날 참여 시간 빠른 순</div>
+    <div class="policy-item has-zone" onclick="hlZone('pred-ranking-table','랭킹')"><div class="pd g"></div>내 랭킹: 상단 고정 구역에 항상 표시 (50위 밖이어도). mycode: 앞4자리+"***"</div>
+    <div class="policy-item has-zone" onclick="hlZone('pred-ranking-table','랭킹')"><div class="pd r"></div>매월 1일: "집계 중" 배지 → KST 2일 00:00 정식 전환</div>
+    <div class="policy-item has-zone" onclick="hlZone('pred-ranking-table','오늘의 선택')"><div class="pd"></div>오늘의 선택: 상승/하락/미참여 실시간 공개</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('pred-stats-bar','참여 현황')">보상 지급</div>
+    <div class="policy-item has-zone" onclick="hlZone('pred-stats-bar','참여 현황')"><div class="pd"></div>월 누적 후 익월 1~2주차 자동 지급. 페이코인 자체 지갑으로 지급 (별도 수령 액션 없음)</div>
+    <div class="policy-code">POST /api/v1/prediction/vote → { choice: "UP"|"DOWN" }
+GET  /api/v1/prediction/today-stats (10초 폴링)
+GET  /api/v1/prediction/calendar?year=&month=
+GET  /api/v1/prediction/ranking?year=&month=</div>
+  </div>
+</div>
+
+<!-- ── NEWS ── -->
+<div class="policy-section" id="pol-news">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_NEWS_LIST <span class="ptag p2">P2</span></div>
+    <div class="policy-title">최근 소식</div>
+    <div class="policy-desc">페이코인·다날·다날핀테크·페이프로토콜 관련 소식 목록. 어드민 등록·관리. 키워드/기간/카테고리 복합 검색 지원.</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
+    <div class="policy-item has-zone" onclick="hlZone('news-list','소식 리스트')"><div class="pd"></div>페이지당 10건, 무한 스크롤 또는 더보기 버튼 구현. cursor 기반 페이지네이션 권장.</div>
+    <div class="policy-item has-zone" onclick="hlZone('news-search','검색')"><div class="pd r"></div>검색 결과 없음: "검색 결과가 없습니다." 빈 상태 UI (빈 화면 금지)</div>
+    <div class="policy-item has-zone" onclick="hlZone('news-search','검색')"><div class="pd"></div>상세 뒤로가기: 검색·필터 상태 유지 (Navigation Stack 유지)</div>
+    <div class="policy-code">GET /api/v1/news?q=&from=&to=&category=&cursor=&limit=10</div>
+  </div>
+</div>
+
+<!-- ── NEWS DETAIL ── -->
+<div class="policy-section" id="pol-news-detail">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_NEWS_DETAIL <span class="ptag p2">P2</span></div>
+    <div class="policy-title">소식 상세</div>
+    <div class="policy-desc">최근 소식 개별 게시글 상세 화면. 이전/다음 글 이동, 뒤로가기 시 리스트 검색·필터 상태 유지.</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('newsdet-nav','이전/다음 글')">⚠️ 개발 주의사항</div>
+    <div class="policy-item has-zone" onclick="hlZone('newsdet-nav','이전/다음 글')"><div class="pd"></div>이전 글 / 다음 글 버튼: 없으면 비활성 처리 (탭 불가, 회색)</div>
+    <div class="policy-item has-zone" onclick="hlZone('newsdet-header','헤더')"><div class="pd r"></div>뒤로가기 → 소식 리스트 화면, 검색·필터 상태 복원 필수</div>
+    <div class="policy-item has-zone" onclick="hlZone('newsdet-header','본문')"><div class="pd"></div>본문 포맷: HTML 또는 Markdown (서버 협의 후 결정)</div>
+    <div class="policy-code">GET /api/v1/news/{id} → body, prev_id, next_id</div>
+  </div>
+</div>
+
+<!-- ── PAYMENT ── -->
+<div class="policy-section" id="pol-payment">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_PAYMENT_MAIN <span class="ptag p1">P1</span></div>
+    <div class="policy-title">결제</div>
+    <div class="policy-desc">QR코드 결제와 오프라인 바코드 결제를 하나의 진입점으로 통합. 이번달 누적 결제 금액·혜택 금액, 방식 선택 버튼, 가맹점 혜택 슬라이드, 최근 결제 내역 5건 표시.</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('pay-buttons','결제 버튼')">⚠️ 개발 주의사항</div>
+    <div class="policy-item has-zone" onclick="hlZone('pay-buttons','QR/바코드 버튼')"><div class="pd r"></div>QR코드 결제 탭 시: 카메라 권한 확인 → 없으면 권한 요청 → 거부 시 설정 이동 안내. 카메라 뷰파인더 → QR 인식 → 기존 플로우. 취소/뒤로가기 → 결제 메인 복귀.</div>
+    <div class="policy-item has-zone" onclick="hlZone('pay-event-banner','이벤트 배너')"><div class="pd r"></div>이벤트 배너 없으면 섹션 전체 미표시.</div>
+    <div class="policy-item has-zone" onclick="hlZone('pay-merchants','가맹점 슬라이드')"><div class="pd"></div>가맹점 슬라이드: 자동 슬라이딩(3초 간격) 무한 반복 + 수동 스와이프.</div>
+    <div class="policy-warn">⚠️ 할인 금액 집계 기준 및 데이터 제공 방식 협의 필요 — monthly_discount_krw 필드 예약</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('pay-summary','결제 현황')">표시 문구 정책</div>
+    <div class="policy-item has-zone" onclick="hlZone('pay-summary','결제 현황')"><div class="pd"></div>결제 현황 레이블: "이번달 누적 결제 금액"</div>
+    <div class="policy-item has-zone" onclick="hlZone('pay-summary','결제 현황')"><div class="pd"></div>할인 문구: "이번달 {N}원 혜택을 받았어요!" (0원 시 미표시)</div>
+  </div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('pay-recent','최근 결제')">최근 결제 내역</div>
+    <div class="policy-item has-zone" onclick="hlZone('pay-recent','최근 결제')"><div class="pd"></div>최근 5건 표시. "전체 보기" 탭 → 거래내역 화면으로 이동.</div>
+    <div class="policy-item has-zone" onclick="hlZone('pay-recent','최근 결제')"><div class="pd"></div>할인 금액: 있는 경우만 표시, 없으면 해당 영역 미표시.</div>
+    <div class="policy-code">GET /api/v1/payment/monthly-summary
+GET /api/v1/payment/merchants
+GET /api/v1/payment/recent?limit=5</div>
+  </div>
+</div>
+
+</div><!-- /policy-panel -->
+</div><!-- /layout-inner -->
+</div><!-- /layout -->
+
+<script>
+/* ══ NAVIGATION ══ */
+const SCREEN_MAP = {
+  'home':         { sc:'sc-home',         pol:'pol-home',         ni:0 },
+  'wallet':       { sc:'sc-wallet',       pol:'pol-wallet',       ni:1 },
+  'wallet-empty': { sc:'sc-wallet-empty',  pol:'pol-wallet',       ni:2 },
+  'wallet-pci':   { sc:'sc-wallet-pci',   pol:'pol-wallet-pci',   ni:3 },
+  'wallet-other': { sc:'sc-wallet-other', pol:'pol-wallet-other', ni:4 },
+  'asset':        { sc:'sc-asset',        pol:'pol-asset',        ni:5 },
+  'pci-info':     { sc:'sc-pci-info',     pol:'pol-pci-info',     ni:6 },
+  'token-detail': { sc:'sc-token-detail', pol:'pol-token-detail', ni:7 },
+  'benefits':     { sc:'sc-benefits',     pol:'pol-benefits',     ni:8 },
+  'prediction':   { sc:'sc-prediction',   pol:'pol-prediction',   ni:9 },
+  'news':         { sc:'sc-news',         pol:'pol-news',         ni:10 },
+  'news-detail':  { sc:'sc-news-detail',  pol:'pol-news-detail',  ni:11 },
+  'payment':      { sc:'sc-payment',      pol:'pol-payment',      ni:12 },
+};
+
+function nav(key) {
+  const cfg = SCREEN_MAP[key];
+  if (!cfg) return;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.policy-section').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const sc = document.getElementById(cfg.sc);
+  const po = document.getElementById(cfg.pol);
+  if (sc) {
+    sc.classList.add('active');
+    // sbody 안의 스크롤 컨테이너 초기화
+    const sbody = sc.querySelector('.sbody');
+    if (sbody) sbody.scrollTop = 0;
+    // 지갑 화면 진입 시 탭 초기화
+    if (cfg.sc === 'sc-wallet') initWalletScreen();
+  }
+  if (po) po.classList.add('active');
+  const navBtns = document.querySelectorAll('.nav-btn');
+  if (navBtns[cfg.ni]) navBtns[cfg.ni].classList.add('active');
+  document.querySelector('.policy-panel').scrollTop = 0;
+  document.querySelectorAll('.overlay').forEach(o => o.classList.remove('show'));
+}
+
+/* ══ MODAL ══ */
+function showModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('overlay')) e.target.classList.remove('show');
+});
+
+/* ══ ROLLING BANNER ══ */
+let bannerIdx = 0;
+const BANNER_COUNT = 3;
+function updateBanner() {
+  const track = document.getElementById('banner-track');
+  if (!track) return;
+  track.style.transform = `translateX(-${bannerIdx * 100}%)`;
+  for (let i = 0; i < BANNER_COUNT; i++) {
+    const d = document.getElementById('bd'+i);
+    if (d) d.classList.toggle('active', i === bannerIdx);
+  }
+}
+setInterval(() => { bannerIdx = (bannerIdx + 1) % BANNER_COUNT; updateBanner(); }, 3000);
+
+/* ══ MERCHANT INFINITE SLIDE ══ */
+(function() {
+  let mPos = 0;
+  let mPaused = false;
+  function loopMerchants() {
+    const track = document.getElementById('merchant-track');
+    if (!track || mPaused) return;
+    const cards = track.querySelectorAll('.merchant-card');
+    if (!cards.length) return;
+    const cardW = cards[0].offsetWidth + 10;
+    const totalOriginal = 10; // original card count
+    mPos += 0.6; // px per frame
+    if (mPos >= cardW * totalOriginal) mPos = 0; // seamless reset
+    track.style.transform = `translateX(-${mPos}px)`;
+    track.style.transition = 'none';
+  }
+  setInterval(loopMerchants, 16);
+})();
+
+/* ══ PREDICTION TABS ══ */
+function showPredTab(tab) {
+  const hist = document.getElementById('pred-history');
+  const rank = document.getElementById('pred-ranking');
+  if (hist) hist.style.display = tab === 'history' ? 'block' : 'none';
+  if (rank) rank.style.display = tab === 'ranking' ? 'block' : 'none';
+
+  ['pbt-history','pbt-ranking'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (id === 'pbt-' + tab) {
+      el.style.color = 'var(--primary)';
+      el.style.borderBottomColor = 'var(--primary)';
+    } else {
+      el.style.color = 'var(--text3)';
+      el.style.borderBottomColor = 'transparent';
+    }
+  });
+}
+function startPred() {
+  const intro = document.getElementById('pred-intro');
+  const main = document.getElementById('pred-main');
+  if (intro) intro.style.display = 'none';
+  if (main) main.style.display = 'flex';
+}
+
+/* ══ VOTE ══ */
+let pendingVote = null;
+function castVote(dir) {
+  pendingVote = dir;
+  const isUp = dir === 'up';
+  document.getElementById('vmi').textContent = isUp ? '▲' : '▼';
+  document.getElementById('vmi').style.color = isUp ? 'var(--red)' : 'var(--primary)';
+  document.getElementById('vmt').textContent = '오늘의 선택: ' + (isUp ? '상승' : '하락');
+  showModal('vote-modal');
+}
+function confirmVote() {
+  closeModal('vote-modal');
+  document.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('sel'));
+  document.querySelector(pendingVote === 'up' ? '.vote-up' : '.vote-down').classList.add('sel');
+  const area = document.getElementById('change-btn-area');
+  if (area && !area.querySelector('button')) {
+    area.innerHTML = '<div style="margin:0 14px 8px"><button class="btn btn-ghost" style="font-size:11px" onclick="changeVote()">선택 변경하기 (광고 시청 필요)</button></div>';
+  }
+}
+function changeVote() {
+  const ok = confirm('📺 광고를 시청하면 선택을 변경할 수 있습니다.\n\n[확인] = 광고 시청 완료 → 변경 허용\n[취소] = 광고 스킵 → 변경 불가');
+  if (ok) {
+    document.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('sel'));
+    const area = document.getElementById('change-btn-area');
+    if (area) area.innerHTML = '';
+    alert('✅ 광고 시청 완료. 다시 선택해주세요.');
+  } else {
+    alert('⚠️ 광고 스킵. 기존 선택이 유지됩니다.');
+  }
+}
+
+/* ══ CALENDAR TOOLTIP ══ */
+function showTip(el, text) {
+  // Close all
+  document.querySelectorAll('.cal-day.show-tip').forEach(d => d.classList.remove('show-tip'));
+  el.classList.add('show-tip');
+  const tip = el.querySelector('.cal-tooltip');
+  if (tip) tip.textContent = text;
+  setTimeout(() => el.classList.remove('show-tip'), 2500);
+}
+
+/* ══ WALLET TAB FILTER ══ */
+const WALLET_DATA = {
+  /* 전체 지갑 목록 */
+  all: {
+    label: '총 보유 자산',
+    amount: '12,345,678원',
+    wallets: [
+      { icon:'🪙', bg:'',        ovl:null,                  name:'페이코인 PCI', sub:'82.45원 · 내 지갑',    krw:'8,245,000원',  qty:'100,000 PCI',    chg:'up',  rate:'▲ 5.23%', dest:'wallet-pci' },
+      { icon:'🪙', bg:'',        ovl:{bg:'#f57c00',txt:'빗'},name:'페이코인 PCI', sub:'82.12원 · 빗썸',       krw:'2,463,600원',  qty:'30,000 PCI',     chg:'up',  rate:'▲ 4.91%', dest:'wallet-other' },
+      { icon:'₿',  bg:'#FEF3C7', ovl:{bg:'#1a73e8',txt:'원'},name:'비트코인 BTC', sub:'93,450,000원 · 코인원', krw:'1,637,432원',  qty:'0.01752100 BTC', chg:'dn',  rate:'▼ 1.20%', dest:'wallet-other' },
+      { icon:'Ξ',  bg:'#EEF2FF', ovl:{bg:'#1a73e8',txt:'원'},name:'이더리움 ETH', sub:'4,823,000원 · 코인원',  krw:'240,000원',    qty:'0.04975000 ETH', chg:'up',  rate:'▲ 2.10%', dest:'wallet-other' },
+      { icon:'◎',  bg:'#F0FDF4', ovl:{bg:'#6B21A8',txt:'빗'},name:'리플 XRP',     sub:'820원 · 코빗',         krw:'82,000원',     qty:'100.00000000 XRP',chg:'dn', rate:'▼ 0.55%', dest:'wallet-other' },
+    ]
+  },
+  /* 내 지갑 (자체 PCI만) */
+  self: {
+    label: '내 지갑 자산',
+    amount: '8,245,000원',
+    wallets: [
+      { icon:'🪙', bg:'', ovl:null, name:'페이코인 PCI', sub:'82.45원 · 내 지갑', krw:'8,245,000원', qty:'100,000 PCI', chg:'up', rate:'▲ 5.23%', dest:'wallet-pci' },
+    ]
+  },
+  /* 빗썸 */
+  bithumb: {
+    label: '빗썸 보유 자산',
+    amount: '2,463,600원',
+    wallets: [
+      { icon:'🪙', bg:'', ovl:{bg:'#f57c00',txt:'빗'}, name:'페이코인 PCI', sub:'82.12원 · 빗썸', krw:'2,463,600원', qty:'30,000 PCI', chg:'up', rate:'▲ 4.91%', dest:'wallet-other' },
+    ],
+    empty: false
+  },
+  /* 코인원 */
+  coinone: {
+    label: '코인원 보유 자산',
+    amount: '1,877,432원',
+    wallets: [
+      { icon:'₿', bg:'#FEF3C7', ovl:{bg:'#1a73e8',txt:'원'}, name:'비트코인 BTC', sub:'93,450,000원 · 코인원', krw:'1,637,432원', qty:'0.01752100 BTC', chg:'dn', rate:'▼ 1.20%', dest:'wallet-other' },
+      { icon:'Ξ', bg:'#EEF2FF', ovl:{bg:'#1a73e8',txt:'원'}, name:'이더리움 ETH', sub:'4,823,000원 · 코인원',  krw:'240,000원',   qty:'0.04975000 ETH', chg:'up', rate:'▲ 2.10%', dest:'wallet-other' },
+    ]
+  },
+  /* 코빗 */
+  korbit: {
+    label: '코빗 보유 자산',
+    amount: '82,000원',
+    wallets: [
+      { icon:'◎', bg:'#F0FDF4', ovl:{bg:'#6B21A8',txt:'빗'}, name:'리플 XRP', sub:'820원 · 코빗', krw:'82,000원', qty:'100.00000000 XRP', chg:'dn', rate:'▼ 0.55%', dest:'wallet-other' },
+    ]
+  }
+};
+
+function walletTab(tab) {
+  /* 칩 active 상태 */
+  ['all','self','bithumb','coinone','korbit'].forEach(t => {
+    const el = document.getElementById('wchip-' + t);
+    if (el) el.classList.toggle('active', t === tab);
+  });
+
+  const data = WALLET_DATA[tab];
+  if (!data) return;
+
+  /* 금액 레이블 업데이트 */
+  const lbl = document.getElementById('wt-label');
+  const amt = document.getElementById('wt-amount');
+  if (lbl) lbl.textContent = data.label;
+  if (amt) amt.textContent = data.amount;
+
+  /* 배너: 내 지갑 탭에서만 숨김 (자체 지갑엔 이미 알고 있음) */
+  const banner = document.getElementById('wt-banner');
+  if (banner) banner.style.display = '';
+
+  /* 지갑 리스트 렌더 */
+  const list = document.getElementById('wt-list');
+  if (!list) return;
+
+  if (!data.wallets || data.wallets.length === 0) {
+    /* 연결된 지갑 없음 */
+    list.innerHTML = `
+      <div style="margin:12px 14px 0;background:var(--card2);border:1.5px dashed var(--border2);border-radius:var(--radius);padding:20px 16px;text-align:center">
+        <div style="font-size:28px;margin-bottom:8px">🔗</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">${tab === 'bithumb' ? '빗썸' : tab === 'coinone' ? '코인원' : '코빗'} 지갑이 연결되지 않았어요</div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.6;margin-bottom:14px">거래소 지갑을 연결하면 보유 자산을<br>한 화면에서 통합 조회할 수 있어요.</div>
+        <button class="btn btn-primary" style="padding:11px;font-size:13px" onclick="showModal('walletconnect-modal')">+ 거래소 지갑 연결하기</button>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = data.wallets.map(w => {
+    const ovl = w.ovl ? `<div class="exch-ovl" style="background:${w.ovl.bg}">${w.ovl.txt}</div>` : '';
+    const bg  = w.bg  ? `style="background:${w.bg}"` : '';
+    return `
+      <div class="wallet-row" onclick="nav('${w.dest}')">
+        <div class="coin-icon" ${bg}>${w.icon}${ovl}</div>
+        <div class="winfo"><div class="wname">${w.name}</div><div class="wprice">${w.sub}</div></div>
+        <div class="wright"><div class="wkrw">${w.krw}</div><div class="wqty">${w.qty} <span class="chg ${w.chg}">${w.rate}</span></div></div>
+      </div>`;
+  }).join('');
+}
+
+/* 화면 진입 시 초기화 */
+function initWalletScreen() {
+  walletTab('all');
+}
+
+/* ══ TILE ROW 3 SWIPE ══ */
+(function() {
+  let r3Idx = 0;
+  const TOTAL = 2;
+  function updateR3() {
+    const track = document.getElementById('tile-row3');
+    if (!track) return;
+    // width of one tile = viewport width
+    const vp = document.getElementById('tile-row3-viewport');
+    const tileW = vp ? vp.offsetWidth - 28 + 8 : 0; // tile width + gap
+    const w = tileW;
+    track.style.transform = `translateX(-${r3Idx * w}px)`;
+    for (let i = 0; i < TOTAL; i++) {
+      const dot = document.getElementById('r3-dot-' + i);
+      if (!dot) continue;
+      dot.style.width  = i === r3Idx ? '16px' : '5px';
+      dot.style.background = i === r3Idx ? 'var(--primary)' : 'var(--border2)';
+    }
+  }
+  // Touch swipe
+  let r3StartX = 0;
+  document.addEventListener('touchstart', e => {
+    const vp = document.getElementById('tile-row3-viewport');
+    if (vp && vp.contains(e.target)) r3StartX = e.touches[0].clientX;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const vp = document.getElementById('tile-row3-viewport');
+    if (!vp || !vp.contains(e.target)) return;
+    const dx = e.changedTouches[0].clientX - r3StartX;
+    if (Math.abs(dx) < 30) return;
+    if (dx < 0 && r3Idx < TOTAL - 1) r3Idx++;
+    else if (dx > 0 && r3Idx > 0) r3Idx--;
+    updateR3();
+  }, { passive: true });
+  // Mouse drag (desktop preview)
+  let r3DragX = 0, r3Dragging = false;
+  document.addEventListener('mousedown', e => {
+    const vp = document.getElementById('tile-row3-viewport');
+    if (vp && vp.contains(e.target)) { r3DragX = e.clientX; r3Dragging = true; }
+  });
+  document.addEventListener('mouseup', e => {
+    if (!r3Dragging) return; r3Dragging = false;
+    const dx = e.clientX - r3DragX;
+    if (Math.abs(dx) < 20) return;
+    if (dx < 0 && r3Idx < TOTAL - 1) r3Idx++;
+    else if (dx > 0 && r3Idx > 0) r3Idx--;
+    updateR3();
+  });
+  window.addEventListener('resize', updateR3);
+  // Init after render
+  setTimeout(updateR3, 100);
+})();
+
+/* ══ UI ZONE HIGHLIGHT ══ */
+let hlTimer = null;
+function hlZone(zoneId, label) {
+  // 기존 하이라이트 제거
+  document.querySelectorAll('.ui-highlight-box').forEach(el => el.remove());
+  if (hlTimer) clearTimeout(hlTimer);
+
+  // 현재 활성 화면 찾기
+  const activeScreen = document.querySelector('.screen.active');
+  if (!activeScreen) return;
+
+  // 대상 zone 요소 찾기 (여러 개면 모두 묶음)
+  const targets = activeScreen.querySelectorAll('[data-zone="' + zoneId + '"]');
+  if (!targets.length) return;
+
+  // phone-frame 기준 좌표 계산
+  const phoneFrame = document.querySelector('.phone-frame');
+  const frameRect  = phoneFrame.getBoundingClientRect();
+
+  // 모든 target의 union bounding box 계산
+  let top = Infinity, left = Infinity, bottom = -Infinity, right = -Infinity;
+  targets.forEach(el => {
+    const r = el.getBoundingClientRect();
+    top    = Math.min(top,    r.top);
+    left   = Math.min(left,   r.left);
+    bottom = Math.max(bottom, r.bottom);
+    right  = Math.max(right,  r.right);
+  });
+
+  const pad = 3;
+  const box = document.createElement('div');
+  box.className = 'ui-highlight-box';
+  box.style.cssText = [
+    'top:'    + (top    - frameRect.top  - pad) + 'px',
+    'left:'   + (left   - frameRect.left - pad) + 'px',
+    'width:'  + (right  - left + pad * 2)       + 'px',
+    'height:' + (bottom - top  + pad * 2)       + 'px',
+  ].join(';');
+
+  // 레이블
+  const lbl = document.createElement('div');
+  lbl.className = 'ui-highlight-label';
+  lbl.textContent = label;
+  box.appendChild(lbl);
+
+  phoneFrame.appendChild(box);
+
+  // 2.2초 후 페이드 아웃 후 제거
+  hlTimer = setTimeout(() => {
+    box.style.opacity = '0';
+    setTimeout(() => box.remove(), 280);
+  }, 2200);
+}
+
+/* ══ NAV SCROLL ARROW ══ */
+(function() {
+  function checkNavScroll() {
+    const wrap = document.getElementById('nav-screens-wrap');
+    const scr  = document.getElementById('nav-screens');
+    if (!wrap || !scr) return;
+    const atEnd = scr.scrollLeft + scr.clientWidth >= scr.scrollWidth - 4;
+    wrap.classList.toggle('at-end', atEnd);
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const scr = document.getElementById('nav-screens');
+    if (scr) scr.addEventListener('scroll', checkNavScroll, { passive: true });
+    setTimeout(checkNavScroll, 200);
+  });
+  setTimeout(() => {
+    const scr = document.getElementById('nav-screens');
+    if (scr) scr.addEventListener('scroll', checkNavScroll, { passive: true });
+    checkNavScroll();
+  }, 300);
+})();
+
+/* ══ INIT ══ */
+// Prediction: show intro by default (first-time user state)
+(function() {
+  const intro = document.getElementById('pred-intro');
+  const main  = document.getElementById('pred-main');
+  if (intro) intro.style.display = 'block';
+  if (main)  main.style.display  = 'none';
+})();
+nav('home');
+
+
+/* ══════════════════════════════════════════════════════
+   QnA SYSTEM
+══════════════════════════════════════════════════════ */
+const QNA = {
+  apiUrl: localStorage.getItem('qna_api_url') || '',
+  filter: 'all',
+  items: [],
+
+  SCREEN_LABELS: {
+    'home':         '메인 홈',
+    'wallet':       '지갑',
+    'wallet-empty': '지갑 (미연결)',
+    'wallet-pci':   '지갑 상세 (PCI)',
+    'wallet-other': '지갑 상세 (기타)',
+    'asset':        '자산현황',
+    'pci-info':     'PCI 정보',
+    'token-detail': '토큰 상세',
+    'benefits':     '혜택',
+    'prediction':   '등락 예측',
+    'news':         '최근 소식',
+    'news-detail':  '소식 상세',
+    'payment':      '결제',
+  },
+
+  currentScreen() {
+    const sc = document.querySelector('.screen.active');
+    if (!sc) return 'home';
+    return sc.id.replace('sc-', '');
+  },
+
+  currentLabel() {
+    return this.SCREEN_LABELS[this.currentScreen()] || this.currentScreen();
+  },
+};
+
+function toggleQna() {
+  const panel = document.getElementById('qna-panel');
+  const isOpen = panel.classList.toggle('open');
+  if (isOpen) {
+    updateQnaScreenInfo();
+    if (!QNA.apiUrl) {
+      setTimeout(() => document.getElementById('qna-setup').classList.add('show'), 200);
+    } else {
+      loadQna();
+    }
+  }
+}
+
+function updateQnaScreenInfo() {
+  const label = QNA.currentLabel();
+  const el1 = document.getElementById('qna-current-screen');
+  const el2 = document.getElementById('qna-form-screen');
+  if (el1) el1.textContent = label;
+  if (el2) el2.textContent = label;
+}
+
+function saveQnaApiUrl() {
+  const url = document.getElementById('qna-api-url-input').value.trim();
+  if (!url.startsWith('https://script.google.com')) {
+    alert('올바른 Google Apps Script URL을 입력해주세요.');
+    return;
+  }
+  QNA.apiUrl = url;
+  localStorage.setItem('qna_api_url', url);
+  document.getElementById('qna-setup').classList.remove('show');
+  loadQna();
+}
+
+function setQFilter(f) {
+  QNA.filter = f;
+  ['all','current','unanswered'].forEach(id => {
+    const el = document.getElementById('qfilter-' + id);
+    if (el) el.classList.toggle('active', id === f);
+  });
+  renderQna();
+}
+
+async function loadQna() {
+  if (!QNA.apiUrl) return;
+  const listEl = document.getElementById('qna-list');
+  listEl.innerHTML = '<div style="padding:20px;text-align:center;font-size:12px;color:var(--text4)">불러오는 중...</div>';
+  try {
+    const res = await fetch(QNA.apiUrl + '?action=list');
+    const data = await res.json();
+    QNA.items = data.items || [];
+    updateBadge();
+    renderQna();
+  } catch(e) {
+    listEl.innerHTML = '<div style="padding:16px;text-align:center;font-size:12px;color:var(--red)">불러오기 실패. API URL을 확인해주세요.<br><button onclick="document.getElementById('qna-setup').classList.add('show')" style="margin-top:8px;padding:5px 12px;background:var(--primary);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:11px">설정</button></div>';
+  }
+}
+
+function renderQna() {
+  const listEl = document.getElementById('qna-list');
+  let items = [...QNA.items].reverse(); // 최신 순
+
+  if (QNA.filter === 'current') {
+    items = items.filter(i => i.screen === QNA.currentScreen());
+  } else if (QNA.filter === 'unanswered') {
+    items = items.filter(i => !i.answer);
+  }
+
+  const countEl = document.getElementById('qna-count-tag');
+  if (countEl) countEl.textContent = `(${items.length}건)`;
+
+  if (!items.length) {
+    const msg = QNA.filter === 'current'
+      ? '이 화면에 등록된 질문이 없습니다.'
+      : QNA.filter === 'unanswered'
+      ? '미답변 질문이 없습니다. 👍'
+      : '아직 등록된 질문이 없습니다.';
+    listEl.innerHTML = `<div class="qna-empty"><div class="qna-empty-icon">💬</div><div>${msg}</div></div>`;
+    return;
+  }
+
+  listEl.innerHTML = items.map((item, idx) => {
+    const screenLabel = QNA.SCREEN_LABELS[item.screen] || item.screen;
+    const ts = item.created_at ? new Date(item.created_at).toLocaleString('ko-KR', {month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+    const answerHtml = item.answer
+      ? `<div class="qna-a">${escHtml(item.answer)}</div>`
+      : `<div class="qna-a-pending">답변 대기 중...</div>
+         <button class="qna-reply-btn" onclick="toggleReply(${item.id})">✏️ 답변 작성</button>
+         <div class="qna-reply-area" id="reply-area-${item.id}">
+           <textarea class="qna-reply-input" id="reply-input-${item.id}" rows="3"
+                     placeholder="답변을 입력하세요..."></textarea>
+           <button class="qna-reply-submit" onclick="submitAnswer(${item.id})">답변 등록</button>
+         </div>`;
+    return `
+      <div class="qna-item" id="qna-item-${item.id}">
+        <div class="qna-item-header">
+          <span class="qna-screen-tag">${escHtml(screenLabel)}</span>
+          <span class="qna-ts">${ts} · ${escHtml(item.author || '익명')}</span>
+        </div>
+        <div class="qna-q">${escHtml(item.question)}</div>
+        ${answerHtml}
+      </div>`;
+  }).join('');
+}
+
+function updateBadge() {
+  const unanswered = QNA.items.filter(i => !i.answer).length;
+  const badge = document.getElementById('qna-badge');
+  if (badge) {
+    badge.style.display = unanswered > 0 ? 'flex' : 'none';
+    badge.textContent = unanswered > 9 ? '9+' : unanswered;
+  }
+}
+
+function toggleReply(id) {
+  const area = document.getElementById('reply-area-' + id);
+  if (area) area.classList.toggle('open');
+}
+
+async function submitAnswer(id) {
+  const input = document.getElementById('reply-input-' + id);
+  const answer = input ? input.value.trim() : '';
+  if (!answer) { alert('답변 내용을 입력해주세요.'); return; }
+  if (!QNA.apiUrl) { alert('API URL을 먼저 설정해주세요.'); return; }
+
+  try {
+    const res = await fetch(QNA.apiUrl, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'answer', id, answer }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      await loadQna();
+    } else {
+      alert('답변 등록 실패: ' + (data.error || ''));
+    }
+  } catch(e) {
+    alert('오류가 발생했습니다: ' + e.message);
+  }
+}
+
+async function submitQuestion() {
+  const qInput  = document.getElementById('qna-question-input');
+  const aInput  = document.getElementById('qna-author-input');
+  const btn     = document.getElementById('qna-submit-btn');
+  const status  = document.getElementById('qna-status');
+  const question = qInput ? qInput.value.trim() : '';
+  const author   = aInput ? aInput.value.trim() || '익명' : '익명';
+
+  if (!question) { qInput && qInput.focus(); return; }
+
+  if (!QNA.apiUrl) {
+    document.getElementById('qna-setup').classList.add('show');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '등록 중...';
+  status.textContent = '';
+  status.classList.remove('show');
+
+  try {
+    const res = await fetch(QNA.apiUrl, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'add',
+        screen: QNA.currentScreen(),
+        question,
+        author,
+      }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      qInput.value = '';
+      status.textContent = '✅ 질문이 등록됐습니다!';
+      status.style.color = 'var(--green)';
+      status.classList.add('show');
+      await loadQna();
+      setTimeout(() => status.classList.remove('show'), 3000);
+    } else {
+      throw new Error(data.error || '등록 실패');
+    }
+  } catch(e) {
+    status.textContent = '❌ 오류: ' + e.message;
+    status.style.color = 'var(--red)';
+    status.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '등록';
+  }
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/\n/g,'<br>');
+}
+
+// 화면 전환 시 QnA 패널 화면 정보 업데이트
+const _origNav = nav;
+window.nav = function(key) {
+  _origNav(key);
+  updateQnaScreenInfo();
+};
+
+// 초기 로드
+setTimeout(() => {
+  updateQnaScreenInfo();
+  if (QNA.apiUrl) loadQna();
+}, 500);
+
+</script>
+
+<!-- ══ QnA FLOATING BUTTON + PANEL ══ -->
+
+<!-- 설정 패널 (초기 API URL 입력) -->
+<div class="qna-setup" id="qna-setup">
+  <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:4px">💬 QnA 설정</div>
+  <div style="font-size:11px;color:var(--text3);margin-bottom:14px;line-height:1.5">
+    Google Apps Script 배포 URL을 입력하면 질문/답변이 저장됩니다.
+  </div>
+  <input id="qna-api-url-input" placeholder="https://script.google.com/macros/s/..." 
+         style="width:100%;padding:9px 11px;background:var(--card2);border:1px solid var(--border2);
+                border-radius:9px;font-size:11px;font-family:'Noto Sans KR',sans-serif;
+                outline:none;margin-bottom:8px;color:var(--text)">
+  <button onclick="saveQnaApiUrl()"
+          style="width:100%;padding:10px;background:var(--primary);color:#fff;border:none;
+                 border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;
+                 font-family:'Noto Sans KR',sans-serif">
+    저장하고 시작하기
+  </button>
+  <div style="margin-top:8px;text-align:center">
+    <button onclick="document.getElementById('qna-setup').classList.remove('show')"
+            style="background:none;border:none;font-size:11px;color:var(--text4);
+                   cursor:pointer;font-family:'Noto Sans KR',sans-serif">
+      나중에 설정
+    </button>
+  </div>
+</div>
+
+<!-- QnA 플로팅 버튼 -->
+<button class="qna-toggle-btn" onclick="toggleQna()" title="질문/답변 열기">
+  💬
+  <div class="qna-badge" id="qna-badge" style="display:none">0</div>
+</button>
+
+<!-- QnA 패널 -->
+<div class="qna-panel" id="qna-panel">
+  <div class="qna-header">
+    <div>
+      <div class="qna-header-title">
+        💬 질문 & 답변
+        <span id="qna-count-tag" style="font-size:10px;font-weight:600;color:var(--text4)"></span>
+      </div>
+      <div class="qna-header-sub">현재 화면: <span id="qna-current-screen" style="color:var(--primary);font-weight:600"></span></div>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button onclick="loadQna()" title="새로고침"
+              style="width:28px;height:28px;border-radius:8px;background:var(--card2);
+                     border:1px solid var(--border);font-size:13px;cursor:pointer;">↻</button>
+      <div class="qna-close-btn" onclick="toggleQna()">✕</div>
+    </div>
+  </div>
+
+  <!-- 필터: 전체 / 현재 화면 -->
+  <div style="display:flex;padding:8px 16px;gap:6px;border-bottom:1px solid var(--border);flex-shrink:0">
+    <div class="chip active" id="qfilter-all"     onclick="setQFilter('all')"     style="font-size:10px;padding:4px 10px">전체</div>
+    <div class="chip"        id="qfilter-current" onclick="setQFilter('current')" style="font-size:10px;padding:4px 10px">이 화면만</div>
+    <div class="chip"        id="qfilter-unanswered" onclick="setQFilter('unanswered')" style="font-size:10px;padding:4px 10px">미답변</div>
+  </div>
+
+  <!-- 질문 목록 -->
+  <div class="qna-list" id="qna-list">
+    <div class="qna-empty">
+      <div class="qna-empty-icon">💬</div>
+      <div>아직 등록된 질문이 없습니다.</div>
+      <div style="font-size:11px;margin-top:4px">아래에서 첫 질문을 남겨보세요!</div>
+    </div>
+  </div>
+
+  <!-- 질문 입력 폼 -->
+  <div class="qna-form">
+    <div class="qna-form-label">
+      질문 등록
+      <span class="qna-screen-indicator" id="qna-form-screen">메인 홈</span>
+    </div>
+    <textarea class="qna-input" id="qna-question-input" rows="2"
+              placeholder="궁금한 점이나 확인이 필요한 사항을 입력하세요..."></textarea>
+    <div class="qna-submit-row">
+      <input class="qna-author-input" id="qna-author-input" placeholder="이름 (예: 홍길동 개발자)">
+      <button class="qna-submit-btn" id="qna-submit-btn" onclick="submitQuestion()">등록</button>
+    </div>
+    <div class="qna-status" id="qna-status"></div>
+  </div>
+</div>
+
+</body>
+</html>
