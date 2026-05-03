@@ -586,7 +586,6 @@ body {
     <button class="nav-btn" onclick="nav('news')">📰 최근 소식</button>
     <button class="nav-btn" onclick="nav('news-detail')">📄 소식 상세</button>
     <button class="nav-btn" onclick="nav('payment')">💳 결제</button>
-  </div>
   </div><!-- /nav-screens -->
   <div class="nav-screens-arrow">›</div>
   </div><!-- /nav-screens-wrap -->
@@ -1894,19 +1893,19 @@ GET /api/v1/payment/recent?limit=5</div>
 <script>
 /* ══ NAVIGATION ══ */
 const SCREEN_MAP = {
-  'home':         { sc:'sc-home',         pol:'pol-home',         ni:0 },
-  'wallet':       { sc:'sc-wallet',       pol:'pol-wallet',       ni:1 },
-  'wallet-empty': { sc:'sc-wallet-empty',  pol:'pol-wallet',       ni:3 },
-  'wallet-pci':   { sc:'sc-wallet-pci',   pol:'pol-wallet-pci',   ni:2 },
-  'wallet-other': { sc:'sc-wallet-other', pol:'pol-wallet-other', ni:3 },
-  'asset':        { sc:'sc-asset',        pol:'pol-asset',        ni:4 },
-  'pci-info':     { sc:'sc-pci-info',     pol:'pol-pci-info',     ni:5 },
-  'token-detail': { sc:'sc-token-detail', pol:'pol-token-detail', ni:6 },
-  'benefits':     { sc:'sc-benefits',     pol:'pol-benefits',     ni:7 },
-  'prediction':   { sc:'sc-prediction',   pol:'pol-prediction',   ni:8 },
-  'news':         { sc:'sc-news',         pol:'pol-news',         ni:9 },
-  'news-detail':  { sc:'sc-news-detail',  pol:'pol-news-detail',  ni:10 },
-  'payment':      { sc:'sc-payment',      pol:'pol-payment',      ni:11 },
+  'home':         { sc:'sc-home',         pol:'pol-home',         ni:0  },
+  'wallet':       { sc:'sc-wallet',       pol:'pol-wallet',       ni:1  },
+  'wallet-empty': { sc:'sc-wallet-empty', pol:'pol-wallet',       ni:2  },
+  'wallet-pci':   { sc:'sc-wallet-pci',   pol:'pol-wallet-pci',   ni:3  },
+  'wallet-other': { sc:'sc-wallet-other', pol:'pol-wallet-other', ni:4  },
+  'asset':        { sc:'sc-asset',        pol:'pol-asset',        ni:5  },
+  'pci-info':     { sc:'sc-pci-info',     pol:'pol-pci-info',     ni:6  },
+  'token-detail': { sc:'sc-token-detail', pol:'pol-token-detail', ni:7  },
+  'benefits':     { sc:'sc-benefits',     pol:'pol-benefits',     ni:8  },
+  'prediction':   { sc:'sc-prediction',   pol:'pol-prediction',   ni:9  },
+  'news':         { sc:'sc-news',         pol:'pol-news',         ni:10 },
+  'news-detail':  { sc:'sc-news-detail',  pol:'pol-news-detail',  ni:11 },
+  'payment':      { sc:'sc-payment',      pol:'pol-payment',      ni:12 },
 };
 
 function nav(key) {
@@ -1924,8 +1923,12 @@ function nav(key) {
     if (cfg.sc === 'sc-wallet') initWalletScreen();
   }
   if (po) po.classList.add('active');
-  const navBtns = document.querySelectorAll('.nav-btn');
-  if (navBtns[cfg.ni]) navBtns[cfg.ni].classList.add('active');
+  // nav-btn에서 onclick에 key가 포함된 버튼을 찾아 active 처리
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + key + "'")) {
+      b.classList.add('active');
+    }
+  });
   document.querySelector('.policy-panel').scrollTop = 0;
   document.querySelectorAll('.overlay').forEach(o => o.classList.remove('show'));
 }
