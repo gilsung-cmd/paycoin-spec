@@ -101,7 +101,7 @@ body {
 }
 .layout-inner {
   display: flex;
-  width: 960px;
+  width: 1120px;
   max-width: 100%;
   height: 100%;
 }
@@ -150,12 +150,13 @@ body {
 
 /* ══ POLICY PANEL ══ */
 .policy-panel {
-  width: 480px;
-  min-width: 480px;
-  overflow-y: auto; padding: 28px 36px;
+  width: 360px;
+  min-width: 360px;
+  overflow-y: auto; padding: 24px 24px;
   background: var(--bg-root);
   scrollbar-width: thin; scrollbar-color: var(--border2) transparent;
   position: relative;
+  border-right: 1px solid var(--border);
 }
 .policy-section { display: none; }
 .policy-section.active { display: block; animation: fadeUp .25s ease; }
@@ -523,44 +524,136 @@ body {
 .policy-group-title.has-zone:hover { color:#D97706; }
 
 
-/* ══ QnA ══ */
-.qna-fab { position:absolute; bottom:28px; right:28px; width:52px; height:52px; border-radius:50%; background:var(--primary); color:#fff; font-size:20px; border:none; cursor:pointer; box-shadow:0 4px 16px rgba(26,86,219,.35); display:flex; align-items:center; justify-content:center; z-index:20; transition:all .2s; }
-.qna-fab:hover { transform:scale(1.08); }
-.qna-fab-badge { position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:9px; font-weight:700; width:17px; height:17px; border-radius:50%; display:none; align-items:center; justify-content:center; border:2px solid var(--bg-root); }
-.qna-box { position:absolute; bottom:92px; right:28px; width:calc(100% - 56px); max-height:580px; background:var(--card); border:1px solid var(--border2); border-radius:18px; box-shadow:0 12px 40px rgba(0,0,0,.12); display:none; flex-direction:column; overflow:hidden; z-index:19; }
-.qna-box.open { display:flex; animation:qnaIn .25s cubic-bezier(.16,1,.3,1); }
-@keyframes qnaIn { from{transform:translateY(10px) scale(.97);opacity:0} to{transform:translateY(0) scale(1);opacity:1} }
-.qna-hd { padding:14px 16px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
-.qna-hd-title { font-size:14px; font-weight:800; color:var(--text); }
-.qna-hd-sub { font-size:10px; color:var(--text4); margin-top:1px; }
-.qna-list { flex:1; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
-.qna-empty { padding:28px 16px; text-align:center; font-size:12px; color:var(--text4); }
-.qna-item { padding:11px 14px; border-bottom:1px solid var(--border); }
-.qna-screen-tag { font-size:9px; font-weight:700; padding:1px 6px; border-radius:10px; background:var(--primary-l); color:var(--primary); border:1px solid #BFDBFE; }
-.qna-ts { font-size:9px; color:var(--text4); }
-.qna-q { font-size:12px; font-weight:600; color:var(--text); line-height:1.5; margin:5px 0 5px; display:flex; gap:5px; }
+
+/* ══ QnA SIDEBAR ══ */
+.qna-sidebar {
+  width: 280px;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border-left: 1px solid var(--border);
+  height: 100%;
+  overflow: hidden;
+}
+.qna-sidebar-hd {
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--card);
+}
+.qna-sidebar-title {
+  font-size: 13px; font-weight: 800; color: var(--text);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.qna-sidebar-sub {
+  font-size: 10px; color: var(--text4); margin-top: 3px;
+}
+.qna-sidebar-filters {
+  display: flex; gap: 5px; padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0; background: var(--card);
+}
+.qna-list {
+  flex: 1; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+.qna-empty {
+  padding: 28px 14px; text-align: center;
+  font-size: 12px; color: var(--text4); line-height: 1.7;
+}
+.qna-item {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.qna-item:last-child { border-bottom: none; }
+.qna-screen-tag {
+  font-size: 9px; font-weight: 700; padding: 1px 6px;
+  border-radius: 10px; background: var(--primary-l);
+  color: var(--primary); border: 1px solid #BFDBFE;
+}
+.qna-ts { font-size: 9px; color: var(--text4); }
+.qna-q {
+  font-size: 12px; font-weight: 600; color: var(--text);
+  line-height: 1.5; margin: 5px 0 5px;
+  display: flex; gap: 5px;
+}
 .qna-q::before { content:'Q'; font-weight:800; color:var(--primary); flex-shrink:0; }
-.qna-a { font-size:12px; color:var(--text2); line-height:1.5; background:var(--card2); border-radius:8px; padding:7px 10px; display:flex; gap:5px; }
+.qna-a {
+  font-size: 12px; color: var(--text2); line-height: 1.5;
+  background: var(--card2); border-radius: 8px;
+  padding: 7px 10px; display: flex; gap: 5px;
+}
 .qna-a::before { content:'A'; font-weight:800; color:var(--green); flex-shrink:0; }
-.qna-pending { font-size:11px; color:var(--text4); font-style:italic; background:var(--card2); border-radius:8px; padding:5px 9px; }
-.qna-reply-btn { font-size:10px; color:var(--primary); background:none; border:none; cursor:pointer; padding:3px 0; font-family:'Noto Sans KR',sans-serif; margin-top:4px; }
-.qna-reply-area { display:none; margin-top:7px; }
-.qna-reply-area.open { display:block; }
-.qna-ri { width:100%; padding:7px 9px; background:var(--card); border:1px solid var(--border2); border-radius:8px; font-size:12px; font-family:'Noto Sans KR',sans-serif; color:var(--text); resize:none; outline:none; line-height:1.5; }
-.qna-ri:focus { border-color:var(--green); }
-.qna-rs { margin-top:4px; width:100%; padding:7px; background:var(--green); color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:11px; font-weight:700; font-family:'Noto Sans KR',sans-serif; }
-.qna-form { padding:10px 14px 14px; border-top:1px solid var(--border); flex-shrink:0; }
-.qna-fi { width:100%; padding:8px 10px; background:var(--card2); border:1px solid var(--border2); border-radius:9px; font-size:12px; resize:none; font-family:'Noto Sans KR',sans-serif; color:var(--text); outline:none; line-height:1.5; margin-bottom:6px; }
-.qna-fi:focus { border-color:var(--primary); background:#fff; }
-.qna-frow { display:flex; gap:6px; }
-.qna-author { flex:1; padding:7px 9px; background:var(--card2); border:1px solid var(--border2); border-radius:8px; font-size:11px; outline:none; font-family:'Noto Sans KR',sans-serif; color:var(--text); }
-.qna-submit { padding:7px 14px; background:var(--primary); color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:12px; font-weight:700; font-family:'Noto Sans KR',sans-serif; white-space:nowrap; }
-.qna-submit:disabled { background:var(--text4); cursor:not-allowed; }
-.qna-status { font-size:10px; text-align:center; padding:4px 0; display:none; }
-.qna-status.show { display:block; }
-.qna-setup-box { position:absolute; bottom:92px; right:28px; width:calc(100% - 56px); background:var(--card); border:1px solid var(--border2); border-radius:16px; box-shadow:0 8px 28px rgba(0,0,0,.1); padding:18px; z-index:18; display:none; }
-.qna-setup-box.open { display:block; animation:qnaIn .2s ease; }
-.qna-su-input { width:100%; padding:9px 11px; background:var(--card2); border:1px solid var(--border2); border-radius:9px; font-size:11px; font-family:'Noto Sans KR',sans-serif; outline:none; margin-bottom:8px; color:var(--text); }
+.qna-pending {
+  font-size: 11px; color: var(--text4); font-style: italic;
+  background: var(--card2); border-radius: 8px; padding: 5px 9px;
+}
+.qna-reply-btn {
+  font-size: 10px; color: var(--primary); background: none;
+  border: none; cursor: pointer; padding: 3px 0;
+  font-family: 'Noto Sans KR', sans-serif; margin-top: 4px;
+}
+.qna-reply-area { display: none; margin-top: 7px; }
+.qna-reply-area.open { display: block; }
+.qna-ri {
+  width: 100%; padding: 7px 9px; background: var(--card);
+  border: 1px solid var(--border2); border-radius: 8px;
+  font-size: 11px; font-family: 'Noto Sans KR', sans-serif;
+  color: var(--text); resize: none; outline: none; line-height: 1.5;
+}
+.qna-ri:focus { border-color: var(--green); }
+.qna-rs {
+  margin-top: 4px; width: 100%; padding: 7px;
+  background: var(--green); color: #fff; border: none;
+  border-radius: 8px; cursor: pointer;
+  font-size: 11px; font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.qna-form {
+  padding: 10px 14px 14px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--card);
+}
+.qna-fi {
+  width: 100%; padding: 8px 10px; background: var(--card2);
+  border: 1px solid var(--border2); border-radius: 9px;
+  font-size: 11px; resize: none;
+  font-family: 'Noto Sans KR', sans-serif; color: var(--text);
+  outline: none; line-height: 1.5; margin-bottom: 6px;
+}
+.qna-fi:focus { border-color: var(--primary); background: #fff; }
+.qna-frow { display: flex; gap: 5px; }
+.qna-author {
+  flex: 1; padding: 7px 8px; background: var(--card2);
+  border: 1px solid var(--border2); border-radius: 8px;
+  font-size: 10px; outline: none;
+  font-family: 'Noto Sans KR', sans-serif; color: var(--text);
+}
+.qna-submit {
+  padding: 7px 12px; background: var(--primary); color: #fff;
+  border: none; border-radius: 8px; cursor: pointer;
+  font-size: 11px; font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif; white-space: nowrap;
+}
+.qna-submit:disabled { background: var(--text4); cursor: not-allowed; }
+.qna-status {
+  font-size: 10px; text-align: center; padding: 4px 0; display: none; margin-top: 4px;
+}
+.qna-status.show { display: block; }
+.qna-setup-inline {
+  padding: 16px; border-top: 1px solid var(--border);
+  flex-shrink: 0; background: #FFFBEB;
+  display: none;
+}
+.qna-setup-inline.show { display: block; }
+.qna-su-input {
+  width: 100%; padding: 8px 10px; background: var(--card);
+  border: 1px solid var(--border2); border-radius: 8px;
+  font-size: 11px; font-family: 'Noto Sans KR', sans-serif;
+  outline: none; margin-bottom: 7px; color: var(--text);
+}
 
 </style>
 
@@ -1842,51 +1935,58 @@ GET /api/v1/payment/recent?limit=5</div>
 </div>
 
 
-<!-- QnA 설정 -->
-<div class="qna-setup-box" id="qna-setup-box">
-  <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:3px">💬 QnA 설정</div>
-  <div style="font-size:11px;color:var(--text3);margin-bottom:12px;line-height:1.5">Google Apps Script 배포 URL을 입력하세요.</div>
-  <input id="qna-api-input" class="qna-su-input" placeholder="https://script.google.com/macros/s/...">
-  <button onclick="saveApiUrl()" style="width:100%;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">저장하고 시작하기</button>
-  <div style="margin-top:7px;text-align:center"><button onclick="document.getElementById('qna-setup-box').classList.remove('open')" style="background:none;border:none;font-size:11px;color:var(--text4);cursor:pointer;font-family:'Noto Sans KR',sans-serif;">나중에 설정</button></div>
-</div>
+</div><!-- /policy-panel -->
 
-<!-- QnA 버튼 -->
-<button class="qna-fab" id="qna-fab" onclick="toggleQna()" title="질문/답변">
-  💬
-  <div class="qna-fab-badge" id="qna-fab-badge"></div>
-</button>
-
-<!-- QnA 패널 -->
-<div class="qna-box" id="qna-box">
-  <div class="qna-hd">
-    <div>
-      <div class="qna-hd-title">💬 질문 &amp; 답변 <span id="qna-cnt" style="font-size:10px;color:var(--text4);font-weight:400"></span></div>
-      <div class="qna-hd-sub">현재 화면: <span id="qna-scr-lbl" style="color:var(--primary);font-weight:600">메인 홈</span></div>
+<!-- ══ QnA SIDEBAR ══ -->
+<div class="qna-sidebar">
+  <!-- 헤더 -->
+  <div class="qna-sidebar-hd">
+    <div class="qna-sidebar-title">
+      💬 질문 &amp; 답변
+      <div style="display:flex;gap:4px">
+        <button onclick="loadQna()" style="width:24px;height:24px;border-radius:6px;background:var(--card2);border:1px solid var(--border);font-size:11px;cursor:pointer;" title="새로고침">↻</button>
+      </div>
     </div>
-    <div style="display:flex;gap:5px">
-      <button onclick="loadQna()" style="width:26px;height:26px;border-radius:7px;background:var(--card2);border:1px solid var(--border);font-size:12px;cursor:pointer;">↻</button>
-      <button onclick="toggleQna()" style="width:26px;height:26px;border-radius:7px;background:var(--card2);border:1px solid var(--border);font-size:12px;cursor:pointer;">✕</button>
+    <div class="qna-sidebar-sub">현재: <span id="qna-scr-lbl" style="color:var(--primary);font-weight:600">메인 홈</span> · <span id="qna-cnt" style="color:var(--text4)">0건</span></div>
+  </div>
+
+  <!-- 필터 -->
+  <div class="qna-sidebar-filters">
+    <div class="chip active" id="qf-all" onclick="setQF('all')" style="font-size:10px;padding:3px 8px">전체</div>
+    <div class="chip" id="qf-cur"        onclick="setQF('cur')" style="font-size:10px;padding:3px 8px">이 화면</div>
+    <div class="chip" id="qf-un"         onclick="setQF('un')"  style="font-size:10px;padding:3px 8px">미답변</div>
+  </div>
+
+  <!-- API 설정 -->
+  <div class="qna-setup-inline" id="qna-setup-inline">
+    <div style="font-size:11px;font-weight:700;color:#92400E;margin-bottom:6px">⚙️ API URL 설정 필요</div>
+    <div style="font-size:10px;color:#92400E;margin-bottom:8px;line-height:1.5">Google Apps Script 배포 URL을 입력하면 질문/답변이 저장됩니다.</div>
+    <input id="qna-api-input" class="qna-su-input" placeholder="https://script.google.com/macros/s/...">
+    <button onclick="saveApiUrl()" style="width:100%;padding:8px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">저장</button>
+    <div style="margin-top:6px;text-align:center">
+      <button onclick="document.getElementById('qna-setup-inline').classList.remove('show')" style="background:none;border:none;font-size:10px;color:var(--text4);cursor:pointer;font-family:'Noto Sans KR',sans-serif;">나중에</button>
     </div>
   </div>
-  <div style="display:flex;padding:7px 14px;gap:5px;border-bottom:1px solid var(--border);flex-shrink:0">
-    <div class="chip active" id="qf-all"  onclick="setQF('all')"  style="font-size:10px;padding:3px 9px">전체</div>
-    <div class="chip" id="qf-cur"         onclick="setQF('cur')"  style="font-size:10px;padding:3px 9px">이 화면</div>
-    <div class="chip" id="qf-un"          onclick="setQF('un')"   style="font-size:10px;padding:3px 9px">미답변</div>
+
+  <!-- 질문 목록 -->
+  <div class="qna-list" id="qna-list">
+    <div class="qna-empty">💬<br>등록된 질문이 없습니다.<br><span style="font-size:10px">아래에서 첫 질문을 남겨보세요!</span></div>
   </div>
-  <div class="qna-list" id="qna-list"><div class="qna-empty">💬<br>등록된 질문이 없습니다.</div></div>
+
+  <!-- 질문 입력 폼 -->
   <div class="qna-form">
-    <div style="font-size:11px;font-weight:600;color:var(--text3);margin-bottom:5px">질문 등록 — <span id="qna-form-scr" style="color:var(--primary);font-weight:700">메인 홈</span></div>
+    <div style="font-size:10px;font-weight:600;color:var(--text3);margin-bottom:5px">
+      질문 — <span id="qna-form-scr" style="color:var(--primary);font-weight:700">메인 홈</span>
+    </div>
     <textarea class="qna-fi" id="qna-q" rows="2" placeholder="궁금한 점을 입력하세요..."></textarea>
     <div class="qna-frow">
-      <input class="qna-author" id="qna-author" placeholder="이름 (예: 홍길동 개발자)">
+      <input class="qna-author" id="qna-author" placeholder="이름 (개발자)">
       <button class="qna-submit" id="qna-sub-btn" onclick="submitQ()">등록</button>
     </div>
     <div class="qna-status" id="qna-status"></div>
   </div>
-</div>
+</div><!-- /qna-sidebar -->
 
-</div><!-- /policy-panel -->
 </div><!-- /layout-inner -->
 </div><!-- /layout -->
 
@@ -2208,13 +2308,16 @@ const QNA = {
   init(){ try{ this.apiUrl=localStorage.getItem('qna_api')||''; }catch(e){} }
 };
 QNA.init();
+// API URL 없으면 설정 섹션 표시
+setTimeout(function(){
+  if(!QNA.apiUrl){
+    const s = document.getElementById('qna-setup-inline');
+    if(s) s.classList.add('show');
+  } else {
+    loadQna();
+  }
+}, 600);
 
-function toggleQna(){
-  const box=document.getElementById('qna-box');
-  const isOpen=box.classList.toggle('open');
-  updateQnaLabels();
-  if(isOpen){ if(!QNA.apiUrl){ document.getElementById('qna-setup-box').classList.add('open'); } else { loadQna(); } }
-}
 function updateQnaLabels(){
   const lbl=QNA.curLabel();
   const el1=document.getElementById('qna-scr-lbl');
@@ -2227,7 +2330,7 @@ function saveApiUrl(){
   if(!url.startsWith('https://')){ alert('올바른 URL을 입력해주세요.'); return; }
   try{ localStorage.setItem('qna_api',url); }catch(e){}
   QNA.apiUrl=url;
-  document.getElementById('qna-setup-box').classList.remove('open');
+  document.getElementById('qna-setup-inline').classList.remove('show');
   loadQna();
 }
 function setQF(f){
@@ -2295,7 +2398,7 @@ async function submitQ(){
   const q=(qEl||{}).value||'';
   const author=(aEl||{}).value||'익명';
   if(!q.trim()){ if(qEl) qEl.focus(); return; }
-  if(!QNA.apiUrl){ document.getElementById('qna-setup-box').classList.add('open'); return; }
+  if(!QNA.apiUrl){ document.getElementById('qna-setup-inline').classList.add('show'); return; }
   btn.disabled=true; btn.textContent='등록 중...';
   st.classList.remove('show');
   try{
