@@ -693,6 +693,64 @@ body {
   border: 1px solid var(--border); vertical-align: middle;
 }
 
+
+/* ══ SHEET GUIDE MODAL ══ */
+.guide-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4); backdrop-filter: blur(3px);
+  z-index: 600; display: none; align-items: center; justify-content: center;
+}
+.guide-overlay.open { display: flex; }
+.guide-modal {
+  background: var(--card); border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.2);
+  width: 680px; max-width: 94vw;
+  max-height: 82vh; display: flex; flex-direction: column;
+  overflow: hidden; animation: qnaIn .25s ease;
+}
+.guide-modal-hd {
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.guide-modal-title { font-size: 15px; font-weight: 800; color: var(--text); }
+.guide-modal-body {
+  overflow-y: auto; padding: 20px 22px;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+.guide-section { margin-bottom: 24px; }
+.guide-section-title {
+  font-size: 12px; font-weight: 800; color: var(--primary);
+  letter-spacing: 1px; text-transform: uppercase;
+  margin-bottom: 10px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.guide-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.guide-table th {
+  background: var(--primary-l); color: var(--primary);
+  font-weight: 700; padding: 7px 10px; text-align: left;
+  border: 1px solid #BFDBFE; font-size: 11px;
+}
+.guide-table td {
+  padding: 6px 10px; border: 1px solid var(--border);
+  color: var(--text2); line-height: 1.5; vertical-align: top;
+}
+.guide-table tr:hover td { background: var(--card2); }
+.guide-table .key {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--primary); font-weight: 600;
+  background: var(--primary-l); padding: 1px 6px;
+  border-radius: 4px; white-space: nowrap;
+}
+.guide-copy-btn {
+  font-size: 10px; color: var(--text4); background: none;
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 1px 6px; cursor: pointer; margin-left: 4px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.guide-copy-btn:hover { background: var(--card2); color: var(--text2); }
+
 </style>
 
 </head>
@@ -1999,6 +2057,7 @@ GET /api/v1/payment/recent?limit=5</div>
     <div class="qna-sidebar-title">
       💬 질문 &amp; 답변
       <div style="display:flex;gap:4px">
+        <button onclick="showSheetGuide()" style="width:24px;height:24px;border-radius:6px;background:var(--gold-l);border:1px solid #FDE68A;font-size:11px;cursor:pointer;" title="Sheets 작성 가이드">📋</button>
         <button onclick="loadQna()" style="width:24px;height:24px;border-radius:6px;background:var(--card2);border:1px solid var(--border);font-size:11px;cursor:pointer;" title="새로고침">↻</button>
       </div>
     </div>
@@ -2628,51 +2687,51 @@ function renderDescForScreen(screenKey) {
     // 그룹 타이틀 — zone 연결 가능한 item이 있으면 첫 번째 zone_id 사용
     const firstZone = groupItems.find(i => i.zone_id);
     const gtClass   = firstZone ? 'policy-group-title has-zone' : 'policy-group-title';
-    const gtClick   = firstZone
-      ? `onclick="hlZone('${firstZone.zone_id}','${escDesc(groupTitle)}')"` : '';
+    // onclick: safeGroup/safeZone 으로 따옴표 처리
+    var sg = groupTitle.replace(/'/g, "&#39;");
+    var gtAttr = firstZone
+      ? ('onclick="hlZone(\'' + firstZone.zone_id + '\',\'' + sg + '\')"')
+      : '';
 
-    html += `<div class="policy-group">
-      <div class="${gtClass}" ${gtClick}>${escDesc(groupTitle)}</div>`;
+    html += '<div class="policy-group">';
+    html += '<div class="' + gtClass + '" ' + gtAttr + '>' + escDesc(groupTitle) + '</div>';
 
-    groupItems.forEach(item => {
-      const content    = item.content || '';
-      const importance = item.importance || '';
-      const zoneId     = item.zone_id || '';
-      const dotCls     = DESC.dotClass(importance);
+    groupItems.forEach(function(item) {
+      var content    = item.content    || '';
+      var importance = item.importance || '';
+      var zoneId     = item.zone_id    || '';
+      var dotCls     = DESC.dotClass(importance);
 
-      // 코드 박스
-      if (importance === '코드' || content.startsWith('`')) {
-        const codeText = content.replace(/^`|`$/g, '');
-        html += `<div class="policy-code">${escDesc(codeText)}</div>`;
+      if (importance === '코드' || content.charAt(0) === '`') {
+        var codeText = content.replace(/^`|`$/g, '');
+        html += '<div class="policy-code">' + escDesc(codeText) + '</div>';
 
-      // 경고 박스
-      } else if (importance === '경고' || content.startsWith('⚠️')) {
-        html += `<div class="policy-warn">${escDesc(content)}</div>`;
+      } else if (importance === '경고' || content.indexOf('⚠️') === 0) {
+        html += '<div class="policy-warn">' + escDesc(content) + '</div>';
 
-      // 일반 항목
       } else {
-        const hasZone  = zoneId ? ' has-zone' : '';
-        const onClick  = zoneId
-          ? `onclick="hlZone('${zoneId}','${escDesc(groupTitle)}')"` : '';
-        const dotColor = dotCls ? ` class="pd ${dotCls}"` : ' class="pd"';
-        html += `<div class="policy-item${hasZone}" ${onClick}>
-          <div${dotColor}></div>${escDesc(content)}
-        </div>`;
+        var hasZone  = zoneId ? ' has-zone' : '';
+        var sz       = zoneId.replace(/'/g, "&#39;");
+        var itemAttr = zoneId
+          ? ('onclick="hlZone(\'' + sz + '\',\'' + sg + '\')"')
+          : '';
+        var dotAttr  = dotCls ? ' class="pd ' + dotCls + '"' : ' class="pd"';
+        html += '<div class="policy-item' + hasZone + '" ' + itemAttr + '>';
+        html += '<div' + dotAttr + '></div>' + escDesc(content);
+        html += '</div>';
       }
-    });
-
-    html += `</div>`; // /policy-group
+    });    html += `</div>`; // /policy-group
   });
 
   sec.innerHTML = html;
 }
 
 function escDesc(s) {
+  // onclick 속성값에는 사용하지 말 것 (safeGroup/safeZone 사용)
   return String(s || '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/>/g, '&gt;');
 }
 
 // QnA API URL 변경 시 description도 함께 로드
@@ -2687,6 +2746,159 @@ setTimeout(function() {
   if (QNA.apiUrl) loadDesc();
 }, 700);
 
+
+/* ══ SHEET GUIDE ══ */
+function showSheetGuide() {
+  document.getElementById('guide-overlay').classList.add('open');
+}
+function closeGuide() {
+  document.getElementById('guide-overlay').classList.remove('open');
+}
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    // 복사 완료 토스트
+    const t = document.createElement('div');
+    t.textContent = '✅ 복사됨: ' + text;
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);' +
+      'background:#1A56DB;color:#fff;padding:8px 18px;border-radius:10px;' +
+      'font-size:12px;font-weight:600;z-index:999;pointer-events:none;' +
+      "font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.2);";
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2000);
+  }).catch(() => {
+    // clipboard API 실패 시 폴백
+    const inp = document.createElement('input');
+    inp.value = text;
+    document.body.appendChild(inp);
+    inp.select();
+    document.execCommand('copy');
+    inp.remove();
+  });
+}
+// ESC 키로 닫기
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeGuide();
+});
+
 </script>
+
+<!-- ══ SHEET GUIDE MODAL ══ -->
+<div class="guide-overlay" id="guide-overlay" onclick="if(event.target===this)closeGuide()">
+  <div class="guide-modal">
+    <div class="guide-modal-hd">
+      <div class="guide-modal-title">📋 Google Sheets 작성 가이드</div>
+      <button onclick="closeGuide()" style="width:28px;height:28px;border-radius:8px;background:var(--card2);border:1px solid var(--border);font-size:14px;cursor:pointer;">✕</button>
+    </div>
+    <div class="guide-modal-body">
+
+      <!-- 작성 규칙 -->
+      <div class="guide-section">
+        <div class="guide-section-title">📌 작성 규칙</div>
+        <table class="guide-table">
+          <tr><th style="width:90px">컬럼</th><th>설명</th><th style="width:180px">예시</th></tr>
+          <tr><td><strong>A: screen_key</strong></td><td>화면 식별자. 아래 목록에서 복사해서 사용</td><td><span class="key">home</span>, <span class="key">wallet</span></td></tr>
+          <tr><td><strong>B: 그룹명</strong></td><td>같은 이름끼리 자동으로 묶임. 자유롭게 작성</td><td>롤링 배너, API 명세</td></tr>
+          <tr><td><strong>C: 내용</strong></td><td>설명 텍스트. ⚠️로 시작 → 경고박스. 중요도가 코드 → 코드박스</td><td>자동 3초 롤링</td></tr>
+          <tr><td><strong>D: 중요도</strong></td><td>드롭다운 선택. 표시 스타일 결정</td><td>필수 / 일반 / 경고 / 참고 / 코드</td></tr>
+          <tr><td><strong>E: zone_id</strong></td><td>채우면 항목 클릭 시 UI 해당 영역 하이라이트. 비워도 됨</td><td><span class="key">home-banner</span></td></tr>
+        </table>
+      </div>
+
+      <!-- 중요도 -->
+      <div class="guide-section">
+        <div class="guide-section-title">🎨 중요도별 표시</div>
+        <table class="guide-table">
+          <tr><th>중요도</th><th>표시 방식</th><th>언제 사용</th></tr>
+          <tr><td>필수</td><td>🔴 빨간 점</td><td>반드시 지켜야 할 정책</td></tr>
+          <tr><td>일반</td><td>🔵 파란 점</td><td>일반 동작 설명</td></tr>
+          <tr><td>경고</td><td>🟠 주황 경고박스</td><td>미확정 항목, 주의 필요</td></tr>
+          <tr><td>참고</td><td>🟢 초록 점</td><td>참고 정보</td></tr>
+          <tr><td>코드</td><td>💻 코드 박스</td><td>API 명세, 코드 예시</td></tr>
+        </table>
+      </div>
+
+      <!-- screen_key 목록 -->
+      <div class="guide-section">
+        <div class="guide-section-title">🖥️ screen_key 목록</div>
+        <table class="guide-table">
+          <tr><th style="width:200px">screen_key</th><th>화면 이름</th></tr>
+          <tr><td><span class="key">home</span><button class="guide-copy-btn" onclick="copyText('home')">복사</button></td><td>메인 홈</td></tr>
+<tr><td><span class="key">wallet</span><button class="guide-copy-btn" onclick="copyText('wallet')">복사</button></td><td>지갑</td></tr>
+<tr><td><span class="key">wallet-empty</span><button class="guide-copy-btn" onclick="copyText('wallet-empty')">복사</button></td><td>지갑 (미연결)</td></tr>
+<tr><td><span class="key">wallet-pci</span><button class="guide-copy-btn" onclick="copyText('wallet-pci')">복사</button></td><td>지갑상세 (PCI)</td></tr>
+<tr><td><span class="key">wallet-other</span><button class="guide-copy-btn" onclick="copyText('wallet-other')">복사</button></td><td>지갑상세 (기타코인)</td></tr>
+<tr><td><span class="key">asset</span><button class="guide-copy-btn" onclick="copyText('asset')">복사</button></td><td>자산현황</td></tr>
+<tr><td><span class="key">pci-info</span><button class="guide-copy-btn" onclick="copyText('pci-info')">복사</button></td><td>PCI 정보</td></tr>
+<tr><td><span class="key">token-detail</span><button class="guide-copy-btn" onclick="copyText('token-detail')">복사</button></td><td>토큰 상세</td></tr>
+<tr><td><span class="key">benefits</span><button class="guide-copy-btn" onclick="copyText('benefits')">복사</button></td><td>혜택</td></tr>
+<tr><td><span class="key">prediction</span><button class="guide-copy-btn" onclick="copyText('prediction')">복사</button></td><td>등락 예측</td></tr>
+<tr><td><span class="key">news</span><button class="guide-copy-btn" onclick="copyText('news')">복사</button></td><td>최근 소식</td></tr>
+<tr><td><span class="key">news-detail</span><button class="guide-copy-btn" onclick="copyText('news-detail')">복사</button></td><td>소식 상세</td></tr>
+<tr><td><span class="key">payment</span><button class="guide-copy-btn" onclick="copyText('payment')">복사</button></td><td>결제</td></tr>
+        </table>
+      </div>
+
+      <!-- zone_id 목록 -->
+      <div class="guide-section">
+        <div class="guide-section-title">🎯 zone_id 목록 (UI 하이라이트 연결용)</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:8px">E열(zone_id)에 입력하면 해당 항목 클릭 시 UI에서 해당 영역이 황금색으로 표시됩니다.</div>
+        <table class="guide-table">
+          <tr><th style="width:220px">zone_id</th><th>연결되는 UI 영역</th></tr>
+          <tr><td><span class="key">home-header</span><button class="guide-copy-btn" onclick="copyText('home-header')">복사</button></td><td>홈 — 상단 헤더 (로고, 알림버튼)</td></tr>
+<tr><td><span class="key">home-asset</span><button class="guide-copy-btn" onclick="copyText('home-asset')">복사</button></td><td>홈 — 자산 합계 카드</td></tr>
+<tr><td><span class="key">home-banner</span><button class="guide-copy-btn" onclick="copyText('home-banner')">복사</button></td><td>홈 — 롤링 배너</td></tr>
+<tr><td><span class="key">home-tiles</span><button class="guide-copy-btn" onclick="copyText('home-tiles')">복사</button></td><td>홈 — 타일 메뉴 전체</td></tr>
+<tr><td><span class="key">home-news</span><button class="guide-copy-btn" onclick="copyText('home-news')">복사</button></td><td>홈 — 최근 소식 목록</td></tr>
+<tr><td><span class="key">wallet-summary</span><button class="guide-copy-btn" onclick="copyText('wallet-summary')">복사</button></td><td>지갑 — 자산 요약 카드</td></tr>
+<tr><td><span class="key">wallet-tabs</span><button class="guide-copy-btn" onclick="copyText('wallet-tabs')">복사</button></td><td>지갑 — 탭 필터 (전체/내지갑/빗썸...)</td></tr>
+<tr><td><span class="key">wallet-pred-banner</span><button class="guide-copy-btn" onclick="copyText('wallet-pred-banner')">복사</button></td><td>지갑 — 등락 예측 배너</td></tr>
+<tr><td><span class="key">wallet-list</span><button class="guide-copy-btn" onclick="copyText('wallet-list')">복사</button></td><td>지갑 — 지갑 목록</td></tr>
+<tr><td><span class="key">wallet-empty-connect</span><button class="guide-copy-btn" onclick="copyText('wallet-empty-connect')">복사</button></td><td>지갑(미연결) — 거래소 연결 유도</td></tr>
+<tr><td><span class="key">wpci-header</span><button class="guide-copy-btn" onclick="copyText('wpci-header')">복사</button></td><td>지갑상세(PCI) — 코인 헤더</td></tr>
+<tr><td><span class="key">wpci-actions</span><button class="guide-copy-btn" onclick="copyText('wpci-actions')">복사</button></td><td>지갑상세(PCI) — 출금/PCI정보 버튼</td></tr>
+<tr><td><span class="key">wpci-address</span><button class="guide-copy-btn" onclick="copyText('wpci-address')">복사</button></td><td>지갑상세(PCI) — 지갑 주소</td></tr>
+<tr><td><span class="key">wpci-price</span><button class="guide-copy-btn" onclick="copyText('wpci-price')">복사</button></td><td>지갑상세(PCI) — 시세 정보</td></tr>
+<tr><td><span class="key">wpci-txlist</span><button class="guide-copy-btn" onclick="copyText('wpci-txlist')">복사</button></td><td>지갑상세(PCI) — 거래 내역</td></tr>
+<tr><td><span class="key">wother-header</span><button class="guide-copy-btn" onclick="copyText('wother-header')">복사</button></td><td>지갑상세(기타) — 코인 헤더</td></tr>
+<tr><td><span class="key">wother-actions</span><button class="guide-copy-btn" onclick="copyText('wother-actions')">복사</button></td><td>지갑상세(기타) — 거래소이동/코인정보 버튼</td></tr>
+<tr><td><span class="key">wother-txguide</span><button class="guide-copy-btn" onclick="copyText('wother-txguide')">복사</button></td><td>지갑상세(기타) — 거래내역 안내</td></tr>
+<tr><td><span class="key">asset-summary</span><button class="guide-copy-btn" onclick="copyText('asset-summary')">복사</button></td><td>자산현황 — 자산 합계 카드</td></tr>
+<tr><td><span class="key">asset-chart</span><button class="guide-copy-btn" onclick="copyText('asset-chart')">복사</button></td><td>자산현황 — 자산 차트</td></tr>
+<tr><td><span class="key">asset-distribution</span><button class="guide-copy-btn" onclick="copyText('asset-distribution')">복사</button></td><td>자산현황 — 자산 비중 그래프</td></tr>
+<tr><td><span class="key">asset-list</span><button class="guide-copy-btn" onclick="copyText('asset-list')">복사</button></td><td>자산현황 — 보유 자산 목록</td></tr>
+<tr><td><span class="key">pci-price</span><button class="guide-copy-btn" onclick="copyText('pci-price')">복사</button></td><td>PCI정보 — 대표 시세</td></tr>
+<tr><td><span class="key">pci-pred-banner</span><button class="guide-copy-btn" onclick="copyText('pci-pred-banner')">복사</button></td><td>PCI정보 — 등락 예측 배너</td></tr>
+<tr><td><span class="key">pci-exchanges</span><button class="guide-copy-btn" onclick="copyText('pci-exchanges')">복사</button></td><td>PCI정보 — 상장 거래소 목록</td></tr>
+<tr><td><span class="key">token-header</span><button class="guide-copy-btn" onclick="copyText('token-header')">복사</button></td><td>토큰상세 — 거래소+코인 헤더</td></tr>
+<tr><td><span class="key">token-price</span><button class="guide-copy-btn" onclick="copyText('token-price')">복사</button></td><td>토큰상세 — 시세 카드</td></tr>
+<tr><td><span class="key">token-wallet</span><button class="guide-copy-btn" onclick="copyText('token-wallet')">복사</button></td><td>토큰상세 — 연결 지갑</td></tr>
+<tr><td><span class="key">ben-banner</span><button class="guide-copy-btn" onclick="copyText('ben-banner')">복사</button></td><td>혜택 — 이벤트 배너</td></tr>
+<tr><td><span class="key">ben-daily</span><button class="guide-copy-btn" onclick="copyText('ben-daily')">복사</button></td><td>혜택 — 매일 참여 목록</td></tr>
+<tr><td><span class="key">ben-referral</span><button class="guide-copy-btn" onclick="copyText('ben-referral')">복사</button></td><td>혜택 — 추천/공유</td></tr>
+<tr><td><span class="key">ben-payment</span><button class="guide-copy-btn" onclick="copyText('ben-payment')">복사</button></td><td>혜택 — 결제/쇼핑 혜택</td></tr>
+<tr><td><span class="key">pred-yesterday</span><button class="guide-copy-btn" onclick="copyText('pred-yesterday')">복사</button></td><td>등락예측 — 어제 결과 카드</td></tr>
+<tr><td><span class="key">pred-base-price</span><button class="guide-copy-btn" onclick="copyText('pred-base-price')">복사</button></td><td>등락예측 — 오늘 기준가</td></tr>
+<tr><td><span class="key">pred-stats-bar</span><button class="guide-copy-btn" onclick="copyText('pred-stats-bar')">복사</button></td><td>등락예측 — 참여 현황 바</td></tr>
+<tr><td><span class="key">pred-vote-btns</span><button class="guide-copy-btn" onclick="copyText('pred-vote-btns')">복사</button></td><td>등락예측 — 투표 버튼</td></tr>
+<tr><td><span class="key">pred-tabs</span><button class="guide-copy-btn" onclick="copyText('pred-tabs')">복사</button></td><td>등락예측 — 하단 탭 (참여내역/랭킹)</td></tr>
+<tr><td><span class="key">pred-calendar</span><button class="guide-copy-btn" onclick="copyText('pred-calendar')">복사</button></td><td>등락예측 — 캘린더</td></tr>
+<tr><td><span class="key">pred-ranking-table</span><button class="guide-copy-btn" onclick="copyText('pred-ranking-table')">복사</button></td><td>등락예측 — 랭킹 테이블</td></tr>
+<tr><td><span class="key">news-search</span><button class="guide-copy-btn" onclick="copyText('news-search')">복사</button></td><td>최근소식 — 검색/필터</td></tr>
+<tr><td><span class="key">news-list</span><button class="guide-copy-btn" onclick="copyText('news-list')">복사</button></td><td>최근소식 — 소식 목록</td></tr>
+<tr><td><span class="key">news-more</span><button class="guide-copy-btn" onclick="copyText('news-more')">복사</button></td><td>최근소식 — 더보기 버튼</td></tr>
+<tr><td><span class="key">newsdet-header</span><button class="guide-copy-btn" onclick="copyText('newsdet-header')">복사</button></td><td>소식상세 — 제목/출처/원문링크</td></tr>
+<tr><td><span class="key">newsdet-nav</span><button class="guide-copy-btn" onclick="copyText('newsdet-nav')">복사</button></td><td>소식상세 — 이전글/다음글/목록</td></tr>
+<tr><td><span class="key">pay-summary</span><button class="guide-copy-btn" onclick="copyText('pay-summary')">복사</button></td><td>결제 — 이번달 누적 결제</td></tr>
+<tr><td><span class="key">pay-buttons</span><button class="guide-copy-btn" onclick="copyText('pay-buttons')">복사</button></td><td>결제 — QR/바코드 버튼</td></tr>
+<tr><td><span class="key">pay-event-banner</span><button class="guide-copy-btn" onclick="copyText('pay-event-banner')">복사</button></td><td>결제 — 이벤트 배너</td></tr>
+<tr><td><span class="key">pay-merchants</span><button class="guide-copy-btn" onclick="copyText('pay-merchants')">복사</button></td><td>결제 — 가맹점 혜택 슬라이드</td></tr>
+<tr><td><span class="key">pay-recent</span><button class="guide-copy-btn" onclick="copyText('pay-recent')">복사</button></td><td>결제 — 최근 결제 내역</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
