@@ -2810,6 +2810,15 @@ document.addEventListener('keydown', function(e) {
 setTimeout(updateQnaLabels, 400);
 
 /* ══ INIT ══ */
+// 예측 화면: 소개 화면 기본 표시
+(function() {
+  const intro = document.getElementById('pred-intro');
+  const main  = document.getElementById('pred-main');
+  if (intro) intro.style.display = 'block';
+  if (main)  main.style.display  = 'none';
+})();
+
+nav('home');  // 초기 화면 활성화
 setTimeout(loadConfig, 600);
 
 </script>
