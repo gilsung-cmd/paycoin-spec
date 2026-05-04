@@ -92,15 +92,23 @@ body {
 
 /* ══ LAYOUT ══ */
 .layout {
-  display: grid;
-  grid-template-columns: 1fr 430px 1fr;
+  display: flex;
+  justify-content: center;
   height: 100vh;
   padding-top: 52px;
+  overflow: clip;
+}
+.layout-inner {
+  display: flex;
+  width: 1120px;
+  max-width: 100%;
+  height: 100%;
 }
 
 /* ══ PHONE PANEL ══ */
 .phone-panel {
-  grid-column: 2;
+  width: 480px;
+  min-width: 480px;
   display: flex; align-items: center; justify-content: center;
   background: var(--bg-phone);
   border-left: 1px solid var(--border);
@@ -131,21 +139,22 @@ body {
 
 .screen {
   position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  overflow-y: auto; overflow-x: hidden;
+  overflow: hidden;
   display: none; background: var(--screen-bg);
-  scrollbar-width: none;
+  flex-direction: column;
 }
 .screen::-webkit-scrollbar { display: none; }
-.screen.active { display: block; animation: slideIn .28s cubic-bezier(.16,1,.3,1); }
+.screen.active { display: flex; animation: slideIn .28s cubic-bezier(.16,1,.3,1); }
 @keyframes slideIn { from { transform: translateX(16px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
 /* ══ POLICY PANEL ══ */
 .policy-panel {
   width: 360px;
   min-width: 360px;
-  overflow-y: auto; padding: 22px 22px;
+  overflow-y: auto; padding: 24px 24px;
   background: var(--bg-root);
   scrollbar-width: thin; scrollbar-color: var(--border2) transparent;
+  position: relative;
   border-right: 1px solid var(--border);
 }
 .policy-section { display: none; }
@@ -210,6 +219,7 @@ body {
 
 /* ══ APP HEADER ══ */
 .aheader {
+  flex-shrink: 0;
   padding: 2px 16px 12px;
   display: flex; align-items: center; justify-content: space-between;
 }
@@ -233,7 +243,14 @@ body {
 }
 
 /* ══ SCREEN BODY ══ */
-.sbody { padding-bottom: 76px; }
+.sbody {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  padding-bottom: 16px;
+}
+.sbody::-webkit-scrollbar { display: none; }
 
 /* ══ CARD ══ */
 .card {
@@ -319,11 +336,12 @@ body {
 
 /* ══ BOTTOM TAB BAR ══ */
 .tab-bar {
-  position: sticky; bottom: 0;
+  flex-shrink: 0;
   height: 68px; background: var(--card);
   border-top: 1px solid var(--border);
   box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
   display: flex; align-items: flex-start; padding-top: 8px;
+  position: relative; z-index: 10;
 }
 .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
 .tab-icon { font-size: 20px; }
@@ -397,7 +415,7 @@ body {
 .divider { height: 8px; background: var(--bg-root); }
 
 /* ══ BACK HEADER ══ */
-.back-header { padding: 4px 14px 10px; display: flex; align-items: center; gap: 10px; }
+.back-header { flex-shrink: 0; padding: 4px 14px 10px; display: flex; align-items: center; gap: 10px; }
 .back-btn { font-size: 13px; color: var(--primary); cursor: pointer; padding: 4px 0; font-weight: 500; }
 
 /* ══ OVERLAY / MODAL ══ */
@@ -514,102 +532,224 @@ body {
 .policy-group-title.has-zone:hover { color:#D97706; }
 
 
-/* ══ QnA ══ */
-.qna-fab { position:absolute; bottom:28px; right:28px; width:52px; height:52px; border-radius:50%; background:var(--primary); color:#fff; font-size:20px; border:none; cursor:pointer; box-shadow:0 4px 16px rgba(26,86,219,.35); display:flex; align-items:center; justify-content:center; z-index:20; transition:all .2s; }
-.qna-fab:hover { transform:scale(1.08); }
-.qna-fab-badge { position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:9px; font-weight:700; width:17px; height:17px; border-radius:50%; display:none; align-items:center; justify-content:center; border:2px solid var(--bg-root); }
-.qna-box { position:absolute; bottom:92px; right:28px; width:calc(100% - 56px); max-height:580px; background:var(--card); border:1px solid var(--border2); border-radius:18px; box-shadow:0 12px 40px rgba(0,0,0,.12); display:none; flex-direction:column; overflow:hidden; z-index:19; }
-.qna-box.open { display:flex; animation:qnaIn .25s cubic-bezier(.16,1,.3,1); }
-@keyframes qnaIn { from{transform:translateY(10px) scale(.97);opacity:0} to{transform:translateY(0) scale(1);opacity:1} }
-.qna-hd { padding:14px 16px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
-.qna-hd-title { font-size:14px; font-weight:800; color:var(--text); }
-.qna-hd-sub { font-size:10px; color:var(--text4); margin-top:1px; }
-.qna-list { flex:1; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
-.qna-empty { padding:28px 16px; text-align:center; font-size:12px; color:var(--text4); }
-.qna-item { padding:11px 14px; border-bottom:1px solid var(--border); }
-.qna-screen-tag { font-size:9px; font-weight:700; padding:1px 6px; border-radius:10px; background:var(--primary-l); color:var(--primary); border:1px solid #BFDBFE; }
-.qna-ts { font-size:9px; color:var(--text4); }
-.qna-q { font-size:12px; font-weight:600; color:var(--text); line-height:1.5; margin:5px 0 5px; display:flex; gap:5px; }
-.qna-q::before { content:'Q'; font-weight:800; color:var(--primary); flex-shrink:0; }
-.qna-a { font-size:12px; color:var(--text2); line-height:1.5; background:var(--card2); border-radius:8px; padding:7px 10px; display:flex; gap:5px; }
-.qna-a::before { content:'A'; font-weight:800; color:var(--green); flex-shrink:0; }
-.qna-pending { font-size:11px; color:var(--text4); font-style:italic; background:var(--card2); border-radius:8px; padding:5px 9px; }
-.qna-reply-btn { font-size:10px; color:var(--primary); background:none; border:none; cursor:pointer; padding:3px 0; font-family:'Noto Sans KR',sans-serif; margin-top:4px; }
-.qna-reply-area { display:none; margin-top:7px; }
-.qna-reply-area.open { display:block; }
-.qna-ri { width:100%; padding:7px 9px; background:var(--card); border:1px solid var(--border2); border-radius:8px; font-size:12px; font-family:'Noto Sans KR',sans-serif; color:var(--text); resize:none; outline:none; line-height:1.5; }
-.qna-ri:focus { border-color:var(--green); }
-.qna-rs { margin-top:4px; width:100%; padding:7px; background:var(--green); color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:11px; font-weight:700; font-family:'Noto Sans KR',sans-serif; }
-.qna-form { padding:10px 14px 14px; border-top:1px solid var(--border); flex-shrink:0; }
-.qna-fi { width:100%; padding:8px 10px; background:var(--card2); border:1px solid var(--border2); border-radius:9px; font-size:12px; resize:none; font-family:'Noto Sans KR',sans-serif; color:var(--text); outline:none; line-height:1.5; margin-bottom:6px; }
-.qna-fi:focus { border-color:var(--primary); background:#fff; }
-.qna-frow { display:flex; gap:6px; }
-.qna-author { flex:1; padding:7px 9px; background:var(--card2); border:1px solid var(--border2); border-radius:8px; font-size:11px; outline:none; font-family:'Noto Sans KR',sans-serif; color:var(--text); }
-.qna-submit { padding:7px 14px; background:var(--primary); color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:12px; font-weight:700; font-family:'Noto Sans KR',sans-serif; white-space:nowrap; }
-.qna-submit:disabled { background:var(--text4); cursor:not-allowed; }
-.qna-status { font-size:10px; text-align:center; padding:4px 0; display:none; }
-.qna-status.show { display:block; }
-.qna-setup-box { position:absolute; bottom:92px; right:28px; width:calc(100% - 56px); background:var(--card); border:1px solid var(--border2); border-radius:16px; box-shadow:0 8px 28px rgba(0,0,0,.1); padding:18px; z-index:18; display:none; }
-.qna-setup-box.open { display:block; animation:qnaIn .2s ease; }
-.qna-su-input { width:100%; padding:9px 11px; background:var(--card2); border:1px solid var(--border2); border-radius:9px; font-size:11px; font-family:'Noto Sans KR',sans-serif; outline:none; margin-bottom:8px; color:var(--text); }
-
 
 /* ══ QnA SIDEBAR ══ */
-.qna-sidebar { width:280px;min-width:280px;display:flex;flex-direction:column;background:var(--card);border-left:1px solid var(--border);height:100%;overflow:hidden; }
-.qna-sidebar-hd { padding:14px 14px 11px;border-bottom:1px solid var(--border);flex-shrink:0; }
-.qna-sidebar-title { font-size:13px;font-weight:800;color:var(--text);display:flex;align-items:center;justify-content:space-between; }
-.qna-sidebar-sub { font-size:10px;color:var(--text4);margin-top:3px; }
-.qna-sidebar-filters { display:flex;gap:5px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0; }
-.qna-list { flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent; }
-.qna-empty { padding:24px 12px;text-align:center;font-size:12px;color:var(--text4);line-height:1.7; }
-.qna-item { padding:10px 13px;border-bottom:1px solid var(--border); }
-.qna-screen-tag { font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;transition:all .15s; }
-.qna-screen-tag:hover { background:var(--primary);color:#fff; }
-.qna-ts { font-size:9px;color:var(--text4); }
-.qna-q { font-size:12px;font-weight:600;color:var(--text);line-height:1.5;margin:5px 0;display:flex;gap:5px; }
-.qna-q::before { content:'Q';font-weight:800;color:var(--primary);flex-shrink:0; }
-.qna-a { font-size:12px;color:var(--text2);line-height:1.5;background:var(--card2);border-radius:8px;padding:7px 10px;display:flex;gap:5px; }
-.qna-a::before { content:'A';font-weight:800;color:var(--green);flex-shrink:0; }
-.qna-pending { font-size:11px;color:var(--text4);font-style:italic;background:var(--card2);border-radius:8px;padding:5px 9px; }
-.qna-reply-btn { font-size:10px;color:var(--primary);background:none;border:none;cursor:pointer;padding:3px 0;font-family:'Noto Sans KR',sans-serif;margin-top:4px; }
-.qna-reply-area { display:none;margin-top:7px; }
-.qna-reply-area.open { display:block; }
-.qna-ri { width:100%;padding:7px 9px;background:var(--card);border:1px solid var(--border2);border-radius:8px;font-size:11px;font-family:'Noto Sans KR',sans-serif;color:var(--text);resize:none;outline:none;line-height:1.5; }
-.qna-ri:focus { border-color:var(--green); }
-.qna-rs { margin-top:4px;width:100%;padding:7px;background:var(--green);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:11px;font-weight:700;font-family:'Noto Sans KR',sans-serif; }
-.qna-form { padding:10px 13px 13px;border-top:1px solid var(--border);flex-shrink:0;background:var(--card); }
-.qna-fi { width:100%;padding:8px 10px;background:var(--card2);border:1px solid var(--border2);border-radius:9px;font-size:11px;resize:none;font-family:'Noto Sans KR',sans-serif;color:var(--text);outline:none;line-height:1.5;margin-bottom:6px; }
-.qna-fi:focus { border-color:var(--primary);background:#fff; }
-.qna-frow { display:flex;gap:5px; }
-.qna-author { flex:1;padding:7px 8px;background:var(--card2);border:1px solid var(--border2);border-radius:8px;font-size:10px;outline:none;font-family:'Noto Sans KR',sans-serif;color:var(--text); }
-.qna-submit { padding:7px 12px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:11px;font-weight:700;font-family:'Noto Sans KR',sans-serif;white-space:nowrap; }
-.qna-submit:disabled { background:var(--text4);cursor:not-allowed; }
-.qna-status { font-size:10px;text-align:center;padding:4px 0;display:none;margin-top:4px; }
-.qna-status.show { display:block; }
-.qna-setup-inline { padding:12px;border-top:1px solid var(--border);flex-shrink:0;background:#FFFBEB;display:none; }
-.qna-setup-inline.show { display:block; }
-.qna-su-input { width:100%;padding:8px 10px;background:var(--card);border:1px solid var(--border2);border-radius:8px;font-size:11px;font-family:'Noto Sans KR',sans-serif;outline:none;margin-bottom:7px;color:var(--text); }
-/* ══ DESC LOADING ══ */
-.desc-loading { display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 16px;gap:10px;color:var(--text4);font-size:12px; }
-.desc-loading-spinner { width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite; }
-@keyframes spin { to { transform:rotate(360deg); } }
-.desc-static-badge { display:inline-block;font-size:9px;font-weight:600;padding:1px 7px;border-radius:10px;margin-left:6px;background:var(--card2);color:var(--text4);border:1px solid var(--border); }
-/* ══ GUIDE MODAL ══ */
-.guide-overlay { position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(3px);z-index:600;display:none;align-items:center;justify-content:center; }
-.guide-overlay.open { display:flex; }
-.guide-modal { background:var(--card);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.2);width:680px;max-width:94vw;max-height:82vh;display:flex;flex-direction:column;overflow:hidden; }
-.guide-modal-hd { padding:16px 20px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0; }
-.guide-modal-title { font-size:14px;font-weight:800;color:var(--text); }
-.guide-modal-body { overflow-y:auto;padding:18px 20px;scrollbar-width:thin; }
-.guide-section { margin-bottom:20px; }
-.guide-section-title { font-size:11px;font-weight:800;color:var(--primary);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border); }
-.guide-table { width:100%;border-collapse:collapse;font-size:11px; }
-.guide-table th { background:var(--primary-l);color:var(--primary);font-weight:700;padding:6px 9px;text-align:left;border:1px solid #BFDBFE; }
-.guide-table td { padding:5px 9px;border:1px solid var(--border);color:var(--text2);line-height:1.5;vertical-align:top; }
-.guide-table tr:hover td { background:var(--card2); }
-.guide-table .key { font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--primary);font-weight:600;background:var(--primary-l);padding:1px 5px;border-radius:4px;white-space:nowrap; }
-.guide-copy-btn { font-size:10px;color:var(--text4);background:none;border:1px solid var(--border);border-radius:4px;padding:1px 5px;cursor:pointer;margin-left:3px;font-family:'Noto Sans KR',sans-serif; }
-.guide-copy-btn:hover { background:var(--card2); }
+.qna-sidebar {
+  width: 280px;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border-left: 1px solid var(--border);
+  height: 100%;
+  overflow: hidden;
+}
+.qna-sidebar-hd {
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--card);
+}
+.qna-sidebar-title {
+  font-size: 13px; font-weight: 800; color: var(--text);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.qna-sidebar-sub {
+  font-size: 10px; color: var(--text4); margin-top: 3px;
+}
+.qna-sidebar-filters {
+  display: flex; gap: 5px; padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0; background: var(--card);
+}
+.qna-list {
+  flex: 1; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+.qna-empty {
+  padding: 28px 14px; text-align: center;
+  font-size: 12px; color: var(--text4); line-height: 1.7;
+}
+.qna-item {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.qna-item:last-child { border-bottom: none; }
+.qna-screen-tag {
+  font-size: 9px; font-weight: 700; padding: 1px 6px;
+  border-radius: 10px; background: var(--primary-l);
+  color: var(--primary); border: 1px solid #BFDBFE;
+  cursor: pointer; transition: all .15s;
+}
+.qna-screen-tag:hover {
+  background: var(--primary); color: #fff;
+  transform: scale(1.05);
+}
+.qna-ts { font-size: 9px; color: var(--text4); }
+.qna-q {
+  font-size: 12px; font-weight: 600; color: var(--text);
+  line-height: 1.5; margin: 5px 0 5px;
+  display: flex; gap: 5px;
+}
+.qna-q::before { content:'Q'; font-weight:800; color:var(--primary); flex-shrink:0; }
+.qna-a {
+  font-size: 12px; color: var(--text2); line-height: 1.5;
+  background: var(--card2); border-radius: 8px;
+  padding: 7px 10px; display: flex; gap: 5px;
+}
+.qna-a::before { content:'A'; font-weight:800; color:var(--green); flex-shrink:0; }
+.qna-pending {
+  font-size: 11px; color: var(--text4); font-style: italic;
+  background: var(--card2); border-radius: 8px; padding: 5px 9px;
+}
+.qna-reply-btn {
+  font-size: 10px; color: var(--primary); background: none;
+  border: none; cursor: pointer; padding: 3px 0;
+  font-family: 'Noto Sans KR', sans-serif; margin-top: 4px;
+}
+.qna-reply-area { display: none; margin-top: 7px; }
+.qna-reply-area.open { display: block; }
+.qna-ri {
+  width: 100%; padding: 7px 9px; background: var(--card);
+  border: 1px solid var(--border2); border-radius: 8px;
+  font-size: 11px; font-family: 'Noto Sans KR', sans-serif;
+  color: var(--text); resize: none; outline: none; line-height: 1.5;
+}
+.qna-ri:focus { border-color: var(--green); }
+.qna-rs {
+  margin-top: 4px; width: 100%; padding: 7px;
+  background: var(--green); color: #fff; border: none;
+  border-radius: 8px; cursor: pointer;
+  font-size: 11px; font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.qna-form {
+  padding: 10px 14px 14px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--card);
+}
+.qna-fi {
+  width: 100%; padding: 8px 10px; background: var(--card2);
+  border: 1px solid var(--border2); border-radius: 9px;
+  font-size: 11px; resize: none;
+  font-family: 'Noto Sans KR', sans-serif; color: var(--text);
+  outline: none; line-height: 1.5; margin-bottom: 6px;
+}
+.qna-fi:focus { border-color: var(--primary); background: #fff; }
+.qna-frow { display: flex; gap: 5px; }
+.qna-author {
+  flex: 1; padding: 7px 8px; background: var(--card2);
+  border: 1px solid var(--border2); border-radius: 8px;
+  font-size: 10px; outline: none;
+  font-family: 'Noto Sans KR', sans-serif; color: var(--text);
+}
+.qna-submit {
+  padding: 7px 12px; background: var(--primary); color: #fff;
+  border: none; border-radius: 8px; cursor: pointer;
+  font-size: 11px; font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif; white-space: nowrap;
+}
+.qna-submit:disabled { background: var(--text4); cursor: not-allowed; }
+.qna-status {
+  font-size: 10px; text-align: center; padding: 4px 0; display: none; margin-top: 4px;
+}
+.qna-status.show { display: block; }
+.qna-setup-inline {
+  padding: 16px; border-top: 1px solid var(--border);
+  flex-shrink: 0; background: #FFFBEB;
+  display: none;
+}
+.qna-setup-inline.show { display: block; }
+.qna-su-input {
+  width: 100%; padding: 8px 10px; background: var(--card);
+  border: 1px solid var(--border2); border-radius: 8px;
+  font-size: 11px; font-family: 'Noto Sans KR', sans-serif;
+  outline: none; margin-bottom: 7px; color: var(--text);
+}
+
+
+/* ══ DESCRIPTION DYNAMIC ══ */
+.desc-loading {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 60px 20px; gap: 10px;
+  color: var(--text4); font-size: 12px;
+}
+.desc-loading-spinner {
+  width: 28px; height: 28px; border: 3px solid var(--border);
+  border-top-color: var(--primary); border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.desc-error {
+  margin: 16px; padding: 14px; background: #FEF2F2;
+  border: 1px solid #FECACA; border-radius: 10px;
+  font-size: 12px; color: var(--red); text-align: center; line-height: 1.6;
+}
+.desc-static-badge {
+  display: inline-block; font-size: 9px; font-weight: 600;
+  padding: 1px 7px; border-radius: 10px; margin-left: 6px;
+  background: var(--card2); color: var(--text4);
+  border: 1px solid var(--border); vertical-align: middle;
+}
+
+
+/* ══ SHEET GUIDE MODAL ══ */
+.guide-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4); backdrop-filter: blur(3px);
+  z-index: 600; display: none; align-items: center; justify-content: center;
+}
+.guide-overlay.open { display: flex; }
+.guide-modal {
+  background: var(--card); border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.2);
+  width: 680px; max-width: 94vw;
+  max-height: 82vh; display: flex; flex-direction: column;
+  overflow: hidden; animation: qnaIn .25s ease;
+}
+.guide-modal-hd {
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.guide-modal-title { font-size: 15px; font-weight: 800; color: var(--text); }
+.guide-modal-body {
+  overflow-y: auto; padding: 20px 22px;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+.guide-section { margin-bottom: 24px; }
+.guide-section-title {
+  font-size: 12px; font-weight: 800; color: var(--primary);
+  letter-spacing: 1px; text-transform: uppercase;
+  margin-bottom: 10px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.guide-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.guide-table th {
+  background: var(--primary-l); color: var(--primary);
+  font-weight: 700; padding: 7px 10px; text-align: left;
+  border: 1px solid #BFDBFE; font-size: 11px;
+}
+.guide-table td {
+  padding: 6px 10px; border: 1px solid var(--border);
+  color: var(--text2); line-height: 1.5; vertical-align: top;
+}
+.guide-table tr:hover td { background: var(--card2); }
+.guide-table .key {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--primary); font-weight: 600;
+  background: var(--primary-l); padding: 1px 6px;
+  border-radius: 4px; white-space: nowrap;
+}
+.guide-copy-btn {
+  font-size: 10px; color: var(--text4); background: none;
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 1px 6px; cursor: pointer; margin-left: 4px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.guide-copy-btn:hover { background: var(--card2); color: var(--text2); }
 
 </style>
 
@@ -635,7 +775,6 @@ body {
     <button class="nav-btn" onclick="nav('news')">📰 최근 소식</button>
     <button class="nav-btn" onclick="nav('news-detail')">📄 소식 상세</button>
     <button class="nav-btn" onclick="nav('payment')">💳 결제</button>
-  </div>
   </div><!-- /nav-screens -->
   <div class="nav-screens-arrow">›</div>
   </div><!-- /nav-screens-wrap -->
@@ -643,7 +782,7 @@ body {
 </nav>
 
 <div class="layout">
-<div style="grid-column:1;background:var(--bg-root)"></div>
+<div class="layout-inner">
 <div class="phone-panel">
   <div class="phone-label">MOBILE PREVIEW · 375 × 780</div>
   <div class="phone-frame">
@@ -652,8 +791,8 @@ body {
 
 <!-- ═══════════════ HOME ═══════════════ -->
 <div class="screen active" id="sc-home">
-  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● WiFi 🔋</span></div>
-  <div class="aheader">
+  <div class="sbar" data-zone="home-header"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● WiFi 🔋</span></div>
+  <div class="aheader" data-zone="home-header">
     <div class="logo">PAYCOIN</div>
     <div class="hicons">
       <div class="icon-btn">🔔<div class="notif-dot">3</div></div>
@@ -662,7 +801,7 @@ body {
   </div>
   <div class="sbody">
     <!-- Asset Card -->
-    <div class="asset-card" onclick="nav('asset')">
+    <div class="asset-card" data-zone="home-asset" onclick="nav('asset')">
       <div class="alabel">총 보유 자산</div>
       <div class="aamt">12,345,678<span style="font-size:15px;font-weight:500;opacity:.8"> 원</span></div>
       <div class="achange"><span class="up" style="color:#FCA5A5">▲ +1,234원</span><span style="opacity:.4">|</span><span style="color:#FCA5A5">▲ 0.43%</span><span style="font-size:10px;opacity:.6;margin-left:2px">전일 대비</span></div>
@@ -670,7 +809,7 @@ body {
     </div>
 
     <!-- Rolling Banner -->
-    <div class="banner-container" id="banner-container">
+    <div class="banner-container" id="banner-container" data-zone="home-banner">
       <div class="banner-track" id="banner-track">
         <div class="banner-slide bslide-1" onclick="nav('prediction')">
           <div><div class="b-text-s">🎯 매일 참여 이벤트</div><div class="b-text-m">PCI 등락 예측하고 에어드랍!</div><div class="b-text-xs">빗썸 종가 기준 · 매일 자정 판정</div></div>
@@ -693,18 +832,27 @@ body {
     </div>
 
     <!-- Tile Menu -->
-    <div class="tile-section">
-      <!-- Row 1: 월렛커넥트, 지갑, PCI 정보 (3 equal) -->
+    <div class="tile-section" data-zone="home-tiles">
+      <!-- Row 1: 출석체크 / 혜택 / PCI 정보 (3 equal) -->
       <div class="tile-row">
-        <div class="tile tile-1-3" onclick="nav('benefits')"><div class="tile-icon">✅</div><div class="tile-lbl">출석체크</div></div>
-        <div class="tile tile-1-3" onclick="nav('benefits')"><div class="tile-icon">🎁</div><div class="tile-lbl">혜택</div></div>
-        <div class="tile tile-1-3" onclick="nav('pci-info')"><div class="tile-icon">🪙</div><div class="tile-lbl">PCI 정보</div></div>
+        <div class="tile tile-1-3" onclick="nav('benefits')">
+          <div class="tile-icon">✅</div><div class="tile-lbl">출석체크</div>
+        </div>
+        <div class="tile tile-1-3" onclick="nav('benefits')">
+          <div class="tile-icon">🎁</div><div class="tile-lbl">혜택</div>
+        </div>
+        <div class="tile tile-1-3" onclick="nav('pci-info')">
+          <div class="tile-icon">🪙</div><div class="tile-lbl">PCI 정보</div>
+        </div>
       </div>
-      <!-- Row 2: 쇼핑(2/3 wide) + 혜택(1/3) -->
-      <div class="tile-row">
+      <!-- Row 2: 쇼핑(2/3 wide, 행 높이 고정) + 우측 1/3 [월렛커넥트(위)/지갑(아래)] -->
+      <div class="tile-row" style="height:63px;align-items:stretch">
         <div class="tile tile-2-3" style="flex-direction:row;gap:10px;justify-content:flex-start;padding:0 14px;height:63px">
           <div style="font-size:22px;line-height:1">🛍️</div>
-          <div style="text-align:left"><div class="tile-lbl" style="font-size:12px;font-weight:700;color:var(--text)">쇼핑</div><div style="font-size:9px;color:var(--text4);margin-top:2px">PCI 쇼핑몰</div></div>
+          <div style="text-align:left">
+            <div class="tile-lbl" style="font-size:12px;font-weight:700;color:var(--text)">쇼핑</div>
+            <div style="font-size:9px;color:var(--text4);margin-top:2px">PCI 쇼핑몰</div>
+          </div>
         </div>
         <div class="tile-1-3" style="display:flex;flex-direction:column;gap:8px">
           <div class="tile" onclick="" style="flex:1;flex-direction:row;gap:6px;padding:0 8px;justify-content:center;min-height:0;border-radius:6px">
@@ -715,61 +863,50 @@ body {
           </div>
         </div>
       </div>
-      <!-- Row 3: 가로 스크롤 — 우측 타일 살짝 노출로 더 있음 암시 -->
-      <div style="position:relative">
-        <div style="position:absolute;right:0;top:0;bottom:0;width:28px;
-                    background:linear-gradient(to right,transparent,var(--screen-bg) 85%);
-                    z-index:2;pointer-events:none;display:flex;align-items:center;
-                    justify-content:flex-end;padding-right:3px">
-          <span style="font-size:12px;color:var(--text3);font-weight:700">›</span>
-        </div>
-        <div style="overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
-          <div style="display:flex;gap:8px;padding-right:24px">
-            <div class="tile" onclick="nav('payment')"
-                 style="flex-shrink:0;width:calc(50% - 4px);flex-direction:row;gap:9px;
-                        justify-content:flex-start;padding:11px 13px;
-                        border:1.5px solid var(--primary);background:var(--primary-l)">
-              <div style="font-size:20px;flex-shrink:0">🏪</div>
-              <div style="min-width:0">
-                <div style="font-size:11px;font-weight:700;color:var(--primary);line-height:1.3">결제 가맹점 / 혜택</div>
-                <div style="font-size:9px;color:var(--text3);margin-top:1px">가맹점 및 할인 확인</div>
+      <!-- Row 3: 스와이프 — 결제 가맹점/혜택 안내 & Wallet Pay 가이드 (동일 크기) -->
+      <div style="position:relative;overflow:hidden;border-radius:var(--radius)">
+        <!-- 스와이프 뷰포트: 딱 1개 타일만 보이게 clip -->
+        <div id="tile-row3-viewport" style="overflow:hidden;border-radius:var(--radius)">
+          <div id="tile-row3" style="display:flex;gap:8px;transition:transform .35s cubic-bezier(.4,0,.2,1);will-change:transform">
+            <!-- 타일 1: 결제 가맹점/혜택 안내 -->
+            <div class="tile" onclick="nav('payment')" id="tile-r3-0"
+                 style="flex-shrink:0;width:100%;flex-direction:row;gap:12px;justify-content:flex-start;padding:13px 16px;border:1.5px solid var(--primary);background:var(--primary-l)">
+              <div style="font-size:26px">🏪</div>
+              <div style="text-align:left">
+                <div style="font-size:12px;font-weight:700;color:var(--primary)">결제 가맹점 / 혜택 안내</div>
+                <div style="font-size:9px;color:var(--text3);margin-top:2px">PCI 결제 가능 가맹점 및 할인 혜택 확인</div>
               </div>
             </div>
-            <div class="tile"
-                 style="flex-shrink:0;width:calc(50% - 4px);flex-direction:row;gap:9px;
-                        justify-content:flex-start;padding:11px 13px;
-                        border:1.5px solid var(--gold);background:var(--gold-l)">
-              <div style="font-size:20px;flex-shrink:0">💡</div>
-              <div style="min-width:0">
-                <div style="font-size:11px;font-weight:700;color:#92400E;line-height:1.3">Wallet Pay 가이드</div>
-                <div style="font-size:9px;color:var(--text3);margin-top:1px">월렛 페이 사용 안내</div>
-              </div>
-            </div>
-            <div class="tile"
-                 style="flex-shrink:0;width:calc(50% - 4px);flex-direction:row;gap:9px;
-                        justify-content:flex-start;padding:11px 13px;
-                        border:1px solid var(--border);background:var(--card)">
-              <div style="font-size:20px;flex-shrink:0">📋</div>
-              <div style="min-width:0">
-                <div style="font-size:11px;font-weight:700;color:var(--text2);line-height:1.3">이용 가이드</div>
-                <div style="font-size:9px;color:var(--text3);margin-top:1px">앱 사용법 안내</div>
+            <!-- 타일 2: Wallet Pay 가이드 -->
+            <div class="tile" id="tile-r3-1"
+                 style="flex-shrink:0;width:100%;flex-direction:row;gap:12px;justify-content:flex-start;padding:13px 16px;border:1.5px solid var(--gold);background:var(--gold-l)">
+              <div style="font-size:26px">💡</div>
+              <div style="text-align:left">
+                <div style="font-size:12px;font-weight:700;color:#92400E">Wallet Pay 가이드</div>
+                <div style="font-size:9px;color:var(--text3);margin-top:2px">페이코인 월렛 페이 사용 방법 안내</div>
               </div>
             </div>
           </div>
         </div>
+        <!-- 스와이프 인디케이터 -->
+        <div style="display:flex;justify-content:center;gap:5px;margin-top:5px">
+          <div id="r3-dot-0" style="width:16px;height:4px;border-radius:2px;background:var(--primary);transition:all .3s"></div>
+          <div id="r3-dot-1" style="width:5px;height:4px;border-radius:2px;background:var(--border2);transition:all .3s"></div>
+        </div>
       </div>
-    </div><!-- /tile-section -->
+    </div>
 
     <div class="divider"></div>
 
-    <!-- News -->
+    <!-- News --><div data-zone="home-news">
     <div class="stitle" style="margin-top:10px">최근 소식 <span class="see-all" onclick="nav('news')">전체 보기</span></div>
     <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.30</div><div class="news-txt">페이코인, 1분기 결제 거래량 전년比 230% 성장</div><div class="news-arr">›</div></div>
     <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.29</div><div class="news-txt">다날핀테크, PCI 글로벌 결제 확대 파트너십 체결</div><div class="news-arr">›</div></div>
     <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.27</div><div class="news-txt">페이코인 앱 v2.0 업데이트 출시 안내</div><div class="news-arr">›</div></div>
     <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.25</div><div class="news-txt">페이프로토콜, 분산형 결제 인프라 기술 특허 취득</div><div class="news-arr">›</div></div>
     <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.22</div><div class="news-txt">다날, 2025 핀테크 혁신대상 수상</div><div class="news-arr">›</div></div>
-  </div>
+  </div><!-- /home-news -->
+  </div><!-- /sbody -->
   <div class="tab-bar">
     <div class="tab-item active" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
     <div class="tab-item" onclick="nav('wallet')"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
@@ -1621,35 +1758,35 @@ body {
     <div class="policy-title">메인 홈</div>
     <div class="policy-desc">앱 실행 후 첫 진입 화면. 자산 현황 요약, 롤링 배너, 타일 메뉴, 최근 소식으로 구성. 모든 주요 기능으로의 진입 허브 역할.</div>
   </div>
-  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
-    <div class="policy-item"><div class="pd r"></div><strong>타일 메뉴 하드코딩 절대 금지.</strong> 서버 JSON을 파싱해 렌더링. 타일 수·순서·노출 여부 모두 어드민에서 관리.</div>
-    <div class="policy-item"><div class="pd r"></div>롤링 배너는 자동 3초 순환 + 수동 스와이프 모두 지원. 배너 없으면 영역 자체 미표시(레이아웃 재배치).</div>
-    <div class="policy-item"><div class="pd r"></div>자산 합계 API 실패 시 "자산 정보를 불러오지 못했습니다 + 다시 시도" — 빈 화면 노출 금지.</div>
-    <div class="policy-item"><div class="pd"></div>앱 실행 시 로컬 캐시를 즉시 표시 → 백그라운드 API 완료 시 실시간 값으로 교체(애니메이션 처리).</div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-tiles','타일 메뉴')">⚠️ 개발 주의사항</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-tiles','타일 메뉴')"><div class="pd r"></div><strong>타일 메뉴 하드코딩 절대 금지.</strong> 서버 JSON을 파싱해 렌더링. 타일 수·순서·노출 여부 모두 어드민에서 관리.</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-banner','롤링 배너')"><div class="pd r"></div>롤링 배너는 자동 3초 순환 + 수동 스와이프 모두 지원. 배너 없으면 영역 자체 미표시(레이아웃 재배치).</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-asset','자산 합계')"><div class="pd r"></div>자산 합계 API 실패 시 "자산 정보를 불러오지 못했습니다 + 다시 시도" — 빈 화면 노출 금지.</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-asset','자산 합계')"><div class="pd"></div>앱 실행 시 로컬 캐시를 즉시 표시 → 백그라운드 API 완료 시 실시간 값으로 교체(애니메이션 처리).</div>
   </div>
-  <div class="policy-group"><div class="policy-group-title">롤링 배너</div>
-    <div class="policy-item"><div class="pd"></div>자동 3초 롤링, 인디케이터 점 표시. 배너 이미지 로드 실패 시 기본 플레이스홀더 표시.</div>
-    <div class="policy-item"><div class="pd"></div>탭 → 지정 딥링크 또는 외부 웹뷰 이동. 링크 없으면 탭 이벤트 무반응.</div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-banner','롤링 배너')">롤링 배너</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-banner','롤링 배너')"><div class="pd"></div>자동 3초 롤링, 인디케이터 점 표시. 배너 이미지 로드 실패 시 기본 플레이스홀더 표시.</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-banner','롤링 배너')"><div class="pd"></div>탭 → 지정 딥링크 또는 외부 웹뷰 이동. 링크 없으면 탭 이벤트 무반응.</div>
     <div class="policy-code">GET /api/v1/home/banners → Banner[]</div>
   </div>
-  <div class="policy-group"><div class="policy-group-title">타일 메뉴 구성 규칙</div>
-    <div class="policy-item"><div class="pd"></div>1행: 1/3 너비 × 3개 / 2행: 2/3(넓은 타일) + 1/3 / 3행: 가로 스크롤, 우측 끝 타일이 화면에 걸쳐 '더 있음'을 암시.</div>
-    <div class="policy-item"><div class="pd"></div>비활성 타일 제거 후 나머지 레이아웃 자동 재배치. 네트워크 오류 시 마지막 캐시 구성 사용.</div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-tiles','타일 메뉴')">타일 메뉴 구성 규칙</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-tiles','타일 메뉴')"><div class="pd"></div>1행: 1/3 너비 × 3개 / 2행: 2/3(넓은 타일) + 1/3 / 3행: 가로 스크롤, 우측 끝 타일이 화면에 걸쳐 '더 있음'을 암시.</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-tiles','타일 메뉴')"><div class="pd"></div>비활성 타일 제거 후 나머지 레이아웃 자동 재배치. 네트워크 오류 시 마지막 캐시 구성 사용.</div>
     <div class="policy-code">GET /api/v1/home/tiles → Tile[]
   tile.row_type: "1x1" | "2x1" | "scroll"</div>
   </div>
-  <div class="policy-group"><div class="policy-group-title">자산 합계 영역</div>
-    <div class="policy-item"><div class="pd"></div>합계 = 자체 지갑 + 모든 연결 지갑 KRW 합산 (실시간 시세 기준)</div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-asset','자산 합계')">자산 합계 영역</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-asset','자산 합계')"><div class="pd"></div>합계 = 자체 지갑 + 모든 연결 지갑 KRW 합산 (실시간 시세 기준)</div>
     <div class="policy-warn">⚠️ 변동 금액·변동률 기준 시점 미확정 (전일 0시 vs 마지막 로그인) — 필드 예약, null 시 UI 미표시</div>
-    <div class="policy-item"><div class="pd r"></div>is_stale=true: 금액 옆 ⚠ 아이콘 + "시세가 최신이 아닐 수 있습니다" 안내</div>
-    <div class="policy-item"><div class="pd"></div>영역 탭 → 지갑 화면 / "자산현황 보기" 탭 → 자산현황 화면</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-asset','자산 합계')"><div class="pd r"></div>is_stale=true: 금액 옆 ⚠ 아이콘 + "시세가 최신이 아닐 수 있습니다" 안내</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-asset','자산 합계')"><div class="pd"></div>영역 탭 → 지갑 화면 / "자산현황 보기" 탭 → 자산현황 화면</div>
   </div>
-  <div class="policy-group"><div class="policy-group-title">알림 뱃지</div>
-    <div class="policy-item"><div class="pd"></div>미확인 알림 수 표시, 99 초과 시 "99+" 고정. 포그라운드 전환 시 1회 재조회.</div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-header','상단 헤더 / 알림 뱃지')">알림 뱃지</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-header','상단 헤더 / 알림 뱃지')"><div class="pd"></div>미확인 알림 수 표시, 99 초과 시 "99+" 고정. 포그라운드 전환 시 1회 재조회.</div>
     <div class="policy-code">GET /api/v1/notifications/unread-count</div>
   </div>
-  <div class="policy-group"><div class="policy-group-title">최근 소식</div>
-    <div class="policy-item"><div class="pd"></div>최신 소식 5건(게시일자 DESC). "전체 보기" → 소식 리스트 화면</div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-news','최근 소식')">최근 소식</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-news','최근 소식')"><div class="pd"></div>최신 소식 5건(게시일자 DESC). "전체 보기" → 소식 리스트 화면</div>
     <div class="policy-code">GET /api/v1/news?limit=5</div>
   </div>
 </div>
@@ -1911,81 +2048,46 @@ GET /api/v1/payment/recent?limit=5</div>
 </div>
 
 
-<!-- QnA 설정 -->
-<div class="qna-setup-box" id="qna-setup-box">
-  <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:3px">💬 QnA 설정</div>
-  <div style="font-size:11px;color:var(--text3);margin-bottom:12px;line-height:1.5">Google Apps Script 배포 URL을 입력하세요.</div>
-  <input id="qna-api-input" class="qna-su-input" placeholder="https://script.google.com/macros/s/...">
-  <button onclick="saveApiUrl()" style="width:100%;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">저장하고 시작하기</button>
-  <div style="margin-top:7px;text-align:center"><button onclick="document.getElementById('qna-setup-box').classList.remove('open')" style="background:none;border:none;font-size:11px;color:var(--text4);cursor:pointer;font-family:'Noto Sans KR',sans-serif;">나중에 설정</button></div>
-</div>
-
-<!-- QnA 버튼 -->
-<button class="qna-fab" id="qna-fab" onclick="toggleQna()" title="질문/답변">
-  💬
-  <div class="qna-fab-badge" id="qna-fab-badge"></div>
-</button>
-
-<!-- QnA 패널 -->
-<div class="qna-box" id="qna-box">
-  <div class="qna-hd">
-    <div>
-      <div class="qna-hd-title">💬 질문 &amp; 답변 <span id="qna-cnt" style="font-size:10px;color:var(--text4);font-weight:400"></span></div>
-      <div class="qna-hd-sub">현재 화면: <span id="qna-scr-lbl" style="color:var(--primary);font-weight:600">메인 홈</span></div>
-    </div>
-    <div style="display:flex;gap:5px">
-      <button onclick="loadQna()" style="width:26px;height:26px;border-radius:7px;background:var(--card2);border:1px solid var(--border);font-size:12px;cursor:pointer;">↻</button>
-      <button onclick="toggleQna()" style="width:26px;height:26px;border-radius:7px;background:var(--card2);border:1px solid var(--border);font-size:12px;cursor:pointer;">✕</button>
-    </div>
-  </div>
-  <div style="display:flex;padding:7px 14px;gap:5px;border-bottom:1px solid var(--border);flex-shrink:0">
-    <div class="chip active" id="qf-all"  onclick="setQF('all')"  style="font-size:10px;padding:3px 9px">전체</div>
-    <div class="chip" id="qf-cur"         onclick="setQF('cur')"  style="font-size:10px;padding:3px 9px">이 화면</div>
-    <div class="chip" id="qf-un"          onclick="setQF('un')"   style="font-size:10px;padding:3px 9px">미답변</div>
-  </div>
-  <div class="qna-list" id="qna-list"><div class="qna-empty">💬<br>등록된 질문이 없습니다.</div></div>
-  <div class="qna-form">
-    <div style="font-size:11px;font-weight:600;color:var(--text3);margin-bottom:5px">질문 등록 — <span id="qna-form-scr" style="color:var(--primary);font-weight:700">메인 홈</span></div>
-    <textarea class="qna-fi" id="qna-q" rows="2" placeholder="궁금한 점을 입력하세요..."></textarea>
-    <div class="qna-frow">
-      <input class="qna-author" id="qna-author" placeholder="이름 (예: 홍길동 개발자)">
-      <button class="qna-submit" id="qna-sub-btn" onclick="submitQ()">등록</button>
-    </div>
-    <div class="qna-status" id="qna-status"></div>
-  </div>
-</div>
-
 </div><!-- /policy-panel -->
 
 <!-- ══ QnA SIDEBAR ══ -->
 <div class="qna-sidebar">
+  <!-- 헤더 -->
   <div class="qna-sidebar-hd">
     <div class="qna-sidebar-title">
       💬 질문 &amp; 답변
       <div style="display:flex;gap:4px">
-        <button onclick="showSheetGuide()" style="width:24px;height:24px;border-radius:6px;background:#FFFBEB;border:1px solid #FDE68A;font-size:11px;cursor:pointer;" title="Sheets 가이드">📋</button>
+        <button onclick="showSheetGuide()" style="width:24px;height:24px;border-radius:6px;background:var(--gold-l);border:1px solid #FDE68A;font-size:11px;cursor:pointer;" title="Sheets 작성 가이드">📋</button>
         <button onclick="loadQna()" style="width:24px;height:24px;border-radius:6px;background:var(--card2);border:1px solid var(--border);font-size:11px;cursor:pointer;" title="새로고침">↻</button>
       </div>
     </div>
     <div class="qna-sidebar-sub">현재: <span id="qna-scr-lbl" style="color:var(--primary);font-weight:600">메인 홈</span> · <span id="qna-cnt" style="color:var(--text4)">0건</span></div>
   </div>
+
+  <!-- 필터 -->
   <div class="qna-sidebar-filters">
     <div class="chip active" id="qf-all" onclick="setQF('all')" style="font-size:10px;padding:3px 8px">전체</div>
     <div class="chip" id="qf-cur"        onclick="setQF('cur')" style="font-size:10px;padding:3px 8px">이 화면</div>
     <div class="chip" id="qf-un"         onclick="setQF('un')"  style="font-size:10px;padding:3px 8px">미답변</div>
   </div>
+
+  <!-- API 설정 -->
   <div class="qna-setup-inline" id="qna-setup-inline">
-    <div style="font-size:11px;font-weight:700;color:#92400E;margin-bottom:5px">⚙️ API URL 설정 필요</div>
-    <div style="font-size:10px;color:#92400E;margin-bottom:7px;line-height:1.5">Google Apps Script 배포 URL을 입력하면 질문/답변이 저장됩니다.</div>
+    <div style="font-size:11px;font-weight:700;color:#92400E;margin-bottom:6px">⚙️ API URL 설정 필요</div>
+    <div style="font-size:10px;color:#92400E;margin-bottom:8px;line-height:1.5">Google Apps Script 배포 URL을 입력하면 질문/답변이 저장됩니다.</div>
     <input id="qna-api-input" class="qna-su-input" placeholder="https://script.google.com/macros/s/...">
     <button onclick="saveApiUrl()" style="width:100%;padding:8px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">저장</button>
-    <div style="margin-top:5px;text-align:center">
+    <div style="margin-top:6px;text-align:center">
       <button onclick="document.getElementById('qna-setup-inline').classList.remove('show')" style="background:none;border:none;font-size:10px;color:var(--text4);cursor:pointer;font-family:'Noto Sans KR',sans-serif;">나중에</button>
     </div>
   </div>
+
+  <!-- 질문 목록 -->
   <div class="qna-list" id="qna-list">
     <div class="qna-empty">💬<br>등록된 질문이 없습니다.<br><span style="font-size:10px">아래에서 첫 질문을 남겨보세요!</span></div>
   </div>
+
+  <!-- 질문 입력 폼 -->
   <div class="qna-form">
     <div style="font-size:10px;font-weight:600;color:var(--text3);margin-bottom:5px">
       질문 — <span id="qna-form-scr" style="color:var(--primary);font-weight:700">메인 홈</span>
@@ -2002,118 +2104,82 @@ GET /api/v1/payment/recent?limit=5</div>
 </div><!-- /layout-inner -->
 </div><!-- /layout -->
 
-<!-- ══ SHEET GUIDE MODAL ══ -->
-<div class="guide-overlay" id="guide-overlay" onclick="if(event.target===this)closeGuide()">
-  <div class="guide-modal">
-    <div class="guide-modal-hd">
-      <div class="guide-modal-title">📋 Google Sheets 작성 가이드</div>
-      <button onclick="closeGuide()" style="width:28px;height:28px;border-radius:8px;background:var(--card2);border:1px solid var(--border);font-size:14px;cursor:pointer;">✕</button>
+
+</div><!-- /policy-panel -->
+
+<!-- ══ QnA SIDEBAR ══ -->
+<div class="qna-sidebar">
+  <!-- 헤더 -->
+  <div class="qna-sidebar-hd">
+    <div class="qna-sidebar-title">
+      💬 질문 &amp; 답변
+      <div style="display:flex;gap:4px">
+        <button onclick="showSheetGuide()" style="width:24px;height:24px;border-radius:6px;background:var(--gold-l);border:1px solid #FDE68A;font-size:11px;cursor:pointer;" title="Sheets 작성 가이드">📋</button>
+        <button onclick="loadQna()" style="width:24px;height:24px;border-radius:6px;background:var(--card2);border:1px solid var(--border);font-size:11px;cursor:pointer;" title="새로고침">↻</button>
+      </div>
     </div>
-    <div class="guide-modal-body">
-      <div class="guide-section">
-        <div class="guide-section-title">📌 작성 규칙</div>
-        <table class="guide-table">
-          <tr><th>컬럼</th><th>설명</th><th>예시</th></tr>
-          <tr><td><strong>A: screen_key</strong></td><td>화면 식별자 (드롭다운 선택)</td><td><span class="key">home</span></td></tr>
-          <tr><td><strong>B: 그룹명</strong></td><td>같은 이름끼리 자동으로 묶임</td><td>롤링 배너</td></tr>
-          <tr><td><strong>C: 내용</strong></td><td>⚠️로 시작→경고박스, 중요도 코드→코드박스</td><td>자동 3초 롤링</td></tr>
-          <tr><td><strong>D: 중요도</strong></td><td>드롭다운 선택</td><td>필수/일반/경고/참고/코드</td></tr>
-          <tr><td><strong>E: zone_id</strong></td><td>클릭 시 UI 하이라이트. 비워도 됨</td><td><span class="key">home-banner</span></td></tr>
-        </table>
-      </div>
-      <div class="guide-section">
-        <div class="guide-section-title">🖥️ screen_key 목록</div>
-        <table class="guide-table"><tr><th style="width:180px">screen_key</th><th>화면 이름</th></tr>
-<tr><td><span class="key">home</span><button class="guide-copy-btn" onclick="copyText('home')">복사</button></td><td>메인 홈</td></tr>
-<tr><td><span class="key">wallet</span><button class="guide-copy-btn" onclick="copyText('wallet')">복사</button></td><td>지갑</td></tr>
-<tr><td><span class="key">wallet-empty</span><button class="guide-copy-btn" onclick="copyText('wallet-empty')">복사</button></td><td>지갑(미연결)</td></tr>
-<tr><td><span class="key">wallet-pci</span><button class="guide-copy-btn" onclick="copyText('wallet-pci')">복사</button></td><td>지갑상세(PCI)</td></tr>
-<tr><td><span class="key">wallet-other</span><button class="guide-copy-btn" onclick="copyText('wallet-other')">복사</button></td><td>지갑상세(기타)</td></tr>
-<tr><td><span class="key">asset</span><button class="guide-copy-btn" onclick="copyText('asset')">복사</button></td><td>자산현황</td></tr>
-<tr><td><span class="key">pci-info</span><button class="guide-copy-btn" onclick="copyText('pci-info')">복사</button></td><td>PCI 정보</td></tr>
-<tr><td><span class="key">token-detail</span><button class="guide-copy-btn" onclick="copyText('token-detail')">복사</button></td><td>토큰 상세</td></tr>
-<tr><td><span class="key">benefits</span><button class="guide-copy-btn" onclick="copyText('benefits')">복사</button></td><td>혜택</td></tr>
-<tr><td><span class="key">prediction</span><button class="guide-copy-btn" onclick="copyText('prediction')">복사</button></td><td>등락 예측</td></tr>
-<tr><td><span class="key">news</span><button class="guide-copy-btn" onclick="copyText('news')">복사</button></td><td>최근 소식</td></tr>
-<tr><td><span class="key">news-detail</span><button class="guide-copy-btn" onclick="copyText('news-detail')">복사</button></td><td>소식 상세</td></tr>
-<tr><td><span class="key">payment</span><button class="guide-copy-btn" onclick="copyText('payment')">복사</button></td><td>결제</td></tr>
-        </table>
-      </div>
-      <div class="guide-section">
-        <div class="guide-section-title">🎯 zone_id 목록</div>
-        <table class="guide-table"><tr><th style="width:200px">zone_id</th><th>UI 영역</th></tr>
-<tr><td><span class="key">home-header</span><button class="guide-copy-btn" onclick="copyText('home-header')">복사</button></td><td>홈 — 상단 헤더</td></tr>
-<tr><td><span class="key">home-asset</span><button class="guide-copy-btn" onclick="copyText('home-asset')">복사</button></td><td>홈 — 자산 합계</td></tr>
-<tr><td><span class="key">home-banner</span><button class="guide-copy-btn" onclick="copyText('home-banner')">복사</button></td><td>홈 — 롤링 배너</td></tr>
-<tr><td><span class="key">home-tiles</span><button class="guide-copy-btn" onclick="copyText('home-tiles')">복사</button></td><td>홈 — 타일 메뉴</td></tr>
-<tr><td><span class="key">home-news</span><button class="guide-copy-btn" onclick="copyText('home-news')">복사</button></td><td>홈 — 최근 소식</td></tr>
-<tr><td><span class="key">wallet-summary</span><button class="guide-copy-btn" onclick="copyText('wallet-summary')">복사</button></td><td>지갑 — 자산 요약</td></tr>
-<tr><td><span class="key">wallet-tabs</span><button class="guide-copy-btn" onclick="copyText('wallet-tabs')">복사</button></td><td>지갑 — 탭 필터</td></tr>
-<tr><td><span class="key">wallet-pred-banner</span><button class="guide-copy-btn" onclick="copyText('wallet-pred-banner')">복사</button></td><td>지갑 — 예측 배너</td></tr>
-<tr><td><span class="key">wallet-list</span><button class="guide-copy-btn" onclick="copyText('wallet-list')">복사</button></td><td>지갑 — 지갑 목록</td></tr>
-<tr><td><span class="key">wallet-empty-connect</span><button class="guide-copy-btn" onclick="copyText('wallet-empty-connect')">복사</button></td><td>지갑(미연결) — 연결 유도</td></tr>
-<tr><td><span class="key">wpci-header</span><button class="guide-copy-btn" onclick="copyText('wpci-header')">복사</button></td><td>지갑상세PCI — 헤더</td></tr>
-<tr><td><span class="key">wpci-actions</span><button class="guide-copy-btn" onclick="copyText('wpci-actions')">복사</button></td><td>지갑상세PCI — 버튼</td></tr>
-<tr><td><span class="key">wpci-address</span><button class="guide-copy-btn" onclick="copyText('wpci-address')">복사</button></td><td>지갑상세PCI — 주소</td></tr>
-<tr><td><span class="key">wpci-price</span><button class="guide-copy-btn" onclick="copyText('wpci-price')">복사</button></td><td>지갑상세PCI — 시세</td></tr>
-<tr><td><span class="key">wpci-txlist</span><button class="guide-copy-btn" onclick="copyText('wpci-txlist')">복사</button></td><td>지갑상세PCI — 거래내역</td></tr>
-<tr><td><span class="key">wother-header</span><button class="guide-copy-btn" onclick="copyText('wother-header')">복사</button></td><td>지갑상세기타 — 헤더</td></tr>
-<tr><td><span class="key">wother-actions</span><button class="guide-copy-btn" onclick="copyText('wother-actions')">복사</button></td><td>지갑상세기타 — 버튼</td></tr>
-<tr><td><span class="key">wother-txguide</span><button class="guide-copy-btn" onclick="copyText('wother-txguide')">복사</button></td><td>지갑상세기타 — 거래내역안내</td></tr>
-<tr><td><span class="key">asset-summary</span><button class="guide-copy-btn" onclick="copyText('asset-summary')">복사</button></td><td>자산현황 — 합계</td></tr>
-<tr><td><span class="key">asset-chart</span><button class="guide-copy-btn" onclick="copyText('asset-chart')">복사</button></td><td>자산현황 — 차트</td></tr>
-<tr><td><span class="key">asset-distribution</span><button class="guide-copy-btn" onclick="copyText('asset-distribution')">복사</button></td><td>자산현황 — 비중</td></tr>
-<tr><td><span class="key">asset-list</span><button class="guide-copy-btn" onclick="copyText('asset-list')">복사</button></td><td>자산현황 — 목록</td></tr>
-<tr><td><span class="key">pci-price</span><button class="guide-copy-btn" onclick="copyText('pci-price')">복사</button></td><td>PCI정보 — 시세</td></tr>
-<tr><td><span class="key">pci-pred-banner</span><button class="guide-copy-btn" onclick="copyText('pci-pred-banner')">복사</button></td><td>PCI정보 — 예측배너</td></tr>
-<tr><td><span class="key">pci-exchanges</span><button class="guide-copy-btn" onclick="copyText('pci-exchanges')">복사</button></td><td>PCI정보 — 거래소</td></tr>
-<tr><td><span class="key">token-header</span><button class="guide-copy-btn" onclick="copyText('token-header')">복사</button></td><td>토큰상세 — 헤더</td></tr>
-<tr><td><span class="key">token-price</span><button class="guide-copy-btn" onclick="copyText('token-price')">복사</button></td><td>토큰상세 — 시세</td></tr>
-<tr><td><span class="key">token-wallet</span><button class="guide-copy-btn" onclick="copyText('token-wallet')">복사</button></td><td>토큰상세 — 연결지갑</td></tr>
-<tr><td><span class="key">ben-banner</span><button class="guide-copy-btn" onclick="copyText('ben-banner')">복사</button></td><td>혜택 — 배너</td></tr>
-<tr><td><span class="key">ben-daily</span><button class="guide-copy-btn" onclick="copyText('ben-daily')">복사</button></td><td>혜택 — 매일참여</td></tr>
-<tr><td><span class="key">ben-referral</span><button class="guide-copy-btn" onclick="copyText('ben-referral')">복사</button></td><td>혜택 — 추천</td></tr>
-<tr><td><span class="key">ben-payment</span><button class="guide-copy-btn" onclick="copyText('ben-payment')">복사</button></td><td>혜택 — 결제</td></tr>
-<tr><td><span class="key">pred-yesterday</span><button class="guide-copy-btn" onclick="copyText('pred-yesterday')">복사</button></td><td>예측 — 어제결과</td></tr>
-<tr><td><span class="key">pred-base-price</span><button class="guide-copy-btn" onclick="copyText('pred-base-price')">복사</button></td><td>예측 — 기준가</td></tr>
-<tr><td><span class="key">pred-stats-bar</span><button class="guide-copy-btn" onclick="copyText('pred-stats-bar')">복사</button></td><td>예측 — 현황바</td></tr>
-<tr><td><span class="key">pred-vote-btns</span><button class="guide-copy-btn" onclick="copyText('pred-vote-btns')">복사</button></td><td>예측 — 투표버튼</td></tr>
-<tr><td><span class="key">pred-tabs</span><button class="guide-copy-btn" onclick="copyText('pred-tabs')">복사</button></td><td>예측 — 하단탭</td></tr>
-<tr><td><span class="key">pred-calendar</span><button class="guide-copy-btn" onclick="copyText('pred-calendar')">복사</button></td><td>예측 — 캘린더</td></tr>
-<tr><td><span class="key">pred-ranking-table</span><button class="guide-copy-btn" onclick="copyText('pred-ranking-table')">복사</button></td><td>예측 — 랭킹</td></tr>
-<tr><td><span class="key">news-search</span><button class="guide-copy-btn" onclick="copyText('news-search')">복사</button></td><td>소식 — 검색</td></tr>
-<tr><td><span class="key">news-list</span><button class="guide-copy-btn" onclick="copyText('news-list')">복사</button></td><td>소식 — 목록</td></tr>
-<tr><td><span class="key">news-more</span><button class="guide-copy-btn" onclick="copyText('news-more')">복사</button></td><td>소식 — 더보기</td></tr>
-<tr><td><span class="key">newsdet-header</span><button class="guide-copy-btn" onclick="copyText('newsdet-header')">복사</button></td><td>소식상세 — 헤더</td></tr>
-<tr><td><span class="key">newsdet-nav</span><button class="guide-copy-btn" onclick="copyText('newsdet-nav')">복사</button></td><td>소식상세 — 이전다음</td></tr>
-<tr><td><span class="key">pay-summary</span><button class="guide-copy-btn" onclick="copyText('pay-summary')">복사</button></td><td>결제 — 현황</td></tr>
-<tr><td><span class="key">pay-buttons</span><button class="guide-copy-btn" onclick="copyText('pay-buttons')">복사</button></td><td>결제 — 버튼</td></tr>
-<tr><td><span class="key">pay-event-banner</span><button class="guide-copy-btn" onclick="copyText('pay-event-banner')">복사</button></td><td>결제 — 배너</td></tr>
-<tr><td><span class="key">pay-merchants</span><button class="guide-copy-btn" onclick="copyText('pay-merchants')">복사</button></td><td>결제 — 가맹점</td></tr>
-<tr><td><span class="key">pay-recent</span><button class="guide-copy-btn" onclick="copyText('pay-recent')">복사</button></td><td>결제 — 최근결제</td></tr>
-        </table>
-      </div>
+    <div class="qna-sidebar-sub">현재: <span id="qna-scr-lbl" style="color:var(--primary);font-weight:600">메인 홈</span> · <span id="qna-cnt" style="color:var(--text4)">0건</span></div>
+  </div>
+
+  <!-- 필터 -->
+  <div class="qna-sidebar-filters">
+    <div class="chip active" id="qf-all" onclick="setQF('all')" style="font-size:10px;padding:3px 8px">전체</div>
+    <div class="chip" id="qf-cur"        onclick="setQF('cur')" style="font-size:10px;padding:3px 8px">이 화면</div>
+    <div class="chip" id="qf-un"         onclick="setQF('un')"  style="font-size:10px;padding:3px 8px">미답변</div>
+  </div>
+
+  <!-- API 설정 -->
+  <div class="qna-setup-inline" id="qna-setup-inline">
+    <div style="font-size:11px;font-weight:700;color:#92400E;margin-bottom:6px">⚙️ API URL 설정 필요</div>
+    <div style="font-size:10px;color:#92400E;margin-bottom:8px;line-height:1.5">Google Apps Script 배포 URL을 입력하면 질문/답변이 저장됩니다.</div>
+    <input id="qna-api-input" class="qna-su-input" placeholder="https://script.google.com/macros/s/...">
+    <button onclick="saveApiUrl()" style="width:100%;padding:8px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">저장</button>
+    <div style="margin-top:6px;text-align:center">
+      <button onclick="document.getElementById('qna-setup-inline').classList.remove('show')" style="background:none;border:none;font-size:10px;color:var(--text4);cursor:pointer;font-family:'Noto Sans KR',sans-serif;">나중에</button>
     </div>
   </div>
-</div>
+
+  <!-- 질문 목록 -->
+  <div class="qna-list" id="qna-list">
+    <div class="qna-empty">💬<br>등록된 질문이 없습니다.<br><span style="font-size:10px">아래에서 첫 질문을 남겨보세요!</span></div>
+  </div>
+
+  <!-- 질문 입력 폼 -->
+  <div class="qna-form">
+    <div style="font-size:10px;font-weight:600;color:var(--text3);margin-bottom:5px">
+      질문 — <span id="qna-form-scr" style="color:var(--primary);font-weight:700">메인 홈</span>
+    </div>
+    <textarea class="qna-fi" id="qna-q" rows="2" placeholder="궁금한 점을 입력하세요..."></textarea>
+    <div class="qna-frow">
+      <input class="qna-author" id="qna-author" placeholder="이름 (개발자)">
+      <button class="qna-submit" id="qna-sub-btn" onclick="submitQ()">등록</button>
+    </div>
+    <div class="qna-status" id="qna-status"></div>
+  </div>
+</div><!-- /qna-sidebar -->
+
+</div><!-- /layout-inner -->
+</div><!-- /layout -->
+
 
 
 <script>
+
 /* ══ NAVIGATION ══ */
 const SCREEN_MAP = {
-  'home':         { sc:'sc-home',         pol:'pol-home',         ni:0 },
-  'wallet':       { sc:'sc-wallet',       pol:'pol-wallet',       ni:1 },
-  'wallet-empty': { sc:'sc-wallet-empty',  pol:'pol-wallet',       ni:3 },
-  'wallet-pci':   { sc:'sc-wallet-pci',   pol:'pol-wallet-pci',   ni:2 },
-  'wallet-other': { sc:'sc-wallet-other', pol:'pol-wallet-other', ni:3 },
-  'asset':        { sc:'sc-asset',        pol:'pol-asset',        ni:4 },
-  'pci-info':     { sc:'sc-pci-info',     pol:'pol-pci-info',     ni:5 },
-  'token-detail': { sc:'sc-token-detail', pol:'pol-token-detail', ni:6 },
-  'benefits':     { sc:'sc-benefits',     pol:'pol-benefits',     ni:7 },
-  'prediction':   { sc:'sc-prediction',   pol:'pol-prediction',   ni:8 },
-  'news':         { sc:'sc-news',         pol:'pol-news',         ni:9 },
-  'news-detail':  { sc:'sc-news-detail',  pol:'pol-news-detail',  ni:10 },
-  'payment':      { sc:'sc-payment',      pol:'pol-payment',      ni:11 },
+  'home':         { sc:'sc-home',         pol:'pol-home',         ni:0  },
+  'wallet':       { sc:'sc-wallet',       pol:'pol-wallet',       ni:1  },
+  'wallet-empty': { sc:'sc-wallet-empty', pol:'pol-wallet',       ni:2  },
+  'wallet-pci':   { sc:'sc-wallet-pci',   pol:'pol-wallet-pci',   ni:3  },
+  'wallet-other': { sc:'sc-wallet-other', pol:'pol-wallet-other', ni:4  },
+  'asset':        { sc:'sc-asset',        pol:'pol-asset',        ni:5  },
+  'pci-info':     { sc:'sc-pci-info',     pol:'pol-pci-info',     ni:6  },
+  'token-detail': { sc:'sc-token-detail', pol:'pol-token-detail', ni:7  },
+  'benefits':     { sc:'sc-benefits',     pol:'pol-benefits',     ni:8  },
+  'prediction':   { sc:'sc-prediction',   pol:'pol-prediction',   ni:9  },
+  'news':         { sc:'sc-news',         pol:'pol-news',         ni:10 },
+  'news-detail':  { sc:'sc-news-detail',  pol:'pol-news-detail',  ni:11 },
+  'payment':      { sc:'sc-payment',      pol:'pol-payment',      ni:12 },
 };
 
 function nav(key) {
@@ -2131,8 +2197,12 @@ function nav(key) {
     if (cfg.sc === 'sc-wallet') initWalletScreen();
   }
   if (po) po.classList.add('active');
-  const navBtns = document.querySelectorAll('.nav-btn');
-  if (navBtns[cfg.ni]) navBtns[cfg.ni].classList.add('active');
+  // nav-btn에서 onclick에 key가 포함된 버튼을 찾아 active 처리
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + key + "'")) {
+      b.classList.add('active');
+    }
+  });
   document.querySelector('.policy-panel').scrollTop = 0;
   document.querySelectorAll('.overlay').forEach(o => o.classList.remove('show'));
 }
@@ -2413,12 +2483,48 @@ const QNA = {
 };
 QNA.init();
 
-function toggleQna(){
-  const box=document.getElementById('qna-box');
-  const isOpen=box.classList.toggle('open');
-  updateQnaLabels();
-  if(isOpen){ if(!QNA.apiUrl){ document.getElementById('qna-setup-box').classList.add('open'); } else { loadQna(); } }
+/* ══ CONFIG 자동 로드 ══
+ * 1순위: config.json (같은 저장소)
+ * 2순위: localStorage (이전 수동 입력값)
+ * 3순위: 수동 입력창 표시
+ */
+async function loadConfig() {
+  // 이미 API URL이 있으면 (localStorage) 바로 사용
+  if (QNA.apiUrl) {
+    startWithApi();
+    return;
+  }
+
+  // config.json 시도
+  try {
+    // 현재 페이지와 같은 경로에서 config.json 읽기
+    const base = window.location.href.replace(/\/[^\/]*$/, '/');
+    const res  = await fetch(base + 'config.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('config.json 없음');
+
+    const cfg = await res.json();
+    if (cfg.apiUrl && cfg.apiUrl.startsWith('https://')) {
+      QNA.apiUrl = cfg.apiUrl;
+      try { localStorage.setItem('qna_api', cfg.apiUrl); } catch(e) {}
+      startWithApi();
+      return;
+    }
+  } catch (e) {
+    // config.json 없거나 읽기 실패 → 수동 입력창 표시
+  }
+
+  // 폴백: 수동 입력창 표시
+  const s = document.getElementById('qna-setup-inline');
+  if (s) s.classList.add('show');
 }
+
+function startWithApi() {
+  // 동시 로딩 (순차 X)
+  Promise.all([loadQna(), loadDesc()]);
+}
+
+setTimeout(loadConfig, 600);
+
 function updateQnaLabels(){
   const lbl=QNA.curLabel();
   const el1=document.getElementById('qna-scr-lbl');
@@ -2431,8 +2537,9 @@ function saveApiUrl(){
   if(!url.startsWith('https://')){ alert('올바른 URL을 입력해주세요.'); return; }
   try{ localStorage.setItem('qna_api',url); }catch(e){}
   QNA.apiUrl=url;
-  document.getElementById('qna-setup-box').classList.remove('open');
+  document.getElementById('qna-setup-inline').classList.remove('show');
   loadQna();
+  loadDesc();
 }
 function setQF(f){
   QNA.filter=f;
@@ -2445,17 +2552,26 @@ function setQF(f){
 async function loadQna(){
   if(!QNA.apiUrl) return;
   const listEl=document.getElementById('qna-list');
-  if(listEl) listEl.innerHTML='<div class="qna-empty">불러오는 중...</div>';
+  if(QNA.items.length) renderQna();
+  else if(listEl) listEl.innerHTML='<div class="qna-empty" style="font-size:11px;color:var(--text4)">불러오는 중...</div>';
   try{
-    const r=await fetch(QNA.apiUrl+'?action=list');
+    const ctrl=new AbortController();
+    const tmr=setTimeout(()=>ctrl.abort(),10000);
+    const r=await fetch(QNA.apiUrl+'?action=qna_list',{signal:ctrl.signal});
+    clearTimeout(tmr);
     const d=await r.json();
     QNA.items=d.items||[];
     updateBadge();
     renderQna();
   }catch(e){
-    if(listEl) listEl.innerHTML='<div class="qna-empty" style="color:var(--red)">불러오기 실패<br><button onclick="document.getElementById(\'qna-setup-box\').classList.add(\'open\')" style="margin-top:8px;padding:4px 10px;background:var(--primary);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:11px">설정</button></div>';
+    if(e.name==='AbortError'){
+      if(listEl&&!QNA.items.length) listEl.innerHTML='<div class="qna-empty" style="color:var(--red)">응답 시간 초과. ↻ 재시도</div>';
+    }else{
+      if(listEl&&!QNA.items.length) listEl.innerHTML='<div class="qna-empty" style="color:var(--red)">불러오기 실패</div>';
+    }
   }
 }
+
 function renderQna(){
   const listEl=document.getElementById('qna-list');
   if(!listEl) return;
@@ -2464,33 +2580,67 @@ function renderQna(){
   else if(QNA.filter==='un') items=items.filter(i=>!i.answer);
   const cnt=document.getElementById('qna-cnt');
   if(cnt) cnt.textContent='('+items.length+'건)';
-  if(!items.length){ listEl.innerHTML='<div class="qna-empty">💬<br>'+(QNA.filter==='cur'?'이 화면에 질문이 없습니다.':QNA.filter==='un'?'미답변 질문이 없습니다. 👍':'등록된 질문이 없습니다.')+'</div>'; return; }
-  listEl.innerHTML=items.map(item=>{
-    const sl=QNA.LABELS[item.screen]||item.screen;
-    const ts=item.created_at?new Date(item.created_at).toLocaleString('ko-KR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
-    const ansHtml=item.answer
-      ?`<div class="qna-a">${esc(item.answer)}</div>`
-      :`<div class="qna-pending">답변 대기 중...</div><button class="qna-reply-btn" onclick="toggleReply(${item.id})">✏️ 답변 작성</button><div class="qna-reply-area" id="ra-${item.id}"><textarea class="qna-ri" id="ri-${item.id}" rows="2" placeholder="답변 입력..."></textarea><button class="qna-rs" onclick="submitA(${item.id})">답변 등록</button></div>`;
-    return `<div class="qna-item"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span class="qna-screen-tag">${esc(sl)}</span><span class="qna-ts">${ts} · ${esc(item.author||'익명')}</span></div><div class="qna-q">${esc(item.question)}</div>${ansHtml}</div>`;
+  if(!items.length){
+    listEl.innerHTML='<div class="qna-empty">💬<br>'+(QNA.filter==='cur'?'이 화면에 질문이 없습니다.':QNA.filter==='un'?'미답변 질문이 없습니다. 👍':'등록된 질문이 없습니다.')+'</div>';
+    return;
+  }
+  listEl.innerHTML=items.map(function(item){
+    var sl=QNA.LABELS[item.screen]||item.screen;
+    var ts=item.created_at?new Date(item.created_at).toLocaleString('ko-KR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+    var ansHtml = item._pending
+      ? '<div class="qna-pending" style="color:var(--gold)">⏳ 등록 중...</div>'
+      : item.answer
+        ? '<div class="qna-a'+(item._answerPending?'" style="opacity:.6"':'"')+'>'+esc(item.answer)+(item._answerPending?' <span style="font-size:9px;color:var(--text4)">(저장 중...)</span>':'')+'</div>'
+        : '<div class="qna-pending">답변 대기 중...</div>'+
+          '<button class="qna-reply-btn" onclick="toggleReply(''+item.id+'')">✏️ 답변 작성</button>'+
+          '<div class="qna-reply-area" id="ra-'+item.id+'">'+
+          '<textarea class="qna-ri" id="ri-'+item.id+'" rows="2" placeholder="답변 입력..."></textarea>'+
+          '<button class="qna-rs" onclick="submitA(''+item.id+'')">답변 등록</button></div>';
+    return '<div class="qna-item"><div style="display:flex;justify-content:space-between;margin-bottom:4px">'+
+      '<span class="qna-screen-tag" onclick="nav(''+item.screen+'')" title="'+esc(sl)+'로 이동">'+esc(sl)+' ↗</span>'+
+      '<span class="qna-ts">'+ts+' · '+esc(item.author||'익명')+'</span></div>'+
+      '<div class="qna-q">'+esc(item.question)+'</div>'+ansHtml+'</div>';
   }).join('');
 }
+
 function updateBadge(){
   const n=QNA.items.filter(i=>!i.answer).length;
   const b=document.getElementById('qna-fab-badge');
   if(b){ b.style.display=n?'flex':'none'; b.textContent=n>9?'9+':n; }
 }
-function toggleReply(id){ const a=document.getElementById('ra-'+id); if(a) a.classList.toggle('open'); }
+
+function toggleReply(id){
+  const a=document.getElementById('ra-'+id);
+  if(a) a.classList.toggle('open');
+}
+
 async function submitA(id){
   const inp=document.getElementById('ri-'+id);
   const ans=inp?inp.value.trim():'';
   if(!ans){ alert('답변을 입력해주세요.'); return; }
   if(!QNA.apiUrl){ alert('API URL을 먼저 설정해주세요.'); return; }
+  const item=QNA.items.find(function(i){ return String(i.id)===String(id); });
+  if(item){ item.answer=ans; item._answerPending=true; renderQna(); }
   try{
-    const r=await fetch(QNA.apiUrl,{method:'POST',body:JSON.stringify({action:'answer',id,answer:ans})});
+    var url=QNA.apiUrl+'?action=qna_answer&id='+encodeURIComponent(id)+'&answer='+encodeURIComponent(ans);
+    const ctrl=new AbortController();
+    const tmr=setTimeout(function(){ ctrl.abort(); },10000);
+    const r=await fetch(url,{signal:ctrl.signal});
+    clearTimeout(tmr);
     const d=await r.json();
-    if(d.success) await loadQna(); else alert('오류: '+(d.error||''));
-  }catch(e){ alert('오류: '+e.message); }
+    if(d.success){
+      if(item) delete item._answerPending;
+      loadQna();
+    }else{
+      if(item){ item.answer=null; delete item._answerPending; renderQna(); }
+      alert('오류: '+(d.error||''));
+    }
+  }catch(e){
+    if(item){ item.answer=null; delete item._answerPending; renderQna(); }
+    alert(e.name==='AbortError'?'응답 지연. 다시 시도해주세요.':'오류: '+e.message);
+  }
 }
+
 async function submitQ(){
   const qEl=document.getElementById('qna-q');
   const aEl=document.getElementById('qna-author');
@@ -2499,171 +2649,18 @@ async function submitQ(){
   const q=(qEl||{}).value||'';
   const author=(aEl||{}).value||'익명';
   if(!q.trim()){ if(qEl) qEl.focus(); return; }
-  if(!QNA.apiUrl){ document.getElementById('qna-setup-box').classList.add('open'); return; }
-  btn.disabled=true; btn.textContent='등록 중...';
-  st.classList.remove('show');
-  try{
-    const r=await fetch(QNA.apiUrl,{method:'POST',body:JSON.stringify({action:'add',screen:QNA.curScreen(),question:q.trim(),author})});
-    const d=await r.json();
-    if(d.success){
-      qEl.value='';
-      st.textContent='✅ 질문이 등록됐습니다!'; st.style.color='var(--green)'; st.classList.add('show');
-      await loadQna();
-      setTimeout(()=>st.classList.remove('show'),3000);
-    } else throw new Error(d.error||'등록 실패');
-  }catch(e){ st.textContent='❌ '+e.message; st.style.color='var(--red)'; st.classList.add('show'); }
-  finally{ btn.disabled=false; btn.textContent='등록'; }
-}
-function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
-
-// nav 래핑 - 화면 전환 시 QnA 레이블 업데이트
-(function(){
-  const _nav=window.nav||nav;
-  window.nav=function(k){ _nav(k); updateQnaLabels(); };
-})();
-setTimeout(updateQnaLabels, 400);
-
-
-/* ══ QnA SYSTEM ══ */
-const QNA = {
-  apiUrl: '',
-  filter: 'all',
-  items: [],
-  LABELS: {'home':'메인 홈','wallet':'지갑','wallet-empty':'지갑(미연결)','wallet-pci':'지갑상세(PCI)','wallet-other':'지갑상세(기타)','asset':'자산현황','pci-info':'PCI 정보','token-detail':'토큰 상세','benefits':'혜택','prediction':'등락 예측','news':'최근 소식','news-detail':'소식 상세','payment':'결제'},
-  curScreen: function(){ var s=document.querySelector('.screen.active'); return s?s.id.replace('sc-',''):'home'; },
-  curLabel: function(){ return this.LABELS[this.curScreen()]||this.curScreen(); },
-  init: function(){ try{ this.apiUrl=localStorage.getItem('qna_api')||''; }catch(e){} }
-};
-QNA.init();
-
-function updateQnaLabels(){
-  var lbl=QNA.curLabel();
-  var e1=document.getElementById('qna-scr-lbl');
-  var e2=document.getElementById('qna-form-scr');
-  if(e1) e1.textContent=lbl;
-  if(e2) e2.textContent=lbl;
-}
-function saveApiUrl(){
-  var url=(document.getElementById('qna-api-input')||{}).value||'';
-  if(!url.startsWith('https://')){ alert('올바른 URL을 입력해주세요.'); return; }
-  try{ localStorage.setItem('qna_api',url); }catch(e){}
-  QNA.apiUrl=url;
-  document.getElementById('qna-setup-inline').classList.remove('show');
-  Promise.all([loadQna(), loadDesc()]);
-}
-function setQF(f){
-  QNA.filter=f;
-  ['all','cur','un'].forEach(function(id){
-    var el=document.getElementById('qf-'+id);
-    if(el) el.classList.toggle('active',id===f);
-  });
-  renderQna();
-}
-async function loadQna(){
-  if(!QNA.apiUrl) return;
-  var listEl=document.getElementById('qna-list');
-  if(QNA.items.length) renderQna();
-  else if(listEl) listEl.innerHTML='<div class="qna-empty" style="font-size:11px;">불러오는 중...</div>';
-  try{
-    var ctrl=new AbortController();
-    var tmr=setTimeout(function(){ ctrl.abort(); },10000);
-    var r=await fetch(QNA.apiUrl+'?action=qna_list',{signal:ctrl.signal});
-    clearTimeout(tmr);
-    var d=await r.json();
-    QNA.items=d.items||[];
-    updateBadge();
-    renderQna();
-  }catch(e){
-    if(listEl&&!QNA.items.length) listEl.innerHTML='<div class="qna-empty" style="color:var(--red)">불러오기 실패. ↻ 재시도</div>';
-  }
-}
-function renderQna(){
-  var listEl=document.getElementById('qna-list');
-  if(!listEl) return;
-  var items=[].concat(QNA.items).reverse();
-  if(QNA.filter==='cur') items=items.filter(function(i){ return i.screen===QNA.curScreen(); });
-  else if(QNA.filter==='un') items=items.filter(function(i){ return !i.answer; });
-  var cnt=document.getElementById('qna-cnt');
-  if(cnt) cnt.textContent='('+items.length+'건)';
-  if(!items.length){
-    listEl.innerHTML='<div class="qna-empty">💬<br>'+(QNA.filter==='cur'?'이 화면에 질문 없음':QNA.filter==='un'?'미답변 없음 👍':'질문이 없습니다.')+'</div>';
-    return;
-  }
-  listEl.innerHTML=items.map(function(item){
-    var sl=QNA.LABELS[item.screen]||item.screen;
-    var ts=item.created_at?new Date(item.created_at).toLocaleString('ko-KR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
-    var scr=String(item.screen).replace(/'/g,'');
-    var ansHtml;
-    if(item._pending){
-      ansHtml='<div class="qna-pending" style="color:var(--gold)">⏳ 등록 중...</div>';
-    }else if(item.answer){
-      ansHtml='<div class="qna-a'+(item._answerPending?' style="opacity:.6"':'"')+'>'+esc(item.answer)+'</div>';
-    }else{
-      var rid='ri-'+item.id;
-      var rad='ra-'+item.id;
-      var saId=String(item.id).replace(/'/g,'');
-      ansHtml='<div class="qna-pending">답변 대기 중...</div>'+
-        '<button class="qna-reply-btn" onclick="toggleReply(this)">✏️ 답변 작성</button>'+
-        '<div class="qna-reply-area" id="'+rad+'">'+
-        '<textarea class="qna-ri" id="'+rid+'" rows="2" placeholder="답변 입력..."></textarea>'+
-        '<button class="qna-rs" data-id="'+saId+'" onclick="submitA(this.dataset.id)">답변 등록</button></div>';
-    }
-    return '<div class="qna-item">'+
-      '<div style="display:flex;justify-content:space-between;margin-bottom:4px">'+
-      '<span class="qna-screen-tag" data-screen="'+scr+'" onclick="nav(this.dataset.screen)">'+esc(sl)+' ↗</span>'+
-      '<span class="qna-ts">'+ts+' · '+esc(item.author||'익명')+'</span></div>'+
-      '<div class="qna-q">'+esc(item.question)+'</div>'+ansHtml+'</div>';
-  }).join('');
-}
-function updateBadge(){
-  var n=QNA.items.filter(function(i){ return !i.answer; }).length;
-}
-function toggleReply(btn){
-  var ra=btn.parentElement?btn.parentElement.querySelector('.qna-reply-area'):null;
-  if(ra) ra.classList.toggle('open');
-}
-async function submitA(id){
-  id=String(id);
-  var inp=document.getElementById('ri-'+id);
-  var ans=inp?inp.value.trim():'';
-  if(!ans){ alert('답변을 입력해주세요.'); return; }
-  if(!QNA.apiUrl){ alert('API URL을 먼저 설정해주세요.'); return; }
-  var item=QNA.items.find(function(i){ return String(i.id)===id; });
-  if(item){ item.answer=ans; item._answerPending=true; renderQna(); }
-  try{
-    var url=QNA.apiUrl+'?action=qna_answer&id='+encodeURIComponent(id)+'&answer='+encodeURIComponent(ans);
-    var ctrl=new AbortController();
-    var tmr=setTimeout(function(){ ctrl.abort(); },10000);
-    var r=await fetch(url,{signal:ctrl.signal});
-    clearTimeout(tmr);
-    var d=await r.json();
-    if(d.success){ if(item) delete item._answerPending; loadQna(); }
-    else{ if(item){ item.answer=null; delete item._answerPending; renderQna(); } alert('오류: '+(d.error||'')); }
-  }catch(e){
-    if(item){ item.answer=null; delete item._answerPending; renderQna(); }
-    alert(e.name==='AbortError'?'응답 지연. 다시 시도해주세요.':'오류: '+e.message);
-  }
-}
-async function submitQ(){
-  var qEl=document.getElementById('qna-q');
-  var aEl=document.getElementById('qna-author');
-  var btn=document.getElementById('qna-sub-btn');
-  var st=document.getElementById('qna-status');
-  var q=(qEl||{}).value||'';
-  var author=(aEl||{}).value||'익명';
-  if(!q.trim()){ if(qEl) qEl.focus(); return; }
   if(!QNA.apiUrl){ document.getElementById('qna-setup-inline').classList.add('show'); return; }
-  var tempId='temp_'+Date.now();
+  const tempId='temp_'+Date.now();
   QNA.items.push({id:tempId,screen:QNA.curScreen(),question:q.trim(),author:author||'익명',answer:null,created_at:new Date().toISOString(),_pending:true});
   qEl.value=''; btn.disabled=true; btn.textContent='등록 중...';
   st.classList.remove('show'); renderQna();
   try{
     var url=QNA.apiUrl+'?action=qna_add&screen='+encodeURIComponent(QNA.curScreen())+'&question='+encodeURIComponent(q.trim())+'&author='+encodeURIComponent(author||'익명');
-    var ctrl=new AbortController();
-    var tmr=setTimeout(function(){ ctrl.abort(); },10000);
-    var r=await fetch(url,{signal:ctrl.signal});
+    const ctrl=new AbortController();
+    const tmr=setTimeout(function(){ ctrl.abort(); },10000);
+    const r=await fetch(url,{signal:ctrl.signal});
     clearTimeout(tmr);
-    var d=await r.json();
+    const d=await r.json();
     QNA.items=QNA.items.filter(function(i){ return i.id!==tempId; });
     if(d.success){
       st.textContent='✅ 등록됐습니다!'; st.style.color='var(--green)'; st.classList.add('show');
@@ -2672,125 +2669,148 @@ async function submitQ(){
     }else throw new Error(d.error||'등록 실패');
   }catch(e){
     QNA.items=QNA.items.filter(function(i){ return i.id!==tempId; }); renderQna();
-    if(e.name==='AbortError'){ st.textContent='⏱ 응답 지연.'; st.style.color='var(--gold)'; }
-    else{ st.textContent='❌ '+e.message; st.style.color='var(--red)'; }
+    if(e.name==='AbortError'){st.textContent='⏱ 응답 지연. 잠시 후 확인해보세요.';st.style.color='var(--gold)';}
+    else{st.textContent='❌ '+e.message;st.style.color='var(--red)';}
     st.classList.add('show');
   }
   finally{ btn.disabled=false; btn.textContent='등록'; }
 }
-function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-/* ══ DESC SYSTEM ══ */
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/
+/g,'<br>'); }
+function escDesc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ══ DESCRIPTION SYSTEM ══ */
 const DESC = {
   items: [], loaded: false, failed: false,
-  dotClass: function(imp){ var m={'필수':'r','경고':'o','참고':'g','코드':'p','일반':''}; return m[imp]||''; }
+  dotClass: function(importance) {
+    var map = {'필수':'r','경고':'o','참고':'g','코드':'p','일반':''};
+    return map[importance] || '';
+  }
 };
-async function loadDesc(){
-  if(!QNA.apiUrl) return;
-  document.querySelectorAll('.policy-section[data-screen]').forEach(function(sec){
-    if(!sec.dataset.staticBackup) sec.dataset.staticBackup=sec.innerHTML;
-    if(!DESC.items.length) sec.innerHTML='<div class="desc-loading"><div class="desc-loading-spinner"></div><div>불러오는 중...</div></div>';
+
+async function loadDesc() {
+  if (!QNA.apiUrl) return;
+  document.querySelectorAll('.policy-section[data-screen]').forEach(function(sec) {
+    if (!sec.dataset.staticBackup) sec.dataset.staticBackup = sec.innerHTML;
+    if (!DESC.items.length) sec.innerHTML = '<div class="desc-loading"><div class="desc-loading-spinner"></div><div>불러오는 중...</div></div>';
   });
-  if(DESC.items.length) renderAllDesc();
-  try{
-    var ctrl=new AbortController();
-    var timer=setTimeout(function(){ ctrl.abort(); },10000);
-    var res=await fetch(QNA.apiUrl+'?action=desc',{signal:ctrl.signal});
+  if (DESC.items.length) renderAllDesc();
+  try {
+    const ctrl  = new AbortController();
+    const timer = setTimeout(function() { ctrl.abort(); }, 10000);
+    const res   = await fetch(QNA.apiUrl + '?action=desc', { signal: ctrl.signal });
     clearTimeout(timer);
-    var data=await res.json();
-    if(!data.success) throw new Error(data.error||'로드 실패');
-    DESC.items=data.items||[]; DESC.loaded=true;
+    const data  = await res.json();
+    if (!data.success) throw new Error(data.error || '로드 실패');
+    DESC.items  = data.items || [];
+    DESC.loaded = true;
     renderAllDesc();
-  }catch(err){
-    DESC.failed=true;
-    console.warn('Description 로드 실패:',err.message);
-    document.querySelectorAll('.policy-section').forEach(function(sec){
-      if(sec.dataset.staticBackup) sec.innerHTML=sec.dataset.staticBackup;
+  } catch (err) {
+    DESC.failed = true;
+    console.warn('Description 로드 실패:', err.message);
+    document.querySelectorAll('.policy-section').forEach(function(sec) {
+      if (sec.dataset.staticBackup) sec.innerHTML = sec.dataset.staticBackup;
     });
   }
 }
-function renderAllDesc(){
-  document.querySelectorAll('.policy-section[data-screen]').forEach(function(sec){
+
+function renderAllDesc() {
+  document.querySelectorAll('.policy-section[data-screen]').forEach(function(sec) {
     renderDescForScreen(sec.dataset.screen);
   });
 }
-function renderDescForScreen(screenKey){
-  var sec=document.querySelector('.policy-section[data-screen="'+screenKey+'"]');
-  if(!sec) return;
-  var items=DESC.items.filter(function(i){ return i.screen_key===screenKey; });
-  if(!items.length){ if(sec.dataset.staticBackup) sec.innerHTML=sec.dataset.staticBackup; return; }
-  var groups={};
-  items.forEach(function(item){ var g=item.group||'기타'; if(!groups[g]) groups[g]=[]; groups[g].push(item); });
-  var sl=QNA.LABELS[screenKey]||screenKey;
-  var sid='SCREEN_'+screenKey.toUpperCase().replace(/-/g,'_');
-  var html='<div class="policy-header"><div class="policy-screen-id">'+escD(sid)+' <span class="desc-static-badge">Sheets</span></div><div class="policy-title">'+escD(sl)+'</div></div>';
-  Object.keys(groups).forEach(function(gt){
-    var gi=groups[gt];
-    var fz=null; gi.forEach(function(i){ if(i.zone_id&&!fz) fz=i; });
-    var sg=escD(gt);
-    var gtC=fz?'policy-group-title has-zone':'policy-group-title';
-    var gtA=fz?' data-zone="'+fz.zone_id+'" data-label="'+sg+'" onclick="hlZoneFromEl(this)"':'';
-    html+='<div class="policy-group"><div class="'+gtC+'"'+gtA+'>'+sg+'</div>';
-    gi.forEach(function(item){
-      var c=item.content||'', imp=item.importance||'', z=item.zone_id||'';
-      var dc=DESC.dotClass(imp);
-      if(imp==='코드'||c.charAt(0)==='`'){
-        html+='<div class="policy-code">'+escD(c.replace(/^`|`$/g,''))+'</div>';
-      }else if(imp==='경고'||c.indexOf('⚠️')===0){
-        html+='<div class="policy-warn">'+escD(c)+'</div>';
-      }else{
-        var hz=z?' has-zone':'';
-        var za=z?' data-zone="'+z+'" data-label="'+sg+'" onclick="hlZoneFromEl(this)"':'';
-        var da=dc?' class="pd '+dc+'"':' class="pd"';
-        html+='<div class="policy-item'+hz+'"'+za+'><div'+da+'></div>'+escD(c)+'</div>';
+
+function renderDescForScreen(screenKey) {
+  const sec = document.querySelector('.policy-section[data-screen="' + screenKey + '"]');
+  if (!sec) return;
+  const items = DESC.items.filter(function(i) { return i.screen_key === screenKey; });
+  if (!items.length) {
+    if (sec.dataset.staticBackup) sec.innerHTML = sec.dataset.staticBackup;
+    return;
+  }
+  const groups = {};
+  items.forEach(function(item) {
+    var g = item.group || '기타';
+    if (!groups[g]) groups[g] = [];
+    groups[g].push(item);
+  });
+  const screenLabel = QNA.LABELS[screenKey] || screenKey;
+  const screenId    = 'SCREEN_' + screenKey.toUpperCase().replace(/-/g,'_');
+  var html = '<div class="policy-header">' +
+    '<div class="policy-screen-id">' + escDesc(screenId) +
+    ' <span class="desc-static-badge">Sheets 연동</span></div>' +
+    '<div class="policy-title">' + escDesc(screenLabel) + '</div></div>';
+
+  Object.keys(groups).forEach(function(groupTitle) {
+    var groupItems = groups[groupTitle];
+    var firstZone  = null;
+    groupItems.forEach(function(i) { if(i.zone_id && !firstZone) firstZone = i; });
+    var sg      = groupTitle.replace(/'/g, "&#39;");
+    var gtClass = firstZone ? 'policy-group-title has-zone' : 'policy-group-title';
+    var gtAttr  = firstZone ? ('onclick="hlZone('' + firstZone.zone_id + '','' + sg + '')"') : '';
+    html += '<div class="policy-group">';
+    html += '<div class="' + gtClass + '" ' + gtAttr + '>' + escDesc(groupTitle) + '</div>';
+    groupItems.forEach(function(item) {
+      var content    = item.content    || '';
+      var importance = item.importance || '';
+      var zoneId     = item.zone_id    || '';
+      var dotCls     = DESC.dotClass(importance);
+      if (importance === '코드' || content.charAt(0) === '`') {
+        var codeText = content.replace(/^`|`$/g, '');
+        html += '<div class="policy-code">' + escDesc(codeText) + '</div>';
+      } else if (importance === '경고' || content.indexOf('⚠️') === 0) {
+        html += '<div class="policy-warn">' + escDesc(content) + '</div>';
+      } else {
+        var hasZone  = zoneId ? ' has-zone' : '';
+        var sz       = zoneId.replace(/'/g, "&#39;");
+        var itemAttr = zoneId ? ('onclick="hlZone('' + sz + '','' + sg + '')"') : '';
+        var dotAttr  = dotCls ? ' class="pd ' + dotCls + '"' : ' class="pd"';
+        html += '<div class="policy-item' + hasZone + '" ' + itemAttr + '>';
+        html += '<div' + dotAttr + '></div>' + escDesc(content) + '</div>';
       }
     });
-    html+='</div>';
+    html += '</div>';
   });
-  sec.innerHTML=html;
+  sec.innerHTML = html;
 }
-function hlZoneFromEl(el){ var z=el.dataset.zone; var lb=el.dataset.label||''; if(z) hlZone(z,lb); }
-function escD(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 /* ══ SHEET GUIDE ══ */
-function showSheetGuide(){ document.getElementById('guide-overlay').classList.add('open'); }
-function closeGuide(){ document.getElementById('guide-overlay').classList.remove('open'); }
-function copyText(text){
-  navigator.clipboard.writeText(text).then(function(){
-    var t=document.createElement('div');
-    t.textContent='✅ 복사: '+text;
-    t.style.cssText="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1A56DB;color:#fff;padding:8px 18px;border-radius:10px;font-size:12px;font-weight:600;z-index:999;pointer-events:none;font-family:'Noto Sans KR',sans-serif;";
+function showSheetGuide() {
+  document.getElementById('guide-overlay').classList.add('open');
+}
+function closeGuide() {
+  document.getElementById('guide-overlay').classList.remove('open');
+}
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(function() {
+    var t = document.createElement('div');
+    t.textContent = '✅ 복사됨: ' + text;
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1A56DB;color:#fff;padding:8px 18px;border-radius:10px;font-size:12px;font-weight:600;z-index:999;pointer-events:none;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.2);';
     document.body.appendChild(t);
-    setTimeout(function(){ t.remove(); },2000);
-  }).catch(function(){ var i=document.createElement('input'); i.value=text; document.body.appendChild(i); i.select(); document.execCommand('copy'); i.remove(); });
+    setTimeout(function() { t.remove(); }, 2000);
+  }).catch(function() {
+    var inp = document.createElement('input');
+    inp.value = text;
+    document.body.appendChild(inp);
+    inp.select();
+    document.execCommand('copy');
+    inp.remove();
+  });
 }
-document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeGuide(); });
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeGuide();
+});
 
-/* ══ CONFIG LOAD ══ */
-async function loadConfig(){
-  if(QNA.apiUrl){ Promise.all([loadQna(),loadDesc()]); return; }
-  try{
-    var base=window.location.href.replace(/\/[^\/]*$/,'/');
-    var res=await fetch(base+'config.json',{cache:'no-cache'});
-    if(!res.ok) throw new Error('no config');
-    var cfg=await res.json();
-    if(cfg.apiUrl&&cfg.apiUrl.startsWith('https://')){
-      QNA.apiUrl=cfg.apiUrl;
-      try{ localStorage.setItem('qna_api',cfg.apiUrl); }catch(e){}
-      Promise.all([loadQna(),loadDesc()]); return;
-    }
-  }catch(e){}
-  var s=document.getElementById('qna-setup-inline');
-  if(s) s.classList.add('show');
-}
-
-/* ══ NAV OVERRIDE ══ */
+/* ══ NAV OVERRIDE (QnA label update) ══ */
 (function(){
-  var _nav=window.nav||nav;
-  window.nav=function(k){ _nav(k); updateQnaLabels(); };
+  var _nav = window.nav || nav;
+  window.nav = function(k){ _nav(k); updateQnaLabels(); };
 })();
+setTimeout(updateQnaLabels, 400);
 
-setTimeout(function(){ updateQnaLabels(); loadConfig(); },600);
+/* ══ INIT ══ */
+setTimeout(loadConfig, 600);
 
 </script>
 </body>
