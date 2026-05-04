@@ -139,12 +139,12 @@ body {
 
 .screen {
   position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  overflow-y: auto; overflow-x: hidden;
+  overflow: hidden;
   display: none; background: var(--screen-bg);
-  scrollbar-width: none;
+  flex-direction: column;
 }
 .screen::-webkit-scrollbar { display: none; }
-.screen.active { display: block; animation: slideIn .28s cubic-bezier(.16,1,.3,1); }
+.screen.active { display: flex; animation: slideIn .28s cubic-bezier(.16,1,.3,1); }
 @keyframes slideIn { from { transform: translateX(16px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
 /* ══ POLICY PANEL ══ */
@@ -219,6 +219,7 @@ body {
 
 /* ══ APP HEADER ══ */
 .aheader {
+  flex-shrink: 0;
   padding: 2px 16px 12px;
   display: flex; align-items: center; justify-content: space-between;
 }
@@ -242,7 +243,14 @@ body {
 }
 
 /* ══ SCREEN BODY ══ */
-.sbody { padding-bottom: 76px; }
+.sbody {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  padding-bottom: 16px;
+}
+.sbody::-webkit-scrollbar { display: none; }
 
 /* ══ CARD ══ */
 .card {
@@ -328,11 +336,12 @@ body {
 
 /* ══ BOTTOM TAB BAR ══ */
 .tab-bar {
-  position: sticky; bottom: 0;
+  flex-shrink: 0;
   height: 68px; background: var(--card);
   border-top: 1px solid var(--border);
   box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
   display: flex; align-items: flex-start; padding-top: 8px;
+  position: relative; z-index: 10;
 }
 .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
 .tab-icon { font-size: 20px; }
@@ -406,7 +415,7 @@ body {
 .divider { height: 8px; background: var(--bg-root); }
 
 /* ══ BACK HEADER ══ */
-.back-header { padding: 4px 14px 10px; display: flex; align-items: center; gap: 10px; }
+.back-header { flex-shrink: 0; padding: 4px 14px 10px; display: flex; align-items: center; gap: 10px; }
 .back-btn { font-size: 13px; color: var(--primary); cursor: pointer; padding: 4px 0; font-weight: 500; }
 
 /* ══ OVERLAY / MODAL ══ */
@@ -659,6 +668,31 @@ body {
   outline: none; margin-bottom: 7px; color: var(--text);
 }
 
+
+/* ══ DESCRIPTION DYNAMIC ══ */
+.desc-loading {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 60px 20px; gap: 10px;
+  color: var(--text4); font-size: 12px;
+}
+.desc-loading-spinner {
+  width: 28px; height: 28px; border: 3px solid var(--border);
+  border-top-color: var(--primary); border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.desc-error {
+  margin: 16px; padding: 14px; background: #FEF2F2;
+  border: 1px solid #FECACA; border-radius: 10px;
+  font-size: 12px; color: var(--red); text-align: center; line-height: 1.6;
+}
+.desc-static-badge {
+  display: inline-block; font-size: 9px; font-weight: 600;
+  padding: 1px 7px; border-radius: 10px; margin-left: 6px;
+  background: var(--card2); color: var(--text4);
+  border: 1px solid var(--border); vertical-align: middle;
+}
+
 </style>
 
 </head>
@@ -699,8 +733,8 @@ body {
 
 <!-- ═══════════════ HOME ═══════════════ -->
 <div class="screen active" id="sc-home">
-  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● WiFi 🔋</span></div>
-  <div class="aheader">
+  <div class="sbar" data-zone="home-header"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● WiFi 🔋</span></div>
+  <div class="aheader" data-zone="home-header">
     <div class="logo">PAYCOIN</div>
     <div class="hicons">
       <div class="icon-btn">🔔<div class="notif-dot">3</div></div>
@@ -709,7 +743,7 @@ body {
   </div>
   <div class="sbody">
     <!-- Asset Card -->
-    <div class="asset-card" onclick="nav('asset')">
+    <div class="asset-card" data-zone="home-asset" onclick="nav('asset')">
       <div class="alabel">총 보유 자산</div>
       <div class="aamt">12,345,678<span style="font-size:15px;font-weight:500;opacity:.8"> 원</span></div>
       <div class="achange"><span class="up" style="color:#FCA5A5">▲ +1,234원</span><span style="opacity:.4">|</span><span style="color:#FCA5A5">▲ 0.43%</span><span style="font-size:10px;opacity:.6;margin-left:2px">전일 대비</span></div>
@@ -717,7 +751,7 @@ body {
     </div>
 
     <!-- Rolling Banner -->
-    <div class="banner-container" id="banner-container">
+    <div class="banner-container" id="banner-container" data-zone="home-banner">
       <div class="banner-track" id="banner-track">
         <div class="banner-slide bslide-1" onclick="nav('prediction')">
           <div><div class="b-text-s">🎯 매일 참여 이벤트</div><div class="b-text-m">PCI 등락 예측하고 에어드랍!</div><div class="b-text-xs">빗썸 종가 기준 · 매일 자정 판정</div></div>
@@ -740,20 +774,36 @@ body {
     </div>
 
     <!-- Tile Menu -->
-    <div class="tile-section">
-      <!-- Row 1: 월렛커넥트, 지갑, PCI 정보 (3 equal) -->
+    <div class="tile-section" data-zone="home-tiles">
+      <!-- Row 1: 출석체크 / 혜택 / PCI 정보 (3 equal) -->
       <div class="tile-row">
-        <div class="tile tile-1-3" onclick=""><div class="tile-icon">🔗</div><div class="tile-lbl">월렛커넥트</div></div>
-        <div class="tile tile-1-3" onclick="nav('wallet')"><div class="tile-icon">👛</div><div class="tile-lbl">지갑</div></div>
-        <div class="tile tile-1-3" onclick="nav('pci-info')"><div class="tile-icon">🪙</div><div class="tile-lbl">PCI 정보</div></div>
-      </div>
-      <!-- Row 2: 쇼핑(2/3 wide) + 혜택(1/3) -->
-      <div class="tile-row">
-        <div class="tile tile-2-3" style="flex-direction:row;gap:10px;justify-content:flex-start;padding:12px 16px">
-          <div class="tile-icon">🛍️</div>
-          <div style="text-align:left"><div class="tile-lbl" style="font-size:12px;font-weight:700;color:var(--text)">쇼핑</div><div style="font-size:9px;color:var(--text4)">PCI 쇼핑몰</div></div>
+        <div class="tile tile-1-3" onclick="nav('benefits')">
+          <div class="tile-icon">✅</div><div class="tile-lbl">출석체크</div>
         </div>
-        <div class="tile tile-1-3" onclick="nav('benefits')"><div class="tile-icon">🎁</div><div class="tile-lbl">혜택</div></div>
+        <div class="tile tile-1-3" onclick="nav('benefits')">
+          <div class="tile-icon">🎁</div><div class="tile-lbl">혜택</div>
+        </div>
+        <div class="tile tile-1-3" onclick="nav('pci-info')">
+          <div class="tile-icon">🪙</div><div class="tile-lbl">PCI 정보</div>
+        </div>
+      </div>
+      <!-- Row 2: 쇼핑(2/3 wide, 행 높이 고정) + 우측 1/3 [월렛커넥트(위)/지갑(아래)] -->
+      <div class="tile-row" style="height:63px;align-items:stretch">
+        <div class="tile tile-2-3" style="flex-direction:row;gap:10px;justify-content:flex-start;padding:0 14px;height:63px">
+          <div style="font-size:22px;line-height:1">🛍️</div>
+          <div style="text-align:left">
+            <div class="tile-lbl" style="font-size:12px;font-weight:700;color:var(--text)">쇼핑</div>
+            <div style="font-size:9px;color:var(--text4);margin-top:2px">PCI 쇼핑몰</div>
+          </div>
+        </div>
+        <div class="tile-1-3" style="display:flex;flex-direction:column;gap:8px">
+          <div class="tile" onclick="" style="flex:1;flex-direction:row;gap:6px;padding:0 8px;justify-content:center;min-height:0;border-radius:6px">
+            <span class="tile-lbl" style="font-size:9px;font-weight:600;color:var(--text2)">월렛커넥트</span>
+          </div>
+          <div class="tile" onclick="nav('wallet')" style="flex:1;flex-direction:row;gap:6px;padding:0 8px;justify-content:center;min-height:0;border-radius:6px">
+            <span class="tile-lbl" style="font-size:10px;font-weight:600;color:var(--text2)">지갑</span>
+          </div>
+        </div>
       </div>
       <!-- Row 3: 스와이프 — 결제 가맹점/혜택 안내 & Wallet Pay 가이드 (동일 크기) -->
       <div style="position:relative;overflow:hidden;border-radius:var(--radius)">
@@ -790,14 +840,15 @@ body {
 
     <div class="divider"></div>
 
-    <!-- News -->
+    <!-- News --><div data-zone="home-news">
     <div class="stitle" style="margin-top:10px">최근 소식 <span class="see-all" onclick="nav('news')">전체 보기</span></div>
     <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.30</div><div class="news-txt">페이코인, 1분기 결제 거래량 전년比 230% 성장</div><div class="news-arr">›</div></div>
     <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.29</div><div class="news-txt">다날핀테크, PCI 글로벌 결제 확대 파트너십 체결</div><div class="news-arr">›</div></div>
     <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.27</div><div class="news-txt">페이코인 앱 v2.0 업데이트 출시 안내</div><div class="news-arr">›</div></div>
     <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.25</div><div class="news-txt">페이프로토콜, 분산형 결제 인프라 기술 특허 취득</div><div class="news-arr">›</div></div>
     <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.22</div><div class="news-txt">다날, 2025 핀테크 혁신대상 수상</div><div class="news-arr">›</div></div>
-  </div>
+  </div><!-- /home-news -->
+  </div><!-- /sbody -->
   <div class="tab-bar">
     <div class="tab-item active" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
     <div class="tab-item" onclick="nav('wallet')"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
@@ -1643,47 +1694,47 @@ body {
 <div class="policy-panel">
 
 <!-- ── HOME ── -->
-<div class="policy-section active" id="pol-home">
+<div class="policy-section active" id="pol-home" data-screen="home">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_HOME <span class="ptag p1">P1</span></div>
     <div class="policy-title">메인 홈</div>
     <div class="policy-desc">앱 실행 후 첫 진입 화면. 자산 현황 요약, 롤링 배너, 타일 메뉴, 최근 소식으로 구성. 모든 주요 기능으로의 진입 허브 역할.</div>
   </div>
-  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
-    <div class="policy-item"><div class="pd r"></div><strong>타일 메뉴 하드코딩 절대 금지.</strong> 서버 JSON을 파싱해 렌더링. 타일 수·순서·노출 여부 모두 어드민에서 관리.</div>
-    <div class="policy-item"><div class="pd r"></div>롤링 배너는 자동 3초 순환 + 수동 스와이프 모두 지원. 배너 없으면 영역 자체 미표시(레이아웃 재배치).</div>
-    <div class="policy-item"><div class="pd r"></div>자산 합계 API 실패 시 "자산 정보를 불러오지 못했습니다 + 다시 시도" — 빈 화면 노출 금지.</div>
-    <div class="policy-item"><div class="pd"></div>앱 실행 시 로컬 캐시를 즉시 표시 → 백그라운드 API 완료 시 실시간 값으로 교체(애니메이션 처리).</div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-tiles','타일 메뉴')">⚠️ 개발 주의사항</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-tiles','타일 메뉴')"><div class="pd r"></div><strong>타일 메뉴 하드코딩 절대 금지.</strong> 서버 JSON을 파싱해 렌더링. 타일 수·순서·노출 여부 모두 어드민에서 관리.</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-banner','롤링 배너')"><div class="pd r"></div>롤링 배너는 자동 3초 순환 + 수동 스와이프 모두 지원. 배너 없으면 영역 자체 미표시(레이아웃 재배치).</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-asset','자산 합계')"><div class="pd r"></div>자산 합계 API 실패 시 "자산 정보를 불러오지 못했습니다 + 다시 시도" — 빈 화면 노출 금지.</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-asset','자산 합계')"><div class="pd"></div>앱 실행 시 로컬 캐시를 즉시 표시 → 백그라운드 API 완료 시 실시간 값으로 교체(애니메이션 처리).</div>
   </div>
-  <div class="policy-group"><div class="policy-group-title">롤링 배너</div>
-    <div class="policy-item"><div class="pd"></div>자동 3초 롤링, 인디케이터 점 표시. 배너 이미지 로드 실패 시 기본 플레이스홀더 표시.</div>
-    <div class="policy-item"><div class="pd"></div>탭 → 지정 딥링크 또는 외부 웹뷰 이동. 링크 없으면 탭 이벤트 무반응.</div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-banner','롤링 배너')">롤링 배너</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-banner','롤링 배너')"><div class="pd"></div>자동 3초 롤링, 인디케이터 점 표시. 배너 이미지 로드 실패 시 기본 플레이스홀더 표시.</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-banner','롤링 배너')"><div class="pd"></div>탭 → 지정 딥링크 또는 외부 웹뷰 이동. 링크 없으면 탭 이벤트 무반응.</div>
     <div class="policy-code">GET /api/v1/home/banners → Banner[]</div>
   </div>
-  <div class="policy-group"><div class="policy-group-title">타일 메뉴 구성 규칙</div>
-    <div class="policy-item"><div class="pd"></div>1행: 1/3 너비 × 3개 / 2행: 2/3(넓은 타일) + 1/3 / 3행: 가로 스크롤, 우측 끝 타일이 화면에 걸쳐 '더 있음'을 암시.</div>
-    <div class="policy-item"><div class="pd"></div>비활성 타일 제거 후 나머지 레이아웃 자동 재배치. 네트워크 오류 시 마지막 캐시 구성 사용.</div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-tiles','타일 메뉴')">타일 메뉴 구성 규칙</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-tiles','타일 메뉴')"><div class="pd"></div>1행: 1/3 너비 × 3개 / 2행: 2/3(넓은 타일) + 1/3 / 3행: 가로 스크롤, 우측 끝 타일이 화면에 걸쳐 '더 있음'을 암시.</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-tiles','타일 메뉴')"><div class="pd"></div>비활성 타일 제거 후 나머지 레이아웃 자동 재배치. 네트워크 오류 시 마지막 캐시 구성 사용.</div>
     <div class="policy-code">GET /api/v1/home/tiles → Tile[]
   tile.row_type: "1x1" | "2x1" | "scroll"</div>
   </div>
-  <div class="policy-group"><div class="policy-group-title">자산 합계 영역</div>
-    <div class="policy-item"><div class="pd"></div>합계 = 자체 지갑 + 모든 연결 지갑 KRW 합산 (실시간 시세 기준)</div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-asset','자산 합계')">자산 합계 영역</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-asset','자산 합계')"><div class="pd"></div>합계 = 자체 지갑 + 모든 연결 지갑 KRW 합산 (실시간 시세 기준)</div>
     <div class="policy-warn">⚠️ 변동 금액·변동률 기준 시점 미확정 (전일 0시 vs 마지막 로그인) — 필드 예약, null 시 UI 미표시</div>
-    <div class="policy-item"><div class="pd r"></div>is_stale=true: 금액 옆 ⚠ 아이콘 + "시세가 최신이 아닐 수 있습니다" 안내</div>
-    <div class="policy-item"><div class="pd"></div>영역 탭 → 지갑 화면 / "자산현황 보기" 탭 → 자산현황 화면</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-asset','자산 합계')"><div class="pd r"></div>is_stale=true: 금액 옆 ⚠ 아이콘 + "시세가 최신이 아닐 수 있습니다" 안내</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-asset','자산 합계')"><div class="pd"></div>영역 탭 → 지갑 화면 / "자산현황 보기" 탭 → 자산현황 화면</div>
   </div>
-  <div class="policy-group"><div class="policy-group-title">알림 뱃지</div>
-    <div class="policy-item"><div class="pd"></div>미확인 알림 수 표시, 99 초과 시 "99+" 고정. 포그라운드 전환 시 1회 재조회.</div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-header','상단 헤더 / 알림 뱃지')">알림 뱃지</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-header','상단 헤더 / 알림 뱃지')"><div class="pd"></div>미확인 알림 수 표시, 99 초과 시 "99+" 고정. 포그라운드 전환 시 1회 재조회.</div>
     <div class="policy-code">GET /api/v1/notifications/unread-count</div>
   </div>
-  <div class="policy-group"><div class="policy-group-title">최근 소식</div>
-    <div class="policy-item"><div class="pd"></div>최신 소식 5건(게시일자 DESC). "전체 보기" → 소식 리스트 화면</div>
+  <div class="policy-group"><div class="policy-group-title has-zone" onclick="hlZone('home-news','최근 소식')">최근 소식</div>
+    <div class="policy-item has-zone" onclick="hlZone('home-news','최근 소식')"><div class="pd"></div>최신 소식 5건(게시일자 DESC). "전체 보기" → 소식 리스트 화면</div>
     <div class="policy-code">GET /api/v1/news?limit=5</div>
   </div>
 </div>
 
 <!-- ── WALLET ── -->
-<div class="policy-section" id="pol-wallet">
+<div class="policy-section" id="pol-wallet" data-screen="wallet">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_WALLET <span class="ptag p1">P1</span></div>
     <div class="policy-title">지갑</div>
@@ -1706,7 +1757,7 @@ GET /api/v1/wallets?source={tab_filter}</div>
 </div>
 
 <!-- ── WALLET PCI ── -->
-<div class="policy-section" id="pol-wallet-pci">
+<div class="policy-section" id="pol-wallet-pci" data-screen="wallet-pci">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_WALLET_DETAIL (자체 PCI) <span class="ptag p1">P1</span></div>
     <div class="policy-title">지갑 상세 — PCI 자체 지갑</div>
@@ -1732,7 +1783,7 @@ POST /api/v1/wallets/{id}/withdraw</div>
 </div>
 
 <!-- ── WALLET OTHER ── -->
-<div class="policy-section" id="pol-wallet-other">
+<div class="policy-section" id="pol-wallet-other" data-screen="wallet-other">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_WALLET_DETAIL (연결 지갑) <span class="ptag p1">P1</span></div>
     <div class="policy-title">지갑 상세 — 연결 지갑 (PCI/기타 코인)</div>
@@ -1753,7 +1804,7 @@ POST /api/v1/wallets/{id}/withdraw</div>
 </div>
 
 <!-- ── ASSET ── -->
-<div class="policy-section" id="pol-asset">
+<div class="policy-section" id="pol-asset" data-screen="asset">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_ASSET_STATUS <span class="ptag p2">P2</span></div>
     <div class="policy-title">자산현황</div>
@@ -1778,7 +1829,7 @@ GET /api/v1/asset-status/wallets</div>
 </div>
 
 <!-- ── PCI INFO ── -->
-<div class="policy-section" id="pol-pci-info">
+<div class="policy-section" id="pol-pci-info" data-screen="pci-info">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_PCI_INFO <span class="ptag p2">P2</span></div>
     <div class="policy-title">PCI 정보</div>
@@ -1799,7 +1850,7 @@ GET /api/v1/pci/exchanges</div>
 </div>
 
 <!-- ── TOKEN DETAIL ── -->
-<div class="policy-section" id="pol-token-detail">
+<div class="policy-section" id="pol-token-detail" data-screen="token-detail">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_TOKEN_DETAIL <span class="ptag p2">P2</span></div>
     <div class="policy-title">토큰 상세 (공통 템플릿)</div>
@@ -1820,7 +1871,7 @@ GET /api/v1/pci/exchanges</div>
 </div>
 
 <!-- ── BENEFITS ── -->
-<div class="policy-section" id="pol-benefits">
+<div class="policy-section" id="pol-benefits" data-screen="benefits">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_BENEFITS <span class="ptag p1">P1</span></div>
     <div class="policy-title">혜택</div>
@@ -1836,7 +1887,7 @@ GET /api/v1/benefits/list → categories[].items[]</div>
 </div>
 
 <!-- ── PREDICTION ── -->
-<div class="policy-section" id="pol-prediction">
+<div class="policy-section" id="pol-prediction" data-screen="prediction">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_PREDICTION <span class="ptag p1">P1</span></div>
     <div class="policy-title">PCI 등락 예측</div>
@@ -1883,7 +1934,7 @@ GET  /api/v1/prediction/ranking?year=&month=</div>
 </div>
 
 <!-- ── NEWS ── -->
-<div class="policy-section" id="pol-news">
+<div class="policy-section" id="pol-news" data-screen="news">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_NEWS_LIST <span class="ptag p2">P2</span></div>
     <div class="policy-title">최근 소식</div>
@@ -1898,7 +1949,7 @@ GET  /api/v1/prediction/ranking?year=&month=</div>
 </div>
 
 <!-- ── NEWS DETAIL ── -->
-<div class="policy-section" id="pol-news-detail">
+<div class="policy-section" id="pol-news-detail" data-screen="news-detail">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_NEWS_DETAIL <span class="ptag p2">P2</span></div>
     <div class="policy-title">소식 상세</div>
@@ -1913,7 +1964,7 @@ GET  /api/v1/prediction/ranking?year=&month=</div>
 </div>
 
 <!-- ── PAYMENT ── -->
-<div class="policy-section" id="pol-payment">
+<div class="policy-section" id="pol-payment" data-screen="payment">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_PAYMENT_MAIN <span class="ptag p1">P1</span></div>
     <div class="policy-title">결제</div>
@@ -2319,6 +2370,7 @@ setTimeout(function(){
     if(s) s.classList.add('show');
   } else {
     loadQna();
+    loadDesc();
   }
 }, 600);
 
@@ -2336,6 +2388,7 @@ function saveApiUrl(){
   QNA.apiUrl=url;
   document.getElementById('qna-setup-inline').classList.remove('show');
   loadQna();
+  loadDesc();
 }
 function setQF(f){
   QNA.filter=f;
@@ -2350,7 +2403,7 @@ async function loadQna(){
   const listEl=document.getElementById('qna-list');
   if(listEl) listEl.innerHTML='<div class="qna-empty">불러오는 중...</div>';
   try{
-    const r=await fetch(QNA.apiUrl+'?action=list');
+    const r=await fetch(QNA.apiUrl+'?action=qna_list');
     const d=await r.json();
     QNA.items=d.items||[];
     updateBadge();
@@ -2389,8 +2442,13 @@ async function submitA(id){
   if(!ans){ alert('답변을 입력해주세요.'); return; }
   if(!QNA.apiUrl){ alert('API URL을 먼저 설정해주세요.'); return; }
   try{
-    const r=await fetch(QNA.apiUrl,{method:'POST',body:JSON.stringify({action:'answer',id,answer:ans})});
-    const d=await r.json();
+    // GET 파라미터 방식으로 전송 (CORS 우회)
+    const url = QNA.apiUrl
+      + '?action=qna_answer'
+      + '&id='     + encodeURIComponent(id)
+      + '&answer=' + encodeURIComponent(ans);
+    const r = await fetch(url);
+    const d = await r.json();
     if(d.success) await loadQna(); else alert('오류: '+(d.error||''));
   }catch(e){ alert('오류: '+e.message); }
 }
@@ -2406,8 +2464,14 @@ async function submitQ(){
   btn.disabled=true; btn.textContent='등록 중...';
   st.classList.remove('show');
   try{
-    const r=await fetch(QNA.apiUrl,{method:'POST',body:JSON.stringify({action:'add',screen:QNA.curScreen(),question:q.trim(),author})});
-    const d=await r.json();
+    // GET 파라미터 방식으로 전송 (CORS 우회)
+    const url = QNA.apiUrl
+      + '?action=qna_add'
+      + '&screen='   + encodeURIComponent(QNA.curScreen())
+      + '&question=' + encodeURIComponent(q.trim())
+      + '&author='   + encodeURIComponent(author);
+    const r = await fetch(url);
+    const d = await r.json();
     if(d.success){
       qEl.value='';
       st.textContent='✅ 질문이 등록됐습니다!'; st.style.color='var(--green)'; st.classList.add('show');
@@ -2425,6 +2489,171 @@ function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')
   window.nav=function(k){ _nav(k); updateQnaLabels(); };
 })();
 setTimeout(updateQnaLabels, 400);
+
+
+/* ══ DESCRIPTION SYSTEM ══ */
+const DESC = {
+  items: [],       // 전체 description 데이터
+  loaded: false,   // 로드 완료 여부
+  failed: false,   // 로드 실패 여부
+
+  // 중요도 → dot 클래스 매핑
+  dotClass(importance) {
+    const map = { '필수':'r', '경고':'o', '참고':'g', '코드':'p', '일반':'' };
+    return map[importance] || '';
+  },
+
+  // 중요도 → has-zone 여부 (zone_id 있을 때만)
+};
+
+// Description 데이터 로드
+async function loadDesc() {
+  if (!QNA.apiUrl) return; // API URL 없으면 정적 내용 유지
+
+  // 각 policy-section에 로딩 표시
+  document.querySelectorAll('.policy-section').forEach(sec => {
+    const key = sec.dataset.screen;
+    if (!key) return;
+    // 기존 내용 보존 (로딩 실패 시 폴백용)
+    if (!sec.dataset.staticBackup) {
+      sec.dataset.staticBackup = sec.innerHTML;
+    }
+    sec.innerHTML = `
+      <div class="desc-loading">
+        <div class="desc-loading-spinner"></div>
+        <div>설명을 불러오는 중...</div>
+      </div>`;
+  });
+
+  try {
+    const res  = await fetch(QNA.apiUrl + '?action=desc');
+    const data = await res.json();
+
+    if (!data.success) throw new Error(data.error || '로드 실패');
+
+    DESC.items  = data.items || [];
+    DESC.loaded = true;
+    renderAllDesc();
+
+  } catch (err) {
+    DESC.failed = true;
+    console.warn('Description 로드 실패:', err.message);
+
+    // 실패 시 정적 백업 복원
+    document.querySelectorAll('.policy-section').forEach(sec => {
+      if (sec.dataset.staticBackup) {
+        sec.innerHTML = sec.dataset.staticBackup;
+      }
+    });
+  }
+}
+
+// 전체 화면 description 렌더링
+function renderAllDesc() {
+  document.querySelectorAll('.policy-section[data-screen]').forEach(sec => {
+    renderDescForScreen(sec.dataset.screen);
+  });
+}
+
+// 특정 화면의 description 렌더링
+function renderDescForScreen(screenKey) {
+  const sec = document.querySelector(`.policy-section[data-screen="${screenKey}"]`);
+  if (!sec) return;
+
+  const items = DESC.items.filter(i => i.screen_key === screenKey);
+
+  if (!items.length) {
+    // 데이터 없으면 정적 백업 복원
+    if (sec.dataset.staticBackup) {
+      sec.innerHTML = sec.dataset.staticBackup;
+    }
+    return;
+  }
+
+  // 그룹별로 묶기
+  const groups = {};
+  items.forEach(item => {
+    const g = item.group || '기타';
+    if (!groups[g]) groups[g] = [];
+    groups[g].push(item);
+  });
+
+  // 화면명 (첫 번째 아이템의 screen_key로 레이블 찾기)
+  const screenLabel = QNA.LABELS[screenKey] || screenKey;
+
+  // 화면 ID 태그 추출 (screen_key를 대문자로)
+  const screenId = 'SCREEN_' + screenKey.toUpperCase().replace(/-/g, '_');
+
+  let html = `
+    <div class="policy-header">
+      <div class="policy-screen-id">${escDesc(screenId)}
+        <span class="desc-static-badge">Sheets 연동</span>
+      </div>
+      <div class="policy-title">${escDesc(screenLabel)}</div>
+    </div>`;
+
+  Object.entries(groups).forEach(([groupTitle, groupItems]) => {
+    // 그룹 타이틀 — zone 연결 가능한 item이 있으면 첫 번째 zone_id 사용
+    const firstZone = groupItems.find(i => i.zone_id);
+    const gtClass   = firstZone ? 'policy-group-title has-zone' : 'policy-group-title';
+    const gtClick   = firstZone
+      ? `onclick="hlZone('${firstZone.zone_id}','${escDesc(groupTitle)}')"` : '';
+
+    html += `<div class="policy-group">
+      <div class="${gtClass}" ${gtClick}>${escDesc(groupTitle)}</div>`;
+
+    groupItems.forEach(item => {
+      const content    = item.content || '';
+      const importance = item.importance || '';
+      const zoneId     = item.zone_id || '';
+      const dotCls     = DESC.dotClass(importance);
+
+      // 코드 박스
+      if (importance === '코드' || content.startsWith('`')) {
+        const codeText = content.replace(/^`|`$/g, '');
+        html += `<div class="policy-code">${escDesc(codeText)}</div>`;
+
+      // 경고 박스
+      } else if (importance === '경고' || content.startsWith('⚠️')) {
+        html += `<div class="policy-warn">${escDesc(content)}</div>`;
+
+      // 일반 항목
+      } else {
+        const hasZone  = zoneId ? ' has-zone' : '';
+        const onClick  = zoneId
+          ? `onclick="hlZone('${zoneId}','${escDesc(groupTitle)}')"` : '';
+        const dotColor = dotCls ? ` class="pd ${dotCls}"` : ' class="pd"';
+        html += `<div class="policy-item${hasZone}" ${onClick}>
+          <div${dotColor}></div>${escDesc(content)}
+        </div>`;
+      }
+    });
+
+    html += `</div>`; // /policy-group
+  });
+
+  sec.innerHTML = html;
+}
+
+function escDesc(s) {
+  return String(s || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// QnA API URL 변경 시 description도 함께 로드
+const _origSaveApiUrl = window.saveApiUrl || saveApiUrl;
+window.saveApiUrl = function() {
+  _origSaveApiUrl();
+  setTimeout(loadDesc, 500);
+};
+
+// 초기 로드 (API URL 있을 때)
+setTimeout(function() {
+  if (QNA.apiUrl) loadDesc();
+}, 700);
 
 </script>
 </body>
