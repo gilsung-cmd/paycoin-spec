@@ -2786,7 +2786,7 @@ function copyText(text) {
   navigator.clipboard.writeText(text).then(function() {
     var t = document.createElement('div');
     t.textContent = '✅ 복사됨: ' + text;
-    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1A56DB;color:#fff;padding:8px 18px;border-radius:10px;font-size:12px;font-weight:600;z-index:999;pointer-events:none;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.2);';
+    t.style.cssText = "position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1A56DB;color:#fff;padding:8px 18px;border-radius:10px;font-size:12px;font-weight:600;z-index:999;pointer-events:none;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.2);";
     document.body.appendChild(t);
     setTimeout(function() { t.remove(); }, 2000);
   }).catch(function() {
