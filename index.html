@@ -523,9 +523,6 @@ body {
 
 
 /* ══ QnA ══ */
-.qna-fab { position:absolute; bottom:28px; right:28px; width:52px; height:52px; border-radius:50%; background:var(--primary); color:#fff; font-size:20px; border:none; cursor:pointer; box-shadow:0 4px 16px rgba(26,86,219,.35); display:flex; align-items:center; justify-content:center; z-index:20; transition:all .2s; }
-.qna-fab:hover { transform:scale(1.08); }
-.qna-fab-badge { position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:9px; font-weight:700; width:17px; height:17px; border-radius:50%; display:none; align-items:center; justify-content:center; border:2px solid var(--bg-root); }
 .qna-box { position:absolute; bottom:92px; right:28px; width:calc(100% - 56px); max-height:580px; background:var(--card); border:1px solid var(--border2); border-radius:18px; box-shadow:0 12px 40px rgba(0,0,0,.12); display:none; flex-direction:column; overflow:hidden; z-index:19; }
 .qna-box.open { display:flex; animation:qnaIn .25s cubic-bezier(.16,1,.3,1); }
 @keyframes qnaIn { from{transform:translateY(10px) scale(.97);opacity:0} to{transform:translateY(0) scale(1);opacity:1} }
@@ -1723,6 +1720,37 @@ GET /api/v1/wallets?source={tab_filter}</div>
 </div>
 
 <!-- ── WALLET PCI ── -->
+<div class="policy-section" id="pol-wallet-empty" data-screen="wallet-empty">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_WALLET_EMPTY <span class="ptag p1">P1</span></div>
+    <div class="policy-title">지갑 (거래소 미연결)</div>
+    <div class="policy-desc">거래소 지갑을 연결하지 않은 상태의 지갑 화면. 자체 지갑(PCI)만 보유한 경우 표시되며, 거래소 연결을 유도합니다.</div>
+  </div>
+  <div class="policy-group">
+    <div class="policy-group-title">⚠️ 개발 주의사항</div>
+    <div class="policy-item"><div class="pd r"></div>연결된 거래소가 <strong>하나도 없을 때</strong> 이 화면 표시. 1개라도 연결되면 sc-wallet으로 이동.</div>
+    <div class="policy-item"><div class="pd r"></div>자체 지갑(PCI) 보유 시 목록에 표시, 미보유 시 자산 합계 0원.</div>
+  </div>
+  <div class="policy-group">
+    <div class="policy-group-title">거래소 연결 유도 섹션</div>
+    <div class="policy-item has-zone" onclick="hlZone('wallet-empty-connect','거래소 연결 유도')"><div class="pd"></div>자체 지갑 행 아래에 거래소 연결 유도 카드 표시.</div>
+    <div class="policy-item has-zone" onclick="hlZone('wallet-empty-connect','거래소 연결 유도')"><div class="pd g"></div>연결 가능 거래소 로고(빗썸·코인원·코빗) 표시.</div>
+    <div class="policy-item has-zone" onclick="hlZone('wallet-empty-connect','거래소 연결 유도')"><div class="pd"></div>"+ 거래소 지갑 연결하기" 버튼 탭 → WalletConnect 모달 표시.</div>
+    <div class="policy-item"><div class="pd r"></div>연결 버튼은 탭 필터 영역과 리스트 두 곳에 노출.</div>
+  </div>
+  <div class="policy-group">
+    <div class="policy-group-title">탭 필터</div>
+    <div class="policy-item"><div class="pd"></div>"전체", "내 지갑" 탭만 표시. 거래소 탭은 연결 후 동적 추가.</div>
+    <div class="policy-item"><div class="pd g"></div>"+ 거래소 연결" 버튼을 탭 필터 영역 우측에 상시 노출.</div>
+  </div>
+  <div class="policy-group">
+    <div class="policy-group-title">API 명세</div>
+    <div class="policy-code">GET /api/v1/wallet/list
+→ { wallets: [], exchanges: [] }  // 연결 거래소 없음</div>
+  </div>
+</div>
+
+
 <div class="policy-section" id="pol-wallet-pci" data-screen="wallet-pci">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_WALLET_DETAIL (자체 PCI) <span class="ptag p1">P1</span></div>
@@ -1965,11 +1993,7 @@ GET /api/v1/payment/recent?limit=5</div>
   <div style="margin-top:7px;text-align:center"><button onclick="document.getElementById('qna-setup-box').classList.remove('open')" style="background:none;border:none;font-size:11px;color:var(--text4);cursor:pointer;font-family:'Noto Sans KR',sans-serif;">나중에 설정</button></div>
 </div>
 
-<!-- QnA 버튼 -->
-<button class="qna-fab" id="qna-fab" onclick="toggleQna()" title="질문/답변">
-  💬
-  <div class="qna-fab-badge" id="qna-fab-badge"></div>
-</button>
+
 
 <!-- QnA 패널 -->
 <div class="qna-box" id="qna-box">
@@ -2148,7 +2172,7 @@ GET /api/v1/payment/recent?limit=5</div>
 const SCREEN_MAP = {
   'home':         { sc:'sc-home',         pol:'pol-home',         ni:0 },
   'wallet':       { sc:'sc-wallet',       pol:'pol-wallet',       ni:1 },
-  'wallet-empty': { sc:'sc-wallet-empty',  pol:'pol-wallet',       ni:3 },
+  'wallet-empty': { sc:'sc-wallet-empty',  pol:'pol-wallet-empty', ni:3 },
   'wallet-pci':   { sc:'sc-wallet-pci',   pol:'pol-wallet-pci',   ni:2 },
   'wallet-other': { sc:'sc-wallet-other', pol:'pol-wallet-other', ni:3 },
   'asset':        { sc:'sc-asset',        pol:'pol-asset',        ni:4 },
@@ -2376,6 +2400,78 @@ function showTip(el, text) {
   window.addEventListener('resize', function() { slideTo(cur); });
   setTimeout(function() { slideTo(0); }, 300);
 })();
+
+/* ══ WALLET TAB FILTER ══ */
+const WALLET_DATA = {
+  all: {
+    label:'총 보유 자산', amount:'12,345,678원',
+    wallets:[
+      { icon:'🪙', bg:'',        ovl:null,                    name:'페이코인 PCI', sub:'82.45원 · 내 지갑',  krw:'8,245,000원',  qty:'100,000 PCI',       chg:'up', rate:'▲ 5.23%', dest:'wallet-pci' },
+      { icon:'🪙', bg:'',        ovl:{bg:'#f57c00',txt:'빗'}, name:'페이코인 PCI', sub:'82.12원 · 빗썸',     krw:'2,463,600원',  qty:'30,000 PCI',        chg:'up', rate:'▲ 4.91%', dest:'wallet-other' },
+      { icon:'₿',  bg:'#FEF3C7', ovl:{bg:'#1a73e8',txt:'원'}, name:'비트코인 BTC', sub:'93,450,000원 · 코인원', krw:'1,637,432원', qty:'0.01752100 BTC',   chg:'dn', rate:'▼ 1.20%', dest:'wallet-other' },
+      { icon:'Ξ',  bg:'#EEF2FF', ovl:{bg:'#1a73e8',txt:'원'}, name:'이더리움 ETH', sub:'4,823,000원 · 코인원', krw:'240,000원',   qty:'0.04975000 ETH',   chg:'up', rate:'▲ 2.10%', dest:'wallet-other' },
+      { icon:'◎',  bg:'#F0FDF4', ovl:{bg:'#6B21A8',txt:'빗'}, name:'리플 XRP',     sub:'820원 · 코빗',       krw:'82,000원',    qty:'100.00000000 XRP', chg:'dn', rate:'▼ 0.55%', dest:'wallet-other' },
+    ]
+  },
+  self: {
+    label:'내 지갑 자산', amount:'8,245,000원',
+    wallets:[
+      { icon:'🪙', bg:'', ovl:null, name:'페이코인 PCI', sub:'82.45원 · 내 지갑', krw:'8,245,000원', qty:'100,000 PCI', chg:'up', rate:'▲ 5.23%', dest:'wallet-pci' },
+    ]
+  },
+  bithumb: {
+    label:'빗썸 보유 자산', amount:'2,463,600원',
+    wallets:[
+      { icon:'🪙', bg:'', ovl:{bg:'#f57c00',txt:'빗'}, name:'페이코인 PCI', sub:'82.12원 · 빗썸', krw:'2,463,600원', qty:'30,000 PCI', chg:'up', rate:'▲ 4.91%', dest:'wallet-other' },
+    ]
+  },
+  coinone: {
+    label:'코인원 보유 자산', amount:'1,877,432원',
+    wallets:[
+      { icon:'₿', bg:'#FEF3C7', ovl:{bg:'#1a73e8',txt:'원'}, name:'비트코인 BTC', sub:'93,450,000원 · 코인원', krw:'1,637,432원', qty:'0.01752100 BTC', chg:'dn', rate:'▼ 1.20%', dest:'wallet-other' },
+      { icon:'Ξ', bg:'#EEF2FF', ovl:{bg:'#1a73e8',txt:'원'}, name:'이더리움 ETH', sub:'4,823,000원 · 코인원', krw:'240,000원',   qty:'0.04975000 ETH', chg:'up', rate:'▲ 2.10%', dest:'wallet-other' },
+    ]
+  },
+  korbit: {
+    label:'코빗 보유 자산', amount:'82,000원',
+    wallets:[
+      { icon:'◎', bg:'#F0FDF4', ovl:{bg:'#6B21A8',txt:'빗'}, name:'리플 XRP', sub:'820원 · 코빗', krw:'82,000원', qty:'100.00000000 XRP', chg:'dn', rate:'▼ 0.55%', dest:'wallet-other' },
+    ]
+  },
+};
+
+function walletTab(tab) {
+  ['all','self','bithumb','coinone','korbit'].forEach(function(t) {
+    var el = document.getElementById('wchip-' + t);
+    if (el) el.classList.toggle('active', t === tab);
+  });
+  var data = WALLET_DATA[tab];
+  if (!data) return;
+  var lbl = document.getElementById('wt-label');
+  var amt = document.getElementById('wt-amount');
+  if (lbl) lbl.textContent = data.label;
+  if (amt) amt.textContent = data.amount;
+  var list = document.getElementById('wt-list');
+  if (!list) return;
+  if (!data.wallets || !data.wallets.length) {
+    var names = { bithumb:'빗썸', coinone:'코인원', korbit:'코빗' };
+    list.innerHTML = '<div style="margin:12px 14px 0;background:var(--card2);border:1.5px dashed var(--border2);border-radius:var(--radius);padding:20px 16px;text-align:center"><div style="font-size:28px;margin-bottom:8px">🔗</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">' + (names[tab]||tab) + ' 지갑이 연결되지 않았어요</div><div style="font-size:11px;color:var(--text3);line-height:1.6;margin-bottom:14px">거래소 지갑을 연결하면 보유 자산을<br>한 화면에서 통합 조회할 수 있어요.</div><button class="btn btn-primary" style="padding:11px;font-size:13px">+ 거래소 지갑 연결하기</button></div>';
+    return;
+  }
+  list.innerHTML = data.wallets.map(function(w) {
+    var ovl = w.ovl ? '<div class="exch-ovl" style="background:' + w.ovl.bg + '">' + w.ovl.txt + '</div>' : '';
+    var bg  = w.bg  ? ' style="background:' + w.bg + '"' : '';
+    return '<div class="wallet-row" onclick="nav(\'' + w.dest + '\')">' +
+      '<div class="coin-icon"' + bg + '>' + w.icon + ovl + '</div>' +
+      '<div class="winfo"><div class="wname">' + w.name + '</div><div class="wprice">' + w.sub + '</div></div>' +
+      '<div class="wright"><div class="wkrw">' + w.krw + '</div>' +
+      '<div class="wqty">' + w.qty + ' <span class="chg ' + w.chg + '">' + w.rate + '</span></div></div>' +
+      '</div>';
+  }).join('');
+}
+
+function initWalletScreen() { walletTab('all'); }
+
 
 /* ══ NAV SCROLL ARROW ══ */
 (function(){
