@@ -523,11 +523,11 @@ body {
 
 
 /* ══ QnA ══ */
-.qna-box { position:absolute; bottom:92px; right:28px; width:calc(100% - 56px); max-height:580px; background:var(--card); border:1px solid var(--border2); border-radius:18px; box-shadow:0 12px 40px rgba(0,0,0,.12); display:none; flex-direction:column; overflow:hidden; z-index:19; }
-.qna-box.open { display:flex; animation:qnaIn .25s cubic-bezier(.16,1,.3,1); }
+
+
 @keyframes qnaIn { from{transform:translateY(10px) scale(.97);opacity:0} to{transform:translateY(0) scale(1);opacity:1} }
-.qna-hd { padding:14px 16px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
-.qna-hd-title { font-size:14px; font-weight:800; color:var(--text); }
+
+
 .qna-hd-sub { font-size:10px; color:var(--text4); margin-top:1px; }
 .qna-list { flex:1; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
 .qna-empty { padding:28px 16px; text-align:center; font-size:12px; color:var(--text4); }
@@ -890,7 +890,7 @@ body {
     </div>
     <div class="wallet-row" onclick="nav('wallet-pci')">
       <div class="coin-icon">🪙</div>
-      <div class="winfo"><div class="wname">페이코인 PCI</div><div class="wprice">82.45원 · 내 지갑</div></div>
+      <div class="winfo"><div class="wname">페이코인 PCI</div><div class="wprice">82.45원</div></div>
       <div class="wright"><div class="wkrw">8,245,000원</div><div class="wqty">100,000 PCI <span class="chg up">▲ 5.23%</span></div></div>
     </div>
     <div style="margin:12px 14px 0">
@@ -949,7 +949,7 @@ body {
   <div class="sbody">
     <div style="text-align:center;padding:8px 14px 18px">
       <div style="font-size:44px;margin-bottom:6px">🪙</div>
-      <div style="font-size:13px;color:var(--text3);margin-bottom:2px">페이코인 PCI · 내 지갑</div>
+      <div style="font-size:13px;color:var(--text3);margin-bottom:2px">페이코인 PCI</div>
       <div style="font-size:26px;font-weight:800;margin-bottom:3px;color:var(--text)">100,000 PCI</div>
       <div style="font-size:17px;font-weight:600;color:var(--text2);margin-bottom:5px">8,245,000원</div>
       <div class="up" style="font-size:12px">▲ 5.23% (24h)</div>
@@ -1995,36 +1995,7 @@ GET /api/v1/payment/recent?limit=5</div>
 
 
 
-<!-- QnA 패널 -->
-<div class="qna-box" id="qna-box">
-  <div class="qna-hd">
-    <div>
-      <div class="qna-hd-title">💬 질문 &amp; 답변 <span id="qna-cnt" style="font-size:10px;color:var(--text4);font-weight:400"></span></div>
-      <div class="qna-hd-sub">현재 화면: <span id="qna-scr-lbl" style="color:var(--primary);font-weight:600">메인 홈</span></div>
-    </div>
-    <div style="display:flex;gap:5px">
-      <button onclick="loadQna()" style="width:26px;height:26px;border-radius:7px;background:var(--card2);border:1px solid var(--border);font-size:12px;cursor:pointer;">↻</button>
-      <button onclick="toggleQna()" style="width:26px;height:26px;border-radius:7px;background:var(--card2);border:1px solid var(--border);font-size:12px;cursor:pointer;">✕</button>
-    </div>
-  </div>
-  <div style="display:flex;padding:7px 14px;gap:5px;border-bottom:1px solid var(--border);flex-shrink:0">
-    <div class="chip active" id="qf-all"  onclick="setQF('all')"  style="font-size:10px;padding:3px 9px">전체</div>
-    <div class="chip" id="qf-cur"         onclick="setQF('cur')"  style="font-size:10px;padding:3px 9px">이 화면</div>
-    <div class="chip" id="qf-un"          onclick="setQF('un')"   style="font-size:10px;padding:3px 9px">미답변</div>
-  </div>
-  <div class="qna-list" id="qna-list"><div class="qna-empty">💬<br>등록된 질문이 없습니다.</div></div>
-  <div class="qna-form">
-    <div style="font-size:11px;font-weight:600;color:var(--text3);margin-bottom:5px">질문 등록 — <span id="qna-form-scr" style="color:var(--primary);font-weight:700">메인 홈</span></div>
-    <textarea class="qna-fi" id="qna-q" rows="2" placeholder="궁금한 점을 입력하세요..."></textarea>
-    <div class="qna-frow">
-      <input class="qna-author" id="qna-author" placeholder="이름 (예: 홍길동 개발자)">
-      <button class="qna-submit" id="qna-sub-btn" onclick="submitQ()">등록</button>
-    </div>
-    <div class="qna-status" id="qna-status"></div>
-  </div>
-</div>
 
-</div><!-- /policy-panel -->
 
 <!-- ══ QnA SIDEBAR ══ -->
 <div class="qna-sidebar">
@@ -2170,19 +2141,19 @@ GET /api/v1/payment/recent?limit=5</div>
 <script>
 /* ══ NAVIGATION ══ */
 const SCREEN_MAP = {
-  'home':         { sc:'sc-home',         pol:'pol-home',         ni:0 },
-  'wallet':       { sc:'sc-wallet',       pol:'pol-wallet',       ni:1 },
-  'wallet-empty': { sc:'sc-wallet-empty',  pol:'pol-wallet-empty', ni:3 },
-  'wallet-pci':   { sc:'sc-wallet-pci',   pol:'pol-wallet-pci',   ni:2 },
-  'wallet-other': { sc:'sc-wallet-other', pol:'pol-wallet-other', ni:3 },
-  'asset':        { sc:'sc-asset',        pol:'pol-asset',        ni:4 },
-  'pci-info':     { sc:'sc-pci-info',     pol:'pol-pci-info',     ni:5 },
-  'token-detail': { sc:'sc-token-detail', pol:'pol-token-detail', ni:6 },
-  'benefits':     { sc:'sc-benefits',     pol:'pol-benefits',     ni:7 },
-  'prediction':   { sc:'sc-prediction',   pol:'pol-prediction',   ni:8 },
-  'news':         { sc:'sc-news',         pol:'pol-news',         ni:9 },
-  'news-detail':  { sc:'sc-news-detail',  pol:'pol-news-detail',  ni:10 },
-  'payment':      { sc:'sc-payment',      pol:'pol-payment',      ni:11 },
+  'home':         { sc:'sc-home',         pol:'pol-home',         ni:0  },
+  'wallet':       { sc:'sc-wallet',       pol:'pol-wallet',       ni:1  },
+  'wallet-empty': { sc:'sc-wallet-empty', pol:'pol-wallet-empty', ni:2  },
+  'wallet-pci':   { sc:'sc-wallet-pci',   pol:'pol-wallet-pci',   ni:3  },
+  'wallet-other': { sc:'sc-wallet-other', pol:'pol-wallet-other', ni:4  },
+  'asset':        { sc:'sc-asset',        pol:'pol-asset',        ni:5  },
+  'pci-info':     { sc:'sc-pci-info',     pol:'pol-pci-info',     ni:6  },
+  'token-detail': { sc:'sc-token-detail', pol:'pol-token-detail', ni:7  },
+  'benefits':     { sc:'sc-benefits',     pol:'pol-benefits',     ni:8  },
+  'prediction':   { sc:'sc-prediction',   pol:'pol-prediction',   ni:9  },
+  'news':         { sc:'sc-news',         pol:'pol-news',         ni:10 },
+  'news-detail':  { sc:'sc-news-detail',  pol:'pol-news-detail',  ni:11 },
+  'payment':      { sc:'sc-payment',      pol:'pol-payment',      ni:12 },
 };
 
 function nav(key) {
@@ -2200,8 +2171,12 @@ function nav(key) {
     if (cfg.sc === 'sc-wallet') initWalletScreen();
   }
   if (po) po.classList.add('active');
-  const navBtns = document.querySelectorAll('.nav-btn');
-  if (navBtns[cfg.ni]) navBtns[cfg.ni].classList.add('active');
+  // onclick 속성에서 key 매칭으로 active 처리 (인덱스 오류 방지)
+  document.querySelectorAll('.nav-btn').forEach(function(b) {
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').indexOf("'" + key + "'") !== -1) {
+      b.classList.add('active');
+    }
+  });
   document.querySelector('.policy-panel').scrollTop = 0;
   document.querySelectorAll('.overlay').forEach(o => o.classList.remove('show'));
 }
@@ -2406,36 +2381,36 @@ const WALLET_DATA = {
   all: {
     label:'총 보유 자산', amount:'12,345,678원',
     wallets:[
-      { icon:'🪙', bg:'',        ovl:null,                    name:'페이코인 PCI', sub:'82.45원 · 내 지갑',  krw:'8,245,000원',  qty:'100,000 PCI',       chg:'up', rate:'▲ 5.23%', dest:'wallet-pci' },
-      { icon:'🪙', bg:'',        ovl:{bg:'#f57c00',txt:'빗'}, name:'페이코인 PCI', sub:'82.12원 · 빗썸',     krw:'2,463,600원',  qty:'30,000 PCI',        chg:'up', rate:'▲ 4.91%', dest:'wallet-other' },
-      { icon:'₿',  bg:'#FEF3C7', ovl:{bg:'#1a73e8',txt:'원'}, name:'비트코인 BTC', sub:'93,450,000원 · 코인원', krw:'1,637,432원', qty:'0.01752100 BTC',   chg:'dn', rate:'▼ 1.20%', dest:'wallet-other' },
-      { icon:'Ξ',  bg:'#EEF2FF', ovl:{bg:'#1a73e8',txt:'원'}, name:'이더리움 ETH', sub:'4,823,000원 · 코인원', krw:'240,000원',   qty:'0.04975000 ETH',   chg:'up', rate:'▲ 2.10%', dest:'wallet-other' },
-      { icon:'◎',  bg:'#F0FDF4', ovl:{bg:'#6B21A8',txt:'빗'}, name:'리플 XRP',     sub:'820원 · 코빗',       krw:'82,000원',    qty:'100.00000000 XRP', chg:'dn', rate:'▼ 0.55%', dest:'wallet-other' },
+      { icon:'🪙', bg:'',        ovl:null,                    name:'페이코인 PCI', sub:'82.45원',  krw:'8,245,000원',  qty:'100,000 PCI',       chg:'up', rate:'▲ 5.23%', dest:'wallet-pci' },
+      { icon:'🪙', bg:'',        ovl:{bg:'#f57c00',txt:'빗'}, name:'페이코인 PCI', sub:'82.12원',     krw:'2,463,600원',  qty:'30,000 PCI',        chg:'up', rate:'▲ 4.91%', dest:'wallet-other' },
+      { icon:'₿',  bg:'#FEF3C7', ovl:{bg:'#1a73e8',txt:'원'}, name:'비트코인 BTC', sub:'93,450,000원', krw:'1,637,432원', qty:'0.01752100 BTC',   chg:'dn', rate:'▼ 1.20%', dest:'wallet-other' },
+      { icon:'Ξ',  bg:'#EEF2FF', ovl:{bg:'#1a73e8',txt:'원'}, name:'이더리움 ETH', sub:'4,823,000원', krw:'240,000원',   qty:'0.04975000 ETH',   chg:'up', rate:'▲ 2.10%', dest:'wallet-other' },
+      { icon:'◎',  bg:'#F0FDF4', ovl:{bg:'#6B21A8',txt:'빗'}, name:'리플 XRP',     sub:'820원',       krw:'82,000원',    qty:'100.00000000 XRP', chg:'dn', rate:'▼ 0.55%', dest:'wallet-other' },
     ]
   },
   self: {
     label:'내 지갑 자산', amount:'8,245,000원',
     wallets:[
-      { icon:'🪙', bg:'', ovl:null, name:'페이코인 PCI', sub:'82.45원 · 내 지갑', krw:'8,245,000원', qty:'100,000 PCI', chg:'up', rate:'▲ 5.23%', dest:'wallet-pci' },
+      { icon:'🪙', bg:'', ovl:null, name:'페이코인 PCI', sub:'82.45원', krw:'8,245,000원', qty:'100,000 PCI', chg:'up', rate:'▲ 5.23%', dest:'wallet-pci' },
     ]
   },
   bithumb: {
     label:'빗썸 보유 자산', amount:'2,463,600원',
     wallets:[
-      { icon:'🪙', bg:'', ovl:{bg:'#f57c00',txt:'빗'}, name:'페이코인 PCI', sub:'82.12원 · 빗썸', krw:'2,463,600원', qty:'30,000 PCI', chg:'up', rate:'▲ 4.91%', dest:'wallet-other' },
+      { icon:'🪙', bg:'', ovl:{bg:'#f57c00',txt:'빗'}, name:'페이코인 PCI', sub:'82.12원', krw:'2,463,600원', qty:'30,000 PCI', chg:'up', rate:'▲ 4.91%', dest:'wallet-other' },
     ]
   },
   coinone: {
     label:'코인원 보유 자산', amount:'1,877,432원',
     wallets:[
-      { icon:'₿', bg:'#FEF3C7', ovl:{bg:'#1a73e8',txt:'원'}, name:'비트코인 BTC', sub:'93,450,000원 · 코인원', krw:'1,637,432원', qty:'0.01752100 BTC', chg:'dn', rate:'▼ 1.20%', dest:'wallet-other' },
-      { icon:'Ξ', bg:'#EEF2FF', ovl:{bg:'#1a73e8',txt:'원'}, name:'이더리움 ETH', sub:'4,823,000원 · 코인원', krw:'240,000원',   qty:'0.04975000 ETH', chg:'up', rate:'▲ 2.10%', dest:'wallet-other' },
+      { icon:'₿', bg:'#FEF3C7', ovl:{bg:'#1a73e8',txt:'원'}, name:'비트코인 BTC', sub:'93,450,000원', krw:'1,637,432원', qty:'0.01752100 BTC', chg:'dn', rate:'▼ 1.20%', dest:'wallet-other' },
+      { icon:'Ξ', bg:'#EEF2FF', ovl:{bg:'#1a73e8',txt:'원'}, name:'이더리움 ETH', sub:'4,823,000원', krw:'240,000원',   qty:'0.04975000 ETH', chg:'up', rate:'▲ 2.10%', dest:'wallet-other' },
     ]
   },
   korbit: {
     label:'코빗 보유 자산', amount:'82,000원',
     wallets:[
-      { icon:'◎', bg:'#F0FDF4', ovl:{bg:'#6B21A8',txt:'빗'}, name:'리플 XRP', sub:'820원 · 코빗', krw:'82,000원', qty:'100.00000000 XRP', chg:'dn', rate:'▼ 0.55%', dest:'wallet-other' },
+      { icon:'◎', bg:'#F0FDF4', ovl:{bg:'#6B21A8',txt:'빗'}, name:'리플 XRP', sub:'820원', krw:'82,000원', qty:'100.00000000 XRP', chg:'dn', rate:'▼ 0.55%', dest:'wallet-other' },
     ]
   },
 };
