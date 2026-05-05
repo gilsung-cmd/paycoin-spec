@@ -1981,12 +1981,16 @@ GET /api/v1/payment/recent?limit=5</div>
     <div class="chip" id="qf-un"         onclick="setQF('un')"  style="font-size:10px;padding:3px 8px">미답변</div>
   </div>
   <div class="qna-setup-inline" id="qna-setup-inline">
-    <div style="font-size:11px;font-weight:700;color:#92400E;margin-bottom:5px">⚙️ API URL 설정 필요</div>
-    <div style="font-size:10px;color:#92400E;margin-bottom:7px;line-height:1.5">Google Apps Script 배포 URL을 입력하면 질문/답변이 저장됩니다.</div>
+    <div style="font-size:11px;font-weight:700;color:#92400E;margin-bottom:5px">⚙️ API URL 설정</div>
+    <div id="qna-current-url" style="font-size:9px;color:var(--text3);margin-bottom:5px;word-break:break-all;"></div>
     <input id="qna-api-input" class="qna-su-input" placeholder="https://script.google.com/macros/s/...">
-    <button onclick="saveApiUrl()" style="width:100%;padding:8px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">저장</button>
-    <div style="margin-top:5px;text-align:center">
-      <button onclick="document.getElementById('qna-setup-inline').classList.remove('show')" style="background:none;border:none;font-size:10px;color:var(--text4);cursor:pointer;font-family:'Noto Sans KR',sans-serif;">나중에</button>
+    <div style="display:flex;gap:5px;margin-bottom:5px">
+      <button onclick="saveApiUrl()" style="flex:1;padding:7px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">저장</button>
+      <button onclick="testApiUrl()" style="flex:1;padding:7px;background:var(--card2);color:var(--text2);border:1px solid var(--border);border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">연결 테스트</button>
+    </div>
+    <div id="qna-test-result" style="font-size:10px;line-height:1.5;margin-bottom:4px;"></div>
+    <div style="text-align:center">
+      <button onclick="document.getElementById('qna-setup-inline').classList.remove('show')" style="background:none;border:none;font-size:10px;color:var(--text4);cursor:pointer;font-family:'Noto Sans KR',sans-serif;">닫기</button>
     </div>
   </div>
   <div class="qna-list" id="qna-list">
@@ -2255,114 +2259,88 @@ function showTip(el, text) {
 
 /* ══ TILE ROW 3 SWIPE ══ */
 (function() {
-  let r3Idx = 0;
-  const TOTAL = 2;
-  function updateR3() {
-    const track = document.getElementById('tile-row3');
+  var cur = 0, total = 2;
+  var startX = 0, startT = 0, isDragging = false;
+
+  function getWrapW() {
+    var w = document.getElementById('tile-row3-wrap');
+    return w ? w.offsetWidth : 0;
+  }
+
+  function slideTo(n) {
+    cur = Math.max(0, Math.min(n, total - 1));
+    var track = document.getElementById('tile-row3-track');
     if (!track) return;
-    // width of one tile = viewport width
-    const vp = document.getElementById('tile-row3-viewport');
-    const w = vp ? vp.offsetWidth + 8 : 0; // +gap
-    track.style.transform = `translateX(-${r3Idx * w}px)`;
-    for (let i = 0; i < TOTAL; i++) {
-      const dot = document.getElementById('r3-dot-' + i);
-      if (!dot) continue;
-      dot.style.width  = i === r3Idx ? '16px' : '5px';
-      dot.style.background = i === r3Idx ? 'var(--primary)' : 'var(--border2)';
-    }
+    var tileW = getWrapW() - 20; // peek=20px
+    track.style.transform = 'translateX(-' + (cur * (tileW + 8)) + 'px)';
   }
-  // Touch swipe
-  let r3StartX = 0;
-  document.addEventListener('touchstart', e => {
-    const vp = document.getElementById('tile-row3-viewport');
-    if (vp && vp.contains(e.target)) r3StartX = e.touches[0].clientX;
+
+  // 터치
+  document.addEventListener('touchstart', function(e) {
+    var w = document.getElementById('tile-row3-wrap');
+    if (!w || !w.contains(e.target)) return;
+    startX = e.touches[0].clientX;
+    startT = Date.now();
+    isDragging = true;
+    var track = document.getElementById('tile-row3-track');
+    if (track) track.style.transition = 'none';
   }, { passive: true });
-  document.addEventListener('touchend', e => {
-    const vp = document.getElementById('tile-row3-viewport');
-    if (!vp || !vp.contains(e.target)) return;
-    const dx = e.changedTouches[0].clientX - r3StartX;
-    if (Math.abs(dx) < 30) return;
-    if (dx < 0 && r3Idx < TOTAL - 1) r3Idx++;
-    else if (dx > 0 && r3Idx > 0) r3Idx--;
-    updateR3();
+
+  document.addEventListener('touchmove', function(e) {
+    if (!isDragging) return;
+    var dx = e.touches[0].clientX - startX;
+    var track = document.getElementById('tile-row3-track');
+    if (!track) return;
+    var tileW = getWrapW() - 20;
+    track.style.transform = 'translateX(-' + (cur * (tileW + 8) - dx) + 'px)';
   }, { passive: true });
-  // Mouse drag (desktop preview)
-  let r3DragX = 0, r3Dragging = false;
-  document.addEventListener('mousedown', e => {
-    const vp = document.getElementById('tile-row3-viewport');
-    if (vp && vp.contains(e.target)) { r3DragX = e.clientX; r3Dragging = true; }
+
+  document.addEventListener('touchend', function(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    var dx = e.changedTouches[0].clientX - startX;
+    var dt = Date.now() - startT;
+    var track = document.getElementById('tile-row3-track');
+    if (track) track.style.transition = 'transform .35s cubic-bezier(.4,0,.2,1)';
+    if (dx < -30 || (dx < -10 && dt < 200)) slideTo(cur + 1);
+    else if (dx > 30 || (dx > 10 && dt < 200)) slideTo(cur - 1);
+    else slideTo(cur);
+  }, { passive: true });
+
+  // 마우스 (데스크탑 미리보기)
+  document.addEventListener('mousedown', function(e) {
+    var w = document.getElementById('tile-row3-wrap');
+    if (!w || !w.contains(e.target)) return;
+    startX = e.clientX; startT = Date.now(); isDragging = true;
+    var track = document.getElementById('tile-row3-track');
+    if (track) track.style.transition = 'none';
+    e.preventDefault();
   });
-  document.addEventListener('mouseup', e => {
-    if (!r3Dragging) return; r3Dragging = false;
-    const dx = e.clientX - r3DragX;
-    if (Math.abs(dx) < 20) return;
-    if (dx < 0 && r3Idx < TOTAL - 1) r3Idx++;
-    else if (dx > 0 && r3Idx > 0) r3Idx--;
-    updateR3();
+
+  document.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    var dx = e.clientX - startX;
+    var track = document.getElementById('tile-row3-track');
+    if (!track) return;
+    var tileW = getWrapW() - 20;
+    track.style.transform = 'translateX(-' + (cur * (tileW + 8) - dx) + 'px)';
   });
-  window.addEventListener('resize', updateR3);
-  // Init after render
-  setTimeout(updateR3, 100);
+
+  document.addEventListener('mouseup', function(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    var dx = e.clientX - startX;
+    var dt = Date.now() - startT;
+    var track = document.getElementById('tile-row3-track');
+    if (track) track.style.transition = 'transform .35s cubic-bezier(.4,0,.2,1)';
+    if (dx < -30 || (dx < -10 && dt < 200)) slideTo(cur + 1);
+    else if (dx > 30 || (dx > 10 && dt < 200)) slideTo(cur - 1);
+    else slideTo(cur);
+  });
+
+  window.addEventListener('resize', function() { slideTo(cur); });
+  setTimeout(function() { slideTo(0); }, 300);
 })();
-
-
-/* ══ WALLET TAB FILTER ══ */
-const WALLET_DATA = {
-  all: { label:'총 보유 자산', amount:'12,345,678원', wallets:[
-    { icon:'🪙', bg:'', ovl:null, name:'페이코인 PCI', sub:'82.45원', krw:'8,245,000원', qty:100000,   sym:'PCI', chg:'up', rate:'▲ 5.23%', dest:'wallet-pci' },
-    { icon:'🪙', bg:'', ovl:{bg:'#f57c00',txt:'빗'}, name:'페이코인 PCI', sub:'82.12원', krw:'2,463,600원', qty:30000,    sym:'PCI', chg:'up', rate:'▲ 4.91%', dest:'wallet-other' },
-    { icon:'₿', bg:'#FEF3C7', ovl:{bg:'#1a73e8',txt:'원'}, name:'비트코인 BTC', sub:'93,450,000원', krw:'1,637,432원', qty:0.017521, sym:'BTC', chg:'dn', rate:'▼ 1.20%', dest:'wallet-other' },
-    { icon:'Ξ', bg:'#EEF2FF', ovl:{bg:'#1a73e8',txt:'원'}, name:'이더리움 ETH', sub:'4,823,000원', krw:'240,000원', qty:0.049750, sym:'ETH', chg:'up', rate:'▲ 2.10%', dest:'wallet-other' },
-    { icon:'◎', bg:'#F0FDF4', ovl:{bg:'#6B21A8',txt:'빗'}, name:'리플 XRP', sub:'820원', krw:'82,000원', qty:100,      sym:'XRP', chg:'dn', rate:'▼ 0.55%', dest:'wallet-other' },
-  ]},
-  self: { label:'내 지갑 자산', amount:'8,245,000원', wallets:[
-    { icon:'🪙', bg:'', ovl:null, name:'페이코인 PCI', sub:'82.45원', krw:'8,245,000원', qty:100000,   sym:'PCI', chg:'up', rate:'▲ 5.23%', dest:'wallet-pci' },
-  ]},
-  bithumb: { label:'빗썸 보유 자산', amount:'2,463,600원', wallets:[
-    { icon:'🪙', bg:'', ovl:{bg:'#f57c00',txt:'빗'}, name:'페이코인 PCI', sub:'82.12원', krw:'2,463,600원', qty:30000,    sym:'PCI', chg:'up', rate:'▲ 4.91%', dest:'wallet-other' },
-  ]},
-  coinone: { label:'코인원 보유 자산', amount:'1,877,432원', wallets:[
-    { icon:'₿', bg:'#FEF3C7', ovl:{bg:'#1a73e8',txt:'원'}, name:'비트코인 BTC', sub:'93,450,000원', krw:'1,637,432원', qty:0.017521, sym:'BTC', chg:'dn', rate:'▼ 1.20%', dest:'wallet-other' },
-    { icon:'Ξ', bg:'#EEF2FF', ovl:{bg:'#1a73e8',txt:'원'}, name:'이더리움 ETH', sub:'4,823,000원', krw:'240,000원', qty:0.049750, sym:'ETH', chg:'up', rate:'▲ 2.10%', dest:'wallet-other' },
-  ]},
-  korbit: { label:'코빗 보유 자산', amount:'82,000원', wallets:[
-    { icon:'◎', bg:'#F0FDF4', ovl:{bg:'#6B21A8',txt:'빗'}, name:'리플 XRP', sub:'820원', krw:'82,000원', qty:100,      sym:'XRP', chg:'dn', rate:'▼ 0.55%', dest:'wallet-other' },
-  ]},
-};
-function walletTab(tab) {
-  ['all','self','bithumb','coinone','korbit'].forEach(t => {
-    const el = document.getElementById('wchip-'+t);
-    if(el) el.classList.toggle('active', t===tab);
-  });
-  const data = WALLET_DATA[tab];
-  if(!data) return;
-  const lbl = document.getElementById('wt-label');
-  if(lbl) lbl.textContent = data.label;
-  // wt-ticker 업데이트 (ticker span 유지)
-  var wtEl = document.getElementById('wt-ticker');
-  if(wtEl) {
-    var newAmt = data.amount;
-    if(!wtEl.querySelector('.dgt')) {
-      wtEl.innerHTML = typeof buildDgt==='function' ? buildDgt(newAmt) : newAmt;
-    } else if(typeof updateDgtInEl==='function') {
-      updateDgtInEl(wtEl, newAmt, 1);
-    } else { wtEl.textContent = newAmt; }
-  }
-  const banner = document.getElementById('wt-banner');
-  if(banner) banner.style.display = '';
-  const list = document.getElementById('wt-list');
-  if(!list) return;
-  if(!data.wallets || !data.wallets.length) {
-    list.innerHTML = `<div style="margin:12px 14px 0;background:var(--card2);border:1.5px dashed var(--border2);border-radius:var(--radius);padding:20px 16px;text-align:center"><div style="font-size:28px;margin-bottom:8px">🔗</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">${tab==='bithumb'?'빗썸':tab==='coinone'?'코인원':'코빗'} 지갑이 연결되지 않았어요</div><div style="font-size:11px;color:var(--text3);line-height:1.6;margin-bottom:14px">거래소 지갑을 연결하면 보유 자산을<br>한 화면에서 통합 조회할 수 있어요.</div><button class="btn btn-primary" style="padding:11px;font-size:13px">+ 거래소 지갑 연결하기</button></div>`;
-    return;
-  }
-  list.innerHTML = data.wallets.map(w => {
-    const ovl = w.ovl ? `<div class="exch-ovl" style="background:${w.ovl.bg}">${w.ovl.txt}</div>` : '';
-    const bg  = w.bg  ? `style="background:${w.bg}"` : '';
-    return `<div class="wallet-row" onclick="nav('${w.dest}')"><div class="coin-icon" ${bg}>${w.icon}${ovl}</div><div class="winfo"><div class="wname">${w.name}</div><div class="wprice">${w.sub}</div></div><div class="wright"><div class="wkrw">${w.krw}</div><div class="wqty">${typeof w.sym!=='undefined'?(fmtQty(w.qty,w.sym)+' '+w.sym):w.qty} <span class="chg ${w.chg}">${w.rate}</span></div></div></div>`;
-  }).join('');
-}
-function initWalletScreen() { walletTab('all'); }
 
 /* ══ NAV SCROLL ARROW ══ */
 (function(){
@@ -2435,6 +2413,41 @@ function updateQnaLabels(){
   var e2=document.getElementById('qna-form-scr');
   if(e1) e1.textContent=lbl; if(e2) e2.textContent=lbl;
 }
+function showCurrentApiUrl(){
+  var el = document.getElementById('qna-current-url');
+  if(!el) return;
+  el.textContent = QNA.apiUrl ? '현재: ' + QNA.apiUrl.substring(0,50) + '...' : '설정된 URL 없음';
+  var inp = document.getElementById('qna-api-input');
+  if(inp && QNA.apiUrl) inp.value = QNA.apiUrl;
+}
+
+async function testApiUrl(){
+  var url = (document.getElementById('qna-api-input')||{}).value || QNA.apiUrl;
+  var res_el = document.getElementById('qna-test-result');
+  if(!url){ if(res_el) res_el.innerHTML = '<span style="color:var(--red)">URL을 입력하세요.</span>'; return; }
+  if(res_el) res_el.innerHTML = '⏳ 연결 테스트 중...';
+  try{
+    var ctrl = new AbortController();
+    setTimeout(function(){ ctrl.abort(); }, 8000);
+    var r = await fetch(url + '?action=qna_list', { signal: ctrl.signal });
+    var d = await r.json();
+    if(res_el){
+      if(d.items !== undefined){
+        res_el.innerHTML = '<span style="color:var(--green)">✅ 연결 성공! 질문 ' + (d.items||[]).length + '건</span>';
+      } else if(d.success !== undefined){
+        res_el.innerHTML = '<span style="color:var(--green)">✅ 연결 성공! (success=' + d.success + ')</span>';
+      } else {
+        res_el.innerHTML = '<span style="color:var(--gold)">⚠️ 응답 형식 확인 필요: ' + JSON.stringify(d).substring(0,60) + '</span>';
+      }
+    }
+  }catch(e){
+    if(res_el){
+      var msg = e.name==='AbortError' ? '응답 시간 초과 (8초)' : e.message;
+      res_el.innerHTML = '<span style="color:var(--red)">❌ 오류: ' + msg + '</span>';
+    }
+  }
+}
+
 function saveApiUrl(){
   var url=(document.getElementById('qna-api-input')||{}).value||'';
   if(!url.startsWith('https://')){ alert('올바른 URL을 입력해주세요.'); return; }
@@ -2464,7 +2477,11 @@ async function loadQna(){
     var d=await r.json();
     QNA.items=d.items||[]; updateBadge(); renderQna();
   }catch(e){
-    if(listEl&&!QNA.items.length) listEl.innerHTML='<div class="qna-empty" style="color:var(--red)">불러오기 실패. ↻ 재시도</div>';
+    console.error('[loadQna] 오류:', e.name, e.message);
+    if(listEl&&!QNA.items.length){
+      var msg = e.name === 'AbortError' ? '응답 시간 초과' : (e.message||'네트워크 오류');
+      listEl.innerHTML='<div class="qna-empty" style="color:var(--red)">불러오기 실패<br><span style="font-size:10px;color:var(--text4)">'+msg+'</span><br><button onclick="loadQna()" style="margin-top:6px;padding:4px 10px;background:var(--primary);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:11px">↻ 재시도</button></div>';
+    }
   }
 }
 function renderQna(){
@@ -2570,7 +2587,7 @@ async function loadDesc(){
     renderAllDesc();
   }catch(err){
     DESC.failed=true;
-    console.warn('Description 로드 실패:',err.message);
+    console.error('[loadDesc] 오류:', err.name, err.message);
     document.querySelectorAll('.policy-section').forEach(function(sec){
       if(sec.dataset.staticBackup) sec.innerHTML=sec.dataset.staticBackup;
     });
@@ -2646,9 +2663,16 @@ async function loadConfig(){
       try{ localStorage.setItem('qna_api',cfg.apiUrl); }catch(e){}
       Promise.all([loadQna(),loadDesc()]); return;
     }
-  }catch(e){}
+  }catch(e){
+    console.warn('[loadConfig] config.json 로드 실패:', e.message);
+  }
+  // apiUrl이 localStorage에 있는데 config.json이 없어도 동작하도록
+  if(QNA.apiUrl){
+    Promise.all([loadQna(), loadDesc()]);
+    return;
+  }
   var s=document.getElementById('qna-setup-inline');
-  if(s) s.classList.add('show');
+  if(s){ s.classList.add('show'); showCurrentApiUrl(); }
 }
 
 /* ══ NAV OVERRIDE ══ */
@@ -2657,7 +2681,11 @@ async function loadConfig(){
   window.nav=function(k){ _nav(k); updateQnaLabels(); };
 })();
 
-setTimeout(function(){ updateQnaLabels(); loadConfig(); },600);
+setTimeout(function(){
+  updateQnaLabels();
+  QNA.init(); // localStorage에서 apiUrl 재로드 보장
+  loadConfig();
+},600);
 
 
 /* 수량 포맷: BTC/ETH → 소수점8자리, 그 외 → 소수점4자리 */
