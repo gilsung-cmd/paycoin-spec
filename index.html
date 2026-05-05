@@ -139,12 +139,12 @@ body {
 
 .screen {
   position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  overflow-y: auto; overflow-x: hidden;
+  overflow: hidden;
   display: none; background: var(--screen-bg);
-  scrollbar-width: none;
+  flex-direction: column;
 }
 .screen::-webkit-scrollbar { display: none; }
-.screen.active { display: block; animation: slideIn .28s cubic-bezier(.16,1,.3,1); }
+.screen.active { display: flex; animation: slideIn .28s cubic-bezier(.16,1,.3,1); }
 @keyframes slideIn { from { transform: translateX(16px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
 /* ══ POLICY PANEL ══ */
@@ -209,15 +209,17 @@ body {
 
 /* ══ APP STATUS BAR ══ */
 .sbar {
-  height: 28px; padding: 0 20px;
+  flex-shrink: 0;
+  height: 28px; padding: 4px 20px 0;
   display: flex; align-items: center; justify-content: space-between;
   font-size: 11px; font-weight: 600; color: var(--text);
-  background: transparent; position: sticky; top: 0; z-index: 20;
+  background: var(--screen-bg); z-index: 20;
   padding-top: 4px;
 }
 
 /* ══ APP HEADER ══ */
 .aheader {
+  flex-shrink: 0;
   padding: 2px 16px 12px;
   display: flex; align-items: center; justify-content: space-between;
 }
@@ -241,7 +243,14 @@ body {
 }
 
 /* ══ SCREEN BODY ══ */
-.sbody { padding-bottom: 76px; }
+.sbody {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  padding-bottom: 16px;
+}
+.sbody::-webkit-scrollbar { display: none; }
 
 /* ══ CARD ══ */
 .card {
@@ -327,7 +336,7 @@ body {
 
 /* ══ BOTTOM TAB BAR ══ */
 .tab-bar {
-  position: sticky; bottom: 0;
+  flex-shrink: 0;
   height: 68px; background: var(--card);
   border-top: 1px solid var(--border);
   box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
@@ -405,7 +414,7 @@ body {
 .divider { height: 8px; background: var(--bg-root); }
 
 /* ══ BACK HEADER ══ */
-.back-header { padding: 4px 14px 10px; display: flex; align-items: center; gap: 10px; }
+.back-header { flex-shrink: 0; padding: 4px 14px 10px; display: flex; align-items: center; gap: 10px; }
 .back-btn { font-size: 13px; color: var(--primary); cursor: pointer; padding: 4px 0; font-weight: 500; }
 
 /* ══ OVERLAY / MODAL ══ */
@@ -523,11 +532,14 @@ body {
 
 
 /* ══ QnA ══ */
-
-
+.qna-fab { position:absolute; bottom:28px; right:28px; width:52px; height:52px; border-radius:50%; background:var(--primary); color:#fff; font-size:20px; border:none; cursor:pointer; box-shadow:0 4px 16px rgba(26,86,219,.35); display:flex; align-items:center; justify-content:center; z-index:20; transition:all .2s; }
+.qna-fab:hover { transform:scale(1.08); }
+.qna-fab-badge { position:absolute; top:-3px; right:-3px; background:var(--red); color:#fff; font-size:9px; font-weight:700; width:17px; height:17px; border-radius:50%; display:none; align-items:center; justify-content:center; border:2px solid var(--bg-root); }
+.qna-box { position:absolute; bottom:92px; right:28px; width:calc(100% - 56px); max-height:580px; background:var(--card); border:1px solid var(--border2); border-radius:18px; box-shadow:0 12px 40px rgba(0,0,0,.12); display:none; flex-direction:column; overflow:hidden; z-index:19; }
+.qna-box.open { display:flex; animation:qnaIn .25s cubic-bezier(.16,1,.3,1); }
 @keyframes qnaIn { from{transform:translateY(10px) scale(.97);opacity:0} to{transform:translateY(0) scale(1);opacity:1} }
-
-
+.qna-hd { padding:14px 16px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.qna-hd-title { font-size:14px; font-weight:800; color:var(--text); }
 .qna-hd-sub { font-size:10px; color:var(--text4); margin-top:1px; }
 .qna-list { flex:1; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
 .qna-empty { padding:28px 16px; text-align:center; font-size:12px; color:var(--text4); }
@@ -616,6 +628,25 @@ body {
 .guide-copy-btn { font-size:10px;color:var(--text4);background:none;border:1px solid var(--border);border-radius:4px;padding:1px 5px;cursor:pointer;margin-left:3px;font-family:'Noto Sans KR',sans-serif; }
 .guide-copy-btn:hover { background:var(--card2); }
 
+
+/* ══ DIGIT TICKER ══ */
+.dgt { display:inline-block; overflow:hidden; height:1.15em; vertical-align:bottom; }
+.dgt-inner { display:block; line-height:1.15em; }
+.dgt-inner.dgt-up   { animation:dgtUp   .3s cubic-bezier(.4,0,.2,1) forwards; }
+.dgt-inner.dgt-down { animation:dgtDown .3s cubic-bezier(.4,0,.2,1) forwards; }
+@keyframes dgtUp {
+  0%  { transform:translateY(0);    color:#EF4444; }
+  44% { transform:translateY(-110%);color:#EF4444; opacity:0; }
+  45% { transform:translateY(110%); color:#EF4444; opacity:0; }
+  100%{ transform:translateY(0);    color:#EF4444; opacity:1; }
+}
+@keyframes dgtDown {
+  0%  { transform:translateY(0);   color:#3B82F6; }
+  44% { transform:translateY(110%);color:#3B82F6; opacity:0; }
+  45% { transform:translateY(-110%);color:#3B82F6;opacity:0; }
+  100%{ transform:translateY(0);   color:#3B82F6; opacity:1; }
+}
+
 </style>
 
 </head>
@@ -669,8 +700,8 @@ body {
     <!-- Asset Card -->
     <div class="asset-card" onclick="nav('asset')">
       <div class="alabel">총 보유 자산</div>
-      <div class="aamt">12,345,678<span style="font-size:15px;font-weight:500;opacity:.8"> 원</span></div>
-      <div class="achange"><span class="up" style="color:#FCA5A5">▲ +1,234원</span><span style="opacity:.4">|</span><span style="color:#FCA5A5">▲ 0.43%</span><span style="font-size:10px;opacity:.6;margin-left:2px">전일 대비</span></div>
+      <div class="aamt"><span id="home-total-amt">12,345,678</span><span style="font-size:15px;font-weight:500;opacity:.8"> 원</span></div>
+      <div class="achange"><span class="up" id="home-total-chg" style="color:#FCA5A5">▲ +1,234원</span><span style="opacity:.4">|</span><span id="home-total-pct" style="color:#FCA5A5">▲ 0.43%</span><span style="font-size:10px;opacity:.6;margin-left:2px">전일 대비</span></div>
       <div class="abtn">자산현황 보기 →</div>
     </div>
 
@@ -698,106 +729,51 @@ body {
     </div>
 
     <!-- Tile Menu -->
-    <div class="tile-section" data-zone="home-tiles">
-
+    <div class="tile-section">
       <!-- Row 1: 출석체크 / 혜택 / PCI 정보 -->
       <div class="tile-row" style="height:72px">
-        <div class="tile tile-1-3" onclick="nav('benefits')">
-          <div class="tile-icon">✅</div><div class="tile-lbl">출석체크</div>
-        </div>
-        <div class="tile tile-1-3" onclick="nav('benefits')">
-          <div class="tile-icon">🎁</div><div class="tile-lbl">혜택</div>
-        </div>
-        <div class="tile tile-1-3" onclick="nav('pci-info')">
-          <div class="tile-icon">🪙</div><div class="tile-lbl">PCI 정보</div>
-        </div>
+        <div class="tile tile-1-3" onclick="nav('benefits')"><div class="tile-icon">✅</div><div class="tile-lbl">출석체크</div></div>
+        <div class="tile tile-1-3" onclick="nav('benefits')"><div class="tile-icon">🎁</div><div class="tile-lbl">혜택</div></div>
+        <div class="tile tile-1-3" onclick="nav('pci-info')"><div class="tile-icon">🪙</div><div class="tile-lbl">PCI 정보</div></div>
       </div>
-
       <!-- Row 2: 쇼핑(2/3) + [월렛커넥트/지갑 세로] -->
       <div class="tile-row" style="height:72px">
-        <!-- 쇼핑 타일: 흰 배경, 좌측 텍스트 + 우측 상품 이미지 세로중앙 (어드민 제어) -->
-        <div class="tile tile-2-3"
-             style="overflow:hidden;padding:0;background:var(--card);
-                    flex-direction:row;align-items:center;justify-content:space-between">
-          <!-- 좌측: 서비스명 + 프로모션 문구 -->
-          <div style="display:flex;flex-direction:column;justify-content:center;
-                      padding:0 0 0 12px;gap:3px">
-            <!-- 어드민 제어: 서비스명 -->
-            <div style="font-size:9px;color:var(--text4);font-weight:500;letter-spacing:.2px">
-              Paycoin Shopping
-            </div>
-            <!-- 어드민 제어: 프로모션 문구 -->
-            <div style="font-size:12px;font-weight:700;color:var(--text);line-height:1.4">
-              아이패드<br>특별 할인혜택
-            </div>
+        <div class="tile tile-2-3" style="overflow:hidden;padding:0;background:var(--card);flex-direction:row;align-items:center;justify-content:space-between">
+          <div style="display:flex;flex-direction:column;justify-content:center;padding:0 0 0 12px;gap:3px">
+            <div style="font-size:9px;color:var(--text4);font-weight:500">Paycoin Shopping</div>
+            <div style="font-size:12px;font-weight:700;color:var(--text);line-height:1.4">아이패드<br>특별 할인혜택</div>
           </div>
-          <!-- 우측: 상품 이미지 세로 중앙 정렬 (어드민 제어: image_url) -->
-          <!-- 실제 구현: <img src="{image_url}" style="height:56px;object-fit:contain"> -->
-          <div style="display:flex;align-items:center;justify-content:center;
-                      height:100%;padding-right:8px;flex-shrink:0">
+          <div style="display:flex;align-items:center;padding-right:8px;flex-shrink:0">
             <div style="display:flex;gap:2px;align-items:center">
-              <div style="width:18px;height:26px;background:#dde0e8;border-radius:3px;
-                           border:1px solid #c8ccd8"></div>
-              <div style="width:28px;height:38px;background:#dde0e8;border-radius:4px;
-                           border:1px solid #c8ccd8"></div>
-              <div style="width:22px;height:30px;background:#dde0e8;border-radius:3px;
-                           border:1px solid #c8ccd8"></div>
+              <div style="width:18px;height:26px;background:#dde0e8;border-radius:3px;border:1px solid #c8ccd8"></div>
+              <div style="width:28px;height:38px;background:#dde0e8;border-radius:4px;border:1px solid #c8ccd8"></div>
+              <div style="width:22px;height:30px;background:#dde0e8;border-radius:3px;border:1px solid #c8ccd8"></div>
             </div>
           </div>
         </div>
         <div class="tile-1-3" style="display:flex;flex-direction:column;gap:6px;height:100%">
-          <div class="tile" onclick=""
-               style="flex:1;flex-direction:row;gap:5px;padding:0 6px;
-                      justify-content:center;border-radius:6px">
+          <div class="tile" onclick="" style="flex:1;flex-direction:row;gap:5px;padding:0 6px;justify-content:center;border-radius:6px">
             <span class="tile-lbl" style="font-size:9px;font-weight:600">월렛커넥트</span>
           </div>
-          <div class="tile" onclick="nav('wallet')"
-               style="flex:1;flex-direction:row;gap:5px;padding:0 6px;
-                      justify-content:center;border-radius:6px">
+          <div class="tile" onclick="nav('wallet')" style="flex:1;flex-direction:row;gap:5px;padding:0 6px;justify-content:center;border-radius:6px">
             <span class="tile-lbl" style="font-size:10px;font-weight:600">지갑</span>
           </div>
         </div>
-      </div>
-
-      <!-- Row 3: 전체 너비 스와이프 배너 2개 — 우측 peek으로 더 있음 암시 -->
-      <div style="position:relative;height:72px;border-radius:var(--radius);overflow:hidden"
-           id="tile-row3-wrap">
-        <!-- 트랙: 타일 2개 나란히, 각 타일 = 컨테이너 너비 - peek -->
-        <div style="display:flex;height:100%;
-                    transition:transform .35s cubic-bezier(.4,0,.2,1);
-                    will-change:transform"
-             id="tile-row3-track">
-          <!-- 타일1 -->
-          <div class="tile" onclick="nav('payment')"
-               style="flex-shrink:0;width:calc(100% - 20px);height:100%;
-                      flex-direction:row;gap:12px;justify-content:flex-start;padding:0 16px;
-                      border-radius:var(--radius);
-                      border:1.5px solid var(--primary);background:var(--primary-l)">
+      </div><!-- /tile-row2 -->
+      <!-- Row 3: 전체 너비 스와이프 — 2개 타일 -->
+      <div style="position:relative;height:72px;border-radius:var(--radius);overflow:hidden" id="tile-row3-wrap">
+        <div style="display:flex;height:100%;transition:transform .35s cubic-bezier(.4,0,.2,1);will-change:transform" id="tile-row3-track">
+          <div class="tile" onclick="nav('payment')" style="flex-shrink:0;width:calc(100% - 20px);height:100%;flex-direction:row;gap:12px;justify-content:flex-start;padding:0 16px;border-radius:var(--radius);border:1.5px solid var(--primary);background:var(--primary-l)">
             <div style="font-size:24px;flex-shrink:0">🏪</div>
-            <div style="min-width:0">
-              <div style="font-size:12px;font-weight:700;color:var(--primary)">결제 가맹점 / 혜택 안내</div>
-              <div style="font-size:10px;color:var(--text3);margin-top:3px">PCI 결제 가맹점 및 할인 혜택 확인</div>
-            </div>
+            <div style="min-width:0"><div style="font-size:12px;font-weight:700;color:var(--primary)">결제 가맹점 / 혜택 안내</div><div style="font-size:10px;color:var(--text3);margin-top:3px">PCI 결제 가맹점 및 할인 혜택 확인</div></div>
           </div>
-          <!-- 간격 -->
           <div style="flex-shrink:0;width:8px"></div>
-          <!-- 타일2 -->
-          <div class="tile"
-               style="flex-shrink:0;width:calc(100% - 20px);height:100%;
-                      flex-direction:row;gap:12px;justify-content:flex-start;padding:0 16px;
-                      border-radius:var(--radius);
-                      border:1.5px solid var(--gold);background:var(--gold-l)">
+          <div class="tile" style="flex-shrink:0;width:calc(100% - 20px);height:100%;flex-direction:row;gap:12px;justify-content:flex-start;padding:0 16px;border-radius:var(--radius);border:1.5px solid var(--gold);background:var(--gold-l)">
             <div style="font-size:24px;flex-shrink:0">💡</div>
-            <div style="min-width:0">
-              <div style="font-size:12px;font-weight:700;color:#92400E">Wallet Pay 가이드</div>
-              <div style="font-size:10px;color:var(--text3);margin-top:3px">페이코인 월렛 페이 사용 방법 안내</div>
-            </div>
+            <div style="min-width:0"><div style="font-size:12px;font-weight:700;color:#92400E">Wallet Pay 가이드</div><div style="font-size:10px;color:var(--text3);margin-top:3px">페이코인 월렛 페이 사용 방법 안내</div></div>
           </div>
         </div>
-        <!-- peek 그라데이션 오버레이 -->
-        <div style="position:absolute;right:0;top:0;bottom:0;width:24px;
-                    background:linear-gradient(to right,transparent,var(--screen-bg) 80%);
-                    pointer-events:none;z-index:2"></div>
+        <div style="position:absolute;right:0;top:0;bottom:0;width:24px;background:linear-gradient(to right,transparent,var(--screen-bg) 80%);pointer-events:none;z-index:2"></div>
       </div>
 
     </div><!-- /tile-section -->
@@ -810,8 +786,7 @@ body {
     <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.29</div><div class="news-txt">다날핀테크, PCI 글로벌 결제 확대 파트너십 체결</div><div class="news-arr">›</div></div>
     <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.27</div><div class="news-txt">페이코인 앱 v2.0 업데이트 출시 안내</div><div class="news-arr">›</div></div>
     <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.25</div><div class="news-txt">페이프로토콜, 분산형 결제 인프라 기술 특허 취득</div><div class="news-arr">›</div></div>
-    <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.22</div><div class="news-txt">다날, 2025 핀테크 혁신대상 수상</div><div class="news-arr">›</div></div>
-  </div>
+    <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.22</div><div class="news-txt">다날, 2025 핀테크 혁신대상 수상</div><div class="news-arr">›</div></div>  </div>
   <div class="tab-bar">
     <div class="tab-item active" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
     <div class="tab-item" onclick="nav('wallet')"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
@@ -830,8 +805,8 @@ body {
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
         <div>
           <div style="font-size:11px;color:var(--text4);margin-bottom:2px" id="wt-label">총 보유 자산</div>
-          <div style="font-size:22px;font-weight:800;margin:2px 0;color:var(--text)" id="wt-amount">12,345,678원</div>
-          <div style="font-size:10px;color:var(--text4)">2026.04.30 09:41 KST 기준</div>
+          <div style="font-size:22px;font-weight:800;margin:2px 0;color:var(--text)" id="wt-amount"><span id="wt-ticker">12,345,678원</span></div>
+          
         </div>
         <button onclick="" style="font-size:11px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:6px 11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;margin-top:2px">거래내역 보기</button>
       </div>
@@ -869,8 +844,8 @@ body {
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
         <div>
           <div style="font-size:11px;color:var(--text4);margin-bottom:2px">총 보유 자산</div>
-          <div style="font-size:22px;font-weight:800;margin:2px 0;color:var(--text)">8,245,000원</div>
-          <div style="font-size:10px;color:var(--text4)">2026.04.30 09:41 KST 기준</div>
+          <div style="font-size:22px;font-weight:800;id="we-ticker" style="margin:2px 0;color:var(--text)">8,245,000원</div>
+          
         </div>
         <button style="font-size:11px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:6px 11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;margin-top:2px">거래내역 보기</button>
       </div>
@@ -890,7 +865,7 @@ body {
     </div>
     <div class="wallet-row" onclick="nav('wallet-pci')">
       <div class="coin-icon">🪙</div>
-      <div class="winfo"><div class="wname">페이코인 PCI</div><div class="wprice">82.45원</div></div>
+      <div class="winfo"><div class="wname">페이코인 PCI</div><div class="wprice">82.45원 · 내 지갑</div></div>
       <div class="wright"><div class="wkrw">8,245,000원</div><div class="wqty">100,000 PCI <span class="chg up">▲ 5.23%</span></div></div>
     </div>
     <div style="margin:12px 14px 0">
@@ -949,9 +924,9 @@ body {
   <div class="sbody">
     <div style="text-align:center;padding:8px 14px 18px">
       <div style="font-size:44px;margin-bottom:6px">🪙</div>
-      <div style="font-size:13px;color:var(--text3);margin-bottom:2px">페이코인 PCI</div>
-      <div style="font-size:26px;font-weight:800;margin-bottom:3px;color:var(--text)">100,000 PCI</div>
-      <div style="font-size:17px;font-weight:600;color:var(--text2);margin-bottom:5px">8,245,000원</div>
+      <div style="font-size:13px;color:var(--text3);margin-bottom:2px">페이코인 PCI · 내 지갑</div>
+      <div style="font-size:26px;font-weight:800;margin-bottom:3px;color:var(--text)">100,000.0000 PCI</div>
+      <div id="wpci-balance" style="font-size:17px;font-weight:600;color:var(--text2);margin-bottom:5px">8,245,000원</div>
       <div class="up" style="font-size:12px">▲ 5.23% (24h)</div>
     </div>
     <div style="display:flex;gap:8px;margin:0 14px 14px">
@@ -968,7 +943,7 @@ body {
     </div>
     <div class="card">
       <div style="font-size:11px;color:var(--text4);margin-bottom:10px;font-weight:600;letter-spacing:.5px">시세 정보</div>
-      <div class="info-row"><span class="ilbl">현재 시세</span><span class="ival">82.45원</span></div>
+      <div class="info-row"><span class="ilbl">현재 시세</span><span class="ival" id="pci-info-price">82.45원</span></div>
       <div class="info-row"><span class="ilbl">24h 고가</span><span class="ival up">88.00원</span></div>
       <div class="info-row"><span class="ilbl">24h 저가</span><span class="ival dn">79.20원</span></div>
     </div>
@@ -1105,7 +1080,7 @@ body {
   <div class="sbody">
     <div style="margin:0 14px 12px;background:linear-gradient(135deg,var(--primary),var(--primary-d));border-radius:20px;padding:20px;text-align:center;box-shadow:0 8px 24px rgba(26,86,219,.25)">
       <div style="font-size:13px;color:rgba(255,255,255,.7);margin-bottom:2px">Coin Market Cap 기준</div>
-      <div style="font-size:30px;font-weight:800;color:#fff;letter-spacing:-1px;margin:6px 0">82.45<span style="font-size:18px;font-weight:500;opacity:.8"> 원</span></div>
+      <div style="font-size:30px;font-weight:800;color:#fff;letter-spacing:-1px;margin:6px 0"><span id="pci-hero-price">82.45</span><span style="font-size:18px;font-weight:500;opacity:.8"> 원</span></div>
       <div style="font-size:13px;color:#FCA5A5">▲ 5.23% &nbsp;|&nbsp; <span style="color:rgba(255,255,255,.7)">+4.10원 (24h)</span></div>
     </div>
     <div style="margin:0 14px 12px">
@@ -1153,7 +1128,7 @@ body {
           <span class="conn-tag">연결됨</span>
         </div>
       </div>
-      <div style="font-size:28px;font-weight:800;color:var(--text);margin-bottom:3px">82.12<span style="font-size:16px;font-weight:500;color:var(--text3)"> 원</span></div>
+      <div style="font-size:28px;font-weight:800;color:var(--text);margin-bottom:3px"><span id="token-price">82.12</span><span style="font-size:16px;font-weight:500;color:var(--text3)"> 원</span></div>
       <div class="up" style="font-size:13px">▲ 4.91% (전일 대비)</div>
     </div>
     <div class="card">
@@ -1169,7 +1144,7 @@ body {
     <div class="connected-card">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
         <div>
-          <div style="font-size:17px;font-weight:800;color:var(--primary)">30,000 PCI</div>
+          <div style="font-size:17px;font-weight:800;color:var(--primary)">30,000.0000 PCI</div>
           <div style="font-size:13px;color:var(--text2)">2,463,600원</div>
         </div>
         <div style="text-align:right">
@@ -1724,32 +1699,17 @@ GET /api/v1/wallets?source={tab_filter}</div>
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_WALLET_EMPTY <span class="ptag p1">P1</span></div>
     <div class="policy-title">지갑 (거래소 미연결)</div>
-    <div class="policy-desc">거래소 지갑을 연결하지 않은 상태의 지갑 화면. 자체 지갑(PCI)만 보유한 경우 표시되며, 거래소 연결을 유도합니다.</div>
+    <div class="policy-desc">거래소 지갑 미연결 상태. 자체 지갑(PCI)만 보유한 경우 표시되며 연결을 유도합니다.</div>
   </div>
   <div class="policy-group">
     <div class="policy-group-title">⚠️ 개발 주의사항</div>
-    <div class="policy-item"><div class="pd r"></div>연결된 거래소가 <strong>하나도 없을 때</strong> 이 화면 표시. 1개라도 연결되면 sc-wallet으로 이동.</div>
-    <div class="policy-item"><div class="pd r"></div>자체 지갑(PCI) 보유 시 목록에 표시, 미보유 시 자산 합계 0원.</div>
+    <div class="policy-item"><div class="pd r"></div>연결된 거래소 0개일 때만 표시. 1개라도 연결되면 sc-wallet으로 이동.</div>
   </div>
   <div class="policy-group">
-    <div class="policy-group-title">거래소 연결 유도 섹션</div>
-    <div class="policy-item has-zone" onclick="hlZone('wallet-empty-connect','거래소 연결 유도')"><div class="pd"></div>자체 지갑 행 아래에 거래소 연결 유도 카드 표시.</div>
-    <div class="policy-item has-zone" onclick="hlZone('wallet-empty-connect','거래소 연결 유도')"><div class="pd g"></div>연결 가능 거래소 로고(빗썸·코인원·코빗) 표시.</div>
-    <div class="policy-item has-zone" onclick="hlZone('wallet-empty-connect','거래소 연결 유도')"><div class="pd"></div>"+ 거래소 지갑 연결하기" 버튼 탭 → WalletConnect 모달 표시.</div>
-    <div class="policy-item"><div class="pd r"></div>연결 버튼은 탭 필터 영역과 리스트 두 곳에 노출.</div>
-  </div>
-  <div class="policy-group">
-    <div class="policy-group-title">탭 필터</div>
-    <div class="policy-item"><div class="pd"></div>"전체", "내 지갑" 탭만 표시. 거래소 탭은 연결 후 동적 추가.</div>
-    <div class="policy-item"><div class="pd g"></div>"+ 거래소 연결" 버튼을 탭 필터 영역 우측에 상시 노출.</div>
-  </div>
-  <div class="policy-group">
-    <div class="policy-group-title">API 명세</div>
-    <div class="policy-code">GET /api/v1/wallet/list
-→ { wallets: [], exchanges: [] }  // 연결 거래소 없음</div>
+    <div class="policy-group-title">거래소 연결 유도</div>
+    <div class="policy-item has-zone" onclick="hlZone('wallet-empty-connect','거래소 연결 유도')"><div class="pd"></div>거래소 연결 유도 카드 + "+ 거래소 지갑 연결하기" 버튼.</div>
   </div>
 </div>
-
 
 <div class="policy-section" id="pol-wallet-pci" data-screen="wallet-pci">
   <div class="policy-header">
@@ -1993,7 +1953,11 @@ GET /api/v1/payment/recent?limit=5</div>
   <div style="margin-top:7px;text-align:center"><button onclick="document.getElementById('qna-setup-box').classList.remove('open')" style="background:none;border:none;font-size:11px;color:var(--text4);cursor:pointer;font-family:'Noto Sans KR',sans-serif;">나중에 설정</button></div>
 </div>
 
-
+<!-- QnA 버튼 -->
+<button class="qna-fab" id="qna-fab" onclick="toggleQna()" title="질문/답변">
+  💬
+  <div class="qna-fab-badge" id="qna-fab-badge"></div>
+</button>
 
 
 
@@ -2143,19 +2107,19 @@ GET /api/v1/payment/recent?limit=5</div>
 <script>
 /* ══ NAVIGATION ══ */
 const SCREEN_MAP = {
-  'home':         { sc:'sc-home',         pol:'pol-home',         ni:0  },
-  'wallet':       { sc:'sc-wallet',       pol:'pol-wallet',       ni:1  },
+  'home':         { sc:'sc-home',         pol:'pol-home',         ni:0 },
+  'wallet':       { sc:'sc-wallet',       pol:'pol-wallet',       ni:1 },
   'wallet-empty': { sc:'sc-wallet-empty', pol:'pol-wallet-empty', ni:2  },
-  'wallet-pci':   { sc:'sc-wallet-pci',   pol:'pol-wallet-pci',   ni:3  },
-  'wallet-other': { sc:'sc-wallet-other', pol:'pol-wallet-other', ni:4  },
-  'asset':        { sc:'sc-asset',        pol:'pol-asset',        ni:5  },
-  'pci-info':     { sc:'sc-pci-info',     pol:'pol-pci-info',     ni:6  },
-  'token-detail': { sc:'sc-token-detail', pol:'pol-token-detail', ni:7  },
-  'benefits':     { sc:'sc-benefits',     pol:'pol-benefits',     ni:8  },
-  'prediction':   { sc:'sc-prediction',   pol:'pol-prediction',   ni:9  },
-  'news':         { sc:'sc-news',         pol:'pol-news',         ni:10 },
-  'news-detail':  { sc:'sc-news-detail',  pol:'pol-news-detail',  ni:11 },
-  'payment':      { sc:'sc-payment',      pol:'pol-payment',      ni:12 },
+  'wallet-pci':   { sc:'sc-wallet-pci',   pol:'pol-wallet-pci',   ni:2 },
+  'wallet-other': { sc:'sc-wallet-other', pol:'pol-wallet-other', ni:3 },
+  'asset':        { sc:'sc-asset',        pol:'pol-asset',        ni:4 },
+  'pci-info':     { sc:'sc-pci-info',     pol:'pol-pci-info',     ni:5 },
+  'token-detail': { sc:'sc-token-detail', pol:'pol-token-detail', ni:6 },
+  'benefits':     { sc:'sc-benefits',     pol:'pol-benefits',     ni:7 },
+  'prediction':   { sc:'sc-prediction',   pol:'pol-prediction',   ni:8 },
+  'news':         { sc:'sc-news',         pol:'pol-news',         ni:9 },
+  'news-detail':  { sc:'sc-news-detail',  pol:'pol-news-detail',  ni:10 },
+  'payment':      { sc:'sc-payment',      pol:'pol-payment',      ni:11 },
 };
 
 function nav(key) {
@@ -2173,7 +2137,6 @@ function nav(key) {
     if (cfg.sc === 'sc-wallet') initWalletScreen();
   }
   if (po) po.classList.add('active');
-  // onclick 속성에서 key 매칭으로 active 처리 (인덱스 오류 방지)
   document.querySelectorAll('.nav-btn').forEach(function(b) {
     if (b.getAttribute('onclick') && b.getAttribute('onclick').indexOf("'" + key + "'") !== -1) {
       b.classList.add('active');
@@ -2292,163 +2255,114 @@ function showTip(el, text) {
 
 /* ══ TILE ROW 3 SWIPE ══ */
 (function() {
-  var cur = 0, total = 2;
-  var startX = 0, startT = 0, isDragging = false;
-
-  function getWrapW() {
-    var w = document.getElementById('tile-row3-wrap');
-    return w ? w.offsetWidth : 0;
+  let r3Idx = 0;
+  const TOTAL = 2;
+  function updateR3() {
+    const track = document.getElementById('tile-row3');
+    if (!track) return;
+    // width of one tile = viewport width
+    const vp = document.getElementById('tile-row3-viewport');
+    const w = vp ? vp.offsetWidth + 8 : 0; // +gap
+    track.style.transform = `translateX(-${r3Idx * w}px)`;
+    for (let i = 0; i < TOTAL; i++) {
+      const dot = document.getElementById('r3-dot-' + i);
+      if (!dot) continue;
+      dot.style.width  = i === r3Idx ? '16px' : '5px';
+      dot.style.background = i === r3Idx ? 'var(--primary)' : 'var(--border2)';
+    }
   }
-  function slideTo(n) {
-    cur = Math.max(0, Math.min(n, total - 1));
-    var track = document.getElementById('tile-row3-track');
-    if (!track) return;
-    // 각 타일 너비 = wrapW - 20(peek)
-    var wrapW = getWrapW();
-    var tileW = wrapW - 20;
-    // 이동거리 = cur * (tileW + 8gap)
-    track.style.transform = 'translateX(-' + (cur * (tileW + 8)) + 'px)';
-  }
-
-  // 터치
-  document.addEventListener('touchstart', function(e) {
-    var w = document.getElementById('tile-row3-wrap');
-    if (!w || !w.contains(e.target)) return;
-    startX = e.touches[0].clientX;
-    startT = Date.now();
-    isDragging = true;
-    var track = document.getElementById('tile-row3-track');
-    if (track) track.style.transition = 'none';
+  // Touch swipe
+  let r3StartX = 0;
+  document.addEventListener('touchstart', e => {
+    const vp = document.getElementById('tile-row3-viewport');
+    if (vp && vp.contains(e.target)) r3StartX = e.touches[0].clientX;
   }, { passive: true });
-  document.addEventListener('touchmove', function(e) {
-    if (!isDragging) return;
-    var dx = e.touches[0].clientX - startX;
-    var track = document.getElementById('tile-row3-track');
-    if (!track) return;
-    var wrapW = getWrapW();
-    var tileW = wrapW - 20;
-    var base  = cur * (tileW + 8);
-    track.style.transform = 'translateX(-' + (base - dx) + 'px)';
+  document.addEventListener('touchend', e => {
+    const vp = document.getElementById('tile-row3-viewport');
+    if (!vp || !vp.contains(e.target)) return;
+    const dx = e.changedTouches[0].clientX - r3StartX;
+    if (Math.abs(dx) < 30) return;
+    if (dx < 0 && r3Idx < TOTAL - 1) r3Idx++;
+    else if (dx > 0 && r3Idx > 0) r3Idx--;
+    updateR3();
   }, { passive: true });
-  document.addEventListener('touchend', function(e) {
-    if (!isDragging) return;
-    isDragging = false;
-    var dx = e.changedTouches[0].clientX - startX;
-    var dt = Date.now() - startT;
-    var track = document.getElementById('tile-row3-track');
-    if (track) track.style.transition = 'transform .35s cubic-bezier(.4,0,.2,1)';
-    // 빠른 스와이프(velocity) 또는 충분한 거리
-    if (dx < -30 || (dx < -10 && dt < 200)) slideTo(cur + 1);
-    else if (dx > 30 || (dx > 10 && dt < 200)) slideTo(cur - 1);
-    else slideTo(cur);
-  }, { passive: true });
-
-  // 마우스 (데스크탑 미리보기)
-  document.addEventListener('mousedown', function(e) {
-    var w = document.getElementById('tile-row3-wrap');
-    if (!w || !w.contains(e.target)) return;
-    startX = e.clientX; startT = Date.now(); isDragging = true;
-    var track = document.getElementById('tile-row3-track');
-    if (track) track.style.transition = 'none';
-    e.preventDefault();
+  // Mouse drag (desktop preview)
+  let r3DragX = 0, r3Dragging = false;
+  document.addEventListener('mousedown', e => {
+    const vp = document.getElementById('tile-row3-viewport');
+    if (vp && vp.contains(e.target)) { r3DragX = e.clientX; r3Dragging = true; }
   });
-  document.addEventListener('mousemove', function(e) {
-    if (!isDragging) return;
-    var dx = e.clientX - startX;
-    var track = document.getElementById('tile-row3-track');
-    if (!track) return;
-    var wrapW = getWrapW();
-    var tileW = wrapW - 20;
-    var base  = cur * (tileW + 8);
-    track.style.transform = 'translateX(-' + (base - dx) + 'px)';
+  document.addEventListener('mouseup', e => {
+    if (!r3Dragging) return; r3Dragging = false;
+    const dx = e.clientX - r3DragX;
+    if (Math.abs(dx) < 20) return;
+    if (dx < 0 && r3Idx < TOTAL - 1) r3Idx++;
+    else if (dx > 0 && r3Idx > 0) r3Idx--;
+    updateR3();
   });
-  document.addEventListener('mouseup', function(e) {
-    if (!isDragging) return;
-    isDragging = false;
-    var dx = e.clientX - startX;
-    var dt = Date.now() - startT;
-    var track = document.getElementById('tile-row3-track');
-    if (track) track.style.transition = 'transform .35s cubic-bezier(.4,0,.2,1)';
-    if (dx < -30 || (dx < -10 && dt < 200)) slideTo(cur + 1);
-    else if (dx > 30 || (dx > 10 && dt < 200)) slideTo(cur - 1);
-    else slideTo(cur);
-  });
-
-  window.addEventListener('resize', function() { slideTo(cur); });
-  setTimeout(function() { slideTo(0); }, 300);
+  window.addEventListener('resize', updateR3);
+  // Init after render
+  setTimeout(updateR3, 100);
 })();
+
 
 /* ══ WALLET TAB FILTER ══ */
 const WALLET_DATA = {
-  all: {
-    label:'총 보유 자산', amount:'12,345,678원',
-    wallets:[
-      { icon:'🪙', bg:'',        ovl:null,                    name:'페이코인 PCI', sub:'82.45원',  krw:'8,245,000원',  qty:'100,000 PCI',       chg:'up', rate:'▲ 5.23%', dest:'wallet-pci' },
-      { icon:'🪙', bg:'',        ovl:{bg:'#f57c00',txt:'빗'}, name:'페이코인 PCI', sub:'82.12원',     krw:'2,463,600원',  qty:'30,000 PCI',        chg:'up', rate:'▲ 4.91%', dest:'wallet-other' },
-      { icon:'₿',  bg:'#FEF3C7', ovl:{bg:'#1a73e8',txt:'원'}, name:'비트코인 BTC', sub:'93,450,000원', krw:'1,637,432원', qty:'0.01752100 BTC',   chg:'dn', rate:'▼ 1.20%', dest:'wallet-other' },
-      { icon:'Ξ',  bg:'#EEF2FF', ovl:{bg:'#1a73e8',txt:'원'}, name:'이더리움 ETH', sub:'4,823,000원', krw:'240,000원',   qty:'0.04975000 ETH',   chg:'up', rate:'▲ 2.10%', dest:'wallet-other' },
-      { icon:'◎',  bg:'#F0FDF4', ovl:{bg:'#6B21A8',txt:'빗'}, name:'리플 XRP',     sub:'820원',       krw:'82,000원',    qty:'100.00000000 XRP', chg:'dn', rate:'▼ 0.55%', dest:'wallet-other' },
-    ]
-  },
-  self: {
-    label:'내 지갑 자산', amount:'8,245,000원',
-    wallets:[
-      { icon:'🪙', bg:'', ovl:null, name:'페이코인 PCI', sub:'82.45원', krw:'8,245,000원', qty:'100,000 PCI', chg:'up', rate:'▲ 5.23%', dest:'wallet-pci' },
-    ]
-  },
-  bithumb: {
-    label:'빗썸 보유 자산', amount:'2,463,600원',
-    wallets:[
-      { icon:'🪙', bg:'', ovl:{bg:'#f57c00',txt:'빗'}, name:'페이코인 PCI', sub:'82.12원', krw:'2,463,600원', qty:'30,000 PCI', chg:'up', rate:'▲ 4.91%', dest:'wallet-other' },
-    ]
-  },
-  coinone: {
-    label:'코인원 보유 자산', amount:'1,877,432원',
-    wallets:[
-      { icon:'₿', bg:'#FEF3C7', ovl:{bg:'#1a73e8',txt:'원'}, name:'비트코인 BTC', sub:'93,450,000원', krw:'1,637,432원', qty:'0.01752100 BTC', chg:'dn', rate:'▼ 1.20%', dest:'wallet-other' },
-      { icon:'Ξ', bg:'#EEF2FF', ovl:{bg:'#1a73e8',txt:'원'}, name:'이더리움 ETH', sub:'4,823,000원', krw:'240,000원',   qty:'0.04975000 ETH', chg:'up', rate:'▲ 2.10%', dest:'wallet-other' },
-    ]
-  },
-  korbit: {
-    label:'코빗 보유 자산', amount:'82,000원',
-    wallets:[
-      { icon:'◎', bg:'#F0FDF4', ovl:{bg:'#6B21A8',txt:'빗'}, name:'리플 XRP', sub:'820원', krw:'82,000원', qty:'100.00000000 XRP', chg:'dn', rate:'▼ 0.55%', dest:'wallet-other' },
-    ]
-  },
+  all: { label:'총 보유 자산', amount:'12,345,678원', wallets:[
+    { icon:'🪙', bg:'', ovl:null, name:'페이코인 PCI', sub:'82.45원', krw:'8,245,000원', qty:100000,   sym:'PCI', chg:'up', rate:'▲ 5.23%', dest:'wallet-pci' },
+    { icon:'🪙', bg:'', ovl:{bg:'#f57c00',txt:'빗'}, name:'페이코인 PCI', sub:'82.12원', krw:'2,463,600원', qty:30000,    sym:'PCI', chg:'up', rate:'▲ 4.91%', dest:'wallet-other' },
+    { icon:'₿', bg:'#FEF3C7', ovl:{bg:'#1a73e8',txt:'원'}, name:'비트코인 BTC', sub:'93,450,000원', krw:'1,637,432원', qty:0.017521, sym:'BTC', chg:'dn', rate:'▼ 1.20%', dest:'wallet-other' },
+    { icon:'Ξ', bg:'#EEF2FF', ovl:{bg:'#1a73e8',txt:'원'}, name:'이더리움 ETH', sub:'4,823,000원', krw:'240,000원', qty:0.049750, sym:'ETH', chg:'up', rate:'▲ 2.10%', dest:'wallet-other' },
+    { icon:'◎', bg:'#F0FDF4', ovl:{bg:'#6B21A8',txt:'빗'}, name:'리플 XRP', sub:'820원', krw:'82,000원', qty:100,      sym:'XRP', chg:'dn', rate:'▼ 0.55%', dest:'wallet-other' },
+  ]},
+  self: { label:'내 지갑 자산', amount:'8,245,000원', wallets:[
+    { icon:'🪙', bg:'', ovl:null, name:'페이코인 PCI', sub:'82.45원', krw:'8,245,000원', qty:100000,   sym:'PCI', chg:'up', rate:'▲ 5.23%', dest:'wallet-pci' },
+  ]},
+  bithumb: { label:'빗썸 보유 자산', amount:'2,463,600원', wallets:[
+    { icon:'🪙', bg:'', ovl:{bg:'#f57c00',txt:'빗'}, name:'페이코인 PCI', sub:'82.12원', krw:'2,463,600원', qty:30000,    sym:'PCI', chg:'up', rate:'▲ 4.91%', dest:'wallet-other' },
+  ]},
+  coinone: { label:'코인원 보유 자산', amount:'1,877,432원', wallets:[
+    { icon:'₿', bg:'#FEF3C7', ovl:{bg:'#1a73e8',txt:'원'}, name:'비트코인 BTC', sub:'93,450,000원', krw:'1,637,432원', qty:0.017521, sym:'BTC', chg:'dn', rate:'▼ 1.20%', dest:'wallet-other' },
+    { icon:'Ξ', bg:'#EEF2FF', ovl:{bg:'#1a73e8',txt:'원'}, name:'이더리움 ETH', sub:'4,823,000원', krw:'240,000원', qty:0.049750, sym:'ETH', chg:'up', rate:'▲ 2.10%', dest:'wallet-other' },
+  ]},
+  korbit: { label:'코빗 보유 자산', amount:'82,000원', wallets:[
+    { icon:'◎', bg:'#F0FDF4', ovl:{bg:'#6B21A8',txt:'빗'}, name:'리플 XRP', sub:'820원', krw:'82,000원', qty:100,      sym:'XRP', chg:'dn', rate:'▼ 0.55%', dest:'wallet-other' },
+  ]},
 };
-
 function walletTab(tab) {
-  ['all','self','bithumb','coinone','korbit'].forEach(function(t) {
-    var el = document.getElementById('wchip-' + t);
-    if (el) el.classList.toggle('active', t === tab);
+  ['all','self','bithumb','coinone','korbit'].forEach(t => {
+    const el = document.getElementById('wchip-'+t);
+    if(el) el.classList.toggle('active', t===tab);
   });
-  var data = WALLET_DATA[tab];
-  if (!data) return;
-  var lbl = document.getElementById('wt-label');
-  var amt = document.getElementById('wt-amount');
-  if (lbl) lbl.textContent = data.label;
-  if (amt) amt.textContent = data.amount;
-  var list = document.getElementById('wt-list');
-  if (!list) return;
-  if (!data.wallets || !data.wallets.length) {
-    var names = { bithumb:'빗썸', coinone:'코인원', korbit:'코빗' };
-    list.innerHTML = '<div style="margin:12px 14px 0;background:var(--card2);border:1.5px dashed var(--border2);border-radius:var(--radius);padding:20px 16px;text-align:center"><div style="font-size:28px;margin-bottom:8px">🔗</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">' + (names[tab]||tab) + ' 지갑이 연결되지 않았어요</div><div style="font-size:11px;color:var(--text3);line-height:1.6;margin-bottom:14px">거래소 지갑을 연결하면 보유 자산을<br>한 화면에서 통합 조회할 수 있어요.</div><button class="btn btn-primary" style="padding:11px;font-size:13px">+ 거래소 지갑 연결하기</button></div>';
+  const data = WALLET_DATA[tab];
+  if(!data) return;
+  const lbl = document.getElementById('wt-label');
+  if(lbl) lbl.textContent = data.label;
+  // wt-ticker 업데이트 (ticker span 유지)
+  var wtEl = document.getElementById('wt-ticker');
+  if(wtEl) {
+    var newAmt = data.amount;
+    if(!wtEl.querySelector('.dgt')) {
+      wtEl.innerHTML = typeof buildDgt==='function' ? buildDgt(newAmt) : newAmt;
+    } else if(typeof updateDgtInEl==='function') {
+      updateDgtInEl(wtEl, newAmt, 1);
+    } else { wtEl.textContent = newAmt; }
+  }
+  const banner = document.getElementById('wt-banner');
+  if(banner) banner.style.display = '';
+  const list = document.getElementById('wt-list');
+  if(!list) return;
+  if(!data.wallets || !data.wallets.length) {
+    list.innerHTML = `<div style="margin:12px 14px 0;background:var(--card2);border:1.5px dashed var(--border2);border-radius:var(--radius);padding:20px 16px;text-align:center"><div style="font-size:28px;margin-bottom:8px">🔗</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">${tab==='bithumb'?'빗썸':tab==='coinone'?'코인원':'코빗'} 지갑이 연결되지 않았어요</div><div style="font-size:11px;color:var(--text3);line-height:1.6;margin-bottom:14px">거래소 지갑을 연결하면 보유 자산을<br>한 화면에서 통합 조회할 수 있어요.</div><button class="btn btn-primary" style="padding:11px;font-size:13px">+ 거래소 지갑 연결하기</button></div>`;
     return;
   }
-  list.innerHTML = data.wallets.map(function(w) {
-    var ovl = w.ovl ? '<div class="exch-ovl" style="background:' + w.ovl.bg + '">' + w.ovl.txt + '</div>' : '';
-    var bg  = w.bg  ? ' style="background:' + w.bg + '"' : '';
-    return '<div class="wallet-row" onclick="nav(\'' + w.dest + '\')">' +
-      '<div class="coin-icon"' + bg + '>' + w.icon + ovl + '</div>' +
-      '<div class="winfo"><div class="wname">' + w.name + '</div><div class="wprice">' + w.sub + '</div></div>' +
-      '<div class="wright"><div class="wkrw">' + w.krw + '</div>' +
-      '<div class="wqty">' + w.qty + ' <span class="chg ' + w.chg + '">' + w.rate + '</span></div></div>' +
-      '</div>';
+  list.innerHTML = data.wallets.map(w => {
+    const ovl = w.ovl ? `<div class="exch-ovl" style="background:${w.ovl.bg}">${w.ovl.txt}</div>` : '';
+    const bg  = w.bg  ? `style="background:${w.bg}"` : '';
+    return `<div class="wallet-row" onclick="nav('${w.dest}')"><div class="coin-icon" ${bg}>${w.icon}${ovl}</div><div class="winfo"><div class="wname">${w.name}</div><div class="wprice">${w.sub}</div></div><div class="wright"><div class="wkrw">${w.krw}</div><div class="wqty">${typeof w.sym!=='undefined'?(fmtQty(w.qty,w.sym)+' '+w.sym):w.qty} <span class="chg ${w.chg}">${w.rate}</span></div></div></div>`;
   }).join('');
 }
-
 function initWalletScreen() { walletTab('all'); }
-
 
 /* ══ NAV SCROLL ARROW ══ */
 (function(){
@@ -2515,13 +2429,11 @@ const QNA = {
   init: function(){ try{ this.apiUrl=localStorage.getItem('qna_api')||''; }catch(e){} }
 };
 QNA.init();
-
 function updateQnaLabels(){
   var lbl=QNA.curLabel();
   var e1=document.getElementById('qna-scr-lbl');
   var e2=document.getElementById('qna-form-scr');
-  if(e1) e1.textContent=lbl;
-  if(e2) e2.textContent=lbl;
+  if(e1) e1.textContent=lbl; if(e2) e2.textContent=lbl;
 }
 function saveApiUrl(){
   var url=(document.getElementById('qna-api-input')||{}).value||'';
@@ -2550,9 +2462,7 @@ async function loadQna(){
     var r=await fetch(QNA.apiUrl+'?action=qna_list',{signal:ctrl.signal});
     clearTimeout(tmr);
     var d=await r.json();
-    QNA.items=d.items||[];
-    updateBadge();
-    renderQna();
+    QNA.items=d.items||[]; updateBadge(); renderQna();
   }catch(e){
     if(listEl&&!QNA.items.length) listEl.innerHTML='<div class="qna-empty" style="color:var(--red)">불러오기 실패. ↻ 재시도</div>';
   }
@@ -2574,11 +2484,9 @@ function renderQna(){
     var ts=item.created_at?new Date(item.created_at).toLocaleString('ko-KR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
     var scr=String(item.screen).replace(/'/g,'');
     var ansHtml;
-    if(item._pending){
-      ansHtml='<div class="qna-pending" style="color:var(--gold)">⏳ 등록 중...</div>';
-    }else if(item.answer){
-      ansHtml='<div class="qna-a">'+esc(item.answer)+'</div>';
-    }else{
+    if(item._pending){ ansHtml='<div class="qna-pending" style="color:var(--gold)">⏳ 등록 중...</div>'; }
+    else if(item.answer){ ansHtml='<div class="qna-a">'+esc(item.answer)+'</div>'; }
+    else{
       var saId=String(item.id).replace(/'/g,'');
       ansHtml='<div class="qna-pending">답변 대기 중...</div>'+
         '<button class="qna-reply-btn" onclick="toggleReply(this)">✏️ 답변 작성</button>'+
@@ -2594,10 +2502,7 @@ function renderQna(){
   }).join('');
 }
 function updateBadge(){}
-function toggleReply(btn){
-  var ra=btn.parentElement?btn.parentElement.querySelector('.qna-reply-area'):null;
-  if(ra) ra.classList.toggle('open');
-}
+function toggleReply(btn){ var ra=btn.parentElement?btn.parentElement.querySelector('.qna-reply-area'):null; if(ra) ra.classList.toggle('open'); }
 async function submitA(id){
   id=String(id);
   var inp=document.getElementById('ri-'+id);
@@ -2608,44 +2513,30 @@ async function submitA(id){
   if(item){ item.answer=ans; item._answerPending=true; renderQna(); }
   try{
     var url=QNA.apiUrl+'?action=qna_answer&id='+encodeURIComponent(id)+'&answer='+encodeURIComponent(ans);
-    var ctrl=new AbortController();
-    var tmr=setTimeout(function(){ ctrl.abort(); },10000);
-    var r=await fetch(url,{signal:ctrl.signal});
-    clearTimeout(tmr);
+    var ctrl=new AbortController(); var tmr=setTimeout(function(){ ctrl.abort(); },10000);
+    var r=await fetch(url,{signal:ctrl.signal}); clearTimeout(tmr);
     var d=await r.json();
     if(d.success){ if(item) delete item._answerPending; loadQna(); }
     else{ if(item){ item.answer=null; delete item._answerPending; renderQna(); } alert('오류: '+(d.error||'')); }
-  }catch(e){
-    if(item){ item.answer=null; delete item._answerPending; renderQna(); }
-    alert(e.name==='AbortError'?'응답 지연. 다시 시도해주세요.':'오류: '+e.message);
-  }
+  }catch(e){ if(item){ item.answer=null; delete item._answerPending; renderQna(); } alert(e.name==='AbortError'?'응답 지연':'오류: '+e.message); }
 }
 async function submitQ(){
-  var qEl=document.getElementById('qna-q');
-  var aEl=document.getElementById('qna-author');
-  var btn=document.getElementById('qna-sub-btn');
-  var st=document.getElementById('qna-status');
-  var q=(qEl||{}).value||'';
-  var author=(aEl||{}).value||'익명';
+  var qEl=document.getElementById('qna-q'), aEl=document.getElementById('qna-author');
+  var btn=document.getElementById('qna-sub-btn'), st=document.getElementById('qna-status');
+  var q=(qEl||{}).value||'', author=(aEl||{}).value||'익명';
   if(!q.trim()){ if(qEl) qEl.focus(); return; }
   if(!QNA.apiUrl){ document.getElementById('qna-setup-inline').classList.add('show'); return; }
   var tempId='temp_'+Date.now();
   QNA.items.push({id:tempId,screen:QNA.curScreen(),question:q.trim(),author:author||'익명',answer:null,created_at:new Date().toISOString(),_pending:true});
-  qEl.value=''; btn.disabled=true; btn.textContent='등록 중...';
-  st.classList.remove('show'); renderQna();
+  qEl.value=''; btn.disabled=true; btn.textContent='등록 중...'; st.classList.remove('show'); renderQna();
   try{
     var url=QNA.apiUrl+'?action=qna_add&screen='+encodeURIComponent(QNA.curScreen())+'&question='+encodeURIComponent(q.trim())+'&author='+encodeURIComponent(author||'익명');
-    var ctrl=new AbortController();
-    var tmr=setTimeout(function(){ ctrl.abort(); },10000);
-    var r=await fetch(url,{signal:ctrl.signal});
-    clearTimeout(tmr);
+    var ctrl=new AbortController(); var tmr=setTimeout(function(){ ctrl.abort(); },10000);
+    var r=await fetch(url,{signal:ctrl.signal}); clearTimeout(tmr);
     var d=await r.json();
     QNA.items=QNA.items.filter(function(i){ return i.id!==tempId; });
-    if(d.success){
-      st.textContent='✅ 등록됐습니다!'; st.style.color='var(--green)'; st.classList.add('show');
-      setTimeout(function(){ st.classList.remove('show'); },2000);
-      loadQna();
-    }else throw new Error(d.error||'등록 실패');
+    if(d.success){ st.textContent='✅ 등록됐습니다!'; st.style.color='var(--green)'; st.classList.add('show'); setTimeout(function(){ st.classList.remove('show'); },2000); loadQna(); }
+    else throw new Error(d.error||'등록 실패');
   }catch(e){
     QNA.items=QNA.items.filter(function(i){ return i.id!==tempId; }); renderQna();
     if(e.name==='AbortError'){ st.textContent='⏱ 응답 지연.'; st.style.color='var(--gold)'; }
@@ -2767,6 +2658,212 @@ async function loadConfig(){
 })();
 
 setTimeout(function(){ updateQnaLabels(); loadConfig(); },600);
+
+
+/* 수량 포맷: BTC/ETH → 소수점8자리, 그 외 → 소수점4자리 */
+function fmtQty(qty, sym) {
+  var n = parseFloat(qty);
+  if(sym==='BTC' || sym==='ETH') return n.toFixed(8);
+  return n.toFixed(4);
+}
+
+/* ══ DIGIT TICKER SIMULATION ══ */
+(function() {
+  /* 숫자 포맷 */
+  function fmt(n){ return Math.round(n).toLocaleString('ko-KR'); }
+  /* fmtQty: 전역으로 이동 */
+
+  /* 문자열을 자릿수 span으로 분리 */
+  function buildDgt(str) {
+    return str.split('').map(function(ch) {
+      if(ch===','||ch==='원'||ch===' ') return '<span>'+ch+'</span>';
+      return '<span class="dgt"><span class="dgt-inner">'+ch+'</span></span>';
+    }).join('');
+  }
+
+  /* 숫자 span 초기화 */
+  function initEl(id, str) {
+    var el = document.getElementById(id);
+    if(!el || el.querySelector('.dgt')) return;
+    el.innerHTML = buildDgt(str);
+  }
+
+  /* 변경된 자릿수에만 모션 */
+  function updateEl(id, newStr, dir) {
+    var el = document.getElementById(id);
+    if(!el) return;
+    if(!el.querySelector('.dgt')) { el.innerHTML = buildDgt(newStr); return; }
+
+    var oldInners = el.querySelectorAll('.dgt-inner');
+    var newChars  = newStr.split('').filter(function(c){ return c!==','&&c!=='원'&&c!==' '; });
+    var oldChars  = Array.from(oldInners).map(function(i){ return i.textContent; });
+
+    // 자릿수 개수 다르면 전체 재구성
+    if(oldChars.length !== newChars.length) {
+      el.innerHTML = buildDgt(newStr);
+      el.querySelectorAll('.dgt-inner').forEach(function(inn) { animDgt(inn, dir); });
+      return;
+    }
+    // 같은 자릿수 → 변경된 것만 모션
+    oldInners.forEach(function(inn, i) {
+      if(inn.textContent !== newChars[i]) {
+        inn.textContent = newChars[i];
+        animDgt(inn, dir);
+      }
+    });
+  }
+
+  function animDgt(inner, dir) {
+    inner.classList.remove('dgt-up','dgt-down');
+    void inner.offsetWidth;
+    inner.classList.add(dir===1 ? 'dgt-up' : 'dgt-down');
+    setTimeout(function(){
+      inner.classList.remove('dgt-up','dgt-down');
+      // 색 서서히 원래대로
+      inner.style.transition = 'color .5s';
+      inner.style.color = '';
+      setTimeout(function(){ inner.style.transition=''; }, 500);
+    }, 300);
+  }
+
+  /* 코인 데이터 */
+  var C = {
+    PCI:{ p:82.45,     qs:100000, qb:30000, prev:82.45     },
+    BTC:{ p:93450000,  q:0.017521,          prev:93450000  },
+    ETH:{ p:4823000,   q:0.049750,          prev:4823000   },
+    XRP:{ p:820,       q:100,               prev:820       },
+  };
+
+  function total(){ return C.PCI.p*(C.PCI.qs+C.PCI.qb)+C.BTC.p*C.BTC.q+C.ETH.p*C.ETH.q+C.XRP.p*C.XRP.q; }
+  function prevTotal(){ return C.PCI.prev*(C.PCI.qs+C.PCI.qb)+C.BTC.prev*C.BTC.q+C.ETH.prev*C.ETH.q+C.XRP.prev*C.XRP.q; }
+
+  /* 초기화 */
+  setTimeout(function(){
+    initEl('home-total-amt', fmt(total()));
+    initEl('wt-ticker',      fmt(total())+'원');
+    initEl('we-ticker',      fmt(total())+'원');
+  }, 400);
+
+  /* 5초마다 변동 */
+  setInterval(function(){
+    // 이전값 저장
+    Object.keys(C).forEach(function(k){ C[k].prev = C[k].p; });
+    // 랜덤 변동 ±0.15%
+    Object.keys(C).forEach(function(k){ C[k].p *= 1+(Math.random()-.5)*0.003; });
+
+    var tot  = total();
+    var prev = prevTotal();
+    var dir  = tot >= prev ? 1 : -1;
+
+    /* 홈 총자산 */
+    updateEl('home-total-amt', fmt(tot), dir);
+    /* 홈 변동금액 */
+    var chgEl = document.getElementById('home-total-chg');
+    if(chgEl){ chgEl.textContent=(dir===1?'▲ +':'▼ ')+fmt(Math.abs(tot-prev))+'원'; chgEl.style.color=dir===1?'#EF4444':'#3B82F6'; }
+    /* 홈 변동률 */
+    var pctEl = document.getElementById('home-total-pct');
+    if(pctEl){ var pct=prev?Math.abs((tot-prev)/prev*100):0; pctEl.textContent=(dir===1?'▲ ':'▼ ')+pct.toFixed(2)+'%'; pctEl.style.color=dir===1?'#EF4444':'#3B82F6'; }
+
+    /* 지갑 총자산 (연결됨 + 미연결) */
+    updateEl('wt-ticker', fmt(tot)+'원', dir);
+    updateEl('we-ticker', fmt(tot)+'원', dir);
+
+    /* 지갑 행 */
+    document.querySelectorAll('.wallet-row').forEach(function(row){
+      var nameEl=row.querySelector('.wname'), krwEl=row.querySelector('.wkrw'), chgEl=row.querySelector('.chg');
+      if(!nameEl||!krwEl) return;
+      var name=nameEl.textContent;
+      var sym=name.indexOf('PCI')!==-1?'PCI':name.indexOf('BTC')!==-1?'BTC':name.indexOf('ETH')!==-1?'ETH':name.indexOf('XRP')!==-1?'XRP':null;
+      if(!sym) return;
+      var c=C[sym];
+      var qty=sym==='PCI'?(row.querySelector('.wprice')&&row.querySelector('.wprice').textContent.indexOf('빗썸')!==-1?c.qb:c.qs):(c.q||0);
+      var newKrw=c.p*qty, prevKrw=c.prev*qty, d2=newKrw>=prevKrw?1:-1;
+      var inner=krwEl.querySelector('.ticker-inner');
+      var newTxt=fmt(newKrw)+'원';
+      if(inner){
+        var wrap=inner.querySelector('.dgt');
+        if(!wrap){ inner.innerHTML=buildDgt(newTxt); }
+        else{ updateDgtInEl(inner, newTxt, d2); }
+      } else { krwEl.textContent=newTxt; }
+      if(chgEl){ var pct2=Math.abs((c.p-c.prev)/c.prev*100); chgEl.className='chg '+(d2===1?'up':'dn'); chgEl.textContent=(d2===1?'▲ ':'▼ ')+pct2.toFixed(2)+'%'; }
+    });
+
+    /* PCI 시세 패널 */
+    document.querySelectorAll('.info-row').forEach(function(row){
+      var lbl=row.querySelector('.ilbl'), val=row.querySelector('.ival');
+      if(!lbl||!val||lbl.textContent.indexOf('현재 시세')===-1) return;
+      var d3=C.PCI.p>=C.PCI.prev?1:-1;
+      var newP=C.PCI.p.toFixed(2)+'원';
+      if(val.textContent!==newP){ val.textContent=newP; colorFlash(val,d3); }
+    });
+
+    /* PCI 정보 히어로 시세 */
+    var pciHero=document.getElementById('pci-hero-price');
+    if(pciHero){
+      var d4=C.PCI.p>=C.PCI.prev?1:-1;
+      updateEl('pci-hero-price', C.PCI.p.toFixed(2), d4);
+    }
+    /* PCI info-row 현재 시세 */
+    var pciInfoP=document.getElementById('pci-info-price');
+    if(pciInfoP){
+      var d5=C.PCI.p>=C.PCI.prev?1:-1;
+      var newPInfo=C.PCI.p.toFixed(2)+'원';
+      if(pciInfoP.textContent!==newPInfo){ pciInfoP.textContent=newPInfo; colorFlash(pciInfoP,d5); }
+    }
+
+    /* 지갑상세 PCI 잔액 */
+    var wpciB=document.getElementById('wpci-balance');
+    if(wpciB){
+      var newBal=fmt(C.PCI.p*C.PCI.qs)+'원';
+      var d6=C.PCI.p>=C.PCI.prev?1:-1;
+      updateEl('wpci-balance', newBal, d6);
+    }
+
+    /* 토큰 상세 현재가 */
+    var tkP=document.getElementById('token-price');
+    if(tkP){
+      var d7=C.PCI.p>=C.PCI.prev?1:-1;
+      updateEl('token-price', C.PCI.p.toFixed(2), d7);
+    }
+
+  }, 5000);
+
+  /* 색상 플래시 (단순 텍스트 요소용) */
+  function colorFlash(el, dir) {
+    el.style.transition = '';
+    el.style.color = dir===1 ? '#EF4444' : '#3B82F6';
+    setTimeout(function(){
+      el.style.transition = 'color .6s';
+      el.style.color = '';
+      setTimeout(function(){ el.style.transition=''; }, 600);
+    }, 300);
+  }
+
+  function updateDgtInEl(container, newStr, dir){
+    var inners=container.querySelectorAll('.dgt-inner');
+    var newChars=newStr.split('').filter(function(c){ return c!==','&&c!=='원'&&c!==' '; });
+    if(inners.length!==newChars.length){ container.innerHTML=buildDgt(newStr); return; }
+    inners.forEach(function(inn,i){ if(inn.textContent!==newChars[i]){ inn.textContent=newChars[i]; animDgt(inn,dir); } });
+  }
+
+  /* walletTab 재렌더 후 행 갱신 */
+  var _wt=window.walletTab;
+  window.walletTab=function(tab){
+    _wt(tab);
+    setTimeout(function(){
+      // wt-ticker 재초기화 (walletTab이 금액 교체 후)
+      var wtEl = document.getElementById('wt-ticker');
+      if(wtEl && !wtEl.querySelector('.dgt')) {
+        wtEl.innerHTML = buildDgt(wtEl.textContent);
+      }
+      // wallet-row wkrw ticker 재초기화
+      document.querySelectorAll('.wallet-row .wkrw').forEach(function(el){
+        var t=el.querySelector('.ticker-inner');
+        if(t && !t.querySelector('.dgt')){ t.innerHTML=buildDgt(t.textContent); }
+      });
+    }, 80);
+  };
+})();
 
 </script>
 </body>
