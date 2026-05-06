@@ -647,6 +647,69 @@ body {
   100%{ transform:translateY(0);   color:#3B82F6; opacity:1; }
 }
 
+
+/* ══ SKELETON UI ══ */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+.sk {
+  background: linear-gradient(90deg,
+    var(--border) 25%, var(--card2) 50%, var(--border) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 6px;
+}
+.sk-screen {
+  position: absolute; inset: 0;
+  background: var(--screen-bg);
+  z-index: 10;
+  display: none;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+.sk-screen.show { display: flex; }
+
+/* 스켈레톤 sbar */
+.sk-sbar {
+  height: 28px; flex-shrink: 0;
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 0 20px; margin-top: 4px;
+}
+/* 스켈레톤 헤더 */
+.sk-header {
+  flex-shrink: 0;
+  padding: 8px 16px 12px;
+  display: flex; align-items: center;
+  justify-content: space-between;
+}
+/* 스켈레톤 카드 */
+.sk-card {
+  margin: 0 14px 10px;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+/* 스켈레톤 행 */
+.sk-row {
+  display: flex; gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.sk-row:last-child { margin-bottom: 0; }
+/* 스켈레톤 원형 */
+.sk-circle {
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+/* 스켈레톤 라인 */
+.sk-line { height: 12px; border-radius: 6px; }
+.sk-line.sm { height: 10px; }
+.sk-line.lg { height: 18px; }
+.sk-line.xl { height: 28px; }
+
 </style>
 
 </head>
@@ -685,6 +748,664 @@ body {
   <div class="phone-frame">
     <div class="phone-notch"></div>
     <div class="phone-screen">
+
+<!-- ══ SKELETON: 지갑상세(PCI) ══ -->
+<div class="sk-screen" id="sk-wallet-pci">
+  <div class="sk-sbar">
+    <div class="sk" style="width:40px;height:12px"></div>
+    <div class="sk" style="width:40px;height:12px"></div>
+  </div>
+  <div style="flex-shrink:0;padding:4px 14px 10px;display:flex;align-items:center;gap:10px">
+    <div class="sk" style="width:28px;height:28px;border-radius:8px"></div>
+    <div class="sk" style="width:80px;height:16px"></div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:0 14px">
+    <!-- 코인 히어로 카드 -->
+    <div class="sk-card" style="margin:0 0 10px;padding:20px;text-align:center">
+      <div class="sk sk-circle" style="width:52px;height:52px;margin:0 auto 10px"></div>
+      <div class="sk xl" style="width:140px;margin:0 auto 8px"></div>
+      <div class="sk sm" style="width:90px;margin:0 auto"></div>
+    </div>
+    <!-- 액션 버튼 -->
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <div class="sk" style="flex:1;height:42px;border-radius:10px"></div>
+      <div class="sk" style="flex:1;height:42px;border-radius:10px"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:50px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:50px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:50px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+
+  </div>
+  <div style="flex-shrink:0;height:68px;border-top:1px solid var(--border);
+              display:flex;align-items:center;justify-content:space-around;padding:0 8px">
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+  </div>
+</div>
+<!-- ══ SKELETON: 지갑상세(기타) ══ -->
+<div class="sk-screen" id="sk-wallet-other">
+  <div class="sk-sbar">
+    <div class="sk" style="width:40px;height:12px"></div>
+    <div class="sk" style="width:40px;height:12px"></div>
+  </div>
+  <div style="flex-shrink:0;padding:4px 14px 10px;display:flex;align-items:center;gap:10px">
+    <div class="sk" style="width:28px;height:28px;border-radius:8px"></div>
+    <div class="sk" style="width:80px;height:16px"></div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:0 14px">
+    <div class="sk-card" style="margin:0 0 10px;padding:20px;text-align:center">
+      <div class="sk sk-circle" style="width:52px;height:52px;margin:0 auto 10px"></div>
+      <div class="sk xl" style="width:140px;margin:0 auto 8px"></div>
+      <div class="sk sm" style="width:90px;margin:0 auto"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <div class="sk" style="flex:1;height:42px;border-radius:10px"></div>
+      <div class="sk" style="flex:1;height:42px;border-radius:10px"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:50px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:50px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:50px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+
+  </div>
+  <div style="flex-shrink:0;height:68px;border-top:1px solid var(--border);
+              display:flex;align-items:center;justify-content:space-around;padding:0 8px">
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+  </div>
+</div>
+<!-- ══ SKELETON: 자산현황 ══ -->
+<div class="sk-screen" id="sk-asset">
+  <div class="sk-sbar">
+    <div class="sk" style="width:40px;height:12px"></div>
+    <div class="sk" style="width:40px;height:12px"></div>
+  </div>
+  <div style="flex-shrink:0;padding:4px 14px 10px;display:flex;align-items:center;gap:10px">
+    <div class="sk" style="width:28px;height:28px;border-radius:8px"></div>
+    <div class="sk" style="width:80px;height:16px"></div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:0 14px">
+        <div class="sk-card" style="margin:0 0 10px">
+      <div class="sk sm" style="width:80px;margin-bottom:8px"></div>
+      <div class="sk xl" style="width:180px;margin-bottom:6px"></div>
+      <div style="display:flex;gap:8px">
+        <div class="sk sm" style="width:70px"></div>
+        <div class="sk sm" style="width:60px"></div>
+      </div>
+    </div>
+    <!-- 차트 영역 -->
+    <div class="sk" style="height:180px;border-radius:12px;margin-bottom:10px"></div>
+    <!-- 자산 비중 바 -->
+    <div class="sk" style="height:32px;border-radius:20px;margin-bottom:10px"></div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px">
+      <div class="sk-row" style="margin-bottom:0">
+        <div class="sk sk-circle" style="width:38px;height:38px"></div>
+        <div style="flex:1">
+          <div class="sk sm" style="width:100px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:70px"></div>
+        </div>
+        <div style="text-align:right">
+          <div class="sk sm" style="width:80px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:60px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px">
+      <div class="sk-row" style="margin-bottom:0">
+        <div class="sk sk-circle" style="width:38px;height:38px"></div>
+        <div style="flex:1">
+          <div class="sk sm" style="width:100px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:70px"></div>
+        </div>
+        <div style="text-align:right">
+          <div class="sk sm" style="width:80px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:60px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px">
+      <div class="sk-row" style="margin-bottom:0">
+        <div class="sk sk-circle" style="width:38px;height:38px"></div>
+        <div style="flex:1">
+          <div class="sk sm" style="width:100px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:70px"></div>
+        </div>
+        <div style="text-align:right">
+          <div class="sk sm" style="width:80px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:60px"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div style="flex-shrink:0;height:68px;border-top:1px solid var(--border);
+              display:flex;align-items:center;justify-content:space-around;padding:0 8px">
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+  </div>
+</div>
+<!-- ══ SKELETON: PCI 정보 ══ -->
+<div class="sk-screen" id="sk-pci-info">
+  <div class="sk-sbar">
+    <div class="sk" style="width:40px;height:12px"></div>
+    <div class="sk" style="width:40px;height:12px"></div>
+  </div>
+  <div style="flex-shrink:0;padding:4px 14px 10px;display:flex;align-items:center;gap:10px">
+    <div class="sk" style="width:28px;height:28px;border-radius:8px"></div>
+    <div class="sk" style="width:80px;height:16px"></div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:0 14px">
+    <!-- 히어로 시세 -->
+    <div class="sk-card" style="margin:0 0 10px;padding:24px;text-align:center">
+      <div class="sk sm" style="width:60px;margin:0 auto 8px"></div>
+      <div class="sk xl" style="width:120px;height:36px;margin:0 auto 8px"></div>
+      <div class="sk sm" style="width:100px;margin:0 auto"></div>
+    </div>
+    <!-- 예측 배너 -->
+    <div class="sk" style="height:64px;border-radius:12px;margin-bottom:10px"></div>
+    <!-- 거래소 목록 -->
+    <div class="sk sm" style="width:80px;margin-bottom:8px"></div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px">
+      <div class="sk-row" style="margin-bottom:0">
+        <div class="sk sk-circle" style="width:38px;height:38px"></div>
+        <div style="flex:1">
+          <div class="sk sm" style="width:100px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:70px"></div>
+        </div>
+        <div style="text-align:right">
+          <div class="sk sm" style="width:80px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:60px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px">
+      <div class="sk-row" style="margin-bottom:0">
+        <div class="sk sk-circle" style="width:38px;height:38px"></div>
+        <div style="flex:1">
+          <div class="sk sm" style="width:100px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:70px"></div>
+        </div>
+        <div style="text-align:right">
+          <div class="sk sm" style="width:80px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:60px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px">
+      <div class="sk-row" style="margin-bottom:0">
+        <div class="sk sk-circle" style="width:38px;height:38px"></div>
+        <div style="flex:1">
+          <div class="sk sm" style="width:100px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:70px"></div>
+        </div>
+        <div style="text-align:right">
+          <div class="sk sm" style="width:80px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:60px"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div style="flex-shrink:0;height:68px;border-top:1px solid var(--border);
+              display:flex;align-items:center;justify-content:space-around;padding:0 8px">
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+  </div>
+</div>
+<!-- ══ SKELETON: 토큰 상세 ══ -->
+<div class="sk-screen" id="sk-token-detail">
+  <div class="sk-sbar">
+    <div class="sk" style="width:40px;height:12px"></div>
+    <div class="sk" style="width:40px;height:12px"></div>
+  </div>
+  <div style="flex-shrink:0;padding:4px 14px 10px;display:flex;align-items:center;gap:10px">
+    <div class="sk" style="width:28px;height:28px;border-radius:8px"></div>
+    <div class="sk" style="width:80px;height:16px"></div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:0 14px">
+        <div class="sk-card" style="margin:0 0 10px">
+      <div class="sk sm" style="width:80px;margin-bottom:8px"></div>
+      <div class="sk xl" style="width:180px;margin-bottom:6px"></div>
+      <div style="display:flex;gap:8px">
+        <div class="sk sm" style="width:70px"></div>
+        <div class="sk sm" style="width:60px"></div>
+      </div>
+    </div>
+    <!-- 보유 지갑 -->
+    <div class="sk-card" style="margin:0 0 10px;padding:14px">
+      <div class="sk sm" style="width:70px;margin-bottom:8px"></div>
+      <div style="display:flex;gap:8px">
+        <div class="sk sk-circle" style="width:32px;height:32px"></div>
+        <div style="flex:1">
+          <div class="sk sm" style="width:80px;margin-bottom:5px"></div>
+          <div class="sk sm" style="width:60px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:50px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:50px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:50px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+
+  </div>
+  <div style="flex-shrink:0;height:68px;border-top:1px solid var(--border);
+              display:flex;align-items:center;justify-content:space-around;padding:0 8px">
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+  </div>
+</div>
+<!-- ══ SKELETON: 혜택 ══ -->
+<div class="sk-screen" id="sk-benefits">
+  <div class="sk-sbar">
+    <div class="sk" style="width:40px;height:12px"></div>
+    <div class="sk" style="width:40px;height:12px"></div>
+  </div>
+  <div style="flex-shrink:0;padding:4px 14px 10px;display:flex;align-items:center;gap:10px">
+    <div class="sk" style="width:28px;height:28px;border-radius:8px"></div>
+    <div class="sk" style="width:80px;height:16px"></div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:0 14px">
+    <!-- 배너 -->
+    <div class="sk" style="height:120px;border-radius:12px;margin-bottom:10px"></div>
+    <!-- 혜택 카드들 -->
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:70px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:70px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:70px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:70px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+
+  </div>
+  <div style="flex-shrink:0;height:68px;border-top:1px solid var(--border);
+              display:flex;align-items:center;justify-content:space-around;padding:0 8px">
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+  </div>
+</div>
+<!-- ══ SKELETON: 등락 예측 ══ -->
+<div class="sk-screen" id="sk-prediction">
+  <div class="sk-sbar">
+    <div class="sk" style="width:40px;height:12px"></div>
+    <div class="sk" style="width:40px;height:12px"></div>
+  </div>
+  <div style="flex-shrink:0;padding:4px 14px 10px;display:flex;align-items:center;gap:10px">
+    <div class="sk" style="width:28px;height:28px;border-radius:8px"></div>
+    <div class="sk" style="width:80px;height:16px"></div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:0 14px">
+        <div class="sk-card" style="margin:0 0 10px">
+      <div class="sk sm" style="width:80px;margin-bottom:8px"></div>
+      <div class="sk xl" style="width:140px;margin-bottom:6px"></div>
+      <div style="display:flex;gap:8px">
+        <div class="sk sm" style="width:70px"></div>
+        <div class="sk sm" style="width:60px"></div>
+      </div>
+    </div>
+    <!-- 현황 바 -->
+    <div class="sk" style="height:40px;border-radius:20px;margin-bottom:10px"></div>
+    <!-- 투표 버튼 -->
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <div class="sk" style="flex:1;height:52px;border-radius:12px"></div>
+      <div class="sk" style="flex:1;height:52px;border-radius:12px"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:55px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:55px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:55px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+
+  </div>
+  <div style="flex-shrink:0;height:68px;border-top:1px solid var(--border);
+              display:flex;align-items:center;justify-content:space-around;padding:0 8px">
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+  </div>
+</div>
+<!-- ══ SKELETON: 최근 소식 ══ -->
+<div class="sk-screen" id="sk-news">
+  <div class="sk-sbar">
+    <div class="sk" style="width:40px;height:12px"></div>
+    <div class="sk" style="width:40px;height:12px"></div>
+  </div>
+  <div style="flex-shrink:0;padding:4px 14px 10px;display:flex;align-items:center;gap:10px">
+    <div class="sk" style="width:28px;height:28px;border-radius:8px"></div>
+    <div class="sk" style="width:80px;height:16px"></div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:0 14px">
+    <!-- 검색 바 -->
+    <div class="sk" style="height:38px;border-radius:20px;margin-bottom:10px"></div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:60px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:60px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:60px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:60px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:60px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+
+  </div>
+  <div style="flex-shrink:0;height:68px;border-top:1px solid var(--border);
+              display:flex;align-items:center;justify-content:space-around;padding:0 8px">
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+  </div>
+</div>
+<!-- ══ SKELETON: 소식 상세 ══ -->
+<div class="sk-screen" id="sk-news-detail">
+  <div class="sk-sbar">
+    <div class="sk" style="width:40px;height:12px"></div>
+    <div class="sk" style="width:40px;height:12px"></div>
+  </div>
+  <div style="flex-shrink:0;padding:4px 14px 10px;display:flex;align-items:center;gap:10px">
+    <div class="sk" style="width:28px;height:28px;border-radius:8px"></div>
+    <div class="sk" style="width:80px;height:16px"></div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:0 14px">
+    <div class="sk lg" style="width:90%;margin-bottom:8px"></div>
+    <div class="sk lg" style="width:70%;margin-bottom:12px"></div>
+    <div class="sk sm" style="width:120px;margin-bottom:16px"></div>
+    <div class="sk sm" style="width:100%;margin-bottom:6px"></div>
+    <div class="sk sm" style="width:100%;margin-bottom:6px"></div>
+    <div class="sk sm" style="width:85%;margin-bottom:6px"></div>
+    <div class="sk sm" style="width:100%;margin-bottom:6px"></div>
+    <div class="sk sm" style="width:75%;margin-bottom:6px"></div>
+    <div class="sk sm" style="width:90%;margin-bottom:6px"></div>
+    <div class="sk sm" style="width:80%"></div>
+  </div>
+  <div style="flex-shrink:0;height:68px;border-top:1px solid var(--border);
+              display:flex;align-items:center;justify-content:space-around;padding:0 8px">
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+  </div>
+</div>
+<!-- ══ SKELETON: 결제 ══ -->
+<div class="sk-screen" id="sk-payment">
+  <div class="sk-sbar">
+    <div class="sk" style="width:40px;height:12px"></div>
+    <div class="sk" style="width:40px;height:12px"></div>
+  </div>
+  <div style="flex-shrink:0;padding:4px 14px 10px;display:flex;align-items:center;gap:10px">
+    <div class="sk" style="width:28px;height:28px;border-radius:8px"></div>
+    <div class="sk" style="width:80px;height:16px"></div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:0 14px">
+        <div class="sk-card" style="margin:0 0 10px">
+      <div class="sk sm" style="width:80px;margin-bottom:8px"></div>
+      <div class="sk xl" style="width:140px;margin-bottom:6px"></div>
+      <div style="display:flex;gap:8px">
+        <div class="sk sm" style="width:70px"></div>
+        <div class="sk sm" style="width:60px"></div>
+      </div>
+    </div>
+    <!-- QR/바코드 버튼 -->
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <div class="sk" style="flex:1;height:52px;border-radius:12px"></div>
+      <div class="sk" style="flex:1;height:52px;border-radius:12px"></div>
+    </div>
+    <!-- 배너 -->
+    <div class="sk" style="height:64px;border-radius:12px;margin-bottom:10px"></div>
+    <!-- 가맹점 슬라이드 -->
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <div class="sk" style="width:100px;height:80px;border-radius:10px;flex-shrink:0"></div>
+      <div class="sk" style="width:100px;height:80px;border-radius:10px;flex-shrink:0"></div>
+      <div class="sk" style="width:100px;height:80px;border-radius:10px;flex-shrink:0"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:55px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+    <div class="sk-card" style="margin:0 0 6px;padding:12px;height:55px">
+      <div class="sk sm" style="width:80%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:55%"></div>
+    </div>
+
+  </div>
+  <div style="flex-shrink:0;height:68px;border-top:1px solid var(--border);
+              display:flex;align-items:center;justify-content:space-around;padding:0 8px">
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+  </div>
+</div>
+
+<!-- ══ SKELETON: 홈 ══ -->
+<div class="sk-screen" id="sk-home">
+  <div class="sk-sbar">
+    <div class="sk" style="width:60px;height:12px"></div>
+    <div style="display:flex;gap:8px">
+      <div class="sk" style="width:20px;height:20px;border-radius:50%"></div>
+      <div class="sk" style="width:20px;height:20px;border-radius:50%"></div>
+    </div>
+  </div>
+  <div class="sk-header">
+    <div class="sk" style="width:100px;height:18px"></div>
+    <div style="display:flex;gap:8px">
+      <div class="sk" style="width:28px;height:28px;border-radius:8px"></div>
+      <div class="sk" style="width:28px;height:28px;border-radius:8px"></div>
+    </div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:0 14px">
+    <!-- 자산 카드 -->
+    <div class="sk-card" style="margin:0 0 10px">
+      <div class="sk sm" style="width:80px;margin-bottom:8px"></div>
+      <div class="sk xl" style="width:160px;margin-bottom:8px"></div>
+      <div style="display:flex;gap:8px">
+        <div class="sk sm" style="width:90px"></div>
+        <div class="sk sm" style="width:70px"></div>
+      </div>
+    </div>
+    <!-- 배너 -->
+    <div class="sk" style="height:64px;border-radius:12px;margin-bottom:10px"></div>
+    <!-- 타일 3행 -->
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <div class="sk" style="flex:1;height:72px;border-radius:10px"></div>
+      <div class="sk" style="flex:1;height:72px;border-radius:10px"></div>
+      <div class="sk" style="flex:1;height:72px;border-radius:10px"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <div class="sk" style="flex:2;height:72px;border-radius:10px"></div>
+      <div class="sk" style="flex:1;height:72px;border-radius:10px"></div>
+    </div>
+    <div class="sk" style="height:72px;border-radius:10px;margin-bottom:12px"></div>
+    <!-- 뉴스 -->
+    <div class="sk sm" style="width:80px;margin-bottom:10px"></div>
+    <div class="sk-card" style="margin:0 0 8px;padding:12px">
+      <div class="sk sm" style="width:100%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:75%"></div>
+    </div>
+    <div class="sk-card" style="margin:0;padding:12px">
+      <div class="sk sm" style="width:100%;margin-bottom:7px"></div>
+      <div class="sk sm" style="width:60%"></div>
+    </div>
+  </div>
+  <!-- 탭바 -->
+  <div style="flex-shrink:0;height:68px;border-top:1px solid var(--border);
+              display:flex;align-items:center;justify-content:space-around;padding:0 8px">
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+  </div>
+</div>
+
+<!-- ══ SKELETON: 지갑 ══ -->
+<div class="sk-screen" id="sk-wallet">
+  <div class="sk-sbar">
+    <div class="sk" style="width:40px;height:12px"></div>
+    <div class="sk" style="width:40px;height:12px"></div>
+  </div>
+  <div class="sk-header">
+    <div class="sk" style="width:60px;height:18px"></div>
+    <div style="display:flex;gap:8px">
+      <div class="sk" style="width:28px;height:28px;border-radius:8px"></div>
+      <div class="sk" style="width:28px;height:28px;border-radius:8px"></div>
+    </div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:0 14px">
+    <!-- 자산 카드 -->
+    <div class="sk-card" style="margin:0 0 8px">
+      <div class="sk sm" style="width:80px;margin-bottom:8px"></div>
+      <div class="sk xl" style="width:140px;margin-bottom:6px"></div>
+    </div>
+    <!-- 탭 필터 -->
+    <div style="display:flex;gap:6px;margin-bottom:10px">
+      <div class="sk" style="width:50px;height:28px;border-radius:20px"></div>
+      <div class="sk" style="width:60px;height:28px;border-radius:20px"></div>
+      <div class="sk" style="width:50px;height:28px;border-radius:20px"></div>
+      <div class="sk" style="width:60px;height:28px;border-radius:20px"></div>
+    </div>
+    <!-- 코인 행 4개 -->
+    
+    <div class="sk-card" style="margin:0 0 6px;padding:12px">
+      <div class="sk-row">
+        <div class="sk sk-circle" style="width:38px;height:38px"></div>
+        <div style="flex:1">
+          <div class="sk sm" style="width:100px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:70px"></div>
+        </div>
+        <div style="text-align:right">
+          <div class="sk sm" style="width:80px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:60px"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="sk-card" style="margin:0 0 6px;padding:12px">
+      <div class="sk-row">
+        <div class="sk sk-circle" style="width:38px;height:38px"></div>
+        <div style="flex:1">
+          <div class="sk sm" style="width:100px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:70px"></div>
+        </div>
+        <div style="text-align:right">
+          <div class="sk sm" style="width:80px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:60px"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="sk-card" style="margin:0 0 6px;padding:12px">
+      <div class="sk-row">
+        <div class="sk sk-circle" style="width:38px;height:38px"></div>
+        <div style="flex:1">
+          <div class="sk sm" style="width:100px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:70px"></div>
+        </div>
+        <div style="text-align:right">
+          <div class="sk sm" style="width:80px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:60px"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="sk-card" style="margin:0 0 6px;padding:12px">
+      <div class="sk-row">
+        <div class="sk sk-circle" style="width:38px;height:38px"></div>
+        <div style="flex:1">
+          <div class="sk sm" style="width:100px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:70px"></div>
+        </div>
+        <div style="text-align:right">
+          <div class="sk sm" style="width:80px;margin-bottom:6px"></div>
+          <div class="sk sm" style="width:60px"></div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  <div style="flex-shrink:0;height:68px;border-top:1px solid var(--border);
+              display:flex;align-items:center;justify-content:space-around;padding:0 8px">
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+  </div>
+</div>
 
 <!-- ═══════════════ HOME ═══════════════ -->
 <div class="screen active" id="sc-home">
@@ -1631,334 +2352,135 @@ body {
 ══════════════════════════════════════════════ -->
 <div class="policy-panel">
 
+
 <!-- ── HOME ── -->
 <div class="policy-section active" id="pol-home" data-screen="home">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_HOME <span class="ptag p1">P1</span></div>
     <div class="policy-title">메인 홈</div>
-    <div class="policy-desc">앱 실행 후 첫 진입 화면. 자산 현황 요약, 롤링 배너, 타일 메뉴, 최근 소식으로 구성. 모든 주요 기능으로의 진입 허브 역할.</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
-    <div class="policy-item"><div class="pd r"></div><strong>타일 메뉴 하드코딩 절대 금지.</strong> 서버 JSON을 파싱해 렌더링. 타일 수·순서·노출 여부 모두 어드민에서 관리.</div>
-    <div class="policy-item"><div class="pd r"></div>롤링 배너는 자동 3초 순환 + 수동 스와이프 모두 지원. 배너 없으면 영역 자체 미표시(레이아웃 재배치).</div>
-    <div class="policy-item"><div class="pd r"></div>자산 합계 API 실패 시 "자산 정보를 불러오지 못했습니다 + 다시 시도" — 빈 화면 노출 금지.</div>
-    <div class="policy-item"><div class="pd"></div>앱 실행 시 로컬 캐시를 즉시 표시 → 백그라운드 API 완료 시 실시간 값으로 교체(애니메이션 처리).</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">롤링 배너</div>
-    <div class="policy-item"><div class="pd"></div>자동 3초 롤링, 인디케이터 점 표시. 배너 이미지 로드 실패 시 기본 플레이스홀더 표시.</div>
-    <div class="policy-item"><div class="pd"></div>탭 → 지정 딥링크 또는 외부 웹뷰 이동. 링크 없으면 탭 이벤트 무반응.</div>
-    <div class="policy-code">GET /api/v1/home/banners → Banner[]</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">타일 메뉴 구성 규칙</div>
-    <div class="policy-item"><div class="pd"></div>1행: 1/3 너비 × 3개 / 2행: 2/3(넓은 타일) + 1/3 / 3행: 가로 스크롤, 우측 끝 타일이 화면에 걸쳐 '더 있음'을 암시.</div>
-    <div class="policy-item"><div class="pd"></div>비활성 타일 제거 후 나머지 레이아웃 자동 재배치. 네트워크 오류 시 마지막 캐시 구성 사용.</div>
-    <div class="policy-code">GET /api/v1/home/tiles → Tile[]
-  tile.row_type: "1x1" | "2x1" | "scroll"</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">자산 합계 영역</div>
-    <div class="policy-item"><div class="pd"></div>합계 = 자체 지갑 + 모든 연결 지갑 KRW 합산 (실시간 시세 기준)</div>
-    <div class="policy-warn">⚠️ 변동 금액·변동률 기준 시점 미확정 (전일 0시 vs 마지막 로그인) — 필드 예약, null 시 UI 미표시</div>
-    <div class="policy-item"><div class="pd r"></div>is_stale=true: 금액 옆 ⚠ 아이콘 + "시세가 최신이 아닐 수 있습니다" 안내</div>
-    <div class="policy-item"><div class="pd"></div>영역 탭 → 지갑 화면 / "자산현황 보기" 탭 → 자산현황 화면</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">알림 뱃지</div>
-    <div class="policy-item"><div class="pd"></div>미확인 알림 수 표시, 99 초과 시 "99+" 고정. 포그라운드 전환 시 1회 재조회.</div>
-    <div class="policy-code">GET /api/v1/notifications/unread-count</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">최근 소식</div>
-    <div class="policy-item"><div class="pd"></div>최신 소식 5건(게시일자 DESC). "전체 보기" → 소식 리스트 화면</div>
-    <div class="policy-code">GET /api/v1/news?limit=5</div>
+    <div class="policy-desc">앱 실행 후 첫 진입 화면. 자산 현황 요약, 롤링 배너, 타일 메뉴, 최근 소식으로 구성.</div>
   </div>
 </div>
+
 
 <!-- ── WALLET ── -->
 <div class="policy-section" id="pol-wallet" data-screen="wallet">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_WALLET <span class="ptag p1">P1</span></div>
     <div class="policy-title">지갑</div>
-    <div class="policy-desc">보유 코인 잔액·시세를 코인 단위로 실시간 조회. "지금 내가 얼마를 갖고 있나"에 집중. 분석·비중은 자산현황 화면에서 제공(역할 분리).</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
-    <div class="policy-item"><div class="pd r"></div>자체 지갑 PCI는 항상 최상단 고정. 연결 지갑은 connected_at ASC 정렬.</div>
-    <div class="policy-item"><div class="pd r"></div>연결 지갑이 없는 거래소 탭: 회색 + "연결하기" 버튼 → WalletConnect 플로우 진입.</div>
-    <div class="policy-item"><div class="pd"></div>▲(상승) 빨간색, ▼(하락) 파란색 — 한국 주식 UI 관행. FLAT은 회색 '-'.</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">아이콘 표시 규칙</div>
-    <div class="policy-item"><div class="pd g"></div>자체 지갑: 코인 심볼 아이콘만 (거래소 오버레이 없음)</div>
-    <div class="policy-item"><div class="pd"></div>연결 지갑: 코인 아이콘 + 거래소 로고 우하단 오버레이 (24px)</div>
-    <div class="policy-item"><div class="pd"></div>동일 코인 복수 거래소: 각각 별도 행으로 독립 표시</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">탭 필터 로직</div>
-    <div class="policy-code">전체 | 내 지갑(SELF) | 빗썸 | 코인원 | 코빗
-GET /api/v1/wallets?source={tab_filter}</div>
+    <div class="policy-desc">보유 코인 잔액·시세를 코인 단위로 실시간 조회.</div>
   </div>
 </div>
 
-<!-- ── WALLET PCI ── -->
+
+<!-- ── WALLET EMPTY ── -->
 <div class="policy-section" id="pol-wallet-empty" data-screen="wallet-empty">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_WALLET_EMPTY <span class="ptag p1">P1</span></div>
     <div class="policy-title">지갑 (거래소 미연결)</div>
-    <div class="policy-desc">거래소 지갑 미연결 상태. 자체 지갑(PCI)만 보유한 경우 표시되며 연결을 유도합니다.</div>
-  </div>
-  <div class="policy-group">
-    <div class="policy-group-title">⚠️ 개발 주의사항</div>
-    <div class="policy-item"><div class="pd r"></div>연결된 거래소 0개일 때만 표시. 1개라도 연결되면 sc-wallet으로 이동.</div>
-  </div>
-  <div class="policy-group">
-    <div class="policy-group-title">거래소 연결 유도</div>
-    <div class="policy-item has-zone" onclick="hlZone('wallet-empty-connect','거래소 연결 유도')"><div class="pd"></div>거래소 연결 유도 카드 + "+ 거래소 지갑 연결하기" 버튼.</div>
+    <div class="policy-desc">거래소 지갑 미연결 상태. 자체 지갑(PCI)만 보유한 경우 표시.</div>
   </div>
 </div>
 
+
+<!-- ── WALLET PCI ── -->
 <div class="policy-section" id="pol-wallet-pci" data-screen="wallet-pci">
   <div class="policy-header">
-    <div class="policy-screen-id">SCREEN_WALLET_DETAIL (자체 PCI) <span class="ptag p1">P1</span></div>
+    <div class="policy-screen-id">SCREEN_WALLET_DETAIL (PCI) <span class="ptag p1">P1</span></div>
     <div class="policy-title">지갑 상세 — PCI 자체 지갑</div>
-    <div class="policy-desc">PCI 자체 지갑 전용 화면. 출금하기 버튼, PCI 정보 보기, 최근 거래 내역(5건)이 이 화면에서만 표시됨.</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
-    <div class="policy-item"><div class="pd r"></div><strong>출금하기 버튼: 자체 지갑(wallet_type=SELF, coin=PCI)에만</strong> 표시. 다른 지갑 유형에서는 절대 노출 안 됨.</div>
-    <div class="policy-item"><div class="pd r"></div>최근 거래 내역도 자체 지갑에만 표시. 연결 지갑은 "거래소 앱에서 확인" 안내문으로 대체.</div>
-    <div class="policy-item"><div class="pd"></div>referrer 파라미터로 뒤로가기 레이블 동적 변경 (지갑/자산현황/PCI거래소상세 등).</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">출금 플로우 검증</div>
-    <div class="policy-item"><div class="pd r"></div>PCI 주소 형식 regex 실시간 검증. 자기 자신 주소 출금 불가.</div>
-    <div class="policy-item"><div class="pd"></div>amount + fee ≤ balance 검증. 최소 출금 수량 이상.</div>
-    <div class="policy-item"><div class="pd"></div>PIN/생체인증 → 최종 확인 팝업 → 네트워크 제출.</div>
-    <div class="policy-item"><div class="pd"></div>햅틱: PIN 입력 Light / PIN 오류 Error(강한 진동).</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">API 명세</div>
-    <div class="policy-code">GET  /api/v1/wallets/{id}
-GET  /api/v1/wallets/{id}/transactions?limit=5
-GET  /api/v1/wallets/{id}/withdraw-info
-POST /api/v1/wallets/{id}/withdraw</div>
+    <div class="policy-desc">PCI 자체 지갑 전용 화면.</div>
   </div>
 </div>
+
 
 <!-- ── WALLET OTHER ── -->
 <div class="policy-section" id="pol-wallet-other" data-screen="wallet-other">
   <div class="policy-header">
-    <div class="policy-screen-id">SCREEN_WALLET_DETAIL (연결 지갑) <span class="ptag p1">P1</span></div>
-    <div class="policy-title">지갑 상세 — 연결 지갑 (PCI/기타 코인)</div>
-    <div class="policy-desc">WalletConnect로 연결된 거래소 지갑 상세. 출금하기 없음. "거래소로 이동하기" 버튼 제공. 거래 내역은 거래소 앱에서 확인 안내.</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
-    <div class="policy-item"><div class="pd r"></div><strong>출금하기 버튼 없음.</strong> 대신 "거래소로 이동하기" 버튼 표시.</div>
-    <div class="policy-item"><div class="pd r"></div>거래 내역 미표시. "거래 내역은 거래소 앱에서 확인" 안내 영역으로 대체.</div>
-    <div class="policy-item"><div class="pd"></div>거래소 이동: 거래소 앱 딥링크 우선, 미설치 시 웹 URL fallback.</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">코인 정보 버튼</div>
-    <div class="policy-item"><div class="pd"></div>PCI 거래소 연결 지갑: "PCI 정보" 버튼 없음 (자체 지갑만 제공)</div>
-    <div class="policy-item"><div class="pd"></div>기타 코인(BTC/ETH 등): "[심볼명] 정보" 버튼 → SCREEN_TOKEN_DETAIL(exchange, coin_symbol)</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">2차 주소 표시 조건</div>
-    <div class="policy-item"><div class="pd"></div>XRP: Destination Tag / 빗썸 PCI·코인원 PCI: Memo / 기타: 미표시</div>
+    <div class="policy-screen-id">SCREEN_WALLET_DETAIL (연결) <span class="ptag p1">P1</span></div>
+    <div class="policy-title">지갑 상세 — 연결 지갑</div>
+    <div class="policy-desc">WalletConnect로 연결된 거래소 지갑 상세.</div>
   </div>
 </div>
+
 
 <!-- ── ASSET ── -->
 <div class="policy-section" id="pol-asset" data-screen="asset">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_ASSET_STATUS <span class="ptag p2">P2</span></div>
     <div class="policy-title">자산현황</div>
-    <div class="policy-desc">포트폴리오 변동 추이·비중·손익 분석. 지갑 화면이 실시간 잔액이라면, 이 화면은 시각화된 분석 제공. 두 화면의 역할을 명확히 분리할 것.</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">⚠️ 미확정 항목</div>
-    <div class="policy-warn">⚠️ 변동률 기준 시점 미확정 (전일 0시 vs 마지막 로그인) — change_amount, change_rate 필드 예약</div>
-    <div class="policy-warn">⚠️ 자산 표시 UX: 캐시→실시간 Toss 방식 구현 방법 개발팀 협의 필요</div>
-    <div class="policy-warn">⚠️ 그래프 제공 기간 구간 미확정 (1D/1W/1M/3M) — period 파라미터 예약</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">비중 그래프 섹션 조건</div>
-    <div class="policy-item"><div class="pd g"></div>코인 2종+ → 자산별 탭 + 거래소별 탭 모두 표시</div>
-    <div class="policy-item"><div class="pd"></div>코인 1종 + 거래소 2개+ → 거래소별 탭만 표시</div>
-    <div class="policy-item"><div class="pd r"></div>코인 1종 + 거래소 1개 → 섹션 전체 미표시. 서버가 show_by_asset/show_by_exchange boolean으로 판단해서 내려줄 것.</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">API 명세</div>
-    <div class="policy-code">GET /api/v1/asset-status/chart?period=1D
-GET /api/v1/asset-status/distribution
-  → show_by_asset, show_by_exchange, by_asset[], by_exchange[]
-GET /api/v1/asset-status/wallets</div>
+    <div class="policy-desc">포트폴리오 변동 추이·비중·손익 분석.</div>
   </div>
 </div>
+
 
 <!-- ── PCI INFO ── -->
 <div class="policy-section" id="pol-pci-info" data-screen="pci-info">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_PCI_INFO <span class="ptag p2">P2</span></div>
     <div class="policy-title">PCI 정보</div>
-    <div class="policy-desc">PCI 시장 정보 허브. 내 보유와 무관하게 PCI 전체 시장 정보 제공. 시세 출처는 반드시 "Coin Market Cap 기준"으로 명시. "실시간" 텍스트 사용 금지.</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
-    <div class="policy-item"><div class="pd r"></div>시세 출처 표기: <strong>"Coin Market Cap 기준"</strong> 명시 필수. "실시간" 단어 사용 금지.</div>
-    <div class="policy-item"><div class="pd r"></div>CMC API 장애 시: 이전 캐시 데이터 표시 + 수집 시각 명시 + 재시도 버튼.</div>
-    <div class="policy-item"><div class="pd"></div>알림 PUSH 딥링크 진입 시 이 화면으로 랜딩: paycoin://pci-info</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">상장 거래소 리스트</div>
-    <div class="policy-item"><div class="pd g"></div>앱 연결 지갑 있는 거래소: "연결됨" 뱃지 + 상단 정렬</div>
-    <div class="policy-item"><div class="pd"></div>정렬: is_connected=true 우선 → 거래량 DESC</div>
-    <div class="policy-item"><div class="pd"></div>행 탭 → SCREEN_TOKEN_DETAIL(exchange, 'PCI')</div>
-    <div class="policy-code">GET /api/v1/pci/summary
-GET /api/v1/pci/exchanges</div>
+    <div class="policy-desc">PCI 시장 정보 허브. 시세 출처는 Coin Market Cap 기준.</div>
   </div>
 </div>
+
 
 <!-- ── TOKEN DETAIL ── -->
 <div class="policy-section" id="pol-token-detail" data-screen="token-detail">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_TOKEN_DETAIL <span class="ptag p2">P2</span></div>
     <div class="policy-title">토큰 상세 (공통 템플릿)</div>
-    <div class="policy-desc">PCI 거래소 상세와 거래소별 코인 정보를 하나의 공통 템플릿으로 구현. coin_symbol + exchange 파라미터로 동일 화면 재사용.</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
-    <div class="policy-item"><div class="pd r"></div>PCI 거래소 상세: coin_symbol='PCI' 고정 / 기타 코인: coin_symbol 동적 (BTC/ETH/XRP/USDT/SOL/POL)</div>
-    <div class="policy-item"><div class="pd"></div>동일 API + 동일 템플릿 컴포넌트 재사용. 파라미터만 다름.</div>
-    <div class="policy-item"><div class="pd"></div>거래소 이동: 거래소 앱 딥링크 우선, 미설치 시 웹 URL fallback.</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">연결 지갑 섹션</div>
-    <div class="policy-item"><div class="pd g"></div>연결 시: 수량 + 원화 환산 + 주소 마스킹(앞6…뒤4) + "지갑 상세 보기"</div>
-    <div class="policy-item"><div class="pd"></div>미연결 시: "이 거래소 지갑 연결하기" → WalletConnect 플로우 (exchange 파라미터 전달)</div>
-    <div class="policy-code">GET /api/v1/market/{exchange}/{coin_symbol}
-  → price, high/low, volume, change,
-    exchange_url, app_scheme, wallet{masked}</div>
+    <div class="policy-desc">coin_symbol + exchange 파라미터로 동일 화면 재사용.</div>
   </div>
 </div>
+
 
 <!-- ── BENEFITS ── -->
 <div class="policy-section" id="pol-benefits" data-screen="benefits">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_BENEFITS <span class="ptag p1">P1</span></div>
     <div class="policy-title">혜택</div>
-    <div class="policy-desc">모든 혜택·이벤트 진입 허브. 카테고리/항목 구성 전체가 어드민 동적 관리. 카테고리 추가·수정·삭제는 DB 저장 목록에서만 선택 가능(신규 생성 불가).</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
-    <div class="policy-item"><div class="pd r"></div>카테고리 하드코딩 금지. 어드민 API에서 카테고리·항목 모두 동적 수신.</div>
-    <div class="policy-item"><div class="pd"></div>is_active=false 또는 노출 기간 외: 목록에서 제거 (빈 슬롯 없이 재배치)</div>
-    <div class="policy-item"><div class="pd"></div>이벤트 배너 없으면 배너 영역 전체 미표시 (레이아웃 자동 조정)</div>
-    <div class="policy-code">GET /api/v1/benefits/banners
-GET /api/v1/benefits/list → categories[].items[]</div>
+    <div class="policy-desc">모든 혜택·이벤트 진입 허브. 카테고리 구성 전체 어드민 관리.</div>
   </div>
 </div>
+
 
 <!-- ── PREDICTION ── -->
 <div class="policy-section" id="pol-prediction" data-screen="prediction">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_PREDICTION <span class="ptag p1">P1</span></div>
     <div class="policy-title">PCI 등락 예측</div>
-    <div class="policy-desc">매일 빗썸 PCI KST 00:00 종가 기준 등락 예측 이벤트. 탭은 하단에 위치(투표/참여내역/랭킹). 선택 변경 시 AdMob 광고 시청 필수.</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
-    <div class="policy-item"><div class="pd r"></div>탭 바 위치: <strong>화면 하단</strong> (상단 아님). 투표 탭은 기본 선택이나, 탭 레이블로는 노출하지 않아도 됨 (내용 자체가 투표 영역).</div>
-    <div class="policy-item"><div class="pd r"></div>AdMob 광고 완료 판정: Android onAdDismissedFullScreenContent / iOS adDidDismissFullScreenContent. 스킵(닫기 탭) = 변경 권한 미부여.</div>
-    <div class="policy-item"><div class="pd r"></div>광고 로드 실패 → "광고를 불러오지 못했습니다" 토스트, 변경 불가. 기존 선택 유지.</div>
-    <div class="policy-item"><div class="pd"></div>햅틱: 투표 버튼 탭 시 Medium 피드백.</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">진입 시나리오 4가지</div>
-    <div class="policy-item"><div class="pd"></div>① 전날 미참여 → 이벤트 소개 화면 → 시작하기 → 투표 영역</div>
-    <div class="policy-item"><div class="pd"></div>② 전날 참여 + 결과 미집계 → 투표 영역만 (결과 카드 없음)</div>
-    <div class="policy-item"><div class="pd g"></div>③ 전날 참여 + 결과 집계 완료 → 투표 영역 상단에 전날 결과 카드</div>
-    <div class="policy-item"><div class="pd"></div>④ 오늘 이미 투표 → 완료 상태 + "선택 변경하기" 버튼</div>
-    <div class="policy-code">GET /api/v1/prediction/status
-  → today_voted, yesterday_participated,
-    yesterday_result_ready, yesterday_result{}</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">판정 정책</div>
-    <div class="policy-item"><div class="pd g"></div>상승: 당일 종가 > 전일 종가 / 하락: 당일 종가 &lt; 전일 종가</div>
-    <div class="policy-warn">⚠️ 변동 없음(FLAT): 당일 = 전일 → 보상 지급 여부 미확정. verdict=FLAT UI 미리 구현 후 보상 로직만 대기.</div>
-    <div class="policy-item"><div class="pd"></div>빗썸 장애 시: 판정 보류 → 정상화 후 소급, 앱 내 공지 노출.</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">캘린더 말풍선 정책</div>
-    <div class="policy-item"><div class="pd"></div>날짜 탭 → 말풍선: "[내 선택] · [실제 결과]" 형식, 2~3초 후 자동 소멸</div>
-    <div class="policy-item"><div class="pd r"></div>미참여 날짜 탭 시 말풍선 미표시</div>
-    <div class="policy-item"><div class="pd"></div>색상: 정답=파랑 / 오답=빨강 / 변동없음=연파랑 / 미참여=색상없음</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">랭킹 정책</div>
-    <div class="policy-item"><div class="pd"></div>상위 50명 표시. 정렬: ① 누적 정답 횟수 → ② 정답률 → ③ 전날 참여 시간 빠른 순</div>
-    <div class="policy-item"><div class="pd g"></div>내 랭킹: 상단 고정 구역에 항상 표시 (50위 밖이어도). mycode: 앞4자리+"***"</div>
-    <div class="policy-item"><div class="pd r"></div>매월 1일: "집계 중" 배지 → KST 2일 00:00 정식 전환</div>
-    <div class="policy-item"><div class="pd"></div>오늘의 선택: 상승/하락/미참여 실시간 공개</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">보상 지급</div>
-    <div class="policy-item"><div class="pd"></div>월 누적 후 익월 1~2주차 자동 지급. 페이코인 자체 지갑으로 지급 (별도 수령 액션 없음)</div>
-    <div class="policy-code">POST /api/v1/prediction/vote → { choice: "UP"|"DOWN" }
-GET  /api/v1/prediction/today-stats (10초 폴링)
-GET  /api/v1/prediction/calendar?year=&month=
-GET  /api/v1/prediction/ranking?year=&month=</div>
+    <div class="policy-desc">매일 빗썸 PCI KST 00:00 종가 기준 등락 예측 이벤트.</div>
   </div>
 </div>
+
 
 <!-- ── NEWS ── -->
 <div class="policy-section" id="pol-news" data-screen="news">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_NEWS_LIST <span class="ptag p2">P2</span></div>
     <div class="policy-title">최근 소식</div>
-    <div class="policy-desc">페이코인·다날·다날핀테크·페이프로토콜 관련 소식 목록. 어드민 등록·관리. 키워드/기간/카테고리 복합 검색 지원.</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
-    <div class="policy-item"><div class="pd"></div>페이지당 10건, 무한 스크롤 또는 더보기 버튼 구현. cursor 기반 페이지네이션 권장.</div>
-    <div class="policy-item"><div class="pd r"></div>검색 결과 없음: "검색 결과가 없습니다." 빈 상태 UI (빈 화면 금지)</div>
-    <div class="policy-item"><div class="pd"></div>상세 뒤로가기: 검색·필터 상태 유지 (Navigation Stack 유지)</div>
-    <div class="policy-code">GET /api/v1/news?q=&from=&to=&category=&cursor=&limit=10</div>
+    <div class="policy-desc">페이코인 관련 소식 목록. 어드민 등록·관리.</div>
   </div>
 </div>
+
 
 <!-- ── NEWS DETAIL ── -->
 <div class="policy-section" id="pol-news-detail" data-screen="news-detail">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_NEWS_DETAIL <span class="ptag p2">P2</span></div>
     <div class="policy-title">소식 상세</div>
-    <div class="policy-desc">최근 소식 개별 게시글 상세 화면. 이전/다음 글 이동, 뒤로가기 시 리스트 검색·필터 상태 유지.</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
-    <div class="policy-item"><div class="pd"></div>이전 글 / 다음 글 버튼: 없으면 비활성 처리 (탭 불가, 회색)</div>
-    <div class="policy-item"><div class="pd r"></div>뒤로가기 → 소식 리스트 화면, 검색·필터 상태 복원 필수</div>
-    <div class="policy-item"><div class="pd"></div>본문 포맷: HTML 또는 Markdown (서버 협의 후 결정)</div>
-    <div class="policy-code">GET /api/v1/news/{id} → body, prev_id, next_id</div>
+    <div class="policy-desc">최근 소식 개별 게시글 상세 화면.</div>
   </div>
 </div>
+
 
 <!-- ── PAYMENT ── -->
 <div class="policy-section" id="pol-payment" data-screen="payment">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_PAYMENT_MAIN <span class="ptag p1">P1</span></div>
     <div class="policy-title">결제</div>
-    <div class="policy-desc">QR코드 결제와 오프라인 바코드 결제를 하나의 진입점으로 통합. 이번달 누적 결제 금액·혜택 금액, 방식 선택 버튼, 가맹점 혜택 슬라이드, 최근 결제 내역 5건 표시.</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">⚠️ 개발 주의사항</div>
-    <div class="policy-item"><div class="pd r"></div>QR코드 결제 탭 시: 카메라 권한 확인 → 없으면 권한 요청 → 거부 시 설정 이동 안내. 카메라 뷰파인더 → QR 인식 → 기존 플로우. 취소/뒤로가기 → 결제 메인 복귀.</div>
-    <div class="policy-item"><div class="pd r"></div>이벤트 배너 없으면 섹션 전체 미표시.</div>
-    <div class="policy-item"><div class="pd"></div>가맹점 슬라이드: 자동 슬라이딩(3초 간격) 무한 반복 + 수동 스와이프.</div>
-    <div class="policy-warn">⚠️ 할인 금액 집계 기준 및 데이터 제공 방식 협의 필요 — monthly_discount_krw 필드 예약</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">표시 문구 정책</div>
-    <div class="policy-item"><div class="pd"></div>결제 현황 레이블: "이번달 누적 결제 금액"</div>
-    <div class="policy-item"><div class="pd"></div>할인 문구: "이번달 {N}원 혜택을 받았어요!" (0원 시 미표시)</div>
-  </div>
-  <div class="policy-group"><div class="policy-group-title">최근 결제 내역</div>
-    <div class="policy-item"><div class="pd"></div>최근 5건 표시. "전체 보기" 탭 → 거래내역 화면으로 이동.</div>
-    <div class="policy-item"><div class="pd"></div>할인 금액: 있는 경우만 표시, 없으면 해당 영역 미표시.</div>
-    <div class="policy-code">GET /api/v1/payment/monthly-summary
-GET /api/v1/payment/merchants
-GET /api/v1/payment/recent?limit=5</div>
+    <div class="policy-desc">QR코드 결제와 오프라인 바코드 결제 통합 진입점.</div>
   </div>
 </div>
-
-
-<!-- QnA 설정 -->
-<div class="qna-setup-box" id="qna-setup-box">
-  <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:3px">💬 QnA 설정</div>
-  <div style="font-size:11px;color:var(--text3);margin-bottom:12px;line-height:1.5">Google Apps Script 배포 URL을 입력하세요.</div>
-  <input id="qna-api-input" class="qna-su-input" placeholder="https://script.google.com/macros/s/...">
-  <button onclick="saveApiUrl()" style="width:100%;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">저장하고 시작하기</button>
-  <div style="margin-top:7px;text-align:center"><button onclick="document.getElementById('qna-setup-box').classList.remove('open')" style="background:none;border:none;font-size:11px;color:var(--text4);cursor:pointer;font-family:'Noto Sans KR',sans-serif;">나중에 설정</button></div>
-</div>
-
-<!-- QnA 버튼 -->
-<button class="qna-fab" id="qna-fab" onclick="toggleQna()" title="질문/답변">
-  💬
-  <div class="qna-fab-badge" id="qna-fab-badge"></div>
-</button>
-
 
 
 </div><!-- /policy-panel -->
@@ -2662,6 +3184,8 @@ const DESC = {
 };
 async function loadDesc(){
   if(!QNA.apiUrl) return;
+  var _skKey = document.querySelector('.screen.active') ? document.querySelector('.screen.active').id.replace('sc-','') : null;
+  if(window.SK) window.SK.showForApi(_skKey);
   document.querySelectorAll('.policy-section[data-screen]').forEach(function(sec){
     if(!sec.dataset.staticBackup) sec.dataset.staticBackup=sec.innerHTML;
     if(!DESC.items.length) sec.innerHTML='<div class="desc-loading"><div class="desc-loading-spinner"></div><div>불러오는 중...</div></div>';
@@ -2676,9 +3200,11 @@ async function loadDesc(){
     if(!data.success) throw new Error(data.error||'로드 실패');
     DESC.items=data.items||[]; DESC.loaded=true;
     renderAllDesc();
+    if(window.SK) window.SK.hideAll();
   }catch(err){
     DESC.failed=true;
     console.error('[loadDesc] 오류:', err.name, err.message);
+    if(window.SK) window.SK.hideAll();
     document.querySelectorAll('.policy-section').forEach(function(sec){
       if(sec.dataset.staticBackup) sec.innerHTML=sec.dataset.staticBackup;
     });
@@ -2985,6 +3511,81 @@ function fmtQty(qty, sym) {
         if(t && !t.querySelector('.dgt')){ t.innerHTML=buildDgt(t.textContent); }
       });
     }, 80);
+  };
+})();
+
+
+/* ══ SKELETON UI ══ */
+(function(){
+  var SK_IDS = {
+    'home':         'sk-home',
+    'wallet':       'sk-wallet',
+    'wallet-empty': 'sk-wallet',
+    'wallet-pci':   'sk-wallet-pci',
+    'wallet-other': 'sk-wallet-other',
+    'asset':        'sk-asset',
+    'pci-info':     'sk-pci-info',
+    'token-detail': 'sk-token-detail',
+    'benefits':     'sk-benefits',
+    'prediction':   'sk-prediction',
+    'news':         'sk-news',
+    'news-detail':  'sk-news-detail',
+    'payment':      'sk-payment',
+  };
+
+  // 최초 진입 여부 추적
+  var SK_VISITED = {};
+
+  function getSk(key) {
+    var id = SK_IDS[key];
+    return id ? document.getElementById(id) : null;
+  }
+
+  function showSk(key) {
+    var sk = getSk(key);
+    if (!sk) return;
+    sk.style.opacity = '1';
+    sk.style.transition = '';
+    sk.classList.add('show');
+  }
+
+  function hideSk(key) {
+    var sk = getSk(key);
+    if (!sk || !sk.classList.contains('show')) return;
+    sk.style.transition = 'opacity .2s ease';
+    sk.style.opacity = '0';
+    setTimeout(function() {
+      sk.classList.remove('show');
+      sk.style.opacity = '';
+      sk.style.transition = '';
+    }, 200);
+  }
+
+  // nav() 래핑 - 최초 진입 시에만 0.6초 스켈레톤
+  var _nav = window.nav || nav;
+  window.nav = function(key) {
+    if (!SK_VISITED[key]) {
+      SK_VISITED[key] = true;
+      showSk(key);
+      setTimeout(function() { hideSk(key); }, 600);
+    }
+    _nav(key);
+  };
+
+  // API 로딩 시 스켈레톤: DESC가 처음 로드될 때만 표시
+  // DESC.loaded가 false인 상태에서 loadDesc 시작 시에만
+  window.SK = {
+    showForApi: function(key) {
+      // DESC가 아직 한 번도 로드 안 된 경우만 표시
+      if (typeof DESC !== 'undefined' && DESC.loaded) return;
+      if (key) showSk(key);
+    },
+    hideForApi: function(key) {
+      if (key) hideSk(key);
+    },
+    hideAll: function() {
+      Object.keys(SK_IDS).forEach(function(key) { hideSk(key); });
+    }
   };
 })();
 
