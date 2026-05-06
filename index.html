@@ -724,6 +724,7 @@ body {
     <button class="nav-btn active" onclick="nav('home')">🏠 메인 홈</button>
     <button class="nav-btn" onclick="nav('wallet')">👛 지갑 (연결됨)</button>
     <button class="nav-btn" onclick="nav('wallet-empty')">👛 지갑 (미연결)</button>
+    <button class="nav-btn" onclick="nav('wallet-manage')">⚙️ 지갑 관리</button>
     <button class="nav-btn" onclick="nav('wallet-pci')">📋 지갑상세 (PCI)</button>
     <button class="nav-btn" onclick="nav('wallet-other')">📋 지갑상세 (기타)</button>
     <button class="nav-btn" onclick="nav('asset')">📊 자산현황</button>
@@ -1532,12 +1533,16 @@ body {
         <button onclick="" style="font-size:11px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:6px 11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;margin-top:2px">거래내역 보기</button>
       </div>
     </div>
-    <div class="tab-filter" data-zone="wallet-tabs">
-      <div class="chip active" id="wchip-all"     onclick="walletTab('all')">전체</div>
-      <div class="chip"        id="wchip-self"    onclick="walletTab('self')">내 지갑</div>
-      <div class="chip"        id="wchip-bithumb" onclick="walletTab('bithumb')">빗썸</div>
-      <div class="chip"        id="wchip-coinone" onclick="walletTab('coinone')">코인원</div>
-      <div class="chip"        id="wchip-korbit"  onclick="walletTab('korbit')">코빗</div>
+    <div style="display:flex;align-items:center;padding-right:10px" data-zone="wallet-tabs">
+      <div class="tab-filter" style="flex:1;padding-right:0">
+        <div class="chip active" id="wchip-all"     onclick="walletTab('all')">전체</div>
+        <div class="chip"        id="wchip-self"    onclick="walletTab('self')">내 지갑</div>
+        <div class="chip"        id="wchip-bithumb" onclick="walletTab('bithumb')">빗썸</div>
+        <div class="chip"        id="wchip-coinone" onclick="walletTab('coinone')">코인원</div>
+        <div class="chip"        id="wchip-korbit"  onclick="walletTab('korbit')">코빗</div>
+      </div>
+      <button onclick="nav('wallet-manage')" title="지갑 관리"
+        style="flex-shrink:0;width:30px;height:30px;border-radius:8px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;box-shadow:var(--shadow-sm);transition:background .12s;">⚙️</button>
     </div>
     <div style="margin:6px 14px 4px" id="wt-banner" data-zone="wallet-pred-banner">
       <div style="height:48px;background:linear-gradient(120deg,#1C3A6E,#1A56DB);border-radius:10px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;cursor:pointer" onclick="nav('prediction')">
@@ -1565,18 +1570,21 @@ body {
       <div style="display:flex;justify-content:space-between;align-items:flex-start">
         <div>
           <div style="font-size:11px;color:var(--text4);margin-bottom:2px">총 보유 자산</div>
-          <div style="font-size:22px;font-weight:800;data-zone="wallet-summary" id="we-ticker" style="margin:2px 0;color:var(--text)">8,245,000원</div>
-          
+          <div data-zone="wallet-summary" id="we-ticker" style="font-size:22px;font-weight:800;margin:2px 0;color:var(--text)">8,245,000원</div>
         </div>
         <button style="font-size:11px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:6px 11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;margin-top:2px">거래내역 보기</button>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:6px;padding:8px 14px;overflow-x:auto;scrollbar-width:none">
-      <div class="chip active">전체</div>
-      <div class="chip">내 지갑</div>
-      <div onclick="showModal('walletconnect-modal')" style="display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;background:var(--primary-l);border:1.5px dashed var(--primary);color:var(--primary);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">
-        <span style="font-size:14px;font-weight:700;line-height:1">+</span> 거래소 연결
+    <div style="display:flex;align-items:center;padding-right:10px">
+      <div style="flex:1;display:flex;align-items:center;gap:6px;padding:8px 14px;overflow-x:auto;scrollbar-width:none">
+        <div class="chip active">전체</div>
+        <div class="chip">내 지갑</div>
+        <div onclick="showModal('walletconnect-modal')" style="display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;background:var(--primary-l);border:1.5px dashed var(--primary);color:var(--primary);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">
+          <span style="font-size:14px;font-weight:700;line-height:1">+</span> 거래소 연결
+        </div>
       </div>
+      <button onclick="nav('wallet-manage')" title="지갑 관리"
+        style="flex-shrink:0;width:30px;height:30px;border-radius:8px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;box-shadow:var(--shadow-sm);transition:background .12s;">⚙️</button>
     </div>
     <div style="margin:6px 14px 4px">
       <div style="height:48px;background:linear-gradient(120deg,#1C3A6E,#1A56DB);border-radius:10px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;cursor:pointer" onclick="nav('prediction')">
@@ -2343,6 +2351,135 @@ body {
   </div>
 </div>
 
+<!-- ═══════════════ WALLET MANAGE ═══════════════ -->
+<div class="screen" id="sc-wallet-manage">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="back-header">
+    <span class="back-btn" onclick="nav('wallet')">‹ 지갑</span>
+    <div style="font-size:15px;font-weight:700;color:var(--text);position:absolute;left:50%;transform:translateX(-50%)">지갑 관리</div>
+  </div>
+  <div class="sbody">
+
+    <!-- 인증 만료 안내 배너 -->
+    <div style="margin:0 14px 12px;padding:11px 13px;background:var(--primary-l);border:1px solid #BFDBFE;border-radius:10px;display:flex;align-items:center;gap:10px;cursor:pointer">
+      <div style="background:var(--primary);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:5px;flex-shrink:0">안내</div>
+      <div style="font-size:12px;color:var(--primary);font-weight:600;flex:1">지갑 인증 정보 만료(예정) 거래소 보기</div>
+      <div style="font-size:14px;color:var(--primary)">›</div>
+    </div>
+
+    <!-- 순서 변경 버튼 -->
+    <div style="display:flex;justify-content:flex-end;padding:0 14px 8px">
+      <button style="font-size:12px;font-weight:600;color:var(--text2);background:var(--card);border:1px solid var(--border);border-radius:8px;padding:5px 13px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">순서 변경</button>
+    </div>
+
+    <!-- 빗썸 카드 -->
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:10px">
+      <!-- 거래소 헤더 -->
+      <div style="display:flex;align-items:center;gap:10px;padding:13px 14px 10px">
+        <div style="width:36px;height:36px;border-radius:50%;background:#FFF3E0;border:1px solid #FFE0B2;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <span style="font-size:16px;font-weight:900;color:#E65100">빗</span>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);flex:1">빗썸</div>
+      </div>
+      <!-- 코인 목록 -->
+      <div style="border-top:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border)">
+          <div style="width:28px;height:28px;border-radius:50%;background:#EEF2FF;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">🪙</div>
+          <div style="flex:1">
+            <span style="font-size:13px;font-weight:600;color:var(--text)">페이코인</span>
+            <span style="font-size:11px;color:var(--text4);margin-left:4px">PCI</span>
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'JetBrains Mono',monospace">0.00000000</div>
+        </div>
+      </div>
+      <!-- 접어두기 -->
+      <div style="padding:11px 14px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--text3)">
+        ∧ 접어두기
+      </div>
+    </div>
+
+    <!-- 코인원 카드 -->
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:10px;padding:13px 14px 10px">
+        <div style="width:36px;height:36px;border-radius:50%;background:#E3F2FD;border:1px solid #BBDEFB;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <span style="font-size:16px;font-weight:900;color:#0D47A1">C</span>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);flex:1">코인원</div>
+        <button style="font-size:11px;font-weight:600;color:var(--text2);background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:4px 11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap">+ 지갑 추가</button>
+      </div>
+      <div style="border-top:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border)">
+          <div style="width:28px;height:28px;border-radius:50%;background:#EEF2FF;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">🪙</div>
+          <div style="flex:1">
+            <span style="font-size:13px;font-weight:600;color:var(--text)">페이코인</span>
+            <span style="font-size:11px;color:var(--text4);margin-left:4px">PCI</span>
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'JetBrains Mono',monospace">0.77000001</div>
+        </div>
+      </div>
+      <div style="padding:11px 14px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--text3)">
+        ∧ 접어두기
+      </div>
+    </div>
+
+    <!-- 코빗 카드 -->
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:10px;padding:13px 14px 10px">
+        <div style="width:36px;height:36px;border-radius:50%;background:#F3E8FF;border:1px solid #E9D5FF;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <span style="font-size:16px;font-weight:900;color:#6B21A8">k</span>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);flex:1">코빗</div>
+        <button style="font-size:11px;font-weight:600;color:var(--text2);background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:4px 11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap">+ 지갑 추가</button>
+      </div>
+      <div style="border-top:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border)">
+          <div style="width:28px;height:28px;border-radius:50%;background:#EEF2FF;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">Ξ</div>
+          <div style="flex:1">
+            <span style="font-size:13px;font-weight:600;color:var(--text)">이더리움</span>
+            <span style="font-size:11px;color:var(--text4);margin-left:4px">ETH</span>
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'JetBrains Mono',monospace">0</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border)">
+          <div style="width:28px;height:28px;border-radius:50%;background:#EEF2FF;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">🪙</div>
+          <div style="flex:1">
+            <span style="font-size:13px;font-weight:600;color:var(--text)">페이코인</span>
+            <span style="font-size:11px;color:var(--text4);margin-left:4px">PCI</span>
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'JetBrains Mono',monospace">1.96356908</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border)">
+          <div style="width:28px;height:28px;border-radius:50%;background:#F3E8FF;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#7C3AED;flex-shrink:0">◈</div>
+          <div style="flex:1">
+            <span style="font-size:13px;font-weight:600;color:var(--text)">폴리곤 에코시스템 토큰</span>
+            <span style="font-size:11px;color:var(--text4);margin-left:4px">POL</span>
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'JetBrains Mono',monospace">0</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border)">
+          <div style="width:28px;height:28px;border-radius:50%;background:#E8F5E9;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#1B5E20;flex-shrink:0">◎</div>
+          <div style="flex:1">
+            <span style="font-size:13px;font-weight:600;color:var(--text)">솔라나</span>
+            <span style="font-size:11px;color:var(--text4);margin-left:4px">SOL</span>
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'JetBrains Mono',monospace">0</div>
+        </div>
+      </div>
+      <div style="padding:11px 14px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--text3)">
+        ∧ 접어두기
+      </div>
+    </div>
+
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
+    <div class="tab-item active" onclick="nav('wallet')"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
+    <div class="tab-item" onclick="nav('payment')"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
+    <div class="tab-item" onclick="nav('benefits')"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
+    <div class="tab-item" onclick=""><div class="tab-icon">🛍️</div><div class="tab-lbl">쇼핑</div></div>
+  </div>
+</div>
+
     </div><!-- /phone-screen -->
   </div><!-- /phone-frame -->
 </div><!-- /phone-panel -->
@@ -2479,6 +2616,17 @@ body {
     <div class="policy-screen-id">SCREEN_PAYMENT_MAIN <span class="ptag p1">P1</span></div>
     <div class="policy-title">결제</div>
     <div class="policy-desc">QR코드 결제와 오프라인 바코드 결제 통합 진입점.</div>
+  </div>
+</div>
+
+
+
+<!-- ── WALLET MANAGE ── -->
+<div class="policy-section" id="pol-wallet-manage" data-screen="wallet-manage">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_WALLET_MANAGE <span class="ptag p1">P1</span></div>
+    <div class="policy-title">지갑 관리</div>
+    <div class="policy-desc">연결된 거래소 지갑 목록 조회 및 관리. 거래소별 보유 코인, 인증 갱신, 노출 순서 변경 기능 제공.</div>
   </div>
 </div>
 
@@ -2646,6 +2794,7 @@ const SCREEN_MAP = {
   'news':         { sc:'sc-news',         pol:'pol-news',         ni:9 },
   'news-detail':  { sc:'sc-news-detail',  pol:'pol-news-detail',  ni:10 },
   'payment':      { sc:'sc-payment',      pol:'pol-payment',      ni:11 },
+  'wallet-manage':{ sc:'sc-wallet-manage', pol:'pol-wallet-manage', ni:12 },
 };
 
 function nav(key) {
@@ -3014,7 +3163,7 @@ const QNA = {
   apiUrl: '',
   filter: 'all',
   items: [],
-  LABELS: {'home':'메인 홈','wallet':'지갑','wallet-empty':'지갑(미연결)','wallet-pci':'지갑상세(PCI)','wallet-other':'지갑상세(기타)','asset':'자산현황','pci-info':'PCI 정보','token-detail':'토큰 상세','benefits':'혜택','prediction':'등락 예측','news':'최근 소식','news-detail':'소식 상세','payment':'결제'},
+  LABELS: {'home':'메인 홈','wallet':'지갑','wallet-empty':'지갑(미연결)','wallet-pci':'지갑상세(PCI)','wallet-other':'지갑상세(기타)','asset':'자산현황','pci-info':'PCI 정보','token-detail':'토큰 상세','benefits':'혜택','prediction':'등락 예측','news':'최근 소식','news-detail':'소식 상세','payment':'결제','wallet-manage':'지갑 관리'},
   curScreen: function(){ var s=document.querySelector('.screen.active'); return s?s.id.replace('sc-',''):'home'; },
   curLabel: function(){ return this.LABELS[this.curScreen()]||this.curScreen(); },
   init: function(){ try{ this.apiUrl=localStorage.getItem('qna_api')||''; }catch(e){} }
@@ -3531,6 +3680,7 @@ function fmtQty(qty, sym) {
     'news':         'sk-news',
     'news-detail':  'sk-news-detail',
     'payment':      'sk-payment',
+    'wallet-manage':  'sk-wallet',
   };
 
   // 최초 진입 여부 추적
