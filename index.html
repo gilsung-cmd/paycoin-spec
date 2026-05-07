@@ -735,6 +735,7 @@ body {
     <button class="nav-btn" onclick="nav('news')">📰 최근 소식</button>
     <button class="nav-btn" onclick="nav('news-detail')">📄 소식 상세</button>
     <button class="nav-btn" onclick="nav('payment')">💳 결제</button>
+    <button class="nav-btn" onclick="nav('payment-wc')">🔗 결제 (WC 미연결)</button>
   </div>
   </div><!-- /nav-screens -->
   <div class="nav-screens-arrow">›</div>
@@ -1241,6 +1242,37 @@ body {
       <div class="sk sm" style="width:55%"></div>
     </div>
 
+  </div>
+  <div style="flex-shrink:0;height:68px;border-top:1px solid var(--border);
+              display:flex;align-items:center;justify-content:space-around;padding:0 8px">
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+    <div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+  </div>
+</div>
+
+<!-- ══ SKELETON: 결제(WC 미연결) ══ -->
+<div class="sk-screen" id="sk-payment-wc">
+  <div class="sk-sbar">
+    <div class="sk" style="width:40px;height:12px"></div>
+    <div class="sk" style="width:40px;height:12px"></div>
+  </div>
+  <div style="flex-shrink:0;padding:4px 14px 10px;display:flex;align-items:center;gap:10px">
+    <div class="sk" style="width:28px;height:28px;border-radius:8px"></div>
+    <div class="sk" style="width:80px;height:16px"></div>
+  </div>
+  <div style="flex:1;overflow:hidden;padding:0 14px">
+    <div class="sk" style="height:140px;border-radius:16px;margin-bottom:14px"></div>
+    <div class="sk" style="height:14px;width:60%;margin-bottom:10px"></div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+      <div class="sk" style="height:56px;border-radius:12px"></div>
+      <div class="sk" style="height:56px;border-radius:12px"></div>
+      <div class="sk" style="height:56px;border-radius:12px"></div>
+    </div>
+    <div class="sk" style="height:44px;border-radius:10px;margin-bottom:8px"></div>
+    <div class="sk" style="height:44px;border-radius:10px"></div>
   </div>
   <div style="flex-shrink:0;height:68px;border-top:1px solid var(--border);
               display:flex;align-items:center;justify-content:space-around;padding:0 8px">
@@ -2265,14 +2297,23 @@ body {
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
   <div class="aheader" data-zone="pay-summary"><div class="htitle">결제</div><div class="hicons"><div class="icon-btn">🔔</div><div class="icon-btn">☰</div></div></div>
   <div class="sbody">
-    <!-- Monthly Summary -->
-    <div style="margin:0 14px 12px;background:linear-gradient(135deg,var(--primary),var(--primary-d));border-radius:20px;padding:18px 20px;box-shadow:0 8px 24px rgba(26,86,219,.25)">
-      <div style="font-size:11px;color:rgba(255,255,255,.7);margin-bottom:2px">이번달 누적 결제 금액</div>
-      <div style="font-size:26px;font-weight:800;color:#fff;letter-spacing:-0.5px;margin-bottom:4px">32,400원</div>
-      <div style="font-size:13px;color:#86EFAC;font-weight:600">💰 이번달 4,800원 혜택을 받았어요!</div>
+
+    <!-- ① 바로결제 섹션 -->
+    <div style="margin:0 14px 10px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-d) 100%);border-radius:20px;padding:18px 20px;box-shadow:0 8px 24px rgba(26,86,219,.25)">
+      <div style="font-size:11px;color:rgba(255,255,255,.7);margin-bottom:3px;font-weight:500">바로결제 가능 잔액</div>
+      <div style="font-size:28px;font-weight:800;color:#fff;letter-spacing:-0.8px;margin-bottom:14px">8,245원</div>
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <button style="flex:1;padding:11px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:10px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">충전하기</button>
+        <button style="flex:1;padding:11px;background:#fff;border:none;border-radius:10px;color:var(--primary);font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">⚡ 바로결제</button>
+      </div>
+      <div style="height:1px;background:rgba(255,255,255,.15);margin-bottom:12px"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:11px;color:rgba(255,255,255,.7)">이번달 누적 결제 <span style="color:#fff;font-weight:700;margin-left:4px">32,400원</span></div>
+        <div style="font-size:11px;color:#86EFAC;font-weight:600">💰 혜택 4,800원</div>
+      </div>
     </div>
 
-    <!-- Payment Buttons (side by side) -->
+    <!-- ② QR / 바코드 결제 버튼 -->
     <div class="pay-btns">
       <div class="pay-btn" onclick="alert('QR 카메라 활성화')">
         <div class="pay-icon">📷</div>
@@ -2286,13 +2327,13 @@ body {
       </div>
     </div>
 
-    <!-- Event Banner -->
+    <!-- ③ 이벤트 배너 -->
     <div style="margin:2px 14px 12px;height:56px;background:linear-gradient(120deg,#2d1b4e,#7C3AED);border-radius:12px;display:flex;align-items:center;justify-content:space-between;padding:0 14px">
       <div><div style="font-size:9px;color:rgba(255,255,255,.7)">🛍️ 결제 프로모션</div><div style="font-size:12px;font-weight:700;color:#fff">5월 PCI 결제 시 5% 추가 적립!</div></div>
       <div style="font-size:11px;font-weight:700;color:#C4B5FD;background:rgba(255,255,255,.15);padding:5px 10px;border-radius:7px">보기</div>
     </div>
 
-    <!-- Merchant Slides (infinite auto-loop) -->
+    <!-- ④ 가맹점 혜택 -->
     <div class="stitle">가맹점 혜택</div>
     <div style="overflow:hidden;margin-bottom:12px;position:relative">
       <div id="merchant-track" style="display:flex;gap:10px;padding:4px 14px;will-change:transform">
@@ -2316,7 +2357,7 @@ body {
       </div>
     </div>
 
-    <!-- Recent Payments -->
+    <!-- ⑤ 최근 결제 내역 -->
     <div class="stitle">최근 결제 내역 <span class="see-all" onclick="alert('거래내역 페이지로 이동')">전체 보기</span></div>
     <div style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
       <div style="display:flex;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--border)">
@@ -2341,6 +2382,7 @@ body {
       </div>
     </div>
     <div style="height:14px"></div>
+
   </div>
   <div class="tab-bar">
     <div class="tab-item" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
@@ -2348,6 +2390,93 @@ body {
     <div class="tab-item active"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
     <div class="tab-item" onclick="nav('benefits')"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
     <div class="tab-item" onclick=""><div class="tab-icon">🛍️</div><div class="tab-lbl">쇼핑</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════ PAYMENT — WalletConnect 미연결 ═══════════════ -->
+<div class="screen" id="sc-payment-wc">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="aheader"><div class="htitle">결제</div><div class="hicons"><div class="icon-btn">🔔</div><div class="icon-btn">☰</div></div></div>
+  <div class="sbody" style="background:#fff">
+
+    <!-- 중앙 안내 영역 -->
+    <div data-zone="paywc-hero" style="display:flex;flex-direction:column;align-items:center;padding:40px 24px 32px;text-align:center">
+      <div style="width:64px;height:64px;border-radius:20px;background:var(--primary-l);border:1px solid #BFDBFE;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:20px">🔗</div>
+      <div style="font-size:17px;font-weight:800;color:var(--text);margin-bottom:8px;letter-spacing:-.3px">코빗 지갑을 연결해 주세요</div>
+      <div style="font-size:13px;color:var(--text3);line-height:1.7">결제 시 연결된 지갑의 자산이 사용됩니다.<br>아래 중 결제에 사용할 지갑을<br>먼저 연결해 주세요.</div>
+    </div>
+
+    <!-- 연결 가능 코인 -->
+    <div data-zone="paywc-coin-list" style="margin:0 20px 24px;background:var(--card2);border-radius:14px;padding:16px 18px">
+      <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:4px">연결 가능한 코빗 지갑</div>
+      <div style="font-size:11px;color:var(--text4);line-height:1.6;margin-bottom:14px">연결한 지갑의 자산으로 결제할 수 있어요.</div>
+      <div style="display:flex;justify-content:space-around">
+        <div data-zone="paywc-pci-row" style="display:flex;flex-direction:column;align-items:center;gap:6px">
+          <div style="width:40px;height:40px;border-radius:50%;background:#EEF2FF;border:1px solid #C7D2FE;display:flex;align-items:center;justify-content:center;font-size:18px">🪙</div>
+          <div style="font-size:11px;font-weight:700;color:var(--text)">페이코인</div>
+        </div>
+        <div data-zone="paywc-btc-row" style="display:flex;flex-direction:column;align-items:center;gap:6px">
+          <div style="width:40px;height:40px;border-radius:50%;background:#FEF3C7;border:1px solid #FDE68A;display:flex;align-items:center;justify-content:center;font-size:18px">₿</div>
+          <div style="font-size:11px;font-weight:700;color:var(--text)">비트코인</div>
+        </div>
+        <div data-zone="paywc-eth-row" style="display:flex;flex-direction:column;align-items:center;gap:6px">
+          <div style="width:40px;height:40px;border-radius:50%;background:#EEF2FF;border:1px solid #C7D2FE;display:flex;align-items:center;justify-content:center;font-size:18px">Ξ</div>
+          <div style="font-size:11px;font-weight:700;color:var(--text)">이더리움</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div data-zone="paywc-cta" style="margin:0 20px 10px">
+      <button class="btn btn-primary" style="font-size:14px" onclick="showModal('paywc-connect-modal')">코빗 지갑 연결하기</button>
+    </div>
+
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
+    <div class="tab-item" onclick="nav('wallet')"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
+    <div class="tab-item active"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
+    <div class="tab-item" onclick="nav('benefits')"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
+    <div class="tab-item" onclick=""><div class="tab-icon">🛍️</div><div class="tab-lbl">쇼핑</div></div>
+  </div>
+
+  <!-- 연결 모달 -->
+  <div class="overlay" id="paywc-connect-modal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div style="text-align:center;margin-bottom:18px">
+        <div style="width:52px;height:52px;border-radius:16px;background:#F3E8FF;border:1.5px solid #E9D5FF;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 10px">k</div>
+        <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:4px">코빗 지갑 연결</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.65">코빗 앱의 WalletConnect QR을<br>스캔하여 지갑을 연결합니다.</div>
+      </div>
+      <div style="margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:8px;letter-spacing:.5px">연결할 코인 선택 (복수 선택 가능)</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card2);border:1.5px solid var(--primary);border-radius:10px;cursor:pointer">
+            <input type="checkbox" checked style="width:16px;height:16px;accent-color:var(--primary)">
+            <span style="font-size:22px">🪙</span>
+            <div><div style="font-size:13px;font-weight:600;color:var(--text)">페이코인 PCI</div><div style="font-size:10px;color:var(--text4)">권장 · 결제 전용</div></div>
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card2);border:1px solid var(--border);border-radius:10px;cursor:pointer">
+            <input type="checkbox" style="width:16px;height:16px;accent-color:var(--primary)">
+            <span style="font-size:22px">₿</span>
+            <div><div style="font-size:13px;font-weight:600;color:var(--text)">비트코인 BTC</div><div style="font-size:10px;color:var(--text4)">선택 가맹점 이용 가능</div></div>
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card2);border:1px solid var(--border);border-radius:10px;cursor:pointer">
+            <input type="checkbox" style="width:16px;height:16px;accent-color:var(--primary)">
+            <span style="font-size:22px">Ξ</span>
+            <div><div style="font-size:13px;font-weight:600;color:var(--text)">이더리움 ETH</div><div style="font-size:10px;color:var(--text4)">선택 가맹점 이용 가능</div></div>
+          </label>
+        </div>
+      </div>
+      <div style="background:var(--card2);border:1px dashed var(--border2);border-radius:12px;padding:20px;text-align:center;margin-bottom:16px">
+        <div style="font-size:42px;margin-bottom:8px">📷</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px">QR 코드 스캔</div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.6">코빗 앱 → WalletConnect → QR 생성 후<br>페이코인 앱 카메라로 스캔하세요.</div>
+        <button style="margin-top:12px;padding:9px 20px;background:var(--primary);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif" onclick="closeModal('paywc-connect-modal');alert('QR 카메라 실행')">📷 QR 스캔 시작</button>
+      </div>
+      <button class="btn btn-ghost" onclick="closeModal('paywc-connect-modal')">취소</button>
+    </div>
   </div>
 </div>
 
@@ -2621,6 +2750,15 @@ body {
 
 
 
+<!-- ── PAYMENT WC MISSING ── -->
+<div class="policy-section" id="pol-payment-wc" data-screen="payment-wc">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_PAYMENT_WC_MISSING <span class="ptag p1">P1</span></div>
+    <div class="policy-title">결제 — WalletConnect 미연결</div>
+    <div class="policy-desc">코빗 거래소 WalletConnect 연결이 없는 사용자 대상 결제 진입 선행 화면. PCI·BTC·ETH 중 하나 이상 연결 완료 시 결제 화면으로 이동.</div>
+  </div>
+</div>
+
 <!-- ── WALLET MANAGE ── -->
 <div class="policy-section" id="pol-wallet-manage" data-screen="wallet-manage">
   <div class="policy-header">
@@ -2686,24 +2824,42 @@ body {
 <div class="guide-overlay" id="guide-overlay" onclick="if(event.target===this)closeGuide()">
   <div class="guide-modal">
     <div class="guide-modal-hd">
-      <div class="guide-modal-title">📋 Google Sheets 작성 가이드</div>
+      <div class="guide-modal-title">📋 설정 가이드</div>
       <button onclick="closeGuide()" style="width:28px;height:28px;border-radius:8px;background:var(--card2);border:1px solid var(--border);font-size:14px;cursor:pointer;">✕</button>
     </div>
+    <!-- 탭 메뉴 -->
+    <div style="display:flex;border-bottom:1px solid var(--border);background:var(--card);flex-shrink:0">
+      <button id="gtab-sheets" onclick="switchGuideTab('sheets')"
+        style="flex:1;padding:10px 6px;font-size:12px;font-weight:700;border:none;background:none;cursor:pointer;color:var(--primary);border-bottom:2px solid var(--primary);font-family:'Noto Sans KR',sans-serif">
+        📊 Sheets 가이드
+      </button>
+      <button id="gtab-script" onclick="switchGuideTab('script')"
+        style="flex:1;padding:10px 6px;font-size:12px;font-weight:700;border:none;background:none;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;font-family:'Noto Sans KR',sans-serif">
+        ⚙️ Apps Script
+      </button>
+      <button id="gtab-config" onclick="switchGuideTab('config')"
+        style="flex:1;padding:10px 6px;font-size:12px;font-weight:700;border:none;background:none;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;font-family:'Noto Sans KR',sans-serif">
+        🔧 config.json
+      </button>
+    </div>
     <div class="guide-modal-body">
-      <div class="guide-section">
-        <div class="guide-section-title">📌 작성 규칙</div>
-        <table class="guide-table">
-          <tr><th>컬럼</th><th>설명</th><th>예시</th></tr>
-          <tr><td><strong>A: screen_key</strong></td><td>화면 식별자 (드롭다운 선택)</td><td><span class="key">home</span></td></tr>
-          <tr><td><strong>B: 그룹명</strong></td><td>같은 이름끼리 자동으로 묶임</td><td>롤링 배너</td></tr>
-          <tr><td><strong>C: 내용</strong></td><td>⚠️로 시작→경고박스, 중요도 코드→코드박스</td><td>자동 3초 롤링</td></tr>
-          <tr><td><strong>D: 중요도</strong></td><td>드롭다운 선택</td><td>필수/일반/경고/참고/코드</td></tr>
-          <tr><td><strong>E: zone_id</strong></td><td>클릭 시 UI 하이라이트. 비워도 됨</td><td><span class="key">home-banner</span></td></tr>
-        </table>
-      </div>
-      <div class="guide-section">
-        <div class="guide-section-title">🖥️ screen_key 목록</div>
-        <table class="guide-table"><tr><th style="width:180px">screen_key</th><th>화면 이름</th></tr>
+
+      <!-- 탭1: Sheets 가이드 -->
+      <div id="gtab-content-sheets">
+        <div class="guide-section">
+          <div class="guide-section-title">📌 작성 규칙</div>
+          <table class="guide-table">
+            <tr><th>컬럼</th><th>설명</th><th>예시</th></tr>
+            <tr><td><strong>A: screen_key</strong></td><td>화면 식별자 (드롭다운 선택)</td><td><span class="key">home</span></td></tr>
+            <tr><td><strong>B: 그룹명</strong></td><td>같은 이름끼리 자동으로 묶임</td><td>롤링 배너</td></tr>
+            <tr><td><strong>C: 내용</strong></td><td>⚠️로 시작→경고박스, 중요도 코드→코드박스</td><td>자동 3초 롤링</td></tr>
+            <tr><td><strong>D: 중요도</strong></td><td>드롭다운 선택</td><td>필수/일반/경고/참고/코드</td></tr>
+            <tr><td><strong>E: zone_id</strong></td><td>클릭 시 UI 하이라이트. 비워도 됨</td><td><span class="key">home-banner</span></td></tr>
+          </table>
+        </div>
+        <div class="guide-section">
+          <div class="guide-section-title">🖥️ screen_key 목록</div>
+          <table class="guide-table"><tr><th style="width:180px">screen_key</th><th>화면 이름</th></tr>
 <tr><td><span class="key">home</span><button class="guide-copy-btn" onclick="copyText('home')">복사</button></td><td>메인 홈</td></tr>
 <tr><td><span class="key">wallet</span><button class="guide-copy-btn" onclick="copyText('wallet')">복사</button></td><td>지갑</td></tr>
 <tr><td><span class="key">wallet-empty</span><button class="guide-copy-btn" onclick="copyText('wallet-empty')">복사</button></td><td>지갑(미연결)</td></tr>
@@ -2717,12 +2873,13 @@ body {
 <tr><td><span class="key">news</span><button class="guide-copy-btn" onclick="copyText('news')">복사</button></td><td>최근 소식</td></tr>
 <tr><td><span class="key">news-detail</span><button class="guide-copy-btn" onclick="copyText('news-detail')">복사</button></td><td>소식 상세</td></tr>
 <tr><td><span class="key">payment</span><button class="guide-copy-btn" onclick="copyText('payment')">복사</button></td><td>결제</td></tr>
+<tr><td><span class="key">payment-wc</span><button class="guide-copy-btn" onclick="copyText('payment-wc')">복사</button></td><td>결제(WC 미연결)</td></tr>
 <tr><td><span class="key">wallet-manage</span><button class="guide-copy-btn" onclick="copyText('wallet-manage')">복사</button></td><td>지갑 관리</td></tr>
-        </table>
-      </div>
-      <div class="guide-section">
-        <div class="guide-section-title">🎯 zone_id 목록</div>
-        <table class="guide-table"><tr><th style="width:200px">zone_id</th><th>UI 영역</th></tr>
+          </table>
+        </div>
+        <div class="guide-section">
+          <div class="guide-section-title">🎯 zone_id 목록</div>
+          <table class="guide-table"><tr><th style="width:200px">zone_id</th><th>UI 영역</th></tr>
 <tr><td><span class="key">home-header</span><button class="guide-copy-btn" onclick="copyText('home-header')">복사</button></td><td>홈 — 상단 헤더</td></tr>
 <tr><td><span class="key">home-asset</span><button class="guide-copy-btn" onclick="copyText('home-asset')">복사</button></td><td>홈 — 자산 합계</td></tr>
 <tr><td><span class="key">home-banner</span><button class="guide-copy-btn" onclick="copyText('home-banner')">복사</button></td><td>홈 — 롤링 배너</td></tr>
@@ -2772,8 +2929,95 @@ body {
 <tr><td><span class="key">pay-event-banner</span><button class="guide-copy-btn" onclick="copyText('pay-event-banner')">복사</button></td><td>결제 — 배너</td></tr>
 <tr><td><span class="key">pay-merchants</span><button class="guide-copy-btn" onclick="copyText('pay-merchants')">복사</button></td><td>결제 — 가맹점</td></tr>
 <tr><td><span class="key">pay-recent</span><button class="guide-copy-btn" onclick="copyText('pay-recent')">복사</button></td><td>결제 — 최근결제</td></tr>
-        </table>
+<tr><td><span class="key">paywc-hero</span><button class="guide-copy-btn" onclick="copyText('paywc-hero')">복사</button></td><td>결제WC — 안내 히어로</td></tr>
+<tr><td><span class="key">paywc-coin-list</span><button class="guide-copy-btn" onclick="copyText('paywc-coin-list')">복사</button></td><td>결제WC — 연결 가능 코인</td></tr>
+<tr><td><span class="key">paywc-pci-row</span><button class="guide-copy-btn" onclick="copyText('paywc-pci-row')">복사</button></td><td>결제WC — PCI 항목</td></tr>
+<tr><td><span class="key">paywc-btc-row</span><button class="guide-copy-btn" onclick="copyText('paywc-btc-row')">복사</button></td><td>결제WC — BTC 항목</td></tr>
+<tr><td><span class="key">paywc-eth-row</span><button class="guide-copy-btn" onclick="copyText('paywc-eth-row')">복사</button></td><td>결제WC — ETH 항목</td></tr>
+<tr><td><span class="key">paywc-guide</span><button class="guide-copy-btn" onclick="copyText('paywc-guide')">복사</button></td><td>결제WC — 연결 방법 안내</td></tr>
+<tr><td><span class="key">paywc-notice</span><button class="guide-copy-btn" onclick="copyText('paywc-notice')">복사</button></td><td>결제WC — 주의사항</td></tr>
+<tr><td><span class="key">paywc-cta</span><button class="guide-copy-btn" onclick="copyText('paywc-cta')">복사</button></td><td>결제WC — 연결 CTA 버튼</td></tr>
+          </table>
+        </div>
       </div>
+
+      <!-- 탭2: Apps Script -->
+      <div id="gtab-content-script" style="display:none">
+        <div class="guide-section">
+          <div class="guide-section-title">⚙️ Apps Script 코드</div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:12px;line-height:1.6">
+            아래 코드를 복사해서 Google Apps Script에 붙여넣으세요.<br>
+            이 코드는 현재 뷰어의 화면 구성을 자동으로 반영합니다.
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="font-size:11px;font-weight:700;color:var(--text)">📋 복사할 코드</div>
+            <button onclick="copyAppsScript()"
+              style="padding:6px 14px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif">
+              전체 복사 ⧉
+            </button>
+          </div>
+          <pre id="apps-script-preview"
+            style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:10px;font-family:'JetBrains Mono',monospace;overflow-x:auto;white-space:pre;line-height:1.6;max-height:420px;overflow-y:auto;color:var(--text2)">로딩 중...</pre>
+          <div id="copy-script-status" style="font-size:11px;color:var(--green);margin-top:6px;text-align:center;min-height:18px"></div>
+        </div>
+        <div class="guide-section">
+          <div class="guide-section-title">📌 적용 방법</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.8">
+            <div style="display:flex;gap:8px;margin-bottom:8px">
+              <div style="width:22px;height:22px;border-radius:50%;background:var(--primary);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+              <div>Google Sheets → <strong>확장 프로그램 → Apps Script</strong> 열기</div>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:8px">
+              <div style="width:22px;height:22px;border-radius:50%;background:var(--primary);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+              <div>기존 코드 전체 삭제 후 위 코드 <strong>붙여넣기</strong></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:8px">
+              <div style="width:22px;height:22px;border-radius:50%;background:var(--primary);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
+              <div><strong>배포 → 새 배포</strong> → 웹 앱 → 액세스: 모든 사용자 → 배포</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <div style="width:22px;height:22px;border-radius:50%;background:var(--primary);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">4</div>
+              <div>배포 URL을 복사해서 <strong>config.json</strong> 탭에 입력</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 탭3: config.json -->
+      <div id="gtab-content-config" style="display:none">
+        <div class="guide-section">
+          <div class="guide-section-title">🔧 config.json 설정</div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:12px;line-height:1.6">
+            HTML 파일과 같은 폴더에 <code style="background:var(--card2);padding:2px 6px;border-radius:4px">config.json</code> 파일을 만들고 아래 내용을 넣으세요.
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="font-size:11px;font-weight:700;color:var(--text)">📋 config.json 템플릿</div>
+            <button onclick="copyConfigJson()"
+              style="padding:6px 14px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif">
+              복사 ⧉
+            </button>
+          </div>
+          <pre style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:11px;font-family:'JetBrains Mono',monospace;white-space:pre;line-height:1.8;color:var(--text2)">{
+  "apiUrl":      "← Apps Script 배포 URL 붙여넣기",
+  "projectName": "← 프로젝트/앱 이름",
+  "primaryColor": "← 브랜드 컬러 HEX (예: #1A56DB)"
+}</pre>
+          <div id="copy-config-status" style="font-size:11px;color:var(--green);margin-top:6px;text-align:center;min-height:18px"></div>
+          <div style="margin-top:14px;background:var(--primary-l);border:1px solid #BFDBFE;border-radius:10px;padding:12px">
+            <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:6px">💡 각 항목 설명</div>
+            <div style="font-size:11px;color:var(--text2);line-height:1.8">
+              <div><strong>apiUrl</strong> — Apps Script 배포 후 받은 URL</div>
+              <div><strong>projectName</strong> — 뷰어 제목과 로고에 표시될 이름</div>
+              <div><strong>primaryColor</strong> — 버튼, 강조색 등에 사용할 브랜드 컬러</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:10px;padding:10px;font-size:11px;color:#92400E">
+            ⚠️ 로컬(파일로 직접 열기)에서는 config.json이 로드되지 않습니다.<br>
+            이 경우 QnA 사이드바 하단 ⚙️ 버튼에서 URL을 직접 입력하세요.
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -2795,6 +3039,7 @@ const SCREEN_MAP = {
   'news':         { sc:'sc-news',         pol:'pol-news',         ni:9 },
   'news-detail':  { sc:'sc-news-detail',  pol:'pol-news-detail',  ni:10 },
   'payment':      { sc:'sc-payment',      pol:'pol-payment',      ni:11 },
+  'payment-wc':   { sc:'sc-payment-wc',   pol:'pol-payment-wc',   ni:11 },
   'wallet-manage':{ sc:'sc-wallet-manage', pol:'pol-wallet-manage', ni:12 },
 };
 
@@ -3681,6 +3926,7 @@ function fmtQty(qty, sym) {
     'news':         'sk-news',
     'news-detail':  'sk-news-detail',
     'payment':      'sk-payment',
+    'payment-wc':   'sk-payment-wc',
     'wallet-manage':  'sk-wallet',
   };
 
@@ -3739,6 +3985,144 @@ function fmtQty(qty, sym) {
     }
   };
 })();
+
+
+/* ══ GUIDE MODAL TABS ══ */
+function switchGuideTab(tab) {
+  ['sheets','script','config'].forEach(function(t) {
+    var btn = document.getElementById('gtab-' + t);
+    var content = document.getElementById('gtab-content-' + t);
+    var isActive = t === tab;
+    if (btn) {
+      btn.style.color = isActive ? 'var(--primary)' : 'var(--text3)';
+      btn.style.borderBottom = isActive ? '2px solid var(--primary)' : '2px solid transparent';
+    }
+    if (content) content.style.display = isActive ? 'block' : 'none';
+  });
+  if (tab === 'script') generateAppsScriptCode();
+}
+
+/* ══ APPS SCRIPT 코드 자동 생성 ══ */
+function generateAppsScriptCode() {
+  var keys = Object.keys(SCREEN_MAP);
+  var screensArr = JSON.stringify(keys, null, 2).replace(/^\[/,'[\n  ').replace(/\]$/,'\n]');
+  var code = [
+    '/**','  * 와이어프레임 뷰어 — Apps Script','  * 자동 생성: ' + new Date().toLocaleDateString('ko-KR'),
+    '  * 배포: 새 배포 → 웹 앱 → 액세스: 모든 사용자',' */',
+    '','const SHEET_NAME_DESC = \'Description\';','const SHEET_NAME_QNA  = \'QnA\';',
+    'const ALLOWED_SCREENS = ' + screensArr + ';',
+    '','function doGet(e) {',
+    '  const action = (e.parameter.action || \'desc\').toLowerCase();',
+    '  if (action === \'desc\')       return handleDescList();',
+    '  if (action === \'qna_list\')   return handleQnaList();',
+    '  if (action === \'qna_add\')    return handleQnaAdd({',
+    '    screen: e.parameter.screen || \'unknown\',',
+    '    question: e.parameter.question || \'\',',
+    '    author: e.parameter.author || \'익명\',',
+    '  });',
+    '  if (action === \'qna_answer\') return handleQnaAnswer({',
+    '    id: e.parameter.id || \'\', answer: e.parameter.answer || \'\',',
+    '  });',
+    '  return jsonResponse({ success: false, error: \'Unknown action: \' + action });',
+    '}',
+    '','function handleDescList() {',
+    '  const sheet = getOrCreateDescSheet();',
+    '  const data  = sheet.getDataRange().getValues();',
+    '  if (data.length <= 1) return jsonResponse({ success: true, items: [] });',
+    '  const items = data.slice(1).filter(row => row[0] && String(row[0]).trim())',
+    '    .map((row, idx) => ({',
+    '      id: idx+1, screen_key: String(row[0]||\'\').trim(),',
+    '      group: String(row[1]||\'\').trim(), content: String(row[2]||\'\').trim(),',
+    '      importance: String(row[3]||\'\').trim(), zone_id: String(row[4]||\'\').trim(),',
+    '    }));',
+    '  return jsonResponse({ success: true, items });',
+    '}',
+    '','function handleQnaList() {',
+    '  const sheet = getOrCreateQnaSheet();',
+    '  const data  = sheet.getDataRange().getValues();',
+    '  if (data.length <= 1) return jsonResponse({ success: true, items: [] });',
+    '  const items = data.slice(1).filter(row => row[0]).map(row => ({',
+    '    id: row[0], screen: row[1], question: row[2], author: row[3],',
+    '    answer: row[4] || null, created_at: row[5] ? new Date(row[5]).toISOString() : null,',
+    '  }));',
+    '  return jsonResponse({ success: true, items });',
+    '}',
+    '','function handleQnaAdd(body) {',
+    '  const q = String(body.question || \'\').trim();',
+    '  if (!q) return jsonResponse({ success: false, error: \'질문 내용이 없습니다.\' });',
+    '  const sheet = getOrCreateQnaSheet();',
+    '  sheet.appendRow([Date.now(), body.screen, q, body.author||\'익명\', \'\', new Date()]);',
+    '  return jsonResponse({ success: true });',
+    '}',
+    '','function handleQnaAnswer(body) {',
+    '  const id = String(body.id||\'\').trim(), ans = String(body.answer||\'\').trim();',
+    '  if (!id||!ans) return jsonResponse({ success: false, error: \'필수 파라미터 누락\' });',
+    '  const sheet = getOrCreateQnaSheet();',
+    '  const data  = sheet.getDataRange().getValues();',
+    '  const rowIdx = data.findIndex(row => String(row[0]) === id);',
+    '  if (rowIdx < 1) return jsonResponse({ success: false, error: \'질문을 찾을 수 없습니다.\' });',
+    '  sheet.getRange(rowIdx+1, 5).setValue(ans);',
+    '  return jsonResponse({ success: true });',
+    '}',
+    '','function getOrCreateDescSheet() {',
+    '  const ss = SpreadsheetApp.getActiveSpreadsheet();',
+    '  let sheet = ss.getSheetByName(SHEET_NAME_DESC);',
+    '  if (!sheet) {',
+    '    sheet = ss.insertSheet(SHEET_NAME_DESC);',
+    '    sheet.appendRow([\'screen_key\',\'그룹명\',\'내용\',\'중요도\',\'zone_id\']);',
+    '    sheet.getRange(1,1,1,5).setFontWeight(\'bold\').setBackground(\'#E8F0FE\');',
+    '    sheet.getRange(2,1,1000,1).setDataValidation(',
+    '      SpreadsheetApp.newDataValidation().requireValueInList(ALLOWED_SCREENS,true).setAllowInvalid(false).build());',
+    '    sheet.getRange(2,4,1000,1).setDataValidation(',
+    '      SpreadsheetApp.newDataValidation().requireValueInList([\'필수\',\'일반\',\'경고\',\'참고\',\'코드\'],true).setAllowInvalid(false).build());',
+    '    sheet.setColumnWidth(3,400);',
+    '  }',
+    '  return sheet;',
+    '}',
+    '','function getOrCreateQnaSheet() {',
+    '  const ss = SpreadsheetApp.getActiveSpreadsheet();',
+    '  let sheet = ss.getSheetByName(SHEET_NAME_QNA);',
+    '  if (!sheet) {',
+    '    sheet = ss.insertSheet(SHEET_NAME_QNA);',
+    '    sheet.appendRow([\'id\',\'screen\',\'question\',\'author\',\'answer\',\'created_at\']);',
+    '    sheet.getRange(1,1,1,6).setFontWeight(\'bold\').setBackground(\'#E8F0FE\');',
+    '    sheet.setColumnWidth(3,300); sheet.setColumnWidth(5,300);',
+    '  }',
+    '  return sheet;',
+    '}',
+    '','function jsonResponse(obj) {',
+    '  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);',
+    '}',
+  ].join('\n');
+  var pre = document.getElementById('apps-script-preview');
+  if (pre) pre.textContent = code;
+  window._appsScriptCode = code;
+}
+
+function copyAppsScript() {
+  var code = window._appsScriptCode || '';
+  if (!code) { generateAppsScriptCode(); code = window._appsScriptCode || ''; }
+  navigator.clipboard.writeText(code).then(function() {
+    var s = document.getElementById('copy-script-status');
+    if (s) { s.textContent = '✅ 클립보드에 복사됐습니다!'; setTimeout(function(){ s.textContent=''; }, 2500); }
+  });
+}
+
+function copyConfigJson() {
+  var cfg = '{\n  "apiUrl":       "← Apps Script 배포 URL 붙여넣기",\n  "projectName":  "← 프로젝트/앱 이름",\n  "primaryColor": "← 브랜드 컬러 HEX (예: #1A56DB)"\n}';
+  navigator.clipboard.writeText(cfg).then(function() {
+    var s = document.getElementById('copy-config-status');
+    if (s) { s.textContent = '✅ 복사됐습니다!'; setTimeout(function(){ s.textContent=''; }, 2500); }
+  });
+}
+
+/* showSheetGuide 오버라이드 */
+var _origShowSheetGuide = window.showSheetGuide;
+window.showSheetGuide = function() {
+  var overlay = document.getElementById('guide-overlay');
+  if (overlay) overlay.classList.add('open');
+  switchGuideTab('sheets');
+};
 
 </script>
 </body>
