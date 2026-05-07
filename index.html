@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -512,6 +513,10 @@ body {
 /* ══ MORE BTN ══ */
 .more-btn { display: block; text-align: center; padding: 11px; font-size: 12px; font-weight: 600; color: var(--primary); background: var(--card); border: 1px solid var(--border); border-radius: 0 0 10px 10px; cursor: pointer; }
 .more-btn:active { background: var(--card2); }
+@keyframes newsDot {
+  0%, 80%, 100% { background: var(--border); transform: scale(1); }
+  40%            { background: var(--text4); transform: scale(1.4); }
+}
 
 /* ══ PRED BOTTOM TABS ══ */
 .pred-bottom-tabs { position: sticky; bottom: 68px; background: var(--card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: flex; z-index: 10; }
@@ -728,7 +733,7 @@ body {
     <button class="nav-btn" onclick="nav('wallet-pci')">📋 지갑상세 (PCI)</button>
     <button class="nav-btn" onclick="nav('wallet-other')">📋 지갑상세 (기타)</button>
     <button class="nav-btn" onclick="nav('asset')">📊 자산현황</button>
-    <button class="nav-btn" onclick="nav('pci-info')">🪙 PCI 정보</button>
+    <button class="nav-btn" onclick="nav('pci-info')">🪙 오늘의 PCI</button>
     <button class="nav-btn" onclick="nav('token-detail')">🏦 토큰 상세</button>
     <button class="nav-btn" onclick="nav('benefits')">🎁 혜택</button>
     <button class="nav-btn" onclick="nav('prediction')">🔮 등락 예측</button>
@@ -1484,13 +1489,13 @@ body {
 
     <!-- Tile Menu -->
     <div class="tile-section" data-zone="home-tiles">
-      <!-- Row 1: 출석체크 / 혜택 / PCI 정보 -->
+      <!-- Row 1: 거래소 지갑 연결 / 결제 / 결제 혜택 -->
       <div class="tile-row" style="height:72px">
-        <div class="tile tile-1-3" onclick="nav('benefits')"><div class="tile-icon">✅</div><div class="tile-lbl">출석체크</div></div>
-        <div class="tile tile-1-3" onclick="nav('benefits')"><div class="tile-icon">🎁</div><div class="tile-lbl">혜택</div></div>
-        <div class="tile tile-1-3" onclick="nav('pci-info')"><div class="tile-icon">🪙</div><div class="tile-lbl">PCI 정보</div></div>
+        <div class="tile tile-1-3" onclick="nav('wallet-manage')"><div class="tile-icon">🔗</div><div class="tile-lbl">거래소 지갑 연결</div></div>
+        <div class="tile tile-1-3" onclick="nav('payment')"><div class="tile-icon">💳</div><div class="tile-lbl">결제</div></div>
+        <div class="tile tile-1-3" onclick="nav('benefits')"><div class="tile-icon">🎁</div><div class="tile-lbl">결제 혜택</div></div>
       </div>
-      <!-- Row 2: 쇼핑(2/3) + [월렛커넥트/지갑 세로] -->
+      <!-- Row 2: 쇼핑(2/3) + 결제 가이드(1/3) -->
       <div class="tile-row" style="height:72px">
         <div class="tile tile-2-3" style="overflow:hidden;padding:0;background:var(--card);flex-direction:row;align-items:center;justify-content:space-between">
           <div style="display:flex;flex-direction:column;justify-content:center;padding:0 0 0 12px;gap:3px">
@@ -1505,31 +1510,14 @@ body {
             </div>
           </div>
         </div>
-        <div class="tile-1-3" style="display:flex;flex-direction:column;gap:6px;height:100%">
-          <div class="tile" onclick="" style="flex:1;flex-direction:row;gap:5px;padding:0 6px;justify-content:center;border-radius:6px">
-            <span class="tile-lbl" style="font-size:9px;font-weight:600">월렛커넥트</span>
-          </div>
-          <div class="tile" onclick="nav('wallet')" style="flex:1;flex-direction:row;gap:5px;padding:0 6px;justify-content:center;border-radius:6px">
-            <span class="tile-lbl" style="font-size:10px;font-weight:600">지갑</span>
-          </div>
-        </div>
-      </div><!-- /tile-row2 -->
-      <!-- Row 3: 전체 너비 스와이프 — 2개 타일 -->
-      <div style="position:relative;height:72px;border-radius:var(--radius);overflow:hidden" id="tile-row3-wrap">
-        <div style="display:flex;height:100%;transition:transform .35s cubic-bezier(.4,0,.2,1);will-change:transform" id="tile-row3-track">
-          <div class="tile" onclick="nav('payment')" style="flex-shrink:0;width:calc(100% - 20px);height:100%;flex-direction:row;gap:12px;justify-content:flex-start;padding:0 16px;border-radius:var(--radius);border:1.5px solid var(--primary);background:var(--primary-l)">
-            <div style="font-size:24px;flex-shrink:0">🏪</div>
-            <div style="min-width:0"><div style="font-size:12px;font-weight:700;color:var(--primary)">결제 가맹점 / 혜택 안내</div><div style="font-size:10px;color:var(--text3);margin-top:3px">PCI 결제 가맹점 및 할인 혜택 확인</div></div>
-          </div>
-          <div style="flex-shrink:0;width:8px"></div>
-          <div class="tile" style="flex-shrink:0;width:calc(100% - 20px);height:100%;flex-direction:row;gap:12px;justify-content:flex-start;padding:0 16px;border-radius:var(--radius);border:1.5px solid var(--gold);background:var(--gold-l)">
-            <div style="font-size:24px;flex-shrink:0">💡</div>
-            <div style="min-width:0"><div style="font-size:12px;font-weight:700;color:#92400E">Wallet Pay 가이드</div><div style="font-size:10px;color:var(--text3);margin-top:3px">페이코인 월렛 페이 사용 방법 안내</div></div>
-          </div>
-        </div>
-        <div style="position:absolute;right:0;top:0;bottom:0;width:24px;background:linear-gradient(to right,transparent,var(--screen-bg) 80%);pointer-events:none;z-index:2"></div>
+        <div class="tile tile-1-3" onclick="nav('payment')"><div class="tile-icon">💡</div><div class="tile-lbl">결제 가이드</div></div>
       </div>
-
+      <!-- Row 3: 출석룰렛 / 등락예측 / 오늘의 혜택 -->
+      <div class="tile-row" style="height:72px">
+        <div class="tile tile-1-3" onclick="nav('benefits')"><div class="tile-icon">🎰</div><div class="tile-lbl">출석룰렛</div></div>
+        <div class="tile tile-1-3" onclick="nav('prediction')"><div class="tile-icon">🔮</div><div class="tile-lbl">등락예측</div></div>
+        <div class="tile tile-1-3" onclick="nav('benefits')"><div class="tile-icon">🪙</div><div class="tile-lbl">오늘의 PCI</div></div>
+      </div>
     </div><!-- /tile-section -->
 
     <div class="divider"></div>
@@ -1692,7 +1680,7 @@ body {
     </div>
     <div data-zone="wpci-actions" style="display:flex;gap:8px;margin:0 14px 14px">
       <button class="btn btn-primary" style="flex:1" onclick="showModal('withdraw-modal')">출금하기</button>
-      <button class="btn btn-secondary" style="flex:1" onclick="nav('pci-info')">PCI 정보</button>
+      <button class="btn btn-secondary" style="flex:1" onclick="nav('pci-info')">오늘의 PCI</button>
     </div>
     <div class="card">
       <div style="font-size:11px;color:var(--text4);margin-bottom:6px;font-weight:600">지갑 주소</div>
@@ -1837,7 +1825,7 @@ body {
 <!-- ═══════════════ PCI INFO ═══════════════ -->
 <div class="screen" id="sc-pci-info">
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
-  <div class="aheader"><div class="htitle">PCI 정보</div><div class="hicons"><div class="icon-btn">🔔</div><div class="icon-btn">☰</div></div></div>
+  <div class="aheader"><div class="htitle">오늘의 PCI</div><div class="hicons"><div class="icon-btn">🔔</div><div class="icon-btn">☰</div></div></div>
   <div class="sbody">
     <div style="margin:0 14px 12px;background:linear-gradient(135deg,var(--primary),var(--primary-d));border-radius:20px;padding:20px;text-align:center;box-shadow:0 8px 24px rgba(26,86,219,.25)">
       <div style="font-size:13px;color:rgba(255,255,255,.7);margin-bottom:2px">Coin Market Cap 기준</div>
@@ -1879,7 +1867,7 @@ body {
 <!-- ═══════════════ TOKEN DETAIL (거래소 상세 / 코인 상세 공통 템플릿) ═══════════════ -->
 <div class="screen" id="sc-token-detail">
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
-  <div class="back-header"><span class="back-btn" onclick="nav('pci-info')">‹ PCI 정보</span></div>
+  <div class="back-header"><span class="back-btn" onclick="nav('pci-info')">‹ 오늘의 PCI</span></div>
   <div class="sbody">
     <div style="padding:0 14px 16px">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
@@ -2242,7 +2230,15 @@ body {
         <span style="font-size:10px;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;padding:2px 7px;border-radius:5px;cursor:pointer">원문 보기 ↗</span>
       </div>
     </div>
-    <div class="more-btn">더보기 (총 24건)</div>
+    <!-- 무한 스크롤 로딩 인디케이터 -->
+    <div id="news-load-indicator" style="display:flex;flex-direction:column;align-items:center;padding:16px 0 8px;gap:6px">
+      <div style="display:flex;gap:5px;align-items:center">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--border);animation:newsDot .9s ease-in-out infinite"></div>
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--border);animation:newsDot .9s ease-in-out .2s infinite"></div>
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--border);animation:newsDot .9s ease-in-out .4s infinite"></div>
+      </div>
+      <div style="font-size:10px;color:var(--text4)">다음 소식 불러오는 중</div>
+    </div>
   </div>
   <div class="tab-bar">
     <div class="tab-item" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
@@ -2298,18 +2294,37 @@ body {
   <div class="aheader" data-zone="pay-summary"><div class="htitle">결제</div><div class="hicons"><div class="icon-btn">🔔</div><div class="icon-btn">☰</div></div></div>
   <div class="sbody">
 
-    <!-- ① 바로결제 섹션 -->
-    <div style="margin:0 14px 10px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-d) 100%);border-radius:20px;padding:18px 20px;box-shadow:0 8px 24px rgba(26,86,219,.25)">
-      <div style="font-size:11px;color:rgba(255,255,255,.7);margin-bottom:3px;font-weight:500">바로결제 가능 잔액</div>
-      <div style="font-size:28px;font-weight:800;color:#fff;letter-spacing:-0.8px;margin-bottom:14px">8,245원</div>
-      <div style="display:flex;gap:8px;margin-bottom:16px">
-        <button style="flex:1;padding:11px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:10px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">충전하기</button>
-        <button style="flex:1;padding:11px;background:#fff;border:none;border-radius:10px;color:var(--primary);font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">⚡ 바로결제</button>
+    <!-- ① 이번달 결제 현황 카드 -->
+    <div style="margin:0 14px 10px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px 20px;box-shadow:var(--shadow-sm)">
+
+      <!-- 이번달 현황 -->
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px">
+        <div style="font-size:11px;color:var(--text4);font-weight:500">이번달 누적 결제</div>
+        <div style="font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.5px">32,400<span style="font-size:13px;font-weight:500;color:var(--text3)"> 원</span></div>
       </div>
-      <div style="height:1px;background:rgba(255,255,255,.15);margin-bottom:12px"></div>
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="font-size:11px;color:rgba(255,255,255,.7)">이번달 누적 결제 <span style="color:#fff;font-weight:700;margin-left:4px">32,400원</span></div>
-        <div style="font-size:11px;color:#86EFAC;font-weight:600">💰 혜택 4,800원</div>
+      <div style="font-size:11px;color:var(--green);font-weight:600;text-align:right;margin-bottom:14px">이번달 <strong>4,800원</strong> 할인받았어요!</div>
+
+      <!-- 구분선 -->
+      <div style="height:1px;background:var(--border);margin-bottom:12px"></div>
+
+      <!-- 결제 가능 예상 잔액 -->
+      <div style="display:flex;align-items:center;justify-content:space-between;position:relative">
+        <div style="display:flex;align-items:center;gap:4px">
+          <span style="font-size:11px;color:var(--text4);font-weight:500">결제 가능 예상 잔액</span>
+          <span id="pay-balance-tip-btn"
+            onclick="var t=document.getElementById('pay-balance-tip');t.style.display=t.style.display==='block'?'none':'block';event.stopPropagation()"
+            style="width:14px;height:14px;border-radius:50%;background:var(--border);color:var(--text4);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;line-height:1">?</span>
+          <!-- 플로팅 툴팁 -->
+          <div id="pay-balance-tip" style="display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:230px;padding:10px 12px;background:#1F2937;border-radius:10px;font-size:10px;color:#fff;line-height:1.8;z-index:50;box-shadow:0 4px 16px rgba(0,0,0,.2)">
+            결제하고 남은 금액과 직접 충전한 금액을 합산한 예상 잔액이에요. 연결된 은행 계좌의 실제 잔액과 차이가 있을 수 있어요.
+            <div style="position:absolute;bottom:-5px;left:14px;width:10px;height:10px;background:#1F2937;transform:rotate(45deg)"></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-size:14px;font-weight:700;color:var(--text3);letter-spacing:-.2px">8,245<span style="font-size:11px;font-weight:500"> 원</span></div>
+          <button onclick="" title="충전하기"
+            style="width:20px;height:20px;border-radius:5px;background:var(--card2);border:1px solid var(--border);font-size:13px;font-weight:400;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;line-height:1">+</button>
+        </div>
       </div>
     </div>
 
@@ -2323,7 +2338,7 @@ body {
       <div class="pay-btn">
         <div class="pay-icon">🔲</div>
         <div class="pay-label">바코드 결제</div>
-        <div class="pay-desc">단말기에 바코드 제시</div>
+        <div class="pay-desc">오프라인 단말기 제시</div>
       </div>
     </div>
 
@@ -2683,7 +2698,7 @@ body {
 <div class="policy-section" id="pol-pci-info" data-screen="pci-info">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_PCI_INFO <span class="ptag p2">P2</span></div>
-    <div class="policy-title">PCI 정보</div>
+    <div class="policy-title">오늘의 PCI</div>
     <div class="policy-desc">PCI 시장 정보 허브. 시세 출처는 Coin Market Cap 기준.</div>
   </div>
 </div>
@@ -2866,7 +2881,7 @@ body {
 <tr><td><span class="key">wallet-pci</span><button class="guide-copy-btn" onclick="copyText('wallet-pci')">복사</button></td><td>지갑상세(PCI)</td></tr>
 <tr><td><span class="key">wallet-other</span><button class="guide-copy-btn" onclick="copyText('wallet-other')">복사</button></td><td>지갑상세(기타)</td></tr>
 <tr><td><span class="key">asset</span><button class="guide-copy-btn" onclick="copyText('asset')">복사</button></td><td>자산현황</td></tr>
-<tr><td><span class="key">pci-info</span><button class="guide-copy-btn" onclick="copyText('pci-info')">복사</button></td><td>PCI 정보</td></tr>
+<tr><td><span class="key">pci-info</span><button class="guide-copy-btn" onclick="copyText('pci-info')">복사</button></td><td>오늘의 PCI</td></tr>
 <tr><td><span class="key">token-detail</span><button class="guide-copy-btn" onclick="copyText('token-detail')">복사</button></td><td>토큰 상세</td></tr>
 <tr><td><span class="key">benefits</span><button class="guide-copy-btn" onclick="copyText('benefits')">복사</button></td><td>혜택</td></tr>
 <tr><td><span class="key">prediction</span><button class="guide-copy-btn" onclick="copyText('prediction')">복사</button></td><td>등락 예측</td></tr>
@@ -3174,90 +3189,7 @@ function showTip(el, text) {
   setTimeout(() => el.classList.remove('show-tip'), 2500);
 }
 
-/* ══ TILE ROW 3 SWIPE ══ */
-(function() {
-  var cur = 0, total = 2;
-  var startX = 0, startT = 0, isDragging = false;
-
-  function getWrapW() {
-    var w = document.getElementById('tile-row3-wrap');
-    return w ? w.offsetWidth : 0;
-  }
-
-  function slideTo(n) {
-    cur = Math.max(0, Math.min(n, total - 1));
-    var track = document.getElementById('tile-row3-track');
-    if (!track) return;
-    var tileW = getWrapW() - 20; // peek=20px
-    track.style.transform = 'translateX(-' + (cur * (tileW + 8)) + 'px)';
-  }
-
-  // 터치
-  document.addEventListener('touchstart', function(e) {
-    var w = document.getElementById('tile-row3-wrap');
-    if (!w || !w.contains(e.target)) return;
-    startX = e.touches[0].clientX;
-    startT = Date.now();
-    isDragging = true;
-    var track = document.getElementById('tile-row3-track');
-    if (track) track.style.transition = 'none';
-  }, { passive: true });
-
-  document.addEventListener('touchmove', function(e) {
-    if (!isDragging) return;
-    var dx = e.touches[0].clientX - startX;
-    var track = document.getElementById('tile-row3-track');
-    if (!track) return;
-    var tileW = getWrapW() - 20;
-    track.style.transform = 'translateX(-' + (cur * (tileW + 8) - dx) + 'px)';
-  }, { passive: true });
-
-  document.addEventListener('touchend', function(e) {
-    if (!isDragging) return;
-    isDragging = false;
-    var dx = e.changedTouches[0].clientX - startX;
-    var dt = Date.now() - startT;
-    var track = document.getElementById('tile-row3-track');
-    if (track) track.style.transition = 'transform .35s cubic-bezier(.4,0,.2,1)';
-    if (dx < -30 || (dx < -10 && dt < 200)) slideTo(cur + 1);
-    else if (dx > 30 || (dx > 10 && dt < 200)) slideTo(cur - 1);
-    else slideTo(cur);
-  }, { passive: true });
-
-  // 마우스 (데스크탑 미리보기)
-  document.addEventListener('mousedown', function(e) {
-    var w = document.getElementById('tile-row3-wrap');
-    if (!w || !w.contains(e.target)) return;
-    startX = e.clientX; startT = Date.now(); isDragging = true;
-    var track = document.getElementById('tile-row3-track');
-    if (track) track.style.transition = 'none';
-    e.preventDefault();
-  });
-
-  document.addEventListener('mousemove', function(e) {
-    if (!isDragging) return;
-    var dx = e.clientX - startX;
-    var track = document.getElementById('tile-row3-track');
-    if (!track) return;
-    var tileW = getWrapW() - 20;
-    track.style.transform = 'translateX(-' + (cur * (tileW + 8) - dx) + 'px)';
-  });
-
-  document.addEventListener('mouseup', function(e) {
-    if (!isDragging) return;
-    isDragging = false;
-    var dx = e.clientX - startX;
-    var dt = Date.now() - startT;
-    var track = document.getElementById('tile-row3-track');
-    if (track) track.style.transition = 'transform .35s cubic-bezier(.4,0,.2,1)';
-    if (dx < -30 || (dx < -10 && dt < 200)) slideTo(cur + 1);
-    else if (dx > 30 || (dx > 10 && dt < 200)) slideTo(cur - 1);
-    else slideTo(cur);
-  });
-
-  window.addEventListener('resize', function() { slideTo(cur); });
-  setTimeout(function() { slideTo(0); }, 300);
-})();
+/* tile-row3 swipe removed */
 
 /* ══ WALLET TAB FILTER ══ */
 const WALLET_DATA = {
@@ -3409,7 +3341,7 @@ const QNA = {
   apiUrl: '',
   filter: 'all',
   items: [],
-  LABELS: {'home':'메인 홈','wallet':'지갑','wallet-empty':'지갑(미연결)','wallet-pci':'지갑상세(PCI)','wallet-other':'지갑상세(기타)','asset':'자산현황','pci-info':'PCI 정보','token-detail':'토큰 상세','benefits':'혜택','prediction':'등락 예측','news':'최근 소식','news-detail':'소식 상세','payment':'결제','wallet-manage':'지갑 관리'},
+  LABELS: {'home':'메인 홈','wallet':'지갑','wallet-empty':'지갑(미연결)','wallet-pci':'지갑상세(PCI)','wallet-other':'지갑상세(기타)','asset':'자산현황','pci-info':'오늘의 PCI','token-detail':'토큰 상세','benefits':'혜택','prediction':'등락 예측','news':'최근 소식','news-detail':'소식 상세','payment':'결제','wallet-manage':'지갑 관리'},
   curScreen: function(){ var s=document.querySelector('.screen.active'); return s?s.id.replace('sc-',''):'home'; },
   curLabel: function(){ return this.LABELS[this.curScreen()]||this.curScreen(); },
   init: function(){ try{ this.apiUrl=localStorage.getItem('qna_api')||''; }catch(e){} }
@@ -4123,6 +4055,18 @@ window.showSheetGuide = function() {
   if (overlay) overlay.classList.add('open');
   switchGuideTab('sheets');
 };
+
+
+/* ══ PAY BALANCE TOOLTIP ══ */
+document.addEventListener('click', function(e) {
+  var tip = document.getElementById('pay-balance-tip');
+  var btn = document.getElementById('pay-balance-tip-btn');
+  if (!tip) return;
+  if (btn && btn.contains(e.target)) return;
+  tip.style.display = 'none';
+});
+var _tipStyle = document.getElementById('pay-balance-tip');
+// show/hide via classList toggle handled inline
 
 </script>
 </body>
