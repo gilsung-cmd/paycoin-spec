@@ -416,10 +416,42 @@ body {
 .divider { height: 8px; background: var(--bg-root); }
 
 /* ══ BACK HEADER ══ */
-.back-header { flex-shrink: 0; padding: 4px 14px 10px; display: flex; align-items: center; gap: 10px; }
-.back-btn { font-size: 13px; color: var(--primary); cursor: pointer; padding: 4px 0; font-weight: 500; }
+/*
+ * [헤더 유형 분류]
+ *
+ * [aheader] 탭바 보유 화면 — 알림(🔔) + 햄버거(☰) 메뉴 표시
+ *   홈 / 지갑 / 자산현황 / 혜택 / 등락예측 / 최근소식 / 결제
+ *
+ * [back-header] 탭바 미보유 서브 화면 — 뒤로가기(‹) + 중앙 화면명만 표시
+ *   지갑상세(PCI) / 지갑상세(WC) / 지갑관리 /
+ *   오늘의PCI / 토큰상세 / 소식 / 결제(WC미연결)
+ *
+ * [서브 화면 타이틀 규칙]
+ *   - 지갑 상세 : {코인명} 상세  (예: 페이코인 상세, 비트코인 상세)
+ *                → 진입한 코인에 따라 동적 치환
+ *   - 토큰 상세 : {코인명} 상세  (동일 규칙 적용)
+ *   - 소식 상세 : "소식"
+ *   - 결제 WC 미연결 : "결제"
+ */
+.back-header {
+  flex-shrink: 0; padding: 22px 14px 12px;
+  display: flex; align-items: center;
+  position: relative;
+}
+.back-btn {
+  font-size: 26px; color: var(--primary); cursor: pointer;
+  padding: 4px 8px 4px 0; font-weight: 300; line-height: 1;
+  position: absolute; left: 14px;
+}
+.back-title {
+  font-size: 15px; font-weight: 700; color: var(--text);
+  position: absolute; left: 50%; transform: translateX(-50%);
+  white-space: nowrap;
+}
 
 /* ══ OVERLAY / MODAL ══ */
+/* late-change-modal open 클래스 */
+#late-change-modal.open { display: flex; }
 .overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(2px); display: none; align-items: flex-end; z-index: 50; border-radius: 42px; }
 .overlay.show { display: flex; animation: fadeIn .2s; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -2050,7 +2082,7 @@ body {
 <!-- ═══════════════ WALLET DETAIL — PCI 자체 지갑 ═══════════════ -->
 <div class="screen" id="sc-wallet-pci">
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
-  <div class="back-header"><span class="back-btn" onclick="nav('wallet')">‹ 지갑</span></div>
+  <div class="back-header"><span class="back-btn" onclick="nav('wallet')">‹</span><span class="back-title">페이코인 상세</span></div>
   <div class="sbody">
     <div data-zone="wpci-header" style="text-align:center;padding:8px 14px 18px">
       <div style="font-size:44px;margin-bottom:6px">🪙</div>
@@ -2329,7 +2361,7 @@ body {
 <!-- ═══════════════ WALLET DETAIL — 기타 (거래소 PCI / BTC 등) ═══════════════ -->
 <div class="screen" id="sc-wallet-other">
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
-  <div class="back-header"><span class="back-btn" onclick="nav('wallet')">‹ 지갑</span></div>
+  <div class="back-header"><span class="back-btn" onclick="nav('wallet')">‹</span><span class="back-title">비트코인 상세</span></div>
   <div class="sbody">
     <div data-zone="wother-header" style="text-align:center;padding:8px 14px 18px">
       <div style="font-size:44px;margin-bottom:6px">₿</div>
@@ -2819,9 +2851,14 @@ body {
   </div>
 
 <!-- ═══════════════ PCI INFO ═══════════════ -->
+<!-- [오늘의 PCI 화면 정책]
+     - 탭바 미포함: 하단 탭바 5개 메뉴에 미포함
+     - 진입 경로: 홈 타일메뉴 / 더보기 메뉴 / 등락예측 배너
+     - 헤더: back-header (뒤로가기 → 진입 이전 화면으로 복귀)
+-->
 <div class="screen" id="sc-pci-info">
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
-  <div class="aheader"><div class="htitle">오늘의 PCI</div><div class="hicons"><div class="icon-btn" onclick="showModal('noti-modal')">🔔</div><div class="icon-btn" onclick="showModal('mmm-pci-info')">☰</div></div></div>
+  <div class="back-header"><span class="back-btn" onclick="nav('home')">‹</span><span class="back-title">오늘의 PCI</span></div>
   <div class="sbody">
 
     <!-- ① 알림 설정 유도 (미설정 사용자만 노출) -->
@@ -3064,16 +3101,8 @@ body {
     </div>
 
   </div>
-  <div class="tab-bar">
-    <div class="tab-item" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
-    <div class="tab-item" onclick="nav('wallet')"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
-    <div class="tab-item" onclick="nav('payment')"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
-    <div class="tab-item" onclick="nav('benefits')"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
-    <div class="tab-item" onclick=""><div class="tab-icon">🛍️</div><div class="tab-lbl">쇼핑</div></div>
-  </div>
-</div>
-  <!-- 더보기 메뉴 -->
 
+</div>
   <!-- 알림함 -->
   <div class="overlay" id="noti-modal" style="align-items:stretch">
     <div style="width:100%;height:100%;background:var(--screen-bg);display:flex;flex-direction:column;overflow:hidden">
@@ -3199,9 +3228,15 @@ body {
   </div>
 
 <!-- ═══════════════ TOKEN DETAIL (거래소 상세 / 코인 상세 공통 템플릿) ═══════════════ -->
+<!-- [토큰 상세 화면 정책]
+     - 공통 템플릿: 코인 종류에 무관하게 동일 화면 재사용
+     - 헤더 타이틀: {코인명} 상세 → 진입 코인에 따라 동적 치환
+       예) 페이코인 상세 / 비트코인 상세 / 이더리움 상세
+     - 파라미터: coin_symbol + exchange 로 화면 구성
+-->
 <div class="screen" id="sc-token-detail">
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
-  <div class="back-header"><span class="back-btn" onclick="nav('pci-info')">‹ 오늘의 PCI</span></div>
+  <div class="back-header"><span class="back-btn" onclick="nav('pci-info')">‹</span><span class="back-title">{코인명} 상세</span><!-- 개발: 진입한 코인명으로 동적 치환 --></div>
   <div class="sbody">
     <div data-zone="token-header" style="padding:0 14px 16px">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
@@ -3215,11 +3250,19 @@ body {
       <div class="up" style="font-size:13px">▲ 4.91% (전일 대비)</div>
     </div>
     <div class="card">
+      <div class="info-row"><span class="ilbl">시가총액 순위</span><span class="ival" style="font-weight:700;color:var(--primary)">#142</span></div>
+      <div class="info-row"><span class="ilbl">시가총액</span><span class="ival">82,120,000,000원</span></div>
+      <div class="info-row"><span class="ilbl">24h 거래량</span><span class="ival">1,234,567 PCI</span></div>
       <div class="info-row"><span class="ilbl">24h 고가</span><span class="ival up">88.00원</span></div>
       <div class="info-row"><span class="ilbl">24h 저가</span><span class="ival dn">79.20원</span></div>
-      <div class="info-row"><span class="ilbl">거래량 (24h)</span><span class="ival">1,234,567 PCI</span></div>
-      <div class="info-row"><span class="ilbl">시가총액</span><span class="ival">–</span></div>
     </div>
+    <div class="card" style="margin-top:0">
+      <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:8px">52주 가격 범위</div>
+      <div class="info-row"><span class="ilbl">52주 고가</span><span class="ival up">124.50원</span></div>
+      <div class="info-row"><span class="ilbl">52주 저가</span><span class="ival dn">41.20원</span></div>
+      <div class="info-row"><span class="ilbl">역대 최고가 (ATH)</span><span class="ival up">1,240.00원</span></div>
+    </div>
+
     <div style="margin:0 14px 10px">
       <button class="btn btn-secondary" style="font-size:12px;padding:11px">빗썸으로 이동하기 ↗</button>
     </div>
@@ -3481,7 +3524,7 @@ body {
         <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">3</div><div style="font-size:12px;color:var(--text2);line-height:1.5">1일 1회 참여 · <strong>선택 변경 가능</strong> (광고 시청 필요)</div></div>
         <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">4</div><div style="font-size:12px;color:var(--text2);line-height:1.5">정답 시 PCI 보상 누적 → <strong>익월 1~2주차 일괄 지급</strong></div></div>
         <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">5</div><div style="font-size:12px;color:var(--text2);line-height:1.5">지급 지갑: 페이코인 앱 <strong>자체 지갑</strong>으로 자동 지급</div></div>
-        <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">6</div><div style="font-size:12px;color:var(--text2);line-height:1.5">결과 확인: <strong>다음날 KST 00:00 이후</strong></div></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">6</div><div style="font-size:12px;color:var(--text2);line-height:1.5">결과 확인: <strong>다음날 KST 00:30 이후</strong></div></div>
       </div>
     </div>
     <div style="margin:0 14px 20px;background:var(--primary-l);border:1px solid #BFDBFE;border-radius:12px;padding:12px;text-align:center">
@@ -3497,16 +3540,42 @@ body {
     <!-- 상단 고정 영역: 결과카드 + 기준가 + 현황바 + 투표버튼 + 결과안내 -->
     <div id="pred-top-area" style="flex-shrink:0">
 
+      <!-- ═══ [PRD 수정 필요] 등락 예측 — 정책 변경 사항 ═══
+
+           ① 결과 및 랭킹 확인 가능 시각
+              - 예측 결과: 익일 KST 00:30 이후 확인 가능
+              - 랭킹: 매월 2일 KST 00:30 이후 확인 가능
+              - 매월 1일은 랭킹 데이터 없음 (빈 상태 표시)
+
+           ② 어제 결과 카드 상태 분기 (4가지)
+              - 정답: 획득 PCI + 기준/결과 종가 + 통계
+              - 오답: +0 PCI + 기준/결과 종가 + 통계
+              - 집계 중: KST 00:30 이후 확인 안내
+              - 어제 미참여(첫 참여자 포함):
+                결과 없이 오늘 참여 유도 문구만 표시
+
+           ③ 리워드 지급
+              - 참여한 월의 익월에 자체 지갑으로 일괄 지급
+
+           ※ 달력 조회 범위 변경 → pred-calendar 위 주석 참고
+           ※ 광고 시청 후 선택 변경 정책 → changeVote 함수 위 주석 참고
+      ═══ -->
+
       <!-- 상태 전환 토글 (뷰어 전용) -->
       <div style="display:flex;justify-content:flex-end;padding:4px 14px 0;gap:6px">
-        <button onclick="document.getElementById('pred-result-done').style.display='block';document.getElementById('pred-result-pending').style.display='none'"
-          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">집계 완료</button>
-        <button onclick="document.getElementById('pred-result-done').style.display='none';document.getElementById('pred-result-pending').style.display='block'"
+        <button onclick="document.getElementById('pred-result-done').style.display='block';document.getElementById('pred-result-fail').style.display='none';document.getElementById('pred-result-pending').style.display='none';document.getElementById('pred-result-none').style.display='none'"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정답</button>
+        <button onclick="document.getElementById('pred-result-done').style.display='none';document.getElementById('pred-result-fail').style.display='block';document.getElementById('pred-result-pending').style.display='none';document.getElementById('pred-result-none').style.display='none'"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">오답</button>
+        <button onclick="document.getElementById('pred-result-done').style.display='none';document.getElementById('pred-result-fail').style.display='none';document.getElementById('pred-result-pending').style.display='block';document.getElementById('pred-result-none').style.display='none'"
           style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">집계 중</button>
+        <button onclick="document.getElementById('pred-result-done').style.display='none';document.getElementById('pred-result-fail').style.display='none';document.getElementById('pred-result-pending').style.display='none';document.getElementById('pred-result-none').style.display='block'"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text4);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">어제 미참여</button>
       </div>
 
       <!-- 어제 결과 카드 -->
-      <!-- 개발: 집계 완료 시 id="pred-result-done" 표시 / 집계 중 시 id="pred-result-pending" 표시 -->
+      <!-- 개발: 정답 → pred-result-done / 오답 → pred-result-fail / 집계 중 → pred-result-pending
+           어제 미참여(첫 참여자 포함) → pred-result-none 표시 -->
 
       <!-- 집계 완료 상태 -->
       <div id="pred-result-done" data-zone="pred-yesterday" style="margin:8px 14px;background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border:1px solid #6EE7B7;border-radius:var(--radius);padding:13px">
@@ -3520,7 +3589,55 @@ body {
             <div style="font-size:13px;font-weight:800;color:var(--green)">+0.69 PCI</div>
           </div>
         </div>
-        <div style="margin-top:10px;padding-top:9px;border-top:1px solid #A7F3D0;font-size:11px;color:var(--text3)">당월 누적 <span style="color:var(--green);font-weight:700">12.50 PCI</span> &nbsp;·&nbsp; 정답률 72% (13/18회) &nbsp;·&nbsp; 당월 정답 13회</div>
+        <div style="margin-top:10px;padding-top:9px;border-top:1px solid #A7F3D0">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <div style="text-align:center;flex:1">
+              <div style="font-size:9px;color:var(--text4);margin-bottom:2px">기준 종가 (04.28)</div>
+              <div style="font-size:12px;font-weight:700;color:var(--text2)">78.20원</div>
+            </div>
+            <div style="font-size:14px;color:var(--text4);display:flex;align-items:center">→</div>
+            <div style="text-align:center;flex:1">
+              <div style="font-size:9px;color:var(--text4);margin-bottom:2px">결과 종가 (04.29)</div>
+              <div style="font-size:12px;font-weight:700;color:var(--red)">82.45원 ▲ 5.43%</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--text3);padding-top:7px;border-top:1px solid #A7F3D0">당월 누적 <span style="color:var(--green);font-weight:700">12.50 PCI</span> &nbsp;·&nbsp; 정답률 72% (13/18회) &nbsp;·&nbsp; 당월 정답 13회</div>
+        </div>
+      </div>
+
+      <!-- 오답(실패) 상태 -->
+      <div id="pred-result-fail" data-zone="pred-yesterday" style="display:none;margin:8px 14px;background:linear-gradient(135deg,#FEF2F2,#FEE2E2);border:1px solid #FCA5A5;border-radius:var(--radius);padding:13px">
+        <div style="font-size:10px;color:var(--red);font-weight:600;margin-bottom:8px">📅 04.29 어제 결과</div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">내 선택</div><div style="font-size:15px;font-weight:800;color:var(--red)">▲ 상승</div></div>
+          <div style="font-size:20px;color:var(--text4)">→</div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">실제 결과</div><div style="font-size:15px;font-weight:800;color:var(--primary)">▼ 하락</div></div>
+          <div style="background:#fff;border:1px solid #FCA5A5;border-radius:10px;padding:8px 12px;text-align:center">
+            <div style="font-size:10px;color:var(--red);font-weight:600">아쉽게 오답</div>
+            <div style="font-size:13px;font-weight:800;color:var(--text3)">+0 PCI</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;padding-top:9px;border-top:1px solid #FCA5A5">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <div style="text-align:center;flex:1">
+              <div style="font-size:9px;color:var(--text4);margin-bottom:2px">기준 종가 (04.28)</div>
+              <div style="font-size:12px;font-weight:700;color:var(--text2)">78.20원</div>
+            </div>
+            <div style="font-size:14px;color:var(--text4);display:flex;align-items:center">→</div>
+            <div style="text-align:center;flex:1">
+              <div style="font-size:9px;color:var(--text4);margin-bottom:2px">결과 종가 (04.29)</div>
+              <div style="font-size:12px;font-weight:700;color:var(--primary)">74.10원 ▼ 5.24%</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--text3);padding-top:7px;border-top:1px solid #FCA5A5">당월 누적 <span style="color:var(--text2);font-weight:700">11.81 PCI</span> &nbsp;·&nbsp; 정답률 68% (12/18회) &nbsp;·&nbsp; 당월 정답 12회</div>
+        </div>
+      </div>
+
+      <!-- 어제 미참여 상태 (개발: 전일 참여 이력 없는 경우 표시 — 첫 참여자 포함) -->
+      <div id="pred-result-none" data-zone="pred-yesterday" style="display:none;margin:8px 14px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border:1px solid #C7D2FE;border-radius:var(--radius);padding:14px;text-align:center">
+        <div style="font-size:22px;margin-bottom:6px">🔮</div>
+        <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:4px">오늘의 예측에 참여해보세요!</div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.6">PCI 시세가 오를까요, 내릴까요?<br>맞히면 PCI 리워드를 드려요!</div>
       </div>
 
       <!-- 집계 중 상태 (개발: 전날 집계 미완료 시 표시) -->
@@ -3545,8 +3662,7 @@ body {
           </div>
         </div>
         <div style="padding:9px 12px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:11px;color:#92400E;line-height:1.6">
-          빗썸 종가 집계 후 결과가 확정됩니다.<br>
-          보통 <strong>KST 00:30 이전</strong>에 완료돼요.
+          KST 00:30 이후 결과를 확인할 수 있어요.
         </div>
       </div>
 
@@ -3576,7 +3692,7 @@ body {
       <div id="change-btn-area"></div>
 
       <!-- 결과 안내 -->
-      <div style="text-align:center;font-size:10px;color:var(--text4);padding:6px 0 0">결과는 내일 KST 00:00 이후 확인 가능합니다</div>
+      <div style="text-align:center;font-size:10px;color:var(--text4);padding:6px 0 0">결과는 내일 KST 00:30 이후 확인 가능합니다</div>
 
     </div><!-- /pred-top-area -->
 
@@ -3603,12 +3719,45 @@ body {
             <div style="font-size:10px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;padding:2px 8px;border-radius:20px;font-weight:600">지급 완료</div>
           </div>
         </div>
+        <!-- ═══ [PRD 수정 필요] 6.3.3 빈 상태(Empty State) 처리 — 참여 내역 ═══
+             현재 PRD: "참여 내역이 없습니다. 오늘 첫 참여를 해보세요!" 문구만 정의됨
+             보완 필요 내용:
+               1. 달력은 빈 상태에서도 항상 표시 (전체 날짜 미참여 ⬜ 상태로 표시)
+               2. 통계 카드 (당월 PCI / 정답률 / 참여 / 정답) → 미표시 또는 전체 0값 표시
+               3. 안내 문구 "참여 내역이 없습니다. 오늘 첫 참여를 해보세요!"는 달력 상단에 위치
+               ※ 빈 상태 = 달력이 비는 것이 아닌 통계 카드 미표시 + 안내 문구 노출의 문제
+        ═══ -->
+
+        <!-- ═══ [PRD 수정 필요] 등락 예측 — 참여 내역 달력 조회 범위 ═══
+             현재 PRD: 3개월 조회 (‹ › 버튼으로 자유롭게 월 이동)
+
+             변경 내용:
+               - 조회 범위: 전월 + 당월 2개월로 제한
+               - 네비게이션: ‹ › 자유 이동 버튼 → [전월] [당월] 탭 버튼으로 교체
+               - 기본 표시: 당월 달력 (앱 진입 시 당월이 기본 선택)
+               - 전월 선택 시: 전월 달력 + 전월 통계 카드로 전환
+               - 당월 선택 시: 당월 달력 + 당월 통계 카드로 전환
+
+             변경 사유:
+               - 3개월 조회는 오래된 데이터 접근 가능성 있어 실익 적음
+               - 전월 데이터는 PCI 지급 확인 용도로만 필요
+               - 탭 구조로 전환하여 UX 단순화
+        ═══ -->
         <div data-zone="pred-calendar" style="padding:0 14px;margin-bottom:10px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-            <span style="font-size:13px;cursor:pointer;color:var(--primary);padding:4px">‹</span>
-            <span style="font-size:13px;font-weight:700;color:var(--text)">2026년 4월</span>
-            <span style="font-size:13px;cursor:pointer;color:var(--text4);padding:4px">›</span>
+          <!-- 전월/당월 탭 -->
+          <div style="display:flex;gap:6px;margin-bottom:12px">
+            <button id="cal-tab-prev" onclick="switchCalTab('prev')"
+              style="flex:1;padding:7px 0;font-size:12px;font-weight:600;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .18s">
+              전월 <span style="font-size:10px;font-weight:400;color:var(--text4)">(2026년 4월)</span>
+            </button>
+            <button id="cal-tab-curr" onclick="switchCalTab('curr')"
+              style="flex:1;padding:7px 0;font-size:12px;font-weight:700;border-radius:8px;border:1px solid var(--primary);background:var(--primary-l);color:var(--primary);cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .18s">
+              당월 <span style="font-size:10px;font-weight:400">(2026년 5월)</span>
+            </button>
           </div>
+          <!-- 선택된 월 표시 -->
+          <div id="cal-month-label" style="font-size:13px;font-weight:700;color:var(--text);text-align:center;margin-bottom:10px">2026년 5월</div>
+          <div id="cal-curr-month">
           <div class="cal-grid">
             <div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">일</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">월</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">화</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">수</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">목</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">금</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">토</div>
             <div class="cal-day cal-none"></div>
@@ -3639,17 +3788,72 @@ body {
             <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">29<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
             <div class="cal-day cal-none">30</div>
           </div>
-          <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap">
-            <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:3px;background:#DBEAFE"></div>정답</div>
-            <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:3px;background:#FEE2E2"></div>오답</div>
-            <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:3px;background:#EEF2FF"></div>변동없음</div>
-            <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:3px;background:var(--border)"></div>미참여</div>
+          </div><!-- /cal-curr-month -->
+
+        <!-- 전월 달력 (기본 숨김) -->
+        <div id="cal-prev-month" style="display:none">
+          <div class="cal-grid">
+            <div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">일</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">월</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">화</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">수</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">목</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">금</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">토</div>
+            <div class="cal-day cal-none"></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">1<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-wrong" onclick="showTip(this,'▲ 상승 · ▼ 하락')">2<div class="cal-tooltip">▲ 상승 · ▼ 하락</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▼ 하락 · ▼ 하락')">3<div class="cal-tooltip">▼ 하락 · ▼ 하락</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">4<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▼ 하락 · ▼ 하락')">5<div class="cal-tooltip">▼ 하락 · ▼ 하락</div></div>
+            <div class="cal-day cal-none">6</div><div class="cal-day cal-none">7</div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">8<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▼ 하락 · ▼ 하락')">9<div class="cal-tooltip">▼ 하락 · ▼ 하락</div></div>
+            <div class="cal-day cal-wrong" onclick="showTip(this,'▼ 하락 · ▲ 상승')">10<div class="cal-tooltip">▼ 하락 · ▲ 상승</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">11<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-flat" onclick="showTip(this,'▲ 상승 · 변동 없음')">12<div class="cal-tooltip">▲ 상승 · 변동 없음</div></div>
+            <div class="cal-day cal-none">13</div><div class="cal-day cal-none">14</div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">15<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-wrong" onclick="showTip(this,'▼ 하락 · ▲ 상승')">16<div class="cal-tooltip">▼ 하락 · ▲ 상승</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">17<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▼ 하락 · ▼ 하락')">18<div class="cal-tooltip">▼ 하락 · ▼ 하락</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">19<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-none">20</div><div class="cal-day cal-none">21</div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▼ 하락 · ▼ 하락')">22<div class="cal-tooltip">▼ 하락 · ▼ 하락</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">23<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-wrong" onclick="showTip(this,'▲ 상승 · ▼ 하락')">24<div class="cal-tooltip">▲ 상승 · ▼ 하락</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">25<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▼ 하락 · ▼ 하락')">26<div class="cal-tooltip">▼ 하락 · ▼ 하락</div></div>
+            <div class="cal-day cal-none">27</div><div class="cal-day cal-none">28</div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'▲ 상승 · ▲ 상승')">29<div class="cal-tooltip">▲ 상승 · ▲ 상승</div></div>
+            <div class="cal-day cal-none">30</div>
           </div>
         </div>
+      <!-- 달력 공통 범례 -->
+      <div style="display:flex;gap:12px;padding:0 14px 10px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:3px;background:#DBEAFE"></div>정답</div>
+        <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:3px;background:#FEE2E2"></div>오답</div>
+        <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:3px;background:#EEF2FF"></div>변동없음</div>
+        <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:3px;background:var(--border)"></div>미참여</div>
       </div>
+        <!-- 이벤트 유의사항 -->
+        <div style="margin:12px 14px 0;padding:14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius)">
+          <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:8px">📋 이벤트 유의사항</div>
+          <div style="font-size:10px;color:var(--text4);line-height:1.9">
+            · 본 이벤트는 당사 사정에 따라 사전 공지 없이 조건이 변경되거나 중단될 수 있습니다.<br>
+            · 부정한 방법으로 참여하거나 어뷰징이 확인된 경우 보상이 취소될 수 있습니다.<br>
+            · 리워드 PCI는 참여한 월의 익월에 자체 지갑으로 일괄 지급됩니다.<br>
+            · 동순위 발생 시 정답률 → 참여 시간이 빠른 순으로 순위가 결정됩니다.<br>
+            · 랭킹은 매월 1일 초기화되며, 당월 참여 내역 기준으로 집계됩니다.<br>
+            · 문의사항은 고객센터를 통해 접수해주세요.
+          </div>
+        </div>
+        </div><!-- /pred-calendar -->
+      </div><!-- /pred-history -->
 
       <!-- 랭킹 탭 -->
       <div data-zone="pred-ranking-table" id="pred-ranking" style="display:none">
+        <!-- 뷰어 토글: 1일 빈 상태 시뮬레이션 -->
+        <div style="display:flex;justify-content:flex-end;padding:4px 14px 0;gap:6px">
+          <button onclick="document.getElementById('ranking-empty').style.display='none';document.getElementById('ranking-table').style.display='block'"
+            style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">랭킹 있음</button>
+          <button onclick="document.getElementById('ranking-empty').style.display='block';document.getElementById('ranking-table').style.display='none'"
+            style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text4);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">1일 빈 상태</button>
+        </div>
         <div style="margin:10px 14px 6px;background:var(--primary-l);border:1px solid #BFDBFE;border-radius:var(--radius);padding:12px">
           <div style="font-size:10px;color:var(--primary);font-weight:600;margin-bottom:6px">내 순위</div>
           <div style="display:flex;align-items:center;gap:10px">
@@ -3669,19 +3873,26 @@ body {
             <div style="flex:1;text-align:center;font-size:10px;font-weight:700;color:var(--text3)">오늘의 선택</div>
           </div>
         </div>
-        <div style="background:var(--card)">
-          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#D97706">🥇</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">XK93***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">18회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">90%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div>
-          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#9CA3AF">🥈</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">PQ47***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">17회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">85%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div>
-          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#CD7F32">🥉</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">TY28***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">17회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">85%</div><div style="flex:1;text-align:center;font-size:11px;color:var(--text4)">미참여</div></div>
-          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">4</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">MN56***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">16회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">80%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div>
-          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">5</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">LR81***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">15회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">78%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div>
-          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">6</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">CD90***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">15회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">75%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div>
-          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center;background:#FEFCE8;border-left:3px solid #FDE047"><div style="width:28px;font-size:13px;font-weight:800;color:var(--primary)">7</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700">AB12***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">13회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">72%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div>
-          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">8</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">EF23***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">13회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">70%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div>
-          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">9</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">GH45***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">12회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">68%</div><div style="flex:1;text-align:center;font-size:11px;color:var(--text4)">미참여</div></div>
-          <div style="display:flex;padding:10px 14px;align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">10</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">IJ67***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">12회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">65%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div>
+        <!-- 1일 빈 상태 (뷰어 토글용) -->
+        <div id="ranking-empty" style="display:none;padding:32px 20px;text-align:center">
+          <div style="font-size:32px;margin-bottom:10px">📊</div>
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px">아직 수집된 랭킹 데이터가 없어요</div>
+          <div style="font-size:11px;color:var(--text3);line-height:1.7">랭킹은 매월 <strong>2일 00:30 KST</strong>부터 확인할 수 있습니다.<br>오늘 예측에 참여하고 다음 달 랭킹에 도전해보세요!</div>
         </div>
-        <div style="padding:8px 14px;text-align:center;font-size:10px;color:var(--text4);background:var(--card);border-top:1px solid var(--border)">상위 50명 · 매월 1일 집계 중 → KST 2일 00:00 정식 전환</div>
+        <div id="ranking-table" style="background:var(--card)">
+<div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#D97706">🥇</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">XK93***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">18회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">90%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#9CA3AF">🥈</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">PQ47***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">17회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">85%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#CD7F32">🥉</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">TY28***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">17회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">85%</div><div style="flex:1;text-align:center;font-size:11px;color:var(--text4)">미참여</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">4</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">MN56***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">16회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">80%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">5</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">LR81***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">15회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">78%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">6</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">CD90***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">15회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">75%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center;background:#FEFCE8;border-left:3px solid #FDE047"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">7</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700">AB12***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">13회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">72%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">8</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">EF23***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">13회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">70%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">9</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">GH45***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">12회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">68%</div><div style="flex:1;text-align:center;font-size:11px;color:var(--text4)">미참여</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">10</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">IJ67***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">12회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">65%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">11</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">KL89***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">11회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">64%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">12</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">MN01***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">11회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">63%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">13</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">OP23***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">11회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">62%</div><div style="flex:1;text-align:center;font-size:11px;color:var(--text4)">미참여</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">14</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">QR45***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">10회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">61%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">15</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">ST67***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">10회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">60%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">16</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">UV89***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">10회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">59%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">17</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">WX01***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">9회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">58%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">18</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">YZ23***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">9회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">57%</div><div style="flex:1;text-align:center;font-size:11px;color:var(--text4)">미참여</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">19</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">AB45***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">9회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">56%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">20</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">CD67***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">9회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">55%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">21</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">EF89***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">8회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">54%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">22</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">GH01***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">8회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">53%</div><div style="flex:1;text-align:center;font-size:11px;color:var(--text4)">미참여</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">23</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">IJ23***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">8회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">52%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">24</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">KL45***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">8회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">51%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">25</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">MN67***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">7회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">50%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">26</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">OP89***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">7회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">49%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">27</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">QR01***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">7회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">48%</div><div style="flex:1;text-align:center;font-size:11px;color:var(--text4)">미참여</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">28</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">ST23***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">7회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">47%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">29</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">UV45***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">6회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">46%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">30</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">WX67***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">6회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">45%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">31</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">YZ89***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">6회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">44%</div><div style="flex:1;text-align:center;font-size:11px;color:var(--text4)">미참여</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">32</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">AB01***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">6회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">43%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">33</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">CD23***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">5회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">42%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">34</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">EF45***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">5회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">41%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">35</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">GH67***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">5회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">40%</div><div style="flex:1;text-align:center;font-size:11px;color:var(--text4)">미참여</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">36</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">IJ89***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">5회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">39%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">37</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">KL01***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">5회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">38%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">38</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">MN23***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">4회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">37%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">39</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">OP45***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">4회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">36%</div><div style="flex:1;text-align:center;font-size:11px;color:var(--text4)">미참여</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">40</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">QR67***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">4회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">35%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">41</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">ST89***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">4회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">34%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">42</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">UV01***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">4회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">33%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">43</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">WX23***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">3회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">32%</div><div style="flex:1;text-align:center;font-size:11px;color:var(--text4)">미참여</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">44</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">YZ45***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">3회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">31%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">45</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">AB67***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">3회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">30%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">46</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">CD89***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">3회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">29%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">47</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">EF01***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">3회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">28%</div><div style="flex:1;text-align:center;font-size:11px;color:var(--text4)">미참여</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">48</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">GH23***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">2회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">27%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div><div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">49</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">IJ45***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">2회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">26%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--red)">▲ 상승</div></div><div style="display:flex;padding:10px 14px;align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">50</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">KL67***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">2회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">25%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--primary)">▼ 하락</div></div>        </div>
+        <!-- 이벤트 유의사항 -->
+        <div style="margin:12px 14px 0;padding:14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius)">
+          <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:8px">📋 이벤트 유의사항</div>
+          <div style="font-size:10px;color:var(--text4);line-height:1.9">
+            · 본 이벤트는 당사 사정에 따라 사전 공지 없이 조건이 변경되거나 중단될 수 있습니다.<br>
+            · 부정한 방법으로 참여하거나 어뷰징이 확인된 경우 보상이 취소될 수 있습니다.<br>
+            · 리워드 PCI는 참여한 월의 익월에 자체 지갑으로 일괄 지급됩니다.<br>
+            · 동순위 발생 시 정답률 → 참여 시간이 빠른 순으로 순위가 결정됩니다.<br>
+            · 랭킹은 매월 1일 초기화되며, 당월 참여 내역 기준으로 집계됩니다.<br>
+            · 문의사항은 고객센터를 통해 접수해주세요.
+          </div>
+        </div>
       </div>
 
     </div><!-- /탭 콘텐츠 -->
@@ -3693,6 +3904,26 @@ body {
     <div class="tab-item" onclick="nav('payment')"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
     <div class="tab-item" onclick="nav('benefits')"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
     <div class="tab-item" onclick=""><div class="tab-icon">🛍️</div><div class="tab-lbl">쇼핑</div></div>
+  </div>
+
+  <!-- 23:58 이후 선택 변경 시 경고 모달 -->
+  <div class="overlay" id="late-change-modal" style="align-items:center;justify-content:center">
+    <div class="modal" style="max-width:280px">
+      <div class="modal-handle"></div>
+      <div style="text-align:center;margin-bottom:16px">
+        <div style="font-size:32px;margin-bottom:8px">⏰</div>
+        <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px">자정이 얼마 남지 않았어요</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.7">현재 <strong>23:58</strong>입니다.<br>광고 시청 후 자정이 지나면<br>선택 변경이 불가합니다.</div>
+      </div>
+      <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:10px 12px;margin-bottom:16px">
+        <div style="font-size:11px;color:#92400E;line-height:1.7">
+          · 광고 시청 중 자정(00:00)이 지나면<br>&nbsp;&nbsp;변경이 취소됩니다.<br>
+          · 변경을 원하시면 지금 바로 진행해주세요.
+        </div>
+      </div>
+      <button class="btn btn-primary" style="margin-bottom:8px" onclick="closeLateChangeModal();confirmAdWatch()">그래도 변경하기</button>
+      <button class="btn btn-ghost" style="font-size:12px" onclick="closeLateChangeModal()">취소</button>
+    </div>
   </div>
 
   <!-- Vote modal -->
@@ -3926,7 +4157,7 @@ body {
 <!-- ═══════════════ NEWS DETAIL ═══════════════ -->
 <div class="screen" id="sc-news-detail">
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
-  <div class="back-header"><span class="back-btn" onclick="nav('news')">‹ 최근 소식</span></div>
+  <div class="back-header"><span class="back-btn" onclick="nav('news')">‹</span><span class="back-title">소식</span></div>
   <div class="sbody">
     <div data-zone="newsdet-header" style="padding:0 14px 16px">
       <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:8px">📄 보도자료</div>
@@ -4376,7 +4607,7 @@ body {
 <!-- ═══════════════ PAYMENT — WalletConnect 미연결 ═══════════════ -->
 <div class="screen" id="sc-payment-wc">
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
-  <div class="aheader"><div class="htitle">결제</div><div class="hicons"><div class="icon-btn" onclick="showModal('noti-modal')">🔔</div><div class="icon-btn" onclick="showModal('mmm-payment-wc')">☰</div></div></div>
+  <div class="back-header"><span class="back-btn" onclick="nav('payment')">‹</span><span class="back-title">결제</span></div>
   <div class="sbody" style="background:#fff">
 
     <!-- 중앙 안내 영역 -->
@@ -4716,9 +4947,8 @@ body {
 <div class="screen" id="sc-wallet-manage">
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
   <div class="back-header">
-    <span class="back-btn" onclick="nav('wallet')">‹ 지갑</span>
-    <div style="font-size:15px;font-weight:700;color:var(--text);position:absolute;left:50%;transform:translateX(-50%)">지갑 관리</div>
-    <div class="icon-btn" onclick="showModal('mmm-wallet-manage')" style="margin-left:auto">☰</div>
+    <span class="back-btn" onclick="nav('wallet')">‹</span>
+    <span class="back-title">지갑 관리</span>
   </div>
   <div class="sbody">
 
@@ -5701,19 +5931,41 @@ function confirmVote() {
   document.querySelector(pendingVote === 'up' ? '.vote-up' : '.vote-down').classList.add('sel');
   const area = document.getElementById('change-btn-area');
   if (area && !area.querySelector('button')) {
-    area.innerHTML = '<div style="margin:0 14px 8px"><button class="btn btn-ghost" style="font-size:11px" onclick="changeVote()">선택 변경하기 (광고 시청 필요)</button></div>';
+    area.innerHTML = '<div style="margin:0 14px 8px;display:flex;gap:6px;align-items:center"><button class="btn btn-ghost" style="font-size:11px;flex:1" onclick="changeVote()">선택 변경하기 (광고 시청 필요)</button><button onclick="showLateChangeModal()" style="font-size:9px;font-weight:600;padding:6px 8px;border-radius:7px;background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;cursor:pointer;font-family:\'Noto Sans KR\',sans-serif;white-space:nowrap">23:58↗</button></div>';
   }
 }
+/* ═══ [PRD 수정 필요] 광고 시청 후 자정 초과 시 선택 변경 정책 ═══
+   엣지 케이스: 23:59에 광고 시청 시작 → 00:01에 복귀 시 변경 가능 여부
+
+   결정: 변경 완료 시점 기준 (엄격 적용)
+     - 광고 시청 버튼 클릭 전 23:58 이후라면 사전 경고 표시
+       "현재 HH:MM입니다. 광고 시청 후 자정이 지나면 변경이 불가합니다."
+     - 변경 완료 시점이 자정(00:00) 이후면 변경 불가 처리
+     - 버퍼(유예 시간) 없음 — 자정이 명확한 마감선
+
+   사유: 버퍼 적용 시 전날 수정 + 당일 재참여 구조가 되어
+         UI/UX 혼란 및 정책 복잡도 증가
+ ═══ */
 function changeVote() {
-  const ok = confirm('📺 광고를 시청하면 선택을 변경할 수 있습니다.\n\n[확인] = 광고 시청 완료 → 변경 허용\n[취소] = 광고 스킵 → 변경 불가');
-  if (ok) {
-    document.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('sel'));
-    const area = document.getElementById('change-btn-area');
-    if (area) area.innerHTML = '';
-    alert('✅ 광고 시청 완료. 다시 선택해주세요.');
-  } else {
-    alert('⚠️ 광고 스킵. 기존 선택이 유지됩니다.');
-  }
+  confirmAdWatch();
+}
+function confirmAdWatch() {
+  document.getElementById('ad-watch-modal').classList.remove('open');
+  document.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('sel'));
+  const area = document.getElementById('change-btn-area');
+  if (area) area.innerHTML = '';
+  showToast('광고 시청 완료. 다시 선택해주세요.');
+}
+function cancelAdWatch() {
+  document.getElementById('ad-watch-modal').classList.remove('open');
+}
+
+/* 23:58 이후 수정 요청 시뮬레이션 */
+function showLateChangeModal() {
+  document.getElementById('late-change-modal').classList.add('open');
+}
+function closeLateChangeModal() {
+  document.getElementById('late-change-modal').classList.remove('open');
 }
 
 /* ══ CALENDAR TOOLTIP ══ */
@@ -5915,7 +6167,7 @@ async function loadPolicyContent() {
   try {
     var ctrl = new AbortController();
     setTimeout(function() { ctrl.abort(); }, 10000);
-    var r = await fetch(QNA.apiUrl + '?action=policy_list', { signal: ctrl.signal });
+    var r = await fetch(QNA.apiUrl + '?action=policy_list', { signal: ctrl.signal, redirect: 'follow' });
     var rawText = await r.text();
     /* ── 디버그: 응답 원문 확인 ── */
     console.log('[policy_list 원문 응답]', rawText);
@@ -6027,15 +6279,7 @@ async function loadPolicyQna() {
   if (btn) btn.disabled = true;
   if (icon) { icon.style.animation = 'spin .7s linear infinite'; icon.style.color = 'var(--primary)'; }
   try {
-    var ctrl = new AbortController();
-    setTimeout(function() { ctrl.abort(); }, 10000);
-    var r = await fetch(QNA.apiUrl + '?action=qna_list', { signal: ctrl.signal });
-    var d = await r.json();
-    var knownScreens = ['home','wallet','wallet-empty','wallet-pci','wallet-other','asset','pci-info','token-detail','benefits','prediction','news','news-detail','payment','payment-wc','wallet-manage'];
-    policyQnaItems = (d.items || []).filter(function(i) {
-      var s = (i.screen || '').trim();
-      return s === 'policy' || s === '' || !knownScreens.includes(s);
-    });
+    await loadQna();
     renderPolicyQna();
     if (icon) { icon.style.animation=''; icon.style.color='var(--green)'; icon.textContent='✓';
       setTimeout(function(){ icon.style.color=''; icon.textContent='↻'; if(btn) btn.disabled=false; }, 1500); }
@@ -6075,11 +6319,17 @@ function renderPolicyQna() {
   }
 
   listEl.innerHTML = items.map(function(item) {
-    var ts   = item.created_at ? new Date(item.created_at).toLocaleString('ko-KR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+    var ts   = item.created_at ? new Date(item.created_at).toLocaleString('ko-KR',{year:'numeric',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'}) : '';
     var saId = String(item.id).replace(/'/g,'');
     var sl   = QNA.LABELS[item.screen] || item.screen || '알 수 없음';
     var ansHtml = item.answer
-      ? '<div class="qna-a">' + esc(item.answer) + '</div>'
+      ? '<div class="qna-a">' + esc(item.answer) +
+          (item.answered_at
+            ? '<div style="font-size:10px;color:var(--text4);margin-top:4px">' +
+              new Date(item.answered_at).toLocaleString('ko-KR',{year:'numeric',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'}) +
+              '</div>'
+            : '') +
+          '</div>'
       : '<div class="qna-pending">답변 대기 중...</div>' +
         '<button class="qna-reply-btn" onclick="toggleReply(this)">✏️ 답변 작성</button>' +
         '<div class="qna-reply-area" id="pra-' + saId + '">' +
@@ -6102,34 +6352,91 @@ async function submitPolicyQ() {
   var author= (aEl||{}).value || '익명';
   if (!q.trim()) { if (qEl) qEl.focus(); return; }
   if (!QNA.apiUrl) return;
-  btn.disabled = true; btn.textContent = '등록 중...';
+  /* Optimistic Update — 즉시 리스트에 반영 */
+  var tempId = 'temp_' + Date.now();
+  QNA.items.push({ id: tempId, screen: 'policy', question: q.trim(), author: author || '익명', answer: null, created_at: new Date().toISOString(), _pending: true });
+  qEl.value = ''; btn.disabled = true; btn.textContent = '등록 중...'; st.classList.remove('show');
+  renderPolicyQna();
   try {
     var url  = QNA.apiUrl + '?action=qna_add&screen=policy&question=' + encodeURIComponent(q.trim()) + '&author=' + encodeURIComponent(author);
-    var ctrl = new AbortController(); setTimeout(function(){ ctrl.abort(); }, 10000);
-    var r    = await fetch(url, { signal: ctrl.signal });
+    var ctrl = new AbortController(); var tmr = setTimeout(function(){ ctrl.abort(); }, 10000);
+    var r    = await fetch(url, { signal: ctrl.signal }); clearTimeout(tmr);
     var d    = await r.json();
+    QNA.items = QNA.items.filter(function(i){ return i.id !== tempId; });
     if (d.success) {
-      qEl.value = '';
       st.textContent = '✅ 등록됐습니다!'; st.style.color = 'var(--green)'; st.classList.add('show');
       setTimeout(function(){ st.classList.remove('show'); }, 2000);
-      loadPolicyQna();
-    } else throw new Error(d.error);
+      loadQna().then(function(){ renderPolicyQna(); });
+    } else throw new Error(d.error || '등록 실패');
   } catch(e) {
-    st.textContent = '❌ ' + e.message; st.style.color = 'var(--red)'; st.classList.add('show');
+    QNA.items = QNA.items.filter(function(i){ return i.id !== tempId; });
+    renderPolicyQna();
+    if (e.name === 'AbortError') { st.textContent = '⏱ 응답 지연.'; st.style.color = 'var(--gold)'; }
+    else { st.textContent = '❌ ' + e.message; st.style.color = 'var(--red)'; }
+    st.classList.add('show');
   } finally { btn.disabled = false; btn.textContent = '등록'; }
 }
 
 async function submitPolicyA(id) {
+  id = String(id);
   var inp = document.getElementById('pri-' + id);
   var ans = inp ? inp.value.trim() : '';
-  if (!ans || !QNA.apiUrl) return;
+  if (!ans) { alert('답변을 입력해주세요.'); return; }
+  if (!QNA.apiUrl) return;
+  /* Optimistic Update — 즉시 화면 반영 */
+  var item = QNA.items.find(function(i){ return String(i.id) === id; });
+  if (item) { item.answer = ans; item._answerPending = true; renderPolicyQna(); }
   try {
     var url  = QNA.apiUrl + '?action=qna_answer&id=' + encodeURIComponent(id) + '&answer=' + encodeURIComponent(ans);
-    var ctrl = new AbortController(); setTimeout(function(){ ctrl.abort(); }, 10000);
-    var r    = await fetch(url, { signal: ctrl.signal });
+    var ctrl = new AbortController(); var tmr = setTimeout(function(){ ctrl.abort(); }, 10000);
+    var r    = await fetch(url, { signal: ctrl.signal }); clearTimeout(tmr);
     var d    = await r.json();
-    if (d.success) loadPolicyQna();
-  } catch(e) { alert('오류: ' + e.message); }
+    if (d.success) {
+      if (item) delete item._answerPending;
+      loadQna().then(function(){ renderPolicyQna(); });
+    } else {
+      if (item) { item.answer = null; delete item._answerPending; renderPolicyQna(); }
+      alert('오류: ' + (d.error || ''));
+    }
+  } catch(e) {
+    if (item) { item.answer = null; delete item._answerPending; renderPolicyQna(); }
+    alert(e.name === 'AbortError' ? '응답 지연' : '오류: ' + e.message);
+  }
+}
+
+/* ══ 등락예측 달력 탭 ══ */
+function switchCalTab(tab) {
+  var prevBtn  = document.getElementById('cal-tab-prev');
+  var currBtn  = document.getElementById('cal-tab-curr');
+  var prevCal  = document.getElementById('cal-prev-month');
+  var currCal  = document.getElementById('cal-curr-month');
+  var label    = document.getElementById('cal-month-label');
+
+  if (tab === 'prev') {
+    prevBtn.style.fontWeight = '700';
+    prevBtn.style.border     = '1px solid var(--primary)';
+    prevBtn.style.background = 'var(--primary-l)';
+    prevBtn.style.color      = 'var(--primary)';
+    currBtn.style.fontWeight = '600';
+    currBtn.style.border     = '1px solid var(--border)';
+    currBtn.style.background = 'var(--card2)';
+    currBtn.style.color      = 'var(--text3)';
+    if (label) label.textContent = '2026년 4월';
+    if (prevCal) prevCal.style.display = 'block';
+    if (currCal) currCal.style.display = 'none';
+  } else {
+    currBtn.style.fontWeight = '700';
+    currBtn.style.border     = '1px solid var(--primary)';
+    currBtn.style.background = 'var(--primary-l)';
+    currBtn.style.color      = 'var(--primary)';
+    prevBtn.style.fontWeight = '600';
+    prevBtn.style.border     = '1px solid var(--border)';
+    prevBtn.style.background = 'var(--card2)';
+    prevBtn.style.color      = 'var(--text3)';
+    if (label) label.textContent = '2026년 5월';
+    if (prevCal) prevCal.style.display = 'none';
+    if (currCal) currCal.style.display = 'block';
+  }
 }
 
 /* ══ WALLET TAB FILTER ══ */
@@ -6364,7 +6671,7 @@ async function loadQna(){
   try{
     var ctrl=new AbortController();
     var tmr=setTimeout(function(){ ctrl.abort(); },10000);
-    var r=await fetch(QNA.apiUrl+'?action=qna_list',{signal:ctrl.signal});
+    var r=await fetch(QNA.apiUrl+'?action=qna_list',{signal:ctrl.signal,redirect:'follow'});
     clearTimeout(tmr);
     var d=await r.json();
     QNA.items=d.items||[]; updateBadge(); renderQna();
@@ -6414,7 +6721,7 @@ function renderQna(){
   }
   listEl.innerHTML=items.map(function(item){
     var sl=QNA.LABELS[item.screen]||item.screen;
-    var ts=item.created_at?new Date(item.created_at).toLocaleString('ko-KR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+    var ts=item.created_at?new Date(item.created_at).toLocaleString('ko-KR',{year:'numeric',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'}):'';
     var scr=String(item.screen).replace(/'/g,'');
     var ansHtml;
     if(item._pending){ ansHtml='<div class="qna-pending" style="color:var(--gold)">⏳ 등록 중...</div>'; }
@@ -6487,6 +6794,7 @@ const DESC = {
 };
 async function loadDesc(){
   if(!QNA.apiUrl) return;
+  DESC.failed = false;  /* 매번 재시도 가능하도록 리셋 */
   var _skKey = document.querySelector('.screen.active') ? document.querySelector('.screen.active').id.replace('sc-','') : null;
   if(window.SK) window.SK.showForApi(_skKey);
   document.querySelectorAll('.policy-section[data-screen]').forEach(function(sec){
@@ -6497,7 +6805,7 @@ async function loadDesc(){
   try{
     var ctrl=new AbortController();
     var timer=setTimeout(function(){ ctrl.abort(); },10000);
-    var res=await fetch(QNA.apiUrl+'?action=desc',{signal:ctrl.signal});
+    var res=await fetch(QNA.apiUrl+'?action=desc',{signal:ctrl.signal,redirect:'follow'});
     clearTimeout(timer);
     var data=await res.json();
     if(!data.success) throw new Error(data.error||'로드 실패');
@@ -7044,12 +7352,13 @@ function generateAppsScriptCode() {
     '  const items = data.slice(1)',
     '    .filter(row => row[0])',
     '    .map(row => ({',
-    '      id:         row[0],',
-    '      screen:     row[1],',
-    '      question:   row[2],',
-    '      author:     row[3],',
-    '      answer:     row[4] || null,',
-    '      created_at: row[5] ? new Date(row[5]).toISOString() : null,',
+    '      id:          row[0],',
+    '      screen:      row[1],',
+    '      question:    row[2],',
+    '      author:      row[3],',
+    '      answer:      row[4] || null,',
+    '      created_at:  row[5] ? new Date(row[5]).toISOString() : null,',
+    '      answered_at: row[6] ? new Date(row[6]).toISOString() : null,',
     '    }));',
     '',
     '  return jsonResponse({ success: true, items });',
@@ -7060,8 +7369,10 @@ function generateAppsScriptCode() {
     '  if (!q) return jsonResponse({ success: false, error: \'질문 내용이 없습니다.\' });',
     '',
     '  const sheet = getOrCreateQnaSheet();',
+    '  const lastRow = sheet.getLastRow();',
+    '  const newId = lastRow <= 1 ? 1 : lastRow;  // 헤더 제외 순차 ID',
     '  sheet.appendRow([',
-    '    Date.now(),',
+    '    newId,',
     '    params.screen || \'unknown\',',
     '    q,',
     '    params.author || \'익명\',',
@@ -7083,6 +7394,7 @@ function generateAppsScriptCode() {
     '  if (rowIdx < 1) return jsonResponse({ success: false, error: \'질문을 찾을 수 없습니다.\' });',
     '',
     '  sheet.getRange(rowIdx + 1, 5).setValue(ans);',
+    '  sheet.getRange(rowIdx + 1, 7).setValue(new Date());  // 답변 일시 (G열)',
     '  return jsonResponse({ success: true });',
     '}',
     '',
@@ -7132,8 +7444,8 @@ function generateAppsScriptCode() {
     '  let sheet = ss.getSheetByName(SHEET_NAME_QNA);',
     '  if (!sheet) {',
     '    sheet = ss.insertSheet(SHEET_NAME_QNA);',
-    '    sheet.appendRow([\'id\', \'screen\', \'question\', \'author\', \'answer\', \'created_at\']);',
-    '    sheet.getRange(1, 1, 1, 6).setFontWeight(\'bold\').setBackground(\'#E8F0FE\');',
+    '    sheet.appendRow([\'id\', \'screen\', \'question\', \'author\', \'answer\', \'created_at\', \'answered_at\']);',
+    '    sheet.getRange(1, 1, 1, 7).setFontWeight(\'bold\').setBackground(\'#E8F0FE\');',
     '    sheet.setColumnWidth(3, 300);',
     '    sheet.setColumnWidth(5, 300);',
     '  }',
