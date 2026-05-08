@@ -614,8 +614,8 @@ body {
 .qna-item { padding:11px 14px; border-bottom:1px solid var(--border); }
 .qna-screen-tag { font-size:9px; font-weight:700; padding:1px 6px; border-radius:10px; background:var(--primary-l); color:var(--primary); border:1px solid #BFDBFE; }
 .qna-ts { font-size:9px; color:var(--text4); }
-.qna-q { font-size:12px; font-weight:600; color:var(--text); line-height:1.5; margin:5px 0 5px; display:flex; gap:5px; }
-.qna-q::before { content:'Q'; font-weight:800; color:var(--primary); flex-shrink:0; }
+.qna-q { font-size:12px; font-weight:600; color:var(--text); line-height:1.5; margin:5px 0 5px; }
+.qna-q::before { content:'Q '; font-weight:800; color:var(--primary); }
 .qna-a { font-size:12px; color:var(--text2); line-height:1.5; background:var(--card2); border-radius:8px; padding:7px 10px; display:flex; gap:5px; }
 .qna-a::before { content:'A'; font-weight:800; color:var(--green); flex-shrink:0; }
 .qna-pending { font-size:11px; color:var(--text4); font-style:italic; background:var(--card2); border-radius:8px; padding:5px 9px; }
@@ -651,8 +651,8 @@ body {
 .qna-screen-tag { font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;transition:all .15s; }
 .qna-screen-tag:hover { background:var(--primary);color:#fff; }
 .qna-ts { font-size:9px;color:var(--text4); }
-.qna-q { font-size:12px;font-weight:600;color:var(--text);line-height:1.5;margin:5px 0;display:flex;gap:5px; }
-.qna-q::before { content:'Q';font-weight:800;color:var(--primary);flex-shrink:0; }
+.qna-q { font-size:12px;font-weight:600;color:var(--text);line-height:1.5;margin:5px 0; }
+.qna-q::before { content:'Q ';font-weight:800;color:var(--primary); }
 .qna-a { font-size:12px;color:var(--text2);line-height:1.5;background:var(--card2);border-radius:8px;padding:7px 10px;display:flex;gap:5px; }
 .qna-a::before { content:'A';font-weight:800;color:var(--green);flex-shrink:0; }
 .qna-pending { font-size:11px;color:var(--text4);font-style:italic;background:var(--card2);border-radius:8px;padding:5px 9px; }
@@ -6725,7 +6725,7 @@ function renderQna(){
     var scr=String(item.screen).replace(/'/g,'');
     var ansHtml;
     if(item._pending){ ansHtml='<div class="qna-pending" style="color:var(--gold)">⏳ 등록 중...</div>'; }
-    else if(item.answer){ ansHtml='<div class="qna-a">'+esc(item.answer)+'</div>'; }
+    else if(item.answer){ ansHtml='<div class="qna-a">'+linkify(item.answer)+'</div>'; }
     else{
       var saId=String(item.id).replace(/'/g,'');
       ansHtml='<div class="qna-pending">답변 대기 중...</div>'+
@@ -6738,7 +6738,7 @@ function renderQna(){
       '<div style="display:flex;justify-content:space-between;margin-bottom:4px">'+
       '<span class="qna-screen-tag" data-screen="'+scr+'" onclick="nav(this.dataset.screen)">'+esc(sl)+' ↗</span>'+
       '<span class="qna-ts">'+ts+' · '+esc(item.author||'익명')+'</span></div>'+
-      '<div class="qna-q">'+esc(item.question)+'</div>'+ansHtml+'</div>';
+      '<div class="qna-q">'+linkify(item.question)+'</div>'+ansHtml+'</div>';
   }).join('');
 }
 function updateBadge(){}
@@ -6854,7 +6854,7 @@ function renderDescForScreen(screenKey){
         var hz=z?' has-zone':'';
         var za=z?' data-zone="'+z+'" data-label="'+sg+'" onclick="hlZoneFromEl(this)"':'';
         var da=dc?' class="pd '+dc+'"':' class="pd"';
-        html+='<div class="policy-item'+hz+'"'+za+'><div'+da+'></div>'+escD(c)+'</div>';
+        html+='<div class="policy-item'+hz+'"'+za+'><div'+da+'></div>'+linkify(c)+'</div>';
       }
     });
     html+='</div>';
@@ -6863,6 +6863,26 @@ function renderDescForScreen(screenKey){
 }
 function hlZoneFromEl(el){ var z=el.dataset.zone; var lb=el.dataset.label||''; if(z) hlZone(z,lb); }
 function escD(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* URL → 클릭 가능한 링크로 변환
+ * 지원 형식:
+ *   [링크텍스트](https://...)  →  <a>링크텍스트</a>
+ *   https://...               →  <a>https://...</a>
+ */
+function linkify(s) {
+  var escaped = escD(s);
+  // [텍스트](URL) 형식
+  escaped = escaped.replace(
+    /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener" style="display:inline;color:var(--primary);text-decoration:underline;font-weight:600;word-break:break-all">$1</a>'
+  );
+  // 단순 URL
+  escaped = escaped.replace(
+    /(?<!href=")(https?:\/\/[^\s<"]+)/g,
+    '<a href="$1" target="_blank" rel="noopener" style="display:inline;color:var(--primary);text-decoration:underline;word-break:break-all">$1</a>'
+  );
+  return escaped;
+}
 
 /* ══ SHEET GUIDE ══ */
 function showSheetGuide(){ document.getElementById('guide-overlay').classList.add('open'); }
