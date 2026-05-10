@@ -3523,8 +3523,9 @@ body {
         <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">2</div><div style="font-size:12px;color:var(--text2);line-height:1.5">참여 시간: 매일 <strong>KST 00:00 ~ 23:59</strong></div></div>
         <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">3</div><div style="font-size:12px;color:var(--text2);line-height:1.5">1일 1회 참여 · <strong>선택 변경 가능</strong> (광고 시청 필요)</div></div>
         <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">4</div><div style="font-size:12px;color:var(--text2);line-height:1.5">정답 시 PCI 보상 누적 → <strong>익월 1~2주차 일괄 지급</strong></div></div>
-        <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">5</div><div style="font-size:12px;color:var(--text2);line-height:1.5">지급 지갑: 페이코인 앱 <strong>자체 지갑</strong>으로 자동 지급</div></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">5</div><div style="font-size:12px;color:var(--text2);line-height:1.5">지급 지갑: 페이코인 앱 <strong>자체 지갑</strong>으로 지급</div></div>
         <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">6</div><div style="font-size:12px;color:var(--text2);line-height:1.5">결과 확인: <strong>다음날 KST 00:30 이후</strong></div></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:#FEF3C7;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:#92400E">7</div><div style="font-size:12px;color:var(--text2);line-height:1.5">시세 <strong>변동 없음</strong> 시: 당일 결과 <strong>무효</strong> 처리 · 보상 미지급</div></div>
       </div>
     </div>
     <div style="margin:0 14px 20px;background:var(--primary-l);border:1px solid #BFDBFE;border-radius:12px;padding:12px;text-align:center">
@@ -3563,14 +3564,16 @@ body {
 
       <!-- 상태 전환 토글 (뷰어 전용) -->
       <div style="display:flex;justify-content:flex-end;padding:4px 14px 0;gap:6px">
-        <button onclick="document.getElementById('pred-result-done').style.display='block';document.getElementById('pred-result-fail').style.display='none';document.getElementById('pred-result-pending').style.display='none';document.getElementById('pred-result-none').style.display='none'"
+        <button onclick="document.getElementById('pred-result-done').style.display='block';document.getElementById('pred-result-fail').style.display='none';document.getElementById('pred-result-pending').style.display='none';document.getElementById('pred-result-none').style.display='none';document.getElementById('pred-result-flat').style.display='none'"
           style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정답</button>
-        <button onclick="document.getElementById('pred-result-done').style.display='none';document.getElementById('pred-result-fail').style.display='block';document.getElementById('pred-result-pending').style.display='none';document.getElementById('pred-result-none').style.display='none'"
+        <button onclick="document.getElementById('pred-result-done').style.display='none';document.getElementById('pred-result-fail').style.display='block';document.getElementById('pred-result-pending').style.display='none';document.getElementById('pred-result-none').style.display='none';document.getElementById('pred-result-flat').style.display='none'"
           style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">오답</button>
-        <button onclick="document.getElementById('pred-result-done').style.display='none';document.getElementById('pred-result-fail').style.display='none';document.getElementById('pred-result-pending').style.display='block';document.getElementById('pred-result-none').style.display='none'"
+        <button onclick="document.getElementById('pred-result-done').style.display='none';document.getElementById('pred-result-fail').style.display='none';document.getElementById('pred-result-pending').style.display='block';document.getElementById('pred-result-none').style.display='none';document.getElementById('pred-result-flat').style.display='none'"
           style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">집계 중</button>
-        <button onclick="document.getElementById('pred-result-done').style.display='none';document.getElementById('pred-result-fail').style.display='none';document.getElementById('pred-result-pending').style.display='none';document.getElementById('pred-result-none').style.display='block'"
+        <button onclick="document.getElementById('pred-result-done').style.display='none';document.getElementById('pred-result-fail').style.display='none';document.getElementById('pred-result-pending').style.display='none';document.getElementById('pred-result-none').style.display='block';document.getElementById('pred-result-flat').style.display='none'"
           style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text4);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">어제 미참여</button>
+        <button onclick="document.getElementById('pred-result-done').style.display='none';document.getElementById('pred-result-fail').style.display='none';document.getElementById('pred-result-pending').style.display='none';document.getElementById('pred-result-none').style.display='none';document.getElementById('pred-result-flat').style.display='block'"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">변동없음</button>
       </div>
 
       <!-- 어제 결과 카드 -->
@@ -3638,6 +3641,34 @@ body {
         <div style="font-size:22px;margin-bottom:6px">🔮</div>
         <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:4px">오늘의 예측에 참여해보세요!</div>
         <div style="font-size:11px;color:var(--text3);line-height:1.6">PCI 시세가 오를까요, 내릴까요?<br>맞히면 PCI 리워드를 드려요!</div>
+      </div>
+
+      <!-- 변동없음 상태 (개발: 기준/결과 종가 동일 시 표시) -->
+      <div id="pred-result-flat" data-zone="pred-yesterday" style="display:none;margin:8px 14px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border:1px solid #C7D2FE;border-radius:var(--radius);padding:13px">
+        <div style="font-size:10px;color:#4338CA;font-weight:600;margin-bottom:8px">📅 04.29 어제 결과</div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">내 선택</div><div style="font-size:15px;font-weight:800;color:#4338CA">▲ 상승</div></div>
+          <div style="font-size:20px;color:var(--text4)">→</div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">실제 결과</div><div style="font-size:15px;font-weight:800;color:var(--text3)">— 변동없음</div></div>
+          <div style="background:#fff;border:1px solid #C7D2FE;border-radius:10px;padding:8px 12px;text-align:center">
+            <div style="font-size:10px;color:#4338CA;font-weight:600">결과 무효</div>
+            <div style="font-size:13px;font-weight:800;color:var(--text3)">+0 PCI</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;padding-top:9px;border-top:1px solid #C7D2FE">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <div style="text-align:center;flex:1">
+              <div style="font-size:9px;color:var(--text4);margin-bottom:2px">기준 종가 (04.28)</div>
+              <div style="font-size:12px;font-weight:700;color:var(--text2)">78.20원</div>
+            </div>
+            <div style="font-size:14px;color:var(--text4);display:flex;align-items:center">=</div>
+            <div style="text-align:center;flex:1">
+              <div style="font-size:9px;color:var(--text4);margin-bottom:2px">결과 종가 (04.29)</div>
+              <div style="font-size:12px;font-weight:700;color:var(--text3)">78.20원</div>
+            </div>
+          </div>
+          <div style="font-size:10px;color:#4338CA;background:#EEF2FF;border-radius:6px;padding:6px 10px;text-align:center">기준 종가와 결과 종가가 동일하여 당일 결과가 무효 처리됩니다.</div>
+        </div>
       </div>
 
       <!-- 집계 중 상태 (개발: 전날 집계 미완료 시 표시) -->
@@ -3716,7 +3747,7 @@ body {
           </div>
           <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
             <div style="font-size:11px;color:var(--text3)">지난달 획득 PCI: <strong>8.30</strong></div>
-            <div style="font-size:10px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;padding:2px 8px;border-radius:20px;font-weight:600">지급 완료</div>
+
           </div>
         </div>
         <!-- ═══ [PRD 수정 필요] 6.3.3 빈 상태(Empty State) 처리 — 참여 내역 ═══
@@ -3838,6 +3869,7 @@ body {
             · 부정한 방법으로 참여하거나 어뷰징이 확인된 경우 보상이 취소될 수 있습니다.<br>
             · 리워드 PCI는 참여한 월의 익월에 자체 지갑으로 일괄 지급됩니다.<br>
             · 동순위 발생 시 정답률 → 참여 시간이 빠른 순으로 순위가 결정됩니다.<br>
+            · 기준 종가와 결과 종가가 동일한 경우(변동 없음) 해당 일의 결과는 무효 처리되며 보상이 지급되지 않습니다.<br>
             · 랭킹은 매월 1일 초기화되며, 당월 참여 내역 기준으로 집계됩니다.<br>
             · 문의사항은 고객센터를 통해 접수해주세요.
           </div>
@@ -3889,6 +3921,7 @@ body {
             · 부정한 방법으로 참여하거나 어뷰징이 확인된 경우 보상이 취소될 수 있습니다.<br>
             · 리워드 PCI는 참여한 월의 익월에 자체 지갑으로 일괄 지급됩니다.<br>
             · 동순위 발생 시 정답률 → 참여 시간이 빠른 순으로 순위가 결정됩니다.<br>
+            · 기준 종가와 결과 종가가 동일한 경우(변동 없음) 해당 일의 결과는 무효 처리되며 보상이 지급되지 않습니다.<br>
             · 랭킹은 매월 1일 초기화되며, 당월 참여 내역 기준으로 집계됩니다.<br>
             · 문의사항은 고객센터를 통해 접수해주세요.
           </div>
