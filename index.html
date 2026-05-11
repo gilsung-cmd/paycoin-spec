@@ -782,6 +782,70 @@ body {
 
 </head>
 <body>
+<!-- ═══ ACCESS GATE ═══ -->
+<div id="gate" style="position:fixed;inset:0;z-index:999999;background:#0f172a;display:flex;align-items:center;justify-content:center;font-family:'Noto Sans KR',sans-serif">
+  <div style="background:#1e293b;border:1px solid #334155;border-radius:16px;padding:36px 32px;width:320px;text-align:center">
+    <h2 style="color:#94a3b8;font-size:13px;font-weight:500;margin-bottom:24px;letter-spacing:1px">RESTRICTED ACCESS</h2>
+    <div id="gate-checking" style="color:#64748b;font-size:12px">접속 확인 중...</div>
+    <input id="gate-input" type="password" placeholder="••••" maxlength="20" style="display:none;width:100%;padding:12px 14px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#f1f5f9;font-size:15px;letter-spacing:4px;text-align:center;outline:none;margin-bottom:12px;font-family:'Noto Sans KR',sans-serif;box-sizing:border-box">
+    <button id="gate-btn" onclick="checkPw()" style="display:none;width:100%;padding:11px;border-radius:8px;background:#3b82f6;color:#fff;font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:4px">확인</button>
+    <div id="gate-msg" style="font-size:11px;color:#ef4444;margin-top:10px;min-height:16px"></div>
+  </div>
+</div>
+<script>
+(function(){
+  const ALLOWED=['211.213.60.','58.234.227.'];
+  const PW_HASH='56b946435788e7c6f9b7802eb17f513f1eedecddfbc2b5e5eca5fc7db5f5f340';
+
+  async function sha256(str){
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+
+  window.checkPw=async function(){
+    const val=document.getElementById('gate-input').value;
+    const hash=await sha256(val);
+    if(hash===PW_HASH){
+      document.getElementById('gate').style.display='none';
+      sessionStorage.setItem('gate_auth','1');
+    } else {
+      document.getElementById('gate-msg').textContent='잘못된 비밀번호입니다.';
+      document.getElementById('gate-input').value='';
+      setTimeout(()=>{ document.body.innerHTML=''; },1500);
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded',function(){
+    document.getElementById('gate-input').addEventListener('keydown',function(e){ if(e.key==='Enter') checkPw(); });
+  });
+
+  if(sessionStorage.getItem('gate_auth')==='1'){
+    document.getElementById('gate').style.display='none';
+    return;
+  }
+
+  fetch('https://api.ipify.org?format=json',{signal:AbortSignal.timeout(5000)})
+    .then(r=>r.json())
+    .then(d=>{
+      const ip=d.ip||'';
+      if(ALLOWED.some(p=>ip.startsWith(p))){
+        document.getElementById('gate').style.display='none';
+        sessionStorage.setItem('gate_auth','1');
+      } else {
+        document.getElementById('gate-checking').style.display='none';
+        document.getElementById('gate-input').style.display='block';
+        document.getElementById('gate-btn').style.display='block';
+        document.getElementById('gate-input').focus();
+      }
+    })
+    .catch(()=>{
+      document.getElementById('gate-checking').style.display='none';
+      document.getElementById('gate-input').style.display='block';
+      document.getElementById('gate-btn').style.display='block';
+      document.getElementById('gate-input').focus();
+    });
+})();
+</script>
 
 <!-- TOP NAV -->
 <nav class="top-nav">
