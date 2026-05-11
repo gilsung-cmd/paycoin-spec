@@ -795,18 +795,16 @@ body {
 <script>
 (function(){
   const ALLOWED=['211.213.60.','58.234.227.'];
-  const PW_HASH='56b946435788e7c6f9b7802eb17f513f1eedecddfbc2b5e5eca5fc7db5f5f340';
 
-  async function sha256(str){
-    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-  }
+
+  // 비밀번호 검증 (charCode 배열로 난독화)
+  const _k=[53,56,53,55];
+  function _chk(s){ return s.length===_k.length && [...s].every((c,i)=>c.charCodeAt(0)===_k[i]); }
 
   let _tries=0;
-  window.checkPw=async function(){
+  window.checkPw=function(){
     const val=document.getElementById('gate-input').value;
-    const hash=await sha256(val);
-    if(hash===PW_HASH){
+    if(_chk(val)){
       document.getElementById('gate').style.display='none';
       sessionStorage.setItem('gate_auth','1');
     } else {
@@ -816,7 +814,7 @@ body {
         document.getElementById('gate-msg').textContent='접근이 차단되었습니다.';
         document.getElementById('gate-input').disabled=true;
         document.getElementById('gate-btn').disabled=true;
-        setTimeout(()=>{ document.body.innerHTML=''; window.close(); },1500);
+        setTimeout(()=>{ document.body.innerHTML=''; },1500);
       } else {
         document.getElementById('gate-msg').textContent='잘못된 비밀번호입니다. (남은 시도: '+left+'회)';
         document.getElementById('gate-input').value='';
