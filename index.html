@@ -1603,27 +1603,49 @@ body {
   </div>
   <div class="sbody">
     <!-- Asset Card -->
-    <div data-zone="home-asset" style="margin:0 14px 14px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px 18px;box-shadow:var(--shadow-sm)">
-      <!-- 상단: 라벨 + 결제내역 링크 -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-        <div style="font-size:11px;color:var(--text4);font-weight:500">이번 달 누적 결제</div>
-        <span onclick="showToast('기존 거래내역 페이지 이동 (코빗 결제 탭으로)')" style="font-size:11px;color:var(--text4);cursor:pointer">결제내역 ›</span>
+    <!-- 뷰어 토글 -->
+    <div style="display:flex;justify-content:flex-end;padding:0 14px 4px;gap:6px">
+      <button onclick="document.getElementById('home-asset-connected').style.display='block';document.getElementById('home-asset-disconnected').style.display='none'"
+        style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">지갑 연결됨</button>
+      <button onclick="document.getElementById('home-asset-connected').style.display='none';document.getElementById('home-asset-disconnected').style.display='block'"
+        style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text4);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">지갑 미연결</button>
+    </div>
+
+    <!-- 연결된 경우 -->
+    <div id="home-asset-connected" data-zone="home-asset" style="margin:0 14px 14px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:12px 16px;box-shadow:var(--shadow-sm)">
+      <!-- 총 보유 자산 -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div style="font-size:11px;color:var(--text4);font-weight:500">총 보유 자산</div>
+        <span onclick="nav('asset')" style="font-size:11px;color:var(--text4);cursor:pointer">자산현황 ›</span>
       </div>
-      <!-- 금액 + 건수 -->
-      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px">
-        <div style="font-size:24px;font-weight:800;color:var(--text);letter-spacing:-.8px">32,400<span style="font-size:13px;font-weight:500;color:var(--text3)"> 원</span></div>
-        <div style="font-size:11px;color:var(--text4)">이번 달 결제 <strong style="color:var(--text2)">4건</strong></div>
-      </div>
+      <div style="font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.8px;margin-bottom:10px">1,234,567<span style="font-size:12px;font-weight:500;color:var(--text3)">원</span></div>
       <!-- 구분선 -->
       <div style="height:1px;background:var(--border);margin-bottom:10px"></div>
-      <!-- 하단: 할인 혜택 + 평균 할인율 양끝 정렬 -->
+      <!-- 결제 요약 2줄 -->
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-        <div style="font-size:11px;color:var(--text3)">이번 달 할인 혜택</div>
-        <div style="font-size:13px;font-weight:700;color:var(--green)">4,800원 절약</div>
+        <div style="font-size:11px;color:var(--text3)">이번 달 결제</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text2)">32,400원 <span style="color:var(--text4);font-weight:400">· 4건</span></div>
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between">
-        <div style="font-size:11px;color:var(--text3)">평균 할인율</div>
-        <div style="font-size:13px;font-weight:700;color:var(--green)">12.9%</div>
+        <div style="font-size:11px;color:var(--text3)">할인 혜택</div>
+        <div style="font-size:12px;font-weight:600;color:var(--green)">4,800원 절약 <span style="color:var(--text4);font-weight:400">· 평균 12.9%</span></div>
+      </div>
+    </div>
+
+    <!-- 미연결 경우 -->
+    <div id="home-asset-disconnected" data-zone="home-asset" style="display:none;margin:0 14px 14px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:12px 16px;box-shadow:var(--shadow-sm)">
+      <!-- 총 보유 자산 -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div style="font-size:11px;color:var(--text4);font-weight:500">총 보유 자산</div>
+        <span onclick="nav('asset')" style="font-size:11px;color:var(--text4);cursor:pointer">자산현황 ›</span>
+      </div>
+      <div style="font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.8px;margin-bottom:10px">82,450<span style="font-size:12px;font-weight:500;color:var(--text3)">원</span></div>
+      <!-- 구분선 -->
+      <div style="height:1px;background:var(--border);margin-bottom:12px"></div>
+      <!-- 연결 유도 -->
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:11px;color:var(--text3);line-height:1.6">거래소 지갑을 연결하고<br>다양한 결제 혜택을 받아보세요</div>
+        <button onclick="nav('wallet')" style="font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:7px 12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap">연결하기 →</button>
       </div>
     </div>
 
