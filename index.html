@@ -811,10 +811,15 @@ body {
       _tries++;
       const left=3-_tries;
       if(left<=0){
-        document.getElementById('gate-msg').textContent='접근이 차단되었습니다.';
+        document.getElementById('gate-msg').textContent='';
         document.getElementById('gate-input').disabled=true;
         document.getElementById('gate-btn').disabled=true;
-        setTimeout(()=>{ document.body.innerHTML=''; },1500);
+        document.getElementById('gate').innerHTML=`
+          <div style="text-align:center;color:#94a3b8;font-family:'Noto Sans KR',sans-serif;padding:40px 24px;max-width:320px">
+            <div style="font-size:32px;margin-bottom:16px">🔒</div>
+            <div style="font-size:14px;font-weight:700;color:#f1f5f9;margin-bottom:10px">접근이 제한된 페이지입니다</div>
+            <div style="font-size:12px;color:#64748b;line-height:1.8">지정된 장소 또는 네트워크 환경에서만<br>접근할 수 있습니다.<br>담당자에게 문의해주세요.</div>
+          </div>`;
       } else {
         document.getElementById('gate-msg').textContent='잘못된 비밀번호입니다. (남은 시도: '+left+'회)';
         document.getElementById('gate-input').value='';
