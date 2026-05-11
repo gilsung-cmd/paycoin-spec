@@ -480,9 +480,11 @@ body {
 .news-meta { font-size: 10px; color: var(--text4); display: flex; gap: 8px; }
 
 /* ══ PAYMENT BUTTONS ══ */
-.pay-btns { display: flex; gap: 8px; margin: 0 14px 10px; }
-.pay-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: all .15s; box-shadow: var(--shadow-sm); }
+.pay-btns { display: flex; gap: 8px; margin: 0 14px 10px; align-items: stretch; }
+.pay-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: all .15s; box-shadow: var(--shadow-sm); }
 .pay-btn:active { border-color: var(--primary); background: var(--primary-l); }
+.pay-btn-primary { flex: 3; padding: 16px 10px; }
+.pay-btn-secondary { flex: 2; padding: 14px 8px; }
 .pay-icon { font-size: 26px; }
 .pay-label { font-size: 12px; font-weight: 700; color: var(--text); }
 .pay-desc { font-size: 10px; color: var(--text4); text-align: center; line-height: 1.3; }
@@ -4401,17 +4403,17 @@ body {
       </div>
     </div>
 
-    <!-- ② QR / 바코드 결제 버튼 -->
+    <!-- ② 오프라인 바코드 결제 / QR 스캔 결제 버튼 (비대칭 배치) -->
     <div data-zone="pay-buttons" class="pay-btns">
-      <div class="pay-btn" onclick="alert('QR 카메라 활성화')">
-        <div class="pay-icon">📷</div>
-        <div class="pay-label">QR 결제</div>
-        <div class="pay-desc">PC·키오스크 QR 스캔</div>
+      <div class="pay-btn pay-btn-primary" onclick="showToast('바코드 결제 화면으로 이동')">
+        <div class="pay-icon" style="font-size:26px">🔲</div>
+        <div class="pay-label" style="font-size:13px;font-weight:700">오프라인 바코드 결제</div>
+        <div class="pay-desc">오프라인 단말기에 바코드 제시</div>
       </div>
-      <div class="pay-btn">
-        <div class="pay-icon">🔲</div>
-        <div class="pay-label">바코드 결제</div>
-        <div class="pay-desc">오프라인 단말기 제시</div>
+      <div class="pay-btn pay-btn-secondary" onclick="alert('QR 카메라 활성화')">
+        <div class="pay-icon" style="font-size:22px">📷</div>
+        <div class="pay-label" style="font-size:12px;font-weight:600">QR 스캔 결제</div>
+        <div class="pay-desc" style="font-size:10px">PC·키오스크 QR 스캔</div>
       </div>
     </div>
 
