@@ -483,8 +483,8 @@ body {
 .pay-btns { display: flex; gap: 8px; margin: 0 14px 10px; align-items: stretch; }
 .pay-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: all .15s; box-shadow: var(--shadow-sm); }
 .pay-btn:active { border-color: var(--primary); background: var(--primary-l); }
-.pay-btn-primary { flex: 3; padding: 16px 10px; }
-.pay-btn-secondary { flex: 2; padding: 14px 8px; }
+.pay-btn-primary { flex: 3; padding: 20px 10px; }
+.pay-btn-secondary { flex: 2; padding: 18px 8px; }
 .pay-icon { font-size: 26px; }
 .pay-label { font-size: 12px; font-weight: 700; color: var(--text); }
 .pay-desc { font-size: 10px; color: var(--text4); text-align: center; line-height: 1.3; }
@@ -3142,43 +3142,95 @@ body {
       </div>
     </div>
 
-    <!-- ⑧ 공지사항 -->
-    <div class="stitle" style="margin-top:6px">공지사항 <span class="see-all" onclick="showToast('공지사항 전체 페이지로 이동')">전체 보기</span></div>
-    <div style="margin:0 14px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)">
-      <div onclick="showToast('공지사항 상세 페이지로 이동')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer">
+    <!-- ⑧ 최근 소식 & 공지사항 탭 -->
+    <div style="margin-top:6px">
+      <!-- 탭 헤더 -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin:0 14px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex">
+          <button id="pci-tab-news" onclick="switchPciTab('news')"
+            style="padding:9px 16px;font-size:12px;font-weight:700;border:none;border-bottom:2px solid var(--primary);cursor:pointer;background:transparent;color:var(--primary);font-family:'Noto Sans KR',sans-serif;transition:all .15s">최근 소식</button>
+          <button id="pci-tab-notice" onclick="switchPciTab('notice')"
+            style="padding:9px 16px;font-size:12px;font-weight:500;border:none;border-bottom:2px solid transparent;cursor:pointer;background:transparent;color:var(--text3);font-family:'Noto Sans KR',sans-serif;transition:all .15s">공지사항</button>
+        </div>
+        <span id="pci-tab-see-all" class="see-all" onclick="nav('news')" style="cursor:pointer;margin-right:14px">전체 보기</span>
+      </div>
+
+      <!-- 최근 소식 목록 -->
+      <div id="pci-news-list" style="margin:0 14px 14px;background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)">
+      <div onclick="showToast('최근 소식 상세로 이동')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">페이코인, 1분기 결제 거래량 전년비 230% 성장</div>
+          <div style="font-size:10px;color:var(--text4)">2026.04.30</div>
+        </div>
+        <span style="font-size:13px;color:var(--text4);flex-shrink:0;margin-left:8px">›</span>
+      </div>
+      <div onclick="showToast('최근 소식 상세로 이동')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">다날핀테크, PCI 글로벌 결제 확대 파트너사 체결</div>
+          <div style="font-size:10px;color:var(--text4)">2026.04.28</div>
+        </div>
+        <span style="font-size:13px;color:var(--text4);flex-shrink:0;margin-left:8px">›</span>
+      </div>
+      <div onclick="showToast('최근 소식 상세로 이동')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">페이코인 v2.0 출시, 월렛커넥트 연동 공식 지원</div>
+          <div style="font-size:10px;color:var(--text4)">2026.04.25</div>
+        </div>
+        <span style="font-size:13px;color:var(--text4);flex-shrink:0;margin-left:8px">›</span>
+      </div>
+      <div onclick="showToast('최근 소식 상세로 이동')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">PCI 빗썸 거래량 역대 최고치 경신</div>
+          <div style="font-size:10px;color:var(--text4)">2026.04.22</div>
+        </div>
+        <span style="font-size:13px;color:var(--text4);flex-shrink:0;margin-left:8px">›</span>
+      </div>
+      <div onclick="showToast('최근 소식 상세로 이동')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">페이코인, 신규 가맹점 50개 추가 입점</div>
+          <div style="font-size:10px;color:var(--text4)">2026.04.18</div>
+        </div>
+        <span style="font-size:13px;color:var(--text4);flex-shrink:0;margin-left:8px">›</span>
+      </div>
+      </div>
+
+      <!-- 공지사항 목록 (기본 숨김) -->
+      <div id="pci-notice-list" style="display:none;margin:0 14px 14px;background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)">
+      <div onclick="showToast('공지사항 상세로 이동')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer">
         <div style="flex:1;min-width:0">
           <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">[공지] 페이코인 앱 v2.0 업데이트 안내</div>
           <div style="font-size:10px;color:var(--text4)">2026.05.01</div>
         </div>
         <span style="font-size:13px;color:var(--text4);flex-shrink:0;margin-left:8px">›</span>
       </div>
-      <div onclick="showToast('공지사항 상세 페이지로 이동')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer">
+      <div onclick="showToast('공지사항 상세로 이동')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer">
         <div style="flex:1;min-width:0">
           <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">[공지] WalletConnect 거래소 연결 기능 업데이트</div>
           <div style="font-size:10px;color:var(--text4)">2026.04.28</div>
         </div>
         <span style="font-size:13px;color:var(--text4);flex-shrink:0;margin-left:8px">›</span>
       </div>
-      <div onclick="showToast('공지사항 상세 페이지로 이동')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer">
+      <div onclick="showToast('공지사항 상세로 이동')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer">
         <div style="flex:1;min-width:0">
           <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">[안내] 5월 PCI 등락 예측 이벤트 참여 방법</div>
           <div style="font-size:10px;color:var(--text4)">2026.04.25</div>
         </div>
         <span style="font-size:13px;color:var(--text4);flex-shrink:0;margin-left:8px">›</span>
       </div>
-      <div onclick="showToast('공지사항 상세 페이지로 이동')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer">
+      <div onclick="showToast('공지사항 상세로 이동')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer">
         <div style="flex:1;min-width:0">
           <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">[공지] 거래소 지갑 연결 인증 방식 변경 안내</div>
           <div style="font-size:10px;color:var(--text4)">2026.04.20</div>
         </div>
         <span style="font-size:13px;color:var(--text4);flex-shrink:0;margin-left:8px">›</span>
       </div>
-      <div onclick="showToast('공지사항 상세 페이지로 이동')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer">
+      <div onclick="showToast('공지사항 상세로 이동')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer">
         <div style="flex:1;min-width:0">
           <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">[안내] 페이코인 쇼핑 신규 파트너사 입점 안내</div>
           <div style="font-size:10px;color:var(--text4)">2026.04.15</div>
         </div>
         <span style="font-size:13px;color:var(--text4);flex-shrink:0;margin-left:8px">›</span>
+      </div>
       </div>
     </div>
 
@@ -3981,6 +4033,14 @@ body {
 
       <!-- 랭킹 탭 -->
       <div data-zone="pred-ranking-table" id="pred-ranking" style="display:none">
+        <!-- 서브탭: 이번달 / 지난달 / 연간 -->
+        <div style="display:flex;border-bottom:1px solid var(--border);background:var(--card2)">
+          <div id="rbt-monthly" onclick="showRankingTab('monthly')" style="flex:1;padding:8px 0;text-align:center;font-size:11px;font-weight:700;cursor:pointer;color:var(--primary);border-bottom:2px solid var(--primary)">이번 달</div>
+          <div id="rbt-last" onclick="showRankingTab('last')" style="flex:1;padding:8px 0;text-align:center;font-size:11px;font-weight:600;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent">지난달</div>
+          <div id="rbt-yearly" onclick="showRankingTab('yearly')" style="flex:1;padding:8px 0;text-align:center;font-size:11px;font-weight:600;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent">연간</div>
+        </div>
+        <!-- 이번달 랭킹 -->
+        <div id="rank-monthly">
         <!-- 뷰어 토글: 1일 빈 상태 시뮬레이션 -->
         <div style="display:flex;justify-content:flex-end;padding:4px 14px 0;gap:6px">
           <button onclick="document.getElementById('ranking-empty').style.display='none';document.getElementById('ranking-table').style.display='block'"
@@ -4028,7 +4088,75 @@ body {
             · 문의사항은 고객센터를 통해 접수해주세요.
           </div>
         </div>
-      </div>
+        </div><!-- /rank-monthly -->
+
+        <!-- 지난달 랭킹 -->
+        <div id="rank-last" style="display:none">
+          <div style="margin:10px 14px 6px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:var(--radius);padding:10px 12px">
+            <div style="font-size:10px;color:#92400E;font-weight:600">📅 2026년 4월 최종 랭킹</div>
+            <div style="font-size:10px;color:#92400E;margin-top:2px">리워드 지급 완료 · 5월 2일 00:30 KST 확정</div>
+          </div>
+          <div style="margin:0 14px 4px;font-size:10px;color:var(--text4);padding:6px 0">※ 집계기준: 누적 정답 횟수 → 정답률 → 참여 시간 빠른 순 · 상위 50명</div>
+          <div style="background:var(--card2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+            <div style="display:flex;padding:7px 14px">
+              <div style="width:28px;font-size:10px;font-weight:700;color:var(--text3)">순위</div>
+              <div style="flex:1.4;font-size:10px;font-weight:700;color:var(--text3)">구분(mycode)</div>
+              <div style="flex:0.9;text-align:center;font-size:10px;font-weight:700;color:var(--text3)">참여횟수</div>
+              <div style="flex:0.9;text-align:center;font-size:10px;font-weight:700;color:var(--text3)">적중률</div>
+              <div style="flex:1;text-align:center;font-size:10px;font-weight:700;color:var(--text3)">획득 PCI</div>
+            </div>
+          </div>
+          <div style="background:var(--card)">
+            <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#D97706">🥇</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">XK93***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">28회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">90%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--green)">14.20 PCI</div></div>
+            <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#9CA3AF">🥈</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">PQ47***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">26회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">85%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--green)">12.30 PCI</div></div>
+            <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#CD7F32">🥉</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">TY28***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">25회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">83%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--green)">10.80 PCI</div></div>
+            <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center;background:linear-gradient(135deg,#FEFCE8,#FFFBEB);border-left:3px solid #FDE047"><div style="width:28px;font-size:13px;font-weight:700;color:var(--primary)">4</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700">AB12***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">23회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">78%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--green)">8.30 PCI</div></div>
+            <div style="display:flex;padding:10px 14px;align-items:center;color:var(--text4)"><div style="flex:1;text-align:center;font-size:10px">· · · 상위 50명 전체 목록 · · ·</div></div>
+          </div>
+          <div style="margin:12px 14px 0;padding:14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius)">
+            <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:8px">📋 이벤트 유의사항</div>
+            <div style="font-size:10px;color:var(--text4);line-height:1.9">
+              · 본 이벤트는 당사 사정에 따라 사전 공지 없이 조건이 변경되거나 중단될 수 있습니다.<br>
+              · 리워드 PCI는 참여한 월의 익월에 자체 지갑으로 일괄 지급됩니다.<br>
+              · 동순위 발생 시 정답률 → 참여 시간이 빠른 순으로 순위가 결정됩니다.<br>
+              · 문의사항은 고객센터를 통해 접수해주세요.
+            </div>
+          </div>
+        </div><!-- /rank-last -->
+
+        <!-- 연간 랭킹 -->
+        <div id="rank-yearly" style="display:none">
+          <div style="margin:10px 14px 6px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border:1px solid #C7D2FE;border-radius:var(--radius);padding:10px 12px">
+            <div style="font-size:10px;color:#4338CA;font-weight:600">🏆 2026년 연간 랭킹</div>
+            <div style="font-size:10px;color:#4338CA;margin-top:2px">2026.01.01 ~ 현재 · 매년 1월 1일 초기화</div>
+          </div>
+          <div style="margin:0 14px 4px;font-size:10px;color:var(--text4);padding:6px 0">※ 집계기준: 연간 누적 정답 횟수 → 정답률 → 참여 시간 빠른 순 · 상위 50명</div>
+          <div style="background:var(--card2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+            <div style="display:flex;padding:7px 14px">
+              <div style="width:28px;font-size:10px;font-weight:700;color:var(--text3)">순위</div>
+              <div style="flex:1.4;font-size:10px;font-weight:700;color:var(--text3)">구분(mycode)</div>
+              <div style="flex:0.9;text-align:center;font-size:10px;font-weight:700;color:var(--text3)">참여횟수</div>
+              <div style="flex:0.9;text-align:center;font-size:10px;font-weight:700;color:var(--text3)">적중률</div>
+              <div style="flex:1;text-align:center;font-size:10px;font-weight:700;color:var(--text3)">획득 PCI</div>
+            </div>
+          </div>
+          <div style="background:var(--card)">
+            <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#D97706">🥇</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">XK93***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">58회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">91%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--green)">28.50 PCI</div></div>
+            <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#9CA3AF">🥈</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">PQ47***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">54회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">87%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--green)">24.60 PCI</div></div>
+            <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center;background:linear-gradient(135deg,#FEFCE8,#FFFBEB);border-left:3px solid #FDE047"><div style="width:28px;font-size:13px;font-weight:700;color:var(--primary)">3</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700">AB12***</div><div style="flex:0.9;text-align:center;font-size:12px;font-weight:700">51회</div><div style="flex:0.9;text-align:center;font-size:11px;color:var(--text3)">84%</div><div style="flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--green)">21.10 PCI</div></div>
+            <div style="display:flex;padding:10px 14px;align-items:center;color:var(--text4)"><div style="flex:1;text-align:center;font-size:10px">· · · 상위 50명 전체 목록 · · ·</div></div>
+          </div>
+          <div style="margin:12px 14px 0;padding:14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius)">
+            <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:8px">📋 이벤트 유의사항</div>
+            <div style="font-size:10px;color:var(--text4);line-height:1.9">
+              · 본 이벤트는 당사 사정에 따라 사전 공지 없이 조건이 변경되거나 중단될 수 있습니다.<br>
+              · 연간 랭킹은 매년 1월 1일 초기화되며, 당해연도 참여 내역 기준으로 집계됩니다.<br>
+              · 동순위 발생 시 정답률 → 참여 시간이 빠른 순으로 순위가 결정됩니다.<br>
+              · 문의사항은 고객센터를 통해 접수해주세요.
+            </div>
+          </div>
+        </div><!-- /rank-yearly -->
+      </div><!-- /pred-ranking -->
 
     </div><!-- /탭 콘텐츠 -->
   </div><!-- /pred-main -->
@@ -4384,31 +4512,32 @@ body {
       </div>
     </div>
 
-    <!-- 충전 잔액 한 줄 -->
-    <div style="margin:0 14px 10px;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;position:relative">
-      <div style="display:flex;align-items:center;gap:4px">
-        <span style="font-size:11px;color:var(--text4);font-weight:500">충전 잔액</span>
-        <span id="pay-balance-tip-btn"
-          onclick="var t=document.getElementById('pay-balance-tip');t.style.display=t.style.display==='block'?'none':'block';event.stopPropagation()"
-          style="width:14px;height:14px;border-radius:50%;background:var(--border);color:var(--text4);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;line-height:1">?</span>
+    <!-- 예상 보유 잔액 -->
+    <div style="margin:0 14px 12px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:13px 16px;position:relative;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px">
+          <span style="font-size:10px;color:var(--text4);font-weight:500">예상 보유 잔액</span>
+          <span id="pay-balance-tip-btn"
+            onclick="var t=document.getElementById('pay-balance-tip');t.style.display=t.style.display==='block'?'none':'block';event.stopPropagation()"
+            style="width:13px;height:13px;border-radius:50%;background:var(--border);color:var(--text4);font-size:8px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">?</span>
+        </div>
+        <div style="font-size:17px;font-weight:800;color:var(--text);letter-spacing:-.5px">8,245<span style="font-size:12px;font-weight:500;color:var(--text3)"> 원</span></div>
         <div id="pay-balance-tip" style="display:none;position:absolute;bottom:calc(100% + 8px);left:14px;width:230px;padding:10px 12px;background:#1F2937;border-radius:10px;font-size:10px;color:#fff;line-height:1.8;z-index:50;box-shadow:0 4px 16px rgba(0,0,0,.2)">
-          결제하고 남은 금액과 직접 충전한 금액을 합산한 예상 잔액이에요. 연결된 은행 계좌의 실제 잔액과 차이가 있을 수 있어요.
+          결제하고 남은 금액을 합산한 예상 잔액이에요. 실제 잔액과 차이가 있을 수 있어요.
           <div style="position:absolute;bottom:-5px;left:14px;width:10px;height:10px;background:#1F2937;transform:rotate(45deg)"></div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <div style="font-size:13px;font-weight:700;color:var(--text3)">8,245<span style="font-size:11px;font-weight:500;color:var(--text4)"> 원</span></div>
-        <button onclick="" title="충전하기"
-          style="width:20px;height:20px;border-radius:5px;background:var(--card2);border:1px solid var(--border);font-size:13px;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;line-height:1">+</button>
-      </div>
+      <button onclick="" title="더하기"
+        style="width:28px;height:28px;border-radius:8px;background:var(--card2);border:1px solid var(--border);font-size:16px;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;line-height:1">+</button>
     </div>
 
     <!-- ② 오프라인 바코드 결제 / QR 스캔 결제 버튼 (비대칭 배치) -->
     <div data-zone="pay-buttons" class="pay-btns">
-      <div class="pay-btn pay-btn-primary" onclick="showToast('바코드 결제 화면으로 이동')">
+      <div class="pay-btn pay-btn-primary" onclick="showToast('바코드 결제 화면으로 이동')"
+        style="background:var(--primary);border-color:var(--primary)">
         <div class="pay-icon" style="font-size:26px">🔲</div>
-        <div class="pay-label" style="font-size:13px;font-weight:700">오프라인 바코드 결제</div>
-        <div class="pay-desc">오프라인 단말기에 바코드 제시</div>
+        <div class="pay-label" style="font-size:13px;font-weight:700;color:#fff">오프라인 바코드 결제</div>
+        <div class="pay-desc" style="color:rgba(255,255,255,.75)">오프라인 단말기에 바코드 제시</div>
       </div>
       <div class="pay-btn pay-btn-secondary" onclick="alert('QR 카메라 활성화')">
         <div class="pay-icon" style="font-size:22px">📷</div>
@@ -5466,6 +5595,14 @@ body {
      POLICY PANEL
 ══════════════════════════════════════════════ -->
 <div class="policy-panel">
+  <!-- desc 패널 헤더 -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--border)">
+    <div style="font-size:14px;font-weight:800;color:var(--text)">📋 Description</div>
+    <button id="desc-refresh-btn" onclick="descRefresh()"
+      style="width:24px;height:24px;border-radius:6px;background:var(--card2);border:1px solid var(--border);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;" title="기능 명세 새로고침">
+      <span id="desc-refresh-icon" style="display:inline-block;transition:color .2s">↻</span>
+    </button>
+  </div>
 
 
 <!-- ── HOME ── -->
@@ -6009,19 +6146,41 @@ setInterval(() => { bannerIdx = (bannerIdx + 1) % BANNER_COUNT; updateBanner(); 
 (function() {
   let mPos = 0;
   let mPaused = false;
+  let mResumeTimer = null;
+
   function loopMerchants() {
     const track = document.getElementById('merchant-track');
     if (!track || mPaused) return;
     const cards = track.querySelectorAll('.merchant-card');
     if (!cards.length) return;
     const cardW = cards[0].offsetWidth + 10;
-    const totalOriginal = 10; // original card count
-    mPos += 0.6; // px per frame
-    if (mPos >= cardW * totalOriginal) mPos = 0; // seamless reset
+    const totalOriginal = 10;
+    mPos += 0.6;
+    if (mPos >= cardW * totalOriginal) mPos = 0;
     track.style.transform = `translateX(-${mPos}px)`;
     track.style.transition = 'none';
   }
   setInterval(loopMerchants, 16);
+
+  /* 터치/마우스 이벤트로 일시정지 */
+  document.addEventListener('DOMContentLoaded', function() {
+    var wrap = document.querySelector('#merchant-track').parentElement;
+    if (!wrap) return;
+
+    function pause() {
+      mPaused = true;
+      if (mResumeTimer) clearTimeout(mResumeTimer);
+    }
+    function resume() {
+      mResumeTimer = setTimeout(function() { mPaused = false; }, 300);
+    }
+
+    wrap.addEventListener('touchstart', pause,  { passive: true });
+    wrap.addEventListener('touchend',   resume, { passive: true });
+    wrap.addEventListener('mousedown',  pause);
+    wrap.addEventListener('mouseup',    resume);
+    wrap.addEventListener('mouseleave', resume);
+  });
 })();
 
 /* ══ PREDICTION TABS ══ */
@@ -6317,6 +6476,7 @@ async function loadPolicyContent() {
         '<div style="font-size:10px;font-family:monospace;background:#fff;border:1px solid #FCA5A5;border-radius:6px;padding:10px;word-break:break-all;white-space:pre-wrap;max-height:200px;overflow-y:auto">' +
         rawText.replace(/</g,"&lt;").replace(/>/g,"&gt;").substring(0,2000) + '</div>' +
         '<div style="font-size:10px;color:#7F1D1D;margin-top:8px">💡 위 내용을 복사해서 공유해주세요.</div>' +
+        '<button onclick="loadPolicyContent()" style="margin-top:10px;padding:5px 14px;background:var(--primary);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:11px">↻ 재시도</button>' +
         '</div>';
       return;
     }
@@ -6537,6 +6697,49 @@ async function submitPolicyA(id) {
     if (item) { item.answer = null; delete item._answerPending; renderPolicyQna(); }
     alert(e.name === 'AbortError' ? '응답 지연' : '오류: ' + e.message);
   }
+}
+
+/* ══ 오늘의 PCI 탭 (최근 소식/공지사항) ══ */
+function switchPciTab(tab) {
+  var isNews = (tab === 'news');
+  var newsBt     = document.getElementById('pci-tab-news');
+  var noticeBt   = document.getElementById('pci-tab-notice');
+  var newsList   = document.getElementById('pci-news-list');
+  var noticeList = document.getElementById('pci-notice-list');
+  var seeAll     = document.getElementById('pci-tab-see-all');
+
+  if (newsBt) {
+    newsBt.style.color       = isNews ? 'var(--primary)' : 'var(--text3)';
+    newsBt.style.fontWeight  = isNews ? '700' : '500';
+    newsBt.style.borderBottom = isNews ? '2px solid var(--primary)' : '2px solid transparent';
+  }
+  if (noticeBt) {
+    noticeBt.style.color      = isNews ? 'var(--text3)' : 'var(--primary)';
+    noticeBt.style.fontWeight = isNews ? '500' : '700';
+    noticeBt.style.borderBottom = isNews ? '2px solid transparent' : '2px solid var(--primary)';
+  }
+  if (newsList)   newsList.style.display   = isNews ? 'block' : 'none';
+  if (noticeList) noticeList.style.display = isNews ? 'none'  : 'block';
+  if (seeAll) {
+    seeAll.onclick = isNews
+      ? function(){ nav('news'); }
+      : function(){ showToast('공지사항 전체 페이지로 이동'); };
+  }
+}
+
+/* ══ 랭킹 서브탭 ══ */
+function showRankingTab(tab) {
+  ['monthly','last','yearly'].forEach(function(t) {
+    var btn = document.getElementById('rbt-'+t);
+    var panel = document.getElementById('rank-'+t);
+    var on = (t === tab);
+    if (btn) {
+      btn.style.color = on ? 'var(--primary)' : 'var(--text3)';
+      btn.style.fontWeight = on ? '700' : '600';
+      btn.style.borderBottom = on ? '2px solid var(--primary)' : '2px solid transparent';
+    }
+    if (panel) panel.style.display = on ? 'block' : 'none';
+  });
 }
 
 /* ══ 등락예측 달력 탭 ══ */
@@ -6932,7 +7135,12 @@ const DESC = {
 };
 async function loadDesc(){
   if(!QNA.apiUrl) return;
-  DESC.failed = false;  /* 매번 재시도 가능하도록 리셋 */
+  DESC.failed = false;
+  /* 로딩 시작 시 아이콘 스피너 */
+  var _icon = document.getElementById('desc-refresh-icon');
+  var _btn  = document.getElementById('desc-refresh-btn');
+  if(_icon){ _icon.style.animation='spin .7s linear infinite'; _icon.style.color='var(--primary)'; }
+  if(_btn)  _btn.disabled = true;
   var _skKey = document.querySelector('.screen.active') ? document.querySelector('.screen.active').id.replace('sc-','') : null;
   if(window.SK) window.SK.showForApi(_skKey);
   document.querySelectorAll('.policy-section[data-screen]').forEach(function(sec){
@@ -6950,6 +7158,9 @@ async function loadDesc(){
     DESC.items=data.items||[]; DESC.loaded=true;
     renderAllDesc();
     if(window.SK) window.SK.hideAll();
+    /* 성공 시 아이콘 복구 */
+    if(_icon){ _icon.style.animation=''; _icon.style.color='var(--green)'; _icon.textContent='✓'; }
+    setTimeout(function(){ if(_icon){ _icon.style.color=''; _icon.textContent='↻'; } if(_btn) _btn.disabled=false; }, 1500);
   }catch(err){
     DESC.failed=true;
     console.error('[loadDesc] 오류:', err.name, err.message);
@@ -6957,8 +7168,28 @@ async function loadDesc(){
     document.querySelectorAll('.policy-section').forEach(function(sec){
       if(sec.dataset.staticBackup) sec.innerHTML=sec.dataset.staticBackup;
     });
+    // 실패 — 애니메이션 중지 + 빨간 ↻ 고정
+    if(_icon){ _icon.style.animation=''; _icon.style.color='var(--red)'; _icon.textContent='↻'; }
+    if(_btn) _btn.disabled=false;
+    // 현재 활성 섹션에 실패 메시지 표시
+    var activeSec = document.querySelector('.policy-section.active');
+    if(activeSec){
+      activeSec.innerHTML = '<div style="padding:32px 0;text-align:center">' +
+        '<div style="font-size:24px;margin-bottom:10px">⚠️</div>' +
+        '<div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px">불러오기 실패</div>' +
+        '<div style="font-size:11px;color:var(--text4);margin-bottom:14px">' + (err.name==='AbortError'?'응답 시간 초과':'네트워크 오류') + '</div>' +
+        '<button onclick="descRefresh()" style="padding:7px 20px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer">↻ 재시도</button>' +
+        '</div>';
+    }
   }
 }
+function descRefresh(){
+  // 실패 메시지 제거 — 활성 섹션 초기 상태로
+  var activeSec = document.querySelector('.policy-section.active');
+  if(activeSec && activeSec.dataset.staticBackup) activeSec.innerHTML = activeSec.dataset.staticBackup;
+  loadDesc();
+}
+
 function renderAllDesc(){
   document.querySelectorAll('.policy-section[data-screen]').forEach(function(sec){
     renderDescForScreen(sec.dataset.screen);
