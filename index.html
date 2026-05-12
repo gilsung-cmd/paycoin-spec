@@ -2168,7 +2168,8 @@ body {
           <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:600;color:var(--text)">입출금 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">입금(리워드 포함)/출금 완료 시 알림</div></div><div class="noti-toggle on" onclick="toggleNoti(this)"><div class="knob"></div></div></div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:600;color:var(--text)">결제 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">결제 관련 정보 발생 시 알림</div></div><div class="noti-toggle off" onclick="toggleNoti(this)"><div class="knob"></div></div></div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:600;color:var(--text)">서비스 참여 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">참여 가능한 활동 알림 (출석체크 등)</div></div><div class="noti-toggle off" onclick="toggleNoti(this)"><div class="knob"></div></div></div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px"><div><div style="font-size:13px;font-weight:600;color:var(--text)">PCI 상승/하락 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">전일 대비 5% 이상 변동 시 알림</div></div><div class="noti-toggle off" onclick="toggleNoti(this)"><div class="knob"></div></div></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:600;color:var(--text)">PCI 상승/하락 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">전일 대비 5% 이상 변동 시 알림</div></div><div class="noti-toggle off" onclick="toggleNoti(this)"><div class="knob"></div></div></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px"><div><div style="font-size:13px;font-weight:600;color:var(--text)">등락 예측 결과 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">예측 결과 집계 완료 시 알림 (KST 00:30)</div></div><div class="noti-toggle off" onclick="toggleNoti(this)"><div class="knob"></div></div></div>
         </div>
         <div style="padding:14px 18px 8px;font-size:13px;font-weight:800;color:var(--text)">이벤트·혜택 알림</div>
         <div style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
@@ -3659,6 +3660,25 @@ body {
   </div>
 
 <!-- ═══════════════ PREDICTION ═══════════════ -->
+<!-- ═══ [PRD 수정 필요] 등락 예측 결과 PUSH 알림 발송 정책 ═══
+
+     발송 시각: 결과 집계 완료 후 (KST 00:30)
+
+     발송 대상 조건 (아래 조건 모두 충족 시에만 발송):
+       1. 전일 등락 예측에 참여한 사용자
+       2. 앱에서 결과를 아직 확인하지 않은 사용자
+          - "확인" 기준: 등락예측 페이지 진입 시 result_viewed = true 기록
+          - 집계 완료 후 result_viewed = false 인 사용자만 발송 대상
+       3. 알림 설정 > 등락 예측 결과 알림이 ON 인 사용자
+
+     발송 제외 조건:
+       - 전일 미참여자
+       - 결과 이미 확인한 사용자 (result_viewed = true)
+       - 등락 예측 결과 알림 OFF 설정 사용자
+
+     ※ 알림 설정 항목: 알림 설정 > 일반 알림 > 등락 예측 결과 알림 (ON/OFF)
+        → 현재 알림 설정 화면에 해당 항목 추가 필요
+ ═══ -->
 <div class="screen" id="sc-prediction">
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
   <div class="aheader"><div class="htitle">PCI 등락 예측</div><div class="hicons"><div class="icon-btn" onclick="showModal('noti-modal')">🔔</div><div class="icon-btn" onclick="showModal('mmm-prediction')">☰</div></div></div>
@@ -3717,141 +3737,40 @@ body {
       ═══ -->
 
       <!-- 상태 전환 토글 (뷰어 전용) -->
-      <div style="display:flex;justify-content:flex-end;padding:4px 14px 0;gap:6px">
-        <button onclick="document.getElementById('pred-result-done').style.display='block';document.getElementById('pred-result-fail').style.display='none';document.getElementById('pred-result-pending').style.display='none';document.getElementById('pred-result-none').style.display='none';document.getElementById('pred-result-flat').style.display='none'"
+      <div style="display:flex;justify-content:flex-end;padding:4px 14px 0;gap:4px;flex-wrap:wrap">
+        <button onclick="setPredState('none')"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">미참여</button>
+        <button onclick="setPredState('voted')"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">참여완료</button>
+        <span style="width:1px;background:var(--border);margin:2px 2px"></span>
+        <button onclick="setPredResult('done')"
           style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정답</button>
-        <button onclick="document.getElementById('pred-result-done').style.display='none';document.getElementById('pred-result-fail').style.display='block';document.getElementById('pred-result-pending').style.display='none';document.getElementById('pred-result-none').style.display='none';document.getElementById('pred-result-flat').style.display='none'"
+        <button onclick="setPredResult('fail')"
           style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">오답</button>
-        <button onclick="document.getElementById('pred-result-done').style.display='none';document.getElementById('pred-result-fail').style.display='none';document.getElementById('pred-result-pending').style.display='block';document.getElementById('pred-result-none').style.display='none';document.getElementById('pred-result-flat').style.display='none'"
-          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">집계 중</button>
-        <button onclick="document.getElementById('pred-result-done').style.display='none';document.getElementById('pred-result-fail').style.display='none';document.getElementById('pred-result-pending').style.display='none';document.getElementById('pred-result-none').style.display='block';document.getElementById('pred-result-flat').style.display='none'"
-          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text4);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">어제 미참여</button>
-        <button onclick="document.getElementById('pred-result-done').style.display='none';document.getElementById('pred-result-fail').style.display='none';document.getElementById('pred-result-pending').style.display='none';document.getElementById('pred-result-none').style.display='none';document.getElementById('pred-result-flat').style.display='block'"
+        <button onclick="setPredResult('pending')"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">집계중</button>
+        <button onclick="setPredResult('flat')"
           style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">변동없음</button>
+        <button onclick="setPredResult('noplay')"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text4);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">어제 미참여</button>
       </div>
 
-      <!-- 어제 결과 카드 -->
-      <!-- 개발: 정답 → pred-result-done / 오답 → pred-result-fail / 집계 중 → pred-result-pending
-           어제 미참여(첫 참여자 포함) → pred-result-none 표시 -->
-
-      <!-- 집계 완료 상태 -->
-      <div id="pred-result-done" data-zone="pred-yesterday" style="margin:8px 14px;background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border:1px solid #6EE7B7;border-radius:var(--radius);padding:13px">
-        <div style="font-size:10px;color:var(--green);font-weight:600;margin-bottom:8px">📅 04.29 어제 결과</div>
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">내 선택</div><div style="font-size:15px;font-weight:800;color:var(--red)">▲ 상승</div></div>
-          <div style="font-size:20px;color:var(--text4)">→</div>
-          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">실제 결과</div><div style="font-size:15px;font-weight:800;color:var(--red)">▲ 상승</div></div>
-          <div style="background:#fff;border:1px solid #6EE7B7;border-radius:10px;padding:8px 12px;text-align:center">
-            <div style="font-size:10px;color:var(--green);font-weight:600">정답!</div>
-            <div style="font-size:13px;font-weight:800;color:var(--green)">+0.69 PCI</div>
-          </div>
-        </div>
-        <div style="margin-top:10px;padding-top:9px;border-top:1px solid #A7F3D0">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-            <div style="text-align:center;flex:1">
-              <div style="font-size:9px;color:var(--text4);margin-bottom:2px">기준 종가 (04.28)</div>
-              <div style="font-size:12px;font-weight:700;color:var(--text2)">78.20원</div>
-            </div>
-            <div style="font-size:14px;color:var(--text4);display:flex;align-items:center">→</div>
-            <div style="text-align:center;flex:1">
-              <div style="font-size:9px;color:var(--text4);margin-bottom:2px">결과 종가 (04.29)</div>
-              <div style="font-size:12px;font-weight:700;color:var(--red)">82.45원 ▲ 5.43%</div>
+      <!-- ── 미참여 상태 (후킹 메시지 + 투표) ── -->
+      <div id="pred-state-none">
+        <!-- 후킹 메시지 (컴팩트 배너) -->
+        <div style="margin:8px 14px 0;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border:1px solid #C7D2FE;border-radius:var(--radius);padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:18px">🔮</span>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--text)">오늘의 예측에 참여해보세요!</div>
+              <div style="font-size:10px;color:var(--text3)">맞히면 PCI 리워드를 드려요</div>
             </div>
           </div>
-          <div style="font-size:11px;color:var(--text3);padding-top:7px;border-top:1px solid #A7F3D0">당월 누적 <span style="color:var(--green);font-weight:700">12.50 PCI</span> &nbsp;·&nbsp; 정답률 72% (13/18회) &nbsp;·&nbsp; 당월 정답 13회</div>
         </div>
-      </div>
-
-      <!-- 오답(실패) 상태 -->
-      <div id="pred-result-fail" data-zone="pred-yesterday" style="display:none;margin:8px 14px;background:linear-gradient(135deg,#FEF2F2,#FEE2E2);border:1px solid #FCA5A5;border-radius:var(--radius);padding:13px">
-        <div style="font-size:10px;color:var(--red);font-weight:600;margin-bottom:8px">📅 04.29 어제 결과</div>
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">내 선택</div><div style="font-size:15px;font-weight:800;color:var(--red)">▲ 상승</div></div>
-          <div style="font-size:20px;color:var(--text4)">→</div>
-          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">실제 결과</div><div style="font-size:15px;font-weight:800;color:var(--primary)">▼ 하락</div></div>
-          <div style="background:#fff;border:1px solid #FCA5A5;border-radius:10px;padding:8px 12px;text-align:center">
-            <div style="font-size:10px;color:var(--red);font-weight:600">아쉽게 오답</div>
-            <div style="font-size:13px;font-weight:800;color:var(--text3)">+0 PCI</div>
-          </div>
+        <!-- 어제 결과 링크 -->
+        <div style="margin:6px 14px 0;display:flex;justify-content:flex-end">
+          <button onclick="showModal('pred-result-modal')" style="font-size:10px;color:var(--text4);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;padding:0">어제 결과 확인하기 ›</button>
         </div>
-        <div style="margin-top:10px;padding-top:9px;border-top:1px solid #FCA5A5">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-            <div style="text-align:center;flex:1">
-              <div style="font-size:9px;color:var(--text4);margin-bottom:2px">기준 종가 (04.28)</div>
-              <div style="font-size:12px;font-weight:700;color:var(--text2)">78.20원</div>
-            </div>
-            <div style="font-size:14px;color:var(--text4);display:flex;align-items:center">→</div>
-            <div style="text-align:center;flex:1">
-              <div style="font-size:9px;color:var(--text4);margin-bottom:2px">결과 종가 (04.29)</div>
-              <div style="font-size:12px;font-weight:700;color:var(--primary)">74.10원 ▼ 5.24%</div>
-            </div>
-          </div>
-          <div style="font-size:11px;color:var(--text3);padding-top:7px;border-top:1px solid #FCA5A5">당월 누적 <span style="color:var(--text2);font-weight:700">11.81 PCI</span> &nbsp;·&nbsp; 정답률 68% (12/18회) &nbsp;·&nbsp; 당월 정답 12회</div>
-        </div>
-      </div>
-
-      <!-- 어제 미참여 상태 (개발: 전일 참여 이력 없는 경우 표시 — 첫 참여자 포함) -->
-      <div id="pred-result-none" data-zone="pred-yesterday" style="display:none;margin:8px 14px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border:1px solid #C7D2FE;border-radius:var(--radius);padding:14px;text-align:center">
-        <div style="font-size:22px;margin-bottom:6px">🔮</div>
-        <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:4px">오늘의 예측에 참여해보세요!</div>
-        <div style="font-size:11px;color:var(--text3);line-height:1.6">PCI 시세가 오를까요, 내릴까요?<br>맞히면 PCI 리워드를 드려요!</div>
-      </div>
-
-      <!-- 변동없음 상태 (개발: 기준/결과 종가 동일 시 표시) -->
-      <div id="pred-result-flat" data-zone="pred-yesterday" style="display:none;margin:8px 14px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border:1px solid #C7D2FE;border-radius:var(--radius);padding:13px">
-        <div style="font-size:10px;color:#4338CA;font-weight:600;margin-bottom:8px">📅 04.29 어제 결과</div>
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">내 선택</div><div style="font-size:15px;font-weight:800;color:#4338CA">▲ 상승</div></div>
-          <div style="font-size:20px;color:var(--text4)">→</div>
-          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">실제 결과</div><div style="font-size:15px;font-weight:800;color:var(--text3)">— 변동없음</div></div>
-          <div style="background:#fff;border:1px solid #C7D2FE;border-radius:10px;padding:8px 12px;text-align:center">
-            <div style="font-size:10px;color:#4338CA;font-weight:600">결과 무효</div>
-            <div style="font-size:13px;font-weight:800;color:var(--text3)">+0 PCI</div>
-          </div>
-        </div>
-        <div style="margin-top:10px;padding-top:9px;border-top:1px solid #C7D2FE">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-            <div style="text-align:center;flex:1">
-              <div style="font-size:9px;color:var(--text4);margin-bottom:2px">기준 종가 (04.28)</div>
-              <div style="font-size:12px;font-weight:700;color:var(--text2)">78.20원</div>
-            </div>
-            <div style="font-size:14px;color:var(--text4);display:flex;align-items:center">=</div>
-            <div style="text-align:center;flex:1">
-              <div style="font-size:9px;color:var(--text4);margin-bottom:2px">결과 종가 (04.29)</div>
-              <div style="font-size:12px;font-weight:700;color:var(--text3)">78.20원</div>
-            </div>
-          </div>
-          <div style="font-size:10px;color:#4338CA;background:#EEF2FF;border-radius:6px;padding:6px 10px;text-align:center">기준 종가와 결과 종가가 동일하여 당일 결과가 무효 처리됩니다.</div>
-        </div>
-      </div>
-
-      <!-- 집계 중 상태 (개발: 전날 집계 미완료 시 표시) -->
-      <div id="pred-result-pending" data-zone="pred-yesterday" style="display:none;margin:8px 14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:13px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-          <div style="width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulse 1.2s ease-in-out infinite;flex-shrink:0"></div>
-          <div style="font-size:10px;font-weight:700;color:var(--gold)">📅 04.29 어제 결과 집계 중</div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-          <div style="text-align:center">
-            <div style="font-size:10px;color:var(--text4);margin-bottom:2px">내 선택</div>
-            <div style="font-size:15px;font-weight:800;color:var(--red)">▲ 상승</div>
-          </div>
-          <div style="font-size:20px;color:var(--text4)">→</div>
-          <div style="text-align:center">
-            <div style="font-size:10px;color:var(--text4);margin-bottom:2px">실제 결과</div>
-            <div style="font-size:15px;font-weight:800;color:var(--text4)">집계 중</div>
-          </div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 12px;text-align:center">
-            <div style="font-size:10px;color:var(--text4);font-weight:600">대기 중</div>
-            <div style="font-size:13px;font-weight:800;color:var(--text4)">— PCI</div>
-          </div>
-        </div>
-        <div style="padding:9px 12px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:11px;color:#92400E;line-height:1.6">
-          KST 00:30 이후 결과를 확인할 수 있어요.
-        </div>
-      </div>
-
-      <!-- 오늘 기준가 -->
       <div data-zone="pred-base-price" style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;text-align:center;box-shadow:var(--shadow-sm)">
         <div style="font-size:11px;color:var(--text4);margin-bottom:3px">04.29 빗썸 종가 (오늘의 기준값)</div>
         <div style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:2px">78.45원</div>
@@ -3878,6 +3797,41 @@ body {
 
       <!-- 결과 안내 -->
       <div style="text-align:center;font-size:10px;color:var(--text4);padding:6px 0 0">결과는 내일 KST 00:30 이후 확인 가능합니다</div>
+      </div>
+
+      <!-- ── 참여완료 상태 ── -->
+      <div id="pred-state-voted" style="display:none">
+        <!-- 어제 결과 링크 (참여완료) -->
+        <div style="margin:8px 14px 0;display:flex;justify-content:flex-end">
+          <button onclick="showModal('pred-result-modal')" style="font-size:10px;color:var(--text4);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;padding:0">어제 결과 확인하기 ›</button>
+        </div>
+      <div data-zone="pred-base-price" style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;text-align:center;box-shadow:var(--shadow-sm)">
+        <div style="font-size:11px;color:var(--text4);margin-bottom:3px">04.29 빗썸 종가 (오늘의 기준값)</div>
+        <div style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:2px">78.45원</div>
+        <div style="font-size:10px;color:var(--text4)">이 금액보다 오늘(04.30) 종가가 높으면 상승</div>
+      </div>
+
+      <!-- 현황 바 -->
+      <div data-zone="pred-stats-bar" style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;margin-bottom:6px">
+          <span class="up">▲ 상승 62.3%</span><span class="dn">▼ 하락 37.7%</span>
+        </div>
+        <div style="display:flex;gap:3px">
+          <div class="prog-wrap" style="flex:62"><div class="prog-bar" style="width:100%;background:var(--red)"></div></div>
+          <div class="prog-wrap" style="flex:38"><div class="prog-bar" style="width:100%;background:var(--primary)"></div></div>
+        </div>
+      </div>
+
+      <!-- 투표 버튼 -->
+      <div data-zone="pred-vote-btns" style="display:flex;gap:8px;margin:0 14px 6px" id="vote-btns">
+        <button class="vote-btn vote-up" onclick="castVote('up')">▲<br><span class="vote-sub">상승</span></button>
+        <button class="vote-btn vote-down" onclick="castVote('down')">▼<br><span class="vote-sub">하락</span></button>
+      </div>
+      <div id="change-btn-area"></div>
+
+      <!-- 결과 안내 -->
+      <div style="text-align:center;font-size:10px;color:var(--text4);padding:6px 0 0">결과는 내일 KST 00:30 이후 확인 가능합니다</div>
+      </div>
 
     </div><!-- /pred-top-area -->
 
@@ -4818,7 +4772,8 @@ body {
           <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:600;color:var(--text)">입출금 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">입금(리워드 포함)/출금 완료 시 알림</div></div><div class="noti-toggle on" onclick="toggleNoti(this)"><div class="knob"></div></div></div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:600;color:var(--text)">결제 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">결제 관련 정보 발생 시 알림</div></div><div class="noti-toggle off" onclick="toggleNoti(this)"><div class="knob"></div></div></div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:600;color:var(--text)">서비스 참여 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">참여 가능한 활동 알림 (출석체크 등)</div></div><div class="noti-toggle off" onclick="toggleNoti(this)"><div class="knob"></div></div></div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px"><div><div style="font-size:13px;font-weight:600;color:var(--text)">PCI 상승/하락 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">전일 대비 5% 이상 변동 시 알림</div></div><div class="noti-toggle off" onclick="toggleNoti(this)"><div class="knob"></div></div></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:600;color:var(--text)">PCI 상승/하락 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">전일 대비 5% 이상 변동 시 알림</div></div><div class="noti-toggle off" onclick="toggleNoti(this)"><div class="knob"></div></div></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px"><div><div style="font-size:13px;font-weight:600;color:var(--text)">등락 예측 결과 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">예측 결과 집계 완료 시 알림 (KST 00:30)</div></div><div class="noti-toggle off" onclick="toggleNoti(this)"><div class="knob"></div></div></div>
         </div>
         <div style="padding:14px 18px 8px;font-size:13px;font-weight:800;color:var(--text)">이벤트·혜택 알림</div>
         <div style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
@@ -4828,6 +4783,101 @@ body {
       </div>
     </div>
   </div>
+  <!-- 어제 결과 모달 -->
+  <div class="overlay" id="pred-result-modal" style="align-items:flex-end">
+    <div class="modal" style="max-height:85vh;overflow-y:auto">
+      <div class="modal-handle"></div>
+      <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px">📅 어제 결과 (04.29)</div>
+
+      <!-- 뷰어 토글 -->
+      <div style="display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap">
+        <button onclick="showPredResultCard('done')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정답</button>
+        <button onclick="showPredResultCard('fail')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">오답</button>
+        <button onclick="showPredResultCard('pending')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">집계중</button>
+        <button onclick="showPredResultCard('flat')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">변동없음</button>
+        <button onclick="showPredResultCard('noplay')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text4);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">어제 미참여</button>
+      </div>
+
+      <!-- 정답 -->
+      <div id="modal-result-done" style="background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border:1px solid #6EE7B7;border-radius:12px;padding:14px;margin-bottom:4px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">내 선택</div><div style="font-size:15px;font-weight:800;color:var(--red)">▲ 상승</div></div>
+          <div style="font-size:18px;color:var(--text4)">→</div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">실제 결과</div><div style="font-size:15px;font-weight:800;color:var(--red)">▲ 상승</div></div>
+          <div style="background:#fff;border:1px solid #6EE7B7;border-radius:10px;padding:8px 12px;text-align:center"><div style="font-size:10px;color:var(--green);font-weight:600">정답!</div><div style="font-size:13px;font-weight:800;color:var(--green)">+0.69 PCI</div></div>
+        </div>
+        <div style="border-top:1px solid #A7F3D0;padding-top:10px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <div style="text-align:center;flex:1"><div style="font-size:9px;color:var(--text4);margin-bottom:2px">기준 종가 (04.28)</div><div style="font-size:12px;font-weight:700;color:var(--text2)">78.20원</div></div>
+            <div style="display:flex;align-items:center;color:var(--text4)">→</div>
+            <div style="text-align:center;flex:1"><div style="font-size:9px;color:var(--text4);margin-bottom:2px">결과 종가 (04.29)</div><div style="font-size:12px;font-weight:700;color:var(--red)">82.45원 ▲ 5.43%</div></div>
+          </div>
+          <div style="font-size:11px;color:var(--text3)">당월 누적 <span style="color:var(--green);font-weight:700">12.50 PCI</span> · 정답률 72% (13/18회)</div>
+        </div>
+      </div>
+      <!-- 오답 -->
+      <div id="modal-result-fail" style="display:none;background:linear-gradient(135deg,#FEF2F2,#FEE2E2);border:1px solid #FCA5A5;border-radius:12px;padding:14px;margin-bottom:4px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">내 선택</div><div style="font-size:15px;font-weight:800;color:var(--red)">▲ 상승</div></div>
+          <div style="font-size:18px;color:var(--text4)">→</div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">실제 결과</div><div style="font-size:15px;font-weight:800;color:var(--primary)">▼ 하락</div></div>
+          <div style="background:#fff;border:1px solid #FCA5A5;border-radius:10px;padding:8px 12px;text-align:center"><div style="font-size:10px;color:var(--red);font-weight:600">아쉽게 오답</div><div style="font-size:13px;font-weight:800;color:var(--text3)">+0 PCI</div></div>
+        </div>
+        <div style="border-top:1px solid #FCA5A5;padding-top:10px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <div style="text-align:center;flex:1"><div style="font-size:9px;color:var(--text4);margin-bottom:2px">기준 종가 (04.28)</div><div style="font-size:12px;font-weight:700;color:var(--text2)">78.20원</div></div>
+            <div style="display:flex;align-items:center;color:var(--text4)">→</div>
+            <div style="text-align:center;flex:1"><div style="font-size:9px;color:var(--text4);margin-bottom:2px">결과 종가 (04.29)</div><div style="font-size:12px;font-weight:700;color:var(--primary)">74.10원 ▼ 5.24%</div></div>
+          </div>
+          <div style="font-size:11px;color:var(--text3)">당월 누적 <span style="font-weight:700">11.81 PCI</span> · 정답률 68% (12/18회)</div>
+        </div>
+      </div>
+      <!-- 집계중 -->
+      <div id="modal-result-pending" style="display:none;background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:16px;text-align:center;margin-bottom:4px">
+        <div style="display:flex;justify-content:center;gap:4px;margin-bottom:8px">
+          <div style="width:7px;height:7px;border-radius:50%;background:#F59E0B;animation:pulse 1s infinite"></div>
+          <div style="width:7px;height:7px;border-radius:50%;background:#F59E0B;animation:pulse 1s .3s infinite"></div>
+          <div style="width:7px;height:7px;border-radius:50%;background:#F59E0B;animation:pulse 1s .6s infinite"></div>
+        </div>
+        <div style="font-size:12px;font-weight:700;color:#92400E;margin-bottom:4px">집계 중</div>
+        <div style="font-size:10px;color:#B45309">KST 00:30 이후 결과를 확인할 수 있어요.</div>
+      </div>
+      <!-- 변동없음 -->
+      <div id="modal-result-flat" style="display:none;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border:1px solid #C7D2FE;border-radius:12px;padding:14px;margin-bottom:4px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">내 선택</div><div style="font-size:15px;font-weight:800;color:#4338CA">▲ 상승</div></div>
+          <div style="font-size:18px;color:var(--text4)">→</div>
+          <div style="text-align:center"><div style="font-size:10px;color:var(--text4);margin-bottom:2px">실제 결과</div><div style="font-size:15px;font-weight:800;color:var(--text3)">— 변동없음</div></div>
+          <div style="background:#fff;border:1px solid #C7D2FE;border-radius:10px;padding:8px 12px;text-align:center"><div style="font-size:10px;color:#4338CA;font-weight:600">결과 무효</div><div style="font-size:13px;font-weight:800;color:var(--text3)">+0 PCI</div></div>
+        </div>
+        <div style="border-top:1px solid #C7D2FE;padding-top:8px;text-align:center;font-size:10px;color:#4338CA">기준 종가와 결과 종가가 동일하여 당일 결과가 무효 처리됩니다.</div>
+      </div>
+
+      <!-- 어제 미참여 -->
+      <div id="modal-result-noplay" style="display:none;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:18px 14px;margin-bottom:4px;text-align:center">
+        <div style="font-size:24px;margin-bottom:8px">😴</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">어제는 참여하지 않으셨네요</div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.7;margin-bottom:12px">어제 결과가 없습니다.<br>오늘 예측에 참여하고 PCI 리워드를 받아보세요!</div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px">
+          <div style="font-size:9px;color:var(--text4);margin-bottom:4px">어제 결과 (04.29)</div>
+          <div style="display:flex;justify-content:space-between">
+            <div style="text-align:center;flex:1">
+              <div style="font-size:9px;color:var(--text4);margin-bottom:2px">기준 종가 (04.28)</div>
+              <div style="font-size:12px;font-weight:700;color:var(--text2)">78.20원</div>
+            </div>
+            <div style="display:flex;align-items:center;color:var(--text4);font-size:12px">→</div>
+            <div style="text-align:center;flex:1">
+              <div style="font-size:9px;color:var(--text4);margin-bottom:2px">결과 종가 (04.29)</div>
+              <div style="font-size:12px;font-weight:700;color:var(--red)">82.45원 ▲ 5.43%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-ghost" style="margin-top:8px;font-size:12px" onclick="closeModal('pred-result-modal')">닫기</button>
+    </div>
+  </div>
+
   <div class="overlay" id="mmm-prediction" style="align-items:flex-end">
     <div style="width:100%;background:var(--card);border-radius:22px 22px 0 0;max-height:92%;overflow-y:auto;padding-bottom:16px;scrollbar-width:none;animation:slideUp .3s cubic-bezier(.16,1,.3,1)">
       <div style="position:sticky;top:0;background:var(--card);padding:14px 18px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);z-index:10">
@@ -6697,6 +6747,25 @@ async function submitPolicyA(id) {
     if (item) { item.answer = null; delete item._answerPending; renderPolicyQna(); }
     alert(e.name === 'AbortError' ? '응답 지연' : '오류: ' + e.message);
   }
+}
+
+/* ══ 등락예측 상태 토글 ══ */
+function setPredState(state) {
+  var none  = document.getElementById('pred-state-none');
+  var voted = document.getElementById('pred-state-voted');
+  if(none)  none.style.display  = (state==='none')  ? 'block' : 'none';
+  if(voted) voted.style.display = (state==='voted') ? 'block' : 'none';
+}
+function setPredResult(result) {
+  setPredState('voted');
+  showModal('pred-result-modal');
+  showPredResultCard(result);
+}
+function showPredResultCard(result) {
+  ['done','fail','pending','flat','noplay'].forEach(function(r){
+    var el = document.getElementById('modal-result-'+r);
+    if(el) el.style.display = (r===result) ? 'block' : 'none';
+  });
 }
 
 /* ══ 오늘의 PCI 탭 (최근 소식/공지사항) ══ */
