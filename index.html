@@ -2137,6 +2137,15 @@ body {
         </div>
       </div>
     </div>
+    <!-- 연결 지갑 잔액 조회 오류 상태 (뷰어 토글) -->
+    <div style="display:flex;justify-content:flex-end;padding:4px 14px 2px;gap:5px">
+      <button onclick="setWalletError('none')"
+        style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정상</button>
+      <button onclick="setWalletError('temp')"
+        style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">일시적 오류</button>
+      <button onclick="setWalletError('maintenance')"
+        style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">거래소 점검</button>
+    </div>
     <div style="display:flex;align-items:center;padding-right:10px" data-zone="wallet-tabs">
       <div class="tab-filter" style="flex:1;padding-right:0">
         <div class="chip active" id="wchip-all"     onclick="walletTab('all')">전체</div>
@@ -2358,6 +2367,9 @@ body {
       <div class="winfo"><div class="wname">페이코인 PCI</div><div class="wprice">82.45원 · 내 지갑</div></div>
       <div class="wright"><div class="wkrw">8,245,000원</div><div class="wqty">100,000 PCI <span class="chg up">▲ 5.23%</span></div></div>
     </div>
+
+
+
     <div style="margin:12px 14px 0" data-zone="wallet-empty-connect">
       <div style="background:var(--card2);border:1.5px dashed var(--border2);border-radius:var(--radius);padding:20px 16px;text-align:center">
         <div style="font-size:28px;margin-bottom:8px">🔗</div>
@@ -3007,8 +3019,29 @@ body {
 
     </div><!-- /card -->
     <div data-zone="asset-list" class="stitle">보유 자산</div>
+    <!-- 연결 지갑 잔액 조회 오류 상태 (뷰어 토글) -->
+    <div style="display:flex;justify-content:flex-end;padding:0 14px 4px;gap:5px">
+      <button onclick="setWalletError('none')"
+        style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정상</button>
+      <button onclick="setWalletError('temp')"
+        style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">일시적 오류</button>
+      <button onclick="setWalletError('maintenance')"
+        style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">거래소 점검</button>
+    </div>
     <div class="wallet-row" onclick="nav('wallet-pci')"><div class="coin-icon">🪙</div><div class="winfo"><div class="wname">페이코인 PCI</div><div class="wprice">내 지갑</div></div><div class="wright"><div class="wkrw">8,245,000원</div><div class="wqty">100,000 PCI · 66.8%</div></div></div>
-    <div class="wallet-row" onclick="nav('wallet-other')"><div class="coin-icon" style="background:#FEF3C7">₿</div><div class="winfo"><div class="wname">비트코인 BTC</div><div class="wprice">코인원</div></div><div class="wright"><div class="wkrw">1,637,432원</div><div class="wqty">0.01752100 · 13.3%</div></div></div>
+    <div class="wallet-row wallet-row-linked" onclick="nav('wallet-other')">
+      <div class="coin-icon" style="background:#FEF3C7">₿</div>
+      <div class="winfo"><div class="wname">비트코인 BTC</div><div class="wprice">코인원</div></div>
+      <div class="wright wallet-err-none" style="flex-direction:column"><div class="wkrw">1,637,432원</div><div class="wqty">0.01752100 · 13.3%</div></div>
+      <div class="wright wallet-err-temp" style="display:none;flex-direction:column;align-items:flex-end">
+        <div style="font-size:11px;color:var(--red);font-weight:600">불러오기 실패</div>
+        <button onclick="event.stopPropagation();showToast('잔액 재조회 중...')" style="font-size:10px;color:var(--primary);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;padding:0;margin-top:2px">↻ 재시도</button>
+      </div>
+      <div class="wright wallet-err-maintenance" style="display:none;flex-direction:column;align-items:flex-end">
+        <div style="font-size:11px;color:#92400E;font-weight:600">조회 불가</div>
+        <div style="font-size:10px;color:var(--text4);margin-top:2px">코인원 점검중</div>
+      </div>
+    </div>
     <div style="margin:14px"><button class="btn btn-ghost">+ 거래소 연결하기</button></div>
   </div>
   <div class="tab-bar" style="display:none!important">
@@ -3382,17 +3415,17 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
 
     <!-- ⑤ 거래소별 시세 -->
     <div data-zone="pci-exchanges" class="stitle">상장 거래소</div>
-    <div class="exch-row" onclick="nav('token-detail')">
+    <div class="exch-row" onclick="navTokenDetail('pci-info','PCI','빗썸','빗')">
       <div class="exch-logo-box" style="background:#FFF3E0">빗</div>
       <div style="flex:1"><div class="exch-name">빗썸 <span class="conn-tag">연결됨</span></div><div class="exch-vol">거래량 1,234,567 PCI</div></div>
       <div class="exch-right"><div class="exch-price">82.12원</div><div class="up" style="font-size:10px">▲ 4.91%</div></div>
     </div>
-    <div class="exch-row" onclick="nav('token-detail')">
+    <div class="exch-row" onclick="navTokenDetail('pci-info','PCI','코인원','원')">
       <div class="exch-logo-box" style="background:#E3F2FD">원</div>
       <div style="flex:1"><div class="exch-name">코인원</div><div class="exch-vol">거래량 890,234 PCI</div></div>
       <div class="exch-right"><div class="exch-price">82.67원</div><div class="up" style="font-size:10px">▲ 5.42%</div></div>
     </div>
-    <div class="exch-row" onclick="nav('token-detail')">
+    <div class="exch-row" onclick="navTokenDetail('pci-info','PCI','코빗','빗')">
       <div class="exch-logo-box" style="background:#F3E8FF">빗</div>
       <div style="flex:1"><div class="exch-name">코빗</div><div class="exch-vol">거래량 234,567 PCI</div></div>
       <div class="exch-right"><div class="exch-price">82.30원</div><div class="dn" style="font-size:10px">▼ 0.21%</div></div>
@@ -3722,16 +3755,35 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
   <div class="back-header"><span class="back-btn" onclick="nav('pci-info')">‹</span><span class="back-title">{코인명} 상세</span><!-- 개발: 진입한 코인명으로 동적 치환 --></div>
   <div class="sbody">
-    <div data-zone="token-header" style="padding:0 14px 16px">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-        <div class="exch-logo-box" style="width:44px;height:44px;border-radius:12px;font-size:16px;background:#FFF3E0">빗</div>
-        <div>
-          <div style="font-size:16px;font-weight:800;color:var(--text)">빗썸 · PCI</div>
-          <span class="conn-tag">연결됨</span>
+    <div data-zone="token-header" style="padding:14px 14px 10px">
+      <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:12px;display:flex;align-items:center;gap:12px">
+        <!-- 코인 아이콘 -->
+        <div style="position:relative;flex-shrink:0">
+          <div style="width:40px;height:40px;border-radius:50%;background:#EEF2FF;border:1.5px solid #C7D2FE;display:flex;align-items:center;justify-content:center;font-size:18px">🪙</div>
+          <div style="position:absolute;bottom:-2px;right:-2px;width:16px;height:16px;border-radius:50%;background:#FFF3E0;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:800;color:#E65100" id="token-exch-ovl">빗</div>
+        </div>
+        <!-- 코인 정보 -->
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px">페이코인 <span style="font-size:12px;font-weight:500;color:var(--text4)">(PCI)</span></div>
+          <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text4)">
+            <span>빗썸</span>
+            <span class="conn-tag" style="font-size:10px">연결됨</span>
+          </div>
+        </div>
+        <!-- 구분선 -->
+        <div style="width:1px;align-self:stretch;background:var(--border);flex-shrink:0;margin:0 4px"></div>
+        <!-- 시세 -->
+        <div style="flex:1;text-align:right">
+          <div style="font-size:20px;font-weight:800;color:var(--text);letter-spacing:-0.5px;line-height:1.1;margin-bottom:3px">
+            <span id="token-price" data-zone="token-price">82.51</span><span style="font-size:12px;font-weight:500;color:var(--text3);margin-left:2px">원</span>
+          </div>
+          <div class="up" style="font-size:12px;font-weight:600">▲ 4.91% <span style="font-size:11px;font-weight:400;color:var(--text4)">(전일 대비)</span></div>
         </div>
       </div>
-      <div style="font-size:28px;font-weight:800;color:var(--text);margin-bottom:3px"><span id="token-price" data-zone="token-price">82.12</span><span style="font-size:16px;font-weight:500;color:var(--text3)"> 원</span></div>
-      <div class="up" style="font-size:13px">▲ 4.91% (전일 대비)</div>
+    </div>
+    <!-- CMC 기준 라벨 (카드 밖, 우측 정렬) -->
+    <div style="display:flex;justify-content:flex-end;padding:0 14px 4px">
+      <span style="font-size:10px;color:var(--text4)">CoinMarketCap 기준</span>
     </div>
     <div class="card">
       <div class="info-row"><span class="ilbl">시가총액 순위</span><span class="ival" style="font-weight:700;color:var(--primary)">#142</span></div>
@@ -3750,7 +3802,14 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
     <div style="margin:0 14px 10px">
       <button class="btn btn-secondary" style="font-size:12px;padding:11px">빗썸으로 이동하기 ↗</button>
     </div>
-    <div data-zone="token-wallet" class="stitle">연결된 내 지갑</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 14px;margin-bottom:4px">
+      <div class="stitle" style="padding:0;margin:0">연결된 내 지갑</div>
+      <div style="display:flex;gap:5px" data-zone="token-wallet">
+        <button onclick="setWalletError('none')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정상</button>
+        <button onclick="setWalletError('temp')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">일시적 오류</button>
+        <button onclick="setWalletError('maintenance')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">거래소 점검</button>
+      </div>
+    </div>
 
     <!-- 뷰어 토글 -->
     <div style="display:flex;justify-content:flex-end;padding:0 14px 6px;gap:6px">
@@ -3764,8 +3823,18 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
     <div id="token-wallet-connected" class="connected-card">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
         <div>
-          <div style="font-size:17px;font-weight:800;color:var(--primary)">30,000.0000 PCI</div>
-          <div style="font-size:13px;color:var(--text2)">2,463,600원</div>
+          <div class="token-wallet-amount">
+            <div style="font-size:17px;font-weight:800;color:var(--primary)">30,000.0000 PCI</div>
+            <div style="font-size:13px;color:var(--text2)">2,463,600원</div>
+          </div>
+          <div class="token-wallet-err-temp" style="display:none;flex-direction:column">
+            <div style="font-size:13px;font-weight:700;color:var(--red)">불러오기 실패</div>
+            <button onclick="showToast('잔액 재조회 중...')" style="font-size:10px;color:var(--primary);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;padding:0;margin-top:2px;text-align:left">↻ 재시도</button>
+          </div>
+          <div class="token-wallet-err-maintenance" style="display:none;flex-direction:column">
+            <div style="font-size:13px;font-weight:700;color:#92400E">조회 불가</div>
+            <div style="font-size:10px;color:var(--text4);margin-top:2px">거래소 점검중</div>
+          </div>
         </div>
         <div style="text-align:right">
           <div style="font-size:10px;color:var(--text4);font-family:'JetBrains Mono',monospace;margin-bottom:3px">0x7f3c…a4b2</div>
@@ -4854,7 +4923,14 @@ EWS DETAIL ═══════════════ -->
 
     <!-- ① 결제 가능 자산 스와이프 카드 -->
     <div style="margin:0 0 4px">
-      <div style="font-size:11px;color:var(--text4);font-weight:500;padding:0 14px 8px">결제 가능 자산</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:0 14px 6px">
+        <div style="font-size:11px;color:var(--text4);font-weight:500">결제 가능 자산</div>
+        <div style="display:flex;gap:5px">
+          <button onclick="setWalletError('none')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정상</button>
+          <button onclick="setWalletError('temp')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">일시적 오류</button>
+          <button onclick="setWalletError('maintenance')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">거래소 점검</button>
+        </div>
+      </div>
       <div style="position:relative;overflow:hidden">
         <div id="pay-card-track" style="display:flex;gap:10px;padding:4px 14px;transition:transform .35s cubic-bezier(.4,0,.2,1);will-change:transform">
 
@@ -4864,9 +4940,19 @@ EWS DETAIL ═══════════════ -->
               <div style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #C7D2FE;display:flex;align-items:center;justify-content:center;font-size:18px">🪙</div>
               <div style="font-size:14px;font-weight:700;color:var(--text)">페이코인</div>
             </div>
-            <div style="font-size:20px;font-weight:800;color:var(--primary);letter-spacing:-.5px;margin-bottom:2px">8,245,000<span style="font-size:13px;font-weight:500"> 원</span></div>
+            <div class="pay-asset-amount" style="display:block">
+              <div style="font-size:20px;font-weight:800;color:var(--primary);letter-spacing:-.5px;margin-bottom:2px">8,245,000<span style="font-size:13px;font-weight:500"> 원</span></div>
+            </div>
+            <div class="pay-asset-err-temp" style="display:none;flex-direction:column;margin-bottom:2px">
+              <div style="font-size:13px;font-weight:700;color:var(--red)">불러오기 실패</div>
+              <button onclick="showToast('잔액 재조회 중...')" style="font-size:10px;color:var(--primary);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;padding:0;margin-top:2px;text-align:left">↻ 재시도</button>
+            </div>
+            <div class="pay-asset-err-maintenance" style="display:none;flex-direction:column;margin-bottom:2px">
+              <div style="font-size:13px;font-weight:700;color:#92400E">조회 불가</div>
+              <div style="font-size:10px;color:var(--text4);margin-top:2px">코빗 점검중</div>
+            </div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
-              <div style="font-size:10px;color:var(--text4)">100,000 PCI</div>
+              <div class="pay-asset-amount" style="font-size:10px;color:var(--text4)">100,000 PCI</div>
               <div style="font-size:9px;font-weight:600;color:var(--text4);background:rgba(255,255,255,.6);border:1px solid #C7D2FE;border-radius:5px;padding:1px 6px">코빗</div>
             </div>
           </div>
@@ -4877,9 +4963,19 @@ EWS DETAIL ═══════════════ -->
               <div style="width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #FDE68A;display:flex;align-items:center;justify-content:center;font-size:18px">₿</div>
               <div style="font-size:14px;font-weight:700;color:var(--text)">비트코인</div>
             </div>
-            <div style="font-size:20px;font-weight:800;color:#D97706;letter-spacing:-.5px;margin-bottom:2px">1,637,432<span style="font-size:13px;font-weight:500"> 원</span></div>
+            <div class="pay-asset-amount" style="display:block">
+              <div style="font-size:20px;font-weight:800;color:#D97706;letter-spacing:-.5px;margin-bottom:2px">1,637,432<span style="font-size:13px;font-weight:500"> 원</span></div>
+            </div>
+            <div class="pay-asset-err-temp" style="display:none;flex-direction:column;margin-bottom:2px">
+              <div style="font-size:13px;font-weight:700;color:var(--red)">불러오기 실패</div>
+              <button onclick="showToast('잔액 재조회 중...')" style="font-size:10px;color:var(--primary);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;padding:0;margin-top:2px;text-align:left">↻ 재시도</button>
+            </div>
+            <div class="pay-asset-err-maintenance" style="display:none;flex-direction:column;margin-bottom:2px">
+              <div style="font-size:13px;font-weight:700;color:#92400E">조회 불가</div>
+              <div style="font-size:10px;color:var(--text4);margin-top:2px">코빗 점검중</div>
+            </div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
-              <div style="font-size:10px;color:var(--text4)">0.01752100 BTC</div>
+              <div class="pay-asset-amount" style="font-size:10px;color:var(--text4)">0.01752100 BTC</div>
               <div style="font-size:9px;font-weight:600;color:var(--text4);background:rgba(255,255,255,.6);border:1px solid #FDE68A;border-radius:5px;padding:1px 6px">코빗</div>
             </div>
           </div>
@@ -5790,16 +5886,31 @@ EWS DETAIL ═══════════════ -->
           <span style="font-size:16px;font-weight:900;color:#E65100">빗</span>
         </div>
         <div style="font-size:14px;font-weight:700;color:var(--text);flex:1">빗썸</div>
+        <!-- 오류 상태 뷰어 토글 -->
+        <div style="display:flex;gap:4px">
+          <button onclick="setWalletError('none')" style="font-size:8px;padding:2px 6px;border-radius:4px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정상</button>
+          <button onclick="setWalletError('temp')" style="font-size:8px;padding:2px 6px;border-radius:4px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">일시적 오류</button>
+          <button onclick="setWalletError('maintenance')" style="font-size:8px;padding:2px 6px;border-radius:4px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">점검</button>
+        </div>
       </div>
-      <!-- 코인 목록 -->
+      <!-- 코인 목록 (정상) -->
+      <!-- 코인 행 — 코인명 고정, 수량만 오류 상태별 교체 -->
       <div style="border-top:1px solid var(--border)">
         <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border)">
           <div style="width:28px;height:28px;border-radius:50%;background:#EEF2FF;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">🪙</div>
-          <div style="flex:1">
-            <span style="font-size:13px;font-weight:600;color:var(--text)">페이코인</span>
-            <span style="font-size:11px;color:var(--text4);margin-left:4px">PCI</span>
+          <div style="flex:1"><span style="font-size:13px;font-weight:600;color:var(--text)">페이코인</span><span style="font-size:11px;color:var(--text4);margin-left:4px">PCI</span></div>
+          <!-- 정상 -->
+          <div class="wallet-err-none" style="font-size:13px;font-weight:600;color:var(--text);font-family:'JetBrains Mono',monospace">0.00000000</div>
+          <!-- 일시적 오류 -->
+          <div class="wallet-err-temp" style="display:none;flex-direction:column;align-items:flex-end">
+            <div style="font-size:11px;color:var(--red);font-weight:600">불러오기 실패</div>
+            <button onclick="showToast('잔액 재조회 중...')" style="font-size:10px;color:var(--primary);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;padding:0;margin-top:2px">↻ 재시도</button>
           </div>
-          <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'JetBrains Mono',monospace">0.00000000</div>
+          <!-- 거래소 점검 -->
+          <div class="wallet-err-maintenance" style="display:none;flex-direction:column;align-items:flex-end">
+            <div style="font-size:11px;color:#92400E;font-weight:600">조회 불가</div>
+            <div style="font-size:10px;color:var(--text4);margin-top:2px">빗썸 점검중</div>
+          </div>
         </div>
       </div>
       <!-- 접어두기 -->
@@ -7337,6 +7448,83 @@ function showPredResultCard(result) {
   });
 }
 
+/* ══ 토큰 상세 진입 분기 ══ */
+function navTokenDetail(from, ticker, exchName, exchLabel) {
+  var backBtn = document.getElementById('token-back-btn');
+  if (backBtn) backBtn.setAttribute('onclick', "nav('" + from + "')");
+
+  var coinNames = { PCI:'페이코인', BTC:'비트코인', ETH:'이더리움', XRP:'리플', USDT:'테더', SOL:'솔라나', POL:'폴리곤 에코시스템 토큰' };
+  var coinName = coinNames[ticker] || ticker;
+
+  var titleEl = document.getElementById('token-back-title');
+  if (titleEl) titleEl.textContent = coinName + ' 상세';
+
+  var nameEl = document.getElementById('token-coin-name');
+  if (nameEl) nameEl.innerHTML = coinName + ' <span style="font-size:12px;font-weight:500;color:var(--text4)">(' + ticker + ')</span>';
+
+  var exchEl = document.getElementById('token-exch-name');
+  if (exchEl) exchEl.textContent = exchName;
+
+  var ovlEl = document.getElementById('token-exch-ovl');
+  if (ovlEl) ovlEl.textContent = exchLabel;
+
+  nav('token-detail');
+}
+
+/* ══ 지갑 잔액 조회 오류 상태 토글 ══ */
+function setWalletError(state) {
+  var isErr = (state !== 'none');
+
+  // wallet-err-* 요소 표시 전환
+  document.querySelectorAll('.wallet-err-none').forEach(function(el) {
+    el.style.display = (state === 'none') ? '' : 'none';
+  });
+  document.querySelectorAll('.wallet-err-temp').forEach(function(el) {
+    el.style.display = (state === 'temp') ? 'flex' : 'none';
+  });
+  document.querySelectorAll('.wallet-err-maintenance').forEach(function(el) {
+    el.style.display = (state === 'maintenance') ? 'flex' : 'none';
+  });
+
+  // 연결 지갑 행 onclick disable (자체 지갑 제외)
+  document.querySelectorAll('.wallet-row-linked').forEach(function(el) {
+    if (isErr) {
+      el.setAttribute('data-prev-onclick', el.getAttribute('onclick') || '');
+      el.removeAttribute('onclick');
+      el.style.cursor = 'default';
+      el.style.opacity = '0.6';
+    } else {
+      var prev = el.getAttribute('data-prev-onclick');
+      if (prev) { el.setAttribute('onclick', prev); el.removeAttribute('data-prev-onclick'); }
+      el.style.cursor = '';
+      el.style.opacity = '';
+    }
+  });
+
+  // 결제 가능 자산 카드 — 잔액/수량 자리 교체
+  document.querySelectorAll('.pay-asset-amount').forEach(function(el) {
+    el.style.display = (state === 'none') ? '' : 'none';
+  });
+  document.querySelectorAll('.pay-asset-err-temp').forEach(function(el) {
+    el.style.display = (state === 'temp') ? 'flex' : 'none';
+  });
+  document.querySelectorAll('.pay-asset-err-maintenance').forEach(function(el) {
+    el.style.display = (state === 'maintenance') ? 'flex' : 'none';
+  });
+
+  // 토큰 상세 — 연결된 내 지갑 잔액 자리 교체
+  document.querySelectorAll('.token-wallet-amount').forEach(function(el) {
+    el.style.display = (state === 'none') ? '' : 'none';
+  });
+  document.querySelectorAll('.token-wallet-err-temp').forEach(function(el) {
+    el.style.display = (state === 'temp') ? 'flex' : 'none';
+  });
+  document.querySelectorAll('.token-wallet-err-maintenance').forEach(function(el) {
+    el.style.display = (state === 'maintenance') ? 'flex' : 'none';
+  });
+}
+
+
 /* ══ 서비스 참여 알림 부모 토글 ══ */
 function toggleServiceNoti(el) {
   el.classList.toggle('on');
@@ -7460,9 +7648,9 @@ const WALLET_DATA = {
     label:'총 보유 자산', amount:'12,345,678원',
     wallets:[
       { icon:'🪙', bg:'',        ovl:null,                      name:'페이코인 PCI',  sub:'82.45원',      krw:'8,245,000원',  qty:100000,   sym:'PCI', chg:'up', rate:'▲ 5.23%', dest:'wallet-pci'   },
-      { icon:'🪙', bg:'',        ovl:{bg:'#f57c00',txt:'빗'},   name:'페이코인 PCI',  sub:'82.12원',      krw:'2,463,600원',  qty:30000,    sym:'PCI', chg:'up', rate:'▲ 4.91%', dest:'wallet-other'  },
-      { icon:'₿',  bg:'#FEF3C7', ovl:{bg:'#1a73e8',txt:'원'},   name:'비트코인 BTC',  sub:'93,450,000원', krw:'1,637,432원',  qty:0.017521, sym:'BTC', chg:'dn', rate:'▼ 1.20%', dest:'wallet-other'  },
-      { icon:'Ξ',  bg:'#EEF2FF', ovl:{bg:'#1a73e8',txt:'원'},   name:'이더리움 ETH',  sub:'4,823,000원',  krw:'240,000원',    qty:0.049750, sym:'ETH', chg:'up', rate:'▲ 2.10%', dest:'wallet-other'  },
+      { icon:'🪙', bg:'',        ovl:{bg:'#f57c00',txt:'빗',exchName:'빗썸'},   name:'페이코인 PCI',  sub:'82.12원',      krw:'2,463,600원',  qty:30000,    sym:'PCI', chg:'up', rate:'▲ 4.91%', dest:'wallet-other'  },
+      { icon:'₿',  bg:'#FEF3C7', ovl:{bg:'#1a73e8',txt:'원',exchName:'코인원'},   name:'비트코인 BTC',  sub:'93,450,000원', krw:'1,637,432원',  qty:0.017521, sym:'BTC', chg:'dn', rate:'▼ 1.20%', dest:'wallet-other'  },
+      { icon:'Ξ',  bg:'#EEF2FF', ovl:{bg:'#1a73e8',txt:'원',exchName:'코인원'},   name:'이더리움 ETH',  sub:'4,823,000원',  krw:'240,000원',    qty:0.049750, sym:'ETH', chg:'up', rate:'▲ 2.10%', dest:'wallet-other'  },
       { icon:'◎',  bg:'#F0FDF4', ovl:{bg:'#6B21A8',txt:'빗'},   name:'리플 XRP',      sub:'820원',        krw:'82,000원',     qty:100,      sym:'XRP', chg:'dn', rate:'▼ 0.55%', dest:'wallet-other'  },
     ]
   },
@@ -7532,13 +7720,27 @@ function walletTab(tab) {
     var ovl = w.ovl ? '<div class="exch-ovl" style="background:' + w.ovl.bg + '">' + w.ovl.txt + '</div>' : '';
     var bg  = w.bg  ? ' style="background:' + w.bg + '"' : '';
     var qtyStr = typeof fmtQty === 'function' ? fmtQty(w.qty, w.sym) + ' ' + w.sym : w.qty;
-    return '<div class="wallet-row" onclick="nav(\'' + w.dest + '\')">' +
+    var exchName = w.ovl ? w.ovl.exchName || '' : '';
+    // 오류 상태는 자체 지갑(ovl 없음) 제외, 연결 지갑에만 표시
+    var errRight = w.ovl ? (
+      '<div class="wright wallet-err-temp" style="display:none;flex-direction:column;align-items:flex-end">' +
+        '<div style="font-size:11px;color:#EF4444;font-weight:600">불러오기 실패</div>' +
+        '<button onclick="event.stopPropagation();showToast(\'' + exchName + '잔액 재조회 중...\');" style="font-size:10px;color:#3B82F6;background:none;border:none;cursor:pointer;font-family:\'Noto Sans KR\',sans-serif;font-weight:600;padding:0;margin-top:3px">↻ 재시도</button>' +
+      '</div>' +
+      '<div class="wright wallet-err-maintenance" style="display:none;flex-direction:column;align-items:flex-end">' +
+        '<div style="font-size:11px;color:#92400E;font-weight:600">조회 불가</div>' +
+        '<div style="font-size:10px;color:#9CA3AF;margin-top:3px">' + exchName + ' 점검중</div>' +
+      '</div>'
+    ) : '';
+    var normalClass = w.ovl ? ' wallet-err-none' : '';
+    var linkedClass = w.ovl ? ' wallet-row-linked' : '';
+    return '<div class="wallet-row' + linkedClass + '" onclick="nav(\'' + w.dest + '\')">' +
       '<div class="coin-icon"' + bg + '>' + w.icon + ovl + '</div>' +
       '<div class="winfo"><div class="wname">' + w.name + '</div><div class="wprice">' + w.sub + '</div></div>' +
-      '<div class="wright">' +
+      '<div class="wright' + normalClass + '">' +
       '<div class="wkrw"><span class="ticker-wrap"><span class="ticker-inner">' + w.krw + '</span></span></div>' +
       '<div class="wqty">' + qtyStr + ' <span class="chg ' + w.chg + '">' + w.rate + '</span></div>' +
-      '</div></div>';
+      '</div>' + errRight + '</div>';
   }).join('');
 }
 
