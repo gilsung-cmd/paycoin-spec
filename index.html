@@ -127,9 +127,9 @@ body {
   width: var(--phone-w); height: var(--phone-h);
   background: var(--phone-bg);
   border-radius: 44px;
+  position: relative;
   border: 2px solid #C8CEDF;
   box-shadow: var(--shadow-phone), 0 0 0 6px rgba(255,255,255,0.7);
-  position: relative; overflow: hidden;
 }
 .phone-notch {
   position: absolute; top: 0; left: 50%; transform: translateX(-50%);
@@ -248,6 +248,7 @@ body {
 /* ══ SCREEN BODY ══ */
 .sbody {
   flex: 1;
+  position: relative;
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: none;
@@ -723,6 +724,26 @@ body {
 }
 
 
+/* ══ HOTSPOT ══ */
+#hs-container { display:none; position:absolute; top:0; left:0; width:100%; z-index:8000; pointer-events:none; }
+.hs-tip {
+  position:fixed; display:none; pointer-events:none; z-index:99999;
+  background:#1E293B; color:#fff; font-size:10px;
+  font-family:'JetBrains Mono',monospace;
+  padding:4px 9px; border-radius:5px; white-space:nowrap;
+  box-shadow:0 2px 8px rgba(0,0,0,.3); max-width:240px;
+}
+#hotspot-legend {
+  display:none; position:fixed; bottom:20px; right:20px;
+  background:#fff; border:1px solid #CBD5E1; border-radius:10px;
+  padding:10px 14px; font-size:11px; font-family:'Noto Sans KR',sans-serif;
+  box-shadow:0 4px 16px rgba(0,0,0,.15); z-index:99998; line-height:2;
+  min-width:120px;
+}
+#hotspot-legend.show { display:block !important; }
+.hl-row { display:flex; align-items:center; gap:7px; }
+.hl-dot { width:11px; height:11px; border-radius:2px; flex-shrink:0; }
+
 /* ══ SKELETON UI ══ */
 @keyframes shimmer {
   0%   { background-position: -400px 0; }
@@ -899,6 +920,23 @@ body {
   </div><!-- /nav-screens-wrap -->
 </div><!-- /nav-inner -->
 </nav>
+
+<!-- 핫스팟 버튼 — body 최상단 고정 -->
+<button id="hotspot-btn"
+  onclick="toggleHotspot()"
+  style="position:fixed;top:14px;right:18px;
+         display:flex;align-items:center;gap:6px;
+         padding:6px 14px;border-radius:8px;
+         border:1.5px solid #CBD5E1;
+         background:#fff;
+         font-size:11px;font-weight:700;color:#475569;
+         cursor:pointer;
+         font-family:'Noto Sans KR',sans-serif;
+         white-space:nowrap;
+         z-index:99999;
+         box-shadow:0 2px 8px rgba(0,0,0,.12)">
+  🔗 핫스팟
+</button>
 
 <div class="layout">
 <div class="layout-inner">
@@ -6818,6 +6856,7 @@ function nav(key) {
   });
   document.querySelector('.policy-panel').scrollTop = 0;
   document.querySelectorAll('.overlay').forEach(o => o.classList.remove('show'));
+  setTimeout(function(){ if(_hsOn) renderHotspots(); }, 80);
 }
 
 /* ══ MODAL ══ */
@@ -7525,7 +7564,159 @@ function setWalletError(state) {
 }
 
 
-/* ══ 서비스 참여 알림 부모 토글 ══ */
+/* ══ 핫스팟 모드 ══ */
+var _hsOn = false;
+var _hsTip = null;
+
+function toggleHotspot() {
+  _hsOn = !_hsOn;
+  var btn = document.getElementById('hotspot-btn');
+  var legend = document.getElementById('hotspot-legend');
+  btn.style.background = _hsOn ? '#1A56DB' : '';
+  btn.style.color = _hsOn ? '#fff' : '';
+  btn.style.borderColor = _hsOn ? '#1A56DB' : '';
+  btn.textContent = _hsOn ? '🔗 핫스팟 ON' : '🔗 핫스팟';
+  legend.classList.toggle('show', _hsOn);
+  if (_hsOn) renderHotspots();
+  else clearHotspots();
+}
+
+function clearHotspots() {
+  var c = document.getElementById('hs-container-active');
+  if (c) c.remove();
+  if (_hsTip) _hsTip.style.display = 'none';
+}
+
+function getHsColor(type) {
+  var colors = { nav:'#059669', modal:'#7C3AED', toast:'#D97706', other:'#1A56DB' };
+  return colors[type] || '#1A56DB';
+}
+
+function parseHsLabel(fn) {
+  var label = '', type = 'other', m;
+  if (/^nav[(]/.test(fn)) {
+    type = 'nav';
+    m = fn.match(/nav[(]['"]([^'"]+)['"]/);
+    label = m ? String.fromCharCode(8594) + ' ' + m[1] : 'nav';
+  } else if (/navTokenDetail/.test(fn)) {
+    type = 'nav'; label = String.fromCharCode(8594) + ' token-detail';
+  } else if (/showModal/.test(fn)) {
+    type = 'modal';
+    m = fn.match(/showModal[(]['"]([^'"]+)['"]/);
+    label = m ? '[modal] ' + m[1].replace(/-modal$/,'') : 'modal';
+  } else if (/closeModal/.test(fn)) {
+    type = 'modal'; label = 'modal close';
+  } else if (/showToast/.test(fn)) {
+    type = 'toast';
+    m = fn.match(/showToast[(]['"](.{0,16})/);
+    label = m ? '[toast] ' + m[1] : 'toast';
+  } else {
+    var base = fn.split('(')[0].trim();
+    label = base.length > 20 ? base.slice(0,20)+'...' : base;
+  }
+  return { label: label, type: type };
+}
+
+function renderHotspots() {
+  // 기존 오버레이 제거
+  document.querySelectorAll('.hs-ov').forEach(function(e){ e.remove(); });
+
+  var activeScreen = document.querySelector('.screen.active');
+  if (!activeScreen) return;
+
+  if (!_hsTip) {
+    _hsTip = document.createElement('div');
+    _hsTip.className = 'hs-tip';
+    document.body.appendChild(_hsTip);
+  }
+
+  var sbody = activeScreen.querySelector('.sbody');
+  var refEl = sbody || activeScreen;
+  var refRect = refEl.getBoundingClientRect();
+  var targets = [activeScreen];
+  document.querySelectorAll('.overlay.show').forEach(function(el){ targets.push(el); });
+
+  targets.forEach(function(scope) {
+    scope.querySelectorAll('[onclick]').forEach(function(el) {
+      if (el.id === 'hotspot-btn') return;
+      var fn = el.getAttribute('onclick') || '';
+      if (!fn || fn.indexOf('hotspot') !== -1) return;
+      var parsed = parseHsLabel(fn);
+      var color = getHsColor(parsed.type);
+      var r = el.getBoundingClientRect();
+      if (r.width === 0 || r.height === 0) return;
+      // phone-frame 기준 좌표
+      var ov = document.createElement('div');
+      ov.className = 'hs-ov';
+      // fixed 좌표 — overflow:hidden 영향 없음
+      ov.style.cssText =
+        'position:fixed;pointer-events:auto;box-sizing:border-box;border-radius:3px;z-index:8000;' +
+        'left:'   + r.left   + 'px;' +
+        'top:'    + r.top    + 'px;' +
+        'width:'  + r.width  + 'px;' +
+        'height:' + r.height + 'px;' +
+        'border:2px solid ' + color + ';background:' + color + '25;';
+      ov.addEventListener('mouseenter', function() {
+        _hsTip.textContent = parsed.label;
+        _hsTip.style.background = color;
+        _hsTip.style.display = 'block';
+      });
+      ov.addEventListener('mousemove', function(e) {
+        _hsTip.style.left = (e.clientX + 14) + 'px';
+        _hsTip.style.top  = (e.clientY - 32) + 'px';
+      });
+      ov.addEventListener('mouseleave', function() {
+        _hsTip.style.display = 'none';
+      });
+      document.body.appendChild(ov);
+    });
+  });
+
+  // 스크롤 시 재렌더
+  if (refEl._hsScroll) refEl.removeEventListener('scroll', refEl._hsScroll);
+  refEl._hsScroll = function() { if (_hsOn) renderHotspots(); };
+  refEl.addEventListener('scroll', refEl._hsScroll);
+}
+
+function clearHotspots() {
+  document.querySelectorAll('.hs-ov').forEach(function(e){ e.remove(); });
+  var c = document.getElementById('hs-container-active');
+  if (c) c.remove();
+  if (_hsTip) _hsTip.style.display = 'none';
+}
+
+
+function getHsColor(type) {
+  var colors = { nav:'#059669', modal:'#7C3AED', toast:'#D97706', other:'#1A56DB' };
+  return colors[type] || '#1A56DB';
+}
+
+function parseHsLabel(fn) {
+  var label = '', type = 'other', m;
+  if (/^nav[(]/.test(fn)) {
+    type = 'nav';
+    m = fn.match(/nav[(]['"]([^'"]+)['"]/);
+    label = m ? String.fromCharCode(8594) + ' ' + m[1] : 'nav';
+  } else if (/navTokenDetail/.test(fn)) {
+    type = 'nav'; label = String.fromCharCode(8594) + ' token-detail';
+  } else if (/showModal/.test(fn)) {
+    type = 'modal';
+    m = fn.match(/showModal[(]['"]([^'"]+)['"]/);
+    label = m ? '[modal] ' + m[1].replace(/-modal$/,'') : 'modal';
+  } else if (/closeModal/.test(fn)) {
+    type = 'modal'; label = 'modal close';
+  } else if (/showToast/.test(fn)) {
+    type = 'toast';
+    m = fn.match(/showToast[(]['"](.{0,16})/);
+    label = m ? '[toast] ' + m[1] : 'toast';
+  } else {
+    var base = fn.split('(')[0].trim();
+    label = base.length > 20 ? base.slice(0,20)+'...' : base;
+  }
+  return { label: label, type: type };
+}
+
+
 function toggleServiceNoti(el) {
   el.classList.toggle('on');
   el.classList.toggle('off');
@@ -8932,6 +9123,13 @@ var _tipStyle = document.getElementById('pay-balance-tip');
 
 </script>
 <div class="toast" id="app-toast"></div>
+  <div id="hotspot-legend">
+    <div style="font-weight:700;margin-bottom:4px;color:#111">핫스팟 범례</div>
+    <div class="hl-row"><div class="hl-dot" style="background:#059669"></div><span>화면 이동</span></div>
+    <div class="hl-row"><div class="hl-dot" style="background:#7C3AED"></div><span>모달 열기</span></div>
+    <div class="hl-row"><div class="hl-dot" style="background:#D97706"></div><span>토스트 안내</span></div>
+    <div class="hl-row"><div class="hl-dot" style="background:#1A56DB"></div><span>기타 액션</span></div>
+  </div>
 </body>
 </html
 >
