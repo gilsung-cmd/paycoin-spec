@@ -7630,8 +7630,20 @@ function renderHotspots() {
     document.body.appendChild(_hsTip);
   }
 
+  // 실제 스크롤 요소 탐지: .sbody → overflow-y:auto 자식 → activeScreen
   var sbody = activeScreen.querySelector('.sbody');
-  var refEl = sbody || activeScreen;
+  var refEl = sbody;
+  if (!refEl) {
+    // sbody 없는 경우 — 현재 보이는 overflow-y:auto 자식 탐색
+    var children = activeScreen.children;
+    for (var i = 0; i < children.length; i++) {
+      var cs = window.getComputedStyle(children[i]);
+      if ((cs.overflowY === 'auto' || cs.overflowY === 'scroll') && children[i].offsetHeight > 0) {
+        refEl = children[i]; break;
+      }
+    }
+  }
+  if (!refEl) refEl = activeScreen;
   var refRect = refEl.getBoundingClientRect();
   var targets = [activeScreen];
   document.querySelectorAll('.overlay.show').forEach(function(el){ targets.push(el); });
