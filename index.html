@@ -9502,4 +9502,190 @@ function generateAppsScriptCode() {
     '',
     '/** Description 시트 드롭다운 */',
     'function applyDropdowns() {',
-    '  const ss    = SpreadsheetApp.getAc
+    '  const ss    = SpreadsheetApp.getActiveSpreadsheet();',
+    '  const sheet = ss.getSheetByName(SHEET_NAME_DESC);',
+    '  if (!sheet) { Logger.log(\'Description 시트 없음\'); return; }',
+    '',
+    '  // A열: screen_key',
+    '  sheet.getRange(\'A2:A1000\').setDataValidation(',
+    '    SpreadsheetApp.newDataValidation()',
+    '      .requireValueInList(SCREEN_KEYS, true)',
+    '      .setAllowInvalid(false)',
+    '      .setHelpText(\'화면을 선택하세요.\')',
+    '      .build()',
+    '  );',
+    '',
+    '  // D열: 중요도',
+    '  sheet.getRange(\'D2:D1000\').setDataValidation(',
+    '    SpreadsheetApp.newDataValidation()',
+    '      .requireValueInList([\'필수\', \'일반\', \'경고\', \'참고\', \'코드\'], true)',
+    '      .setAllowInvalid(false)',
+    '      .setHelpText(\'중요도를 선택하세요.\')',
+    '      .build()',
+    '  );',
+    '',
+    '  // E열: zone_id (현재 채워진 행만, 나머지는 onEdit 처리)',
+    '  const lastRow = Math.max(sheet.getLastRow(), 2);',
+    '  const aVals   = sheet.getRange(\'A2:A\' + lastRow).getValues();',
+    '',
+    '  aVals.forEach((row, i) => {',
+    '    const key    = String(row[0] || \'\').trim();',
+    '    const zones  = ZONE_MAP[key] || Object.values(ZONE_MAP).flat();',
+    '    const unique = [...new Set(zones)];',
+    '',
+    '    sheet.getRange(i + 2, 5).setDataValidation(',
+    '      SpreadsheetApp.newDataValidation()',
+    '        .requireValueInList(unique, true)',
+    '        .setAllowInvalid(true)',
+    '        .setHelpText(\'UI 영역 선택 (비워도 됨)\')',
+    '        .build()',
+    '    );',
+    '  });',
+    '',
+    '  Logger.log(\'Description 드롭다운 적용 완료 (\' + lastRow + \'행)\');',
+    '}',
+    '',
+    '/** Policy 시트 드롭다운 */',
+    'function applyPolicyDropdowns(sheet) {',
+    '  if (!sheet) {',
+    '    const ss = SpreadsheetApp.getActiveSpreadsheet();',
+    '    sheet = ss.getSheetByName(SHEET_NAME_POLICY);',
+    '  }',
+    '  if (!sheet) return;',
+    '',
+    '  // A열: 카테고리',
+    '  sheet.getRange(\'A2:A1000\').setDataValidation(',
+    '    SpreadsheetApp.newDataValidation()',
+    '      .requireValueInList(POLICY_CATEGORIES, true)',
+    '      .setAllowInvalid(false)',
+    '      .setHelpText(\'카테고리를 선택하세요.\')',
+    '      .build()',
+    '  );',
+    '',
+    '  // E열: 중요도',
+    '  sheet.getRange(\'E2:E1000\').setDataValidation(',
+    '    SpreadsheetApp.newDataValidation()',
+    '      .requireValueInList(POLICY_IMPORTANCE, true)',
+    '      .setAllowInvalid(false)',
+    '      .setHelpText(\'중요도를 선택하세요.\')',
+    '      .build()',
+    '  );',
+    '',
+    '  Logger.log(\'Policy 드롭다운 적용 완료\');',
+    '}',
+    '',
+    '',
+    '// ════════════════════════════════════════════════════',
+    '// onEdit 트리거 — Description A열 변경 시 E열 자동 갱신',
+    '// ════════════════════════════════════════════════════',
+    'function onEdit(e) {',
+    '  const sheet = e.range.getSheet();',
+    '  if (sheet.getName() !== SHEET_NAME_DESC) return;',
+    '  if (e.range.getColumn() !== 1) return;',
+    '  if (e.range.getRow() < 2) return;',
+    '',
+    '  const key    = String(e.value || \'\').trim();',
+    '  const zones  = ZONE_MAP[key] || [\'\'];',
+    '  const unique = [...new Set(zones)];',
+    '',
+    '  const targetCell = sheet.getRange(e.range.getRow(), 5);',
+    '  targetCell.clearContent();',
+    '  targetCell.setDataValidation(',
+    '    SpreadsheetApp.newDataValidation()',
+    '      .requireValueInList(unique, true)',
+    '      .setAllowInvalid(true)',
+    '      .setHelpText(\'UI 영역 선택 (비워도 됨)\')',
+    '      .build()',
+    '  );',
+    '}',
+    '',
+    '',
+    '// ════════════════════════════════════════════════════',
+    '// 트리거 설치 (최초 1회 실행)',
+    '// ════════════════════════════════════════════════════',
+    'function installTrigger() {',
+    '  const ss = SpreadsheetApp.getActiveSpreadsheet();',
+    '',
+    '  ScriptApp.getProjectTriggers().forEach(t => {',
+    '    if (t.getHandlerFunction() === \'onEdit\') ScriptApp.deleteTrigger(t);',
+    '  });',
+    '',
+    '  ScriptApp.newTrigger(\'onEdit\').forSpreadsheet(ss).onEdit().create();',
+    '  Logger.log(\'onEdit 트리거 등록 완료\');',
+    '}',
+    '',
+    '/** 전체 초기 설정 (최초 1회 실행) */',
+    'function setup() {',
+    '  getOrCreateDescSheet();',
+    '  getOrCreateQnaSheet();',
+    '  getOrCreatePolicySheet();',
+    '  installTrigger();',
+    '  Logger.log(\'전체 설정 완료\');',
+    '}',
+    '',
+    '',
+    '// ════════════════════════════════════════════════════',
+    '// 공통 응답',
+    '// ════════════════════════════════════════════════════',
+    'function jsonResponse(obj) {',
+    '  return ContentService',
+    '    .createTextOutput(JSON.stringify(obj))',
+    '    .setMimeType(ContentService.MimeType.JSON);',
+    '}',
+    ''
+  ].join('\n');
+
+  var pre = document.getElementById('apps-script-preview');
+  if (pre) pre.textContent = code;
+  window._appsScriptCode = code;
+}
+
+function copyAppsScript() {
+  var code = window._appsScriptCode || '';
+  if (!code) { generateAppsScriptCode(); code = window._appsScriptCode || ''; }
+  navigator.clipboard.writeText(code).then(function() {
+    var s = document.getElementById('copy-script-status');
+    if (s) { s.textContent = '✅ 클립보드에 복사됐습니다!'; setTimeout(function(){ s.textContent=''; }, 2500); }
+  });
+}
+
+function copyConfigJson() {
+  var cfg = '{\n  "apiUrl":       "← Apps Script 배포 URL 붙여넣기",\n  "projectName":  "← 프로젝트/앱 이름",\n  "primaryColor": "← 브랜드 컬러 HEX (예: #1A56DB)"\n}';
+  navigator.clipboard.writeText(cfg).then(function() {
+    var s = document.getElementById('copy-config-status');
+    if (s) { s.textContent = '✅ 복사됐습니다!'; setTimeout(function(){ s.textContent=''; }, 2500); }
+  });
+}
+
+/* showSheetGuide 오버라이드 */
+var _origShowSheetGuide = window.showSheetGuide;
+window.showSheetGuide = function() {
+  var overlay = document.getElementById('guide-overlay');
+  if (overlay) overlay.classList.add('open');
+  switchGuideTab('sheets');
+};
+
+
+/* ══ PAY BALANCE TOOLTIP ══ */
+document.addEventListener('click', function(e) {
+  var tip = document.getElementById('pay-balance-tip');
+  var btn = document.getElementById('pay-balance-tip-btn');
+  if (!tip) return;
+  if (btn && btn.contains(e.target)) return;
+  tip.style.display = 'none';
+});
+var _tipStyle = document.getElementById('pay-balance-tip');
+// show/hide via classList toggle handled inline
+
+</script>
+<div class="toast" id="app-toast"></div>
+  <div id="hotspot-legend">
+    <div style="font-weight:700;margin-bottom:4px;color:#111">핫스팟 범례</div>
+    <div class="hl-row"><div class="hl-dot" style="background:#059669"></div><span>화면 이동</span></div>
+    <div class="hl-row"><div class="hl-dot" style="background:#7C3AED"></div><span>모달 열기</span></div>
+    <div class="hl-row"><div class="hl-dot" style="background:#D97706"></div><span>토스트 안내</span></div>
+    <div class="hl-row"><div class="hl-dot" style="background:#1A56DB"></div><span>기타 액션</span></div>
+  </div>
+</body>
+</html
+>
