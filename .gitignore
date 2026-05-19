@@ -1,0 +1,25 @@
+# 폴더 제외
+admin/
+admin_1/
+
+# 문서류 제외
+*.md
+!README.md
+*.docx
+*.xlsx
+*.xls
+*.tsv
+*.pdf
+
+# Apps Script
+Code.gs
+
+# 엑셀 임시 잠금 파일
+~$*
+
+# OS / 에디터 임시 파일
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo

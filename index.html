@@ -91,6 +91,13 @@ body {
 .nav-btn.nav-sub { padding-left: 26px; font-size: 12px; color: var(--text4); }
 .nav-btn.nav-sub:hover { color: var(--text2); background: var(--card2); }
 .nav-btn.nav-sub.active { color: var(--primary); border-left-color: var(--primary); background: var(--primary-l); font-weight: 700; }
+.nav-docs { flex-shrink: 0; padding: 8px 10px 12px; border-top: 1px solid var(--border); }
+.nav-docs-title { font-size: 9px; font-weight: 700; color: var(--text4); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; padding-left: 4px; }
+.nav-doc-btn { display: flex; align-items: center; gap: 6px; width: 100%; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--card); color: var(--text2); font-size: 11px; font-family: inherit; cursor: pointer; text-decoration: none; margin-bottom: 4px; transition: background 0.15s, border-color 0.15s; }
+.nav-doc-btn:last-child { margin-bottom: 0; }
+.nav-doc-btn:hover { background: var(--primary-l); border-color: var(--primary); color: var(--primary); }
+.nav-doc-btn .doc-icon { font-size: 13px; flex-shrink: 0; }
+.nav-doc-btn .doc-label { font-weight: 600; }
 
 /* ══ LAYOUT ══ */
 .layout {
@@ -544,9 +551,10 @@ body {
 .dist-row { display: flex; align-items: center; gap: 9px; padding: 7px 0; border-bottom: 1px solid var(--border); }
 .dist-row:last-child { border: none; }
 .dist-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-.dist-lbl { flex: 1; font-size: 12px; color: var(--text2); }
-.dist-pct { font-size: 12px; font-weight: 700; color: var(--text); }
-.dist-amt { font-size: 11px; color: var(--text3); margin-left: 6px; }
+.dist-lbl { flex: 1; font-size: 12px; color: var(--text2); line-height: 1.3; }
+.dist-sub { font-size: 10px; color: var(--text4); margin-top: 1px; }
+.dist-pct { font-size: 12px; font-weight: 700; color: var(--text); min-width: 46px; text-align: right; flex-shrink: 0; }
+.dist-amt { font-size: 11px; color: var(--text3); min-width: 82px; text-align: right; flex-shrink: 0; }
 
 /* ══ CONNECTED WALLET CARD ══ */
 .connected-card { background: var(--primary-l); border: 1px solid #BFDBFE; border-radius: var(--radius); padding: 14px; margin: 0 14px 10px; }
@@ -918,6 +926,15 @@ body {
   </div>
   </div><!-- /nav-screens -->
   </div><!-- /nav-screens-wrap -->
+  <div class="nav-docs" id="nav-docs">
+    <div class="nav-docs-title">📄 문서</div>
+    <a class="nav-doc-btn" id="nav-doc-prd" href="#" target="_blank" rel="noopener">
+      <span class="doc-icon">📋</span><span class="doc-label">PRD v2.0</span>
+    </a>
+    <a class="nav-doc-btn" id="nav-doc-spec" href="#" target="_blank" rel="noopener">
+      <span class="doc-icon">📝</span><span class="doc-label">기능명세서 v1.3</span>
+    </a>
+  </div><!-- /nav-docs -->
 </div><!-- /nav-inner -->
 </nav>
 
@@ -3188,10 +3205,13 @@ body {
               <div style="flex:0.9;background:#F3E8FF;border:1px solid #E9D5FF;border-radius:4px;min-height:5px"></div>
             </div>
           </div>
-          <div class="dist-row"><div class="dist-dot" style="background:#4338CA"></div><div class="dist-lbl">내 지갑 (PCI)</div><div class="dist-pct">66.8%</div><div class="dist-amt">8,245,000원</div></div>
-          <div class="dist-row"><div class="dist-dot" style="background:#E65100"></div><div class="dist-lbl">빗썸 (PCI)</div><div class="dist-pct">19.0%</div><div class="dist-amt">2,343,600원</div></div>
-          <div class="dist-row"><div class="dist-dot" style="background:#0D47A1"></div><div class="dist-lbl">코인원 (BTC·ETH)</div><div class="dist-pct">13.3%</div><div class="dist-amt">1,637,000원</div></div>
-          <div class="dist-row"><div class="dist-dot" style="background:#6B21A8"></div><div class="dist-lbl">코빗 (XRP)</div><div class="dist-pct">0.9%</div><div class="dist-amt">114,432원</div></div>
+          <!-- 거래소별 범례: 거래소명 / 코인 목록 2줄 구조
+               규칙: 1종 → 코인명 그대로 / 2종 → A · B /
+                     3종 이상 → A · B 외 N종 (예: BTC · ETH 외 3종) -->
+          <div class="dist-row"><div class="dist-dot" style="background:#4338CA"></div><div class="dist-lbl">내 지갑<div class="dist-sub">PCI</div></div><div class="dist-pct">66.8%</div><div class="dist-amt">8,245,000원</div></div>
+          <div class="dist-row"><div class="dist-dot" style="background:#E65100"></div><div class="dist-lbl">빗썸<div class="dist-sub">PCI</div></div><div class="dist-pct">19.0%</div><div class="dist-amt">2,343,600원</div></div>
+          <div class="dist-row"><div class="dist-dot" style="background:#0D47A1"></div><div class="dist-lbl">코인원<div class="dist-sub">BTC · ETH</div></div><div class="dist-pct">13.3%</div><div class="dist-amt">1,637,000원</div></div>
+          <div class="dist-row"><div class="dist-dot" style="background:#6B21A8"></div><div class="dist-lbl">코빗<div class="dist-sub">XRP</div></div><div class="dist-pct">0.9%</div><div class="dist-amt">114,432원</div></div>
         </div>
 
         <!-- ② 전체 잔액 0 / 조건: 연결된 자산이 있으나 모두 잔액 0원 (④의 0원 포함) -->
@@ -8798,23 +8818,38 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeGuide
 
 /* ══ CONFIG LOAD ══ */
 async function loadConfig(){
-  if(QNA.apiUrl){ Promise.all([loadQna(),loadDesc()]); return; }
+  // config.json을 항상 먼저 fetch — docs 링크 적용을 위해 QNA.apiUrl 유무 무관하게 실행
   try{
     var base=window.location.href.replace(/\/[^\/]*$/,'/');
     var res=await fetch(base+'config.json',{cache:'no-cache'});
     if(!res.ok) throw new Error('no config');
     var cfg=await res.json();
+    // apiUrl 적용
     if(cfg.apiUrl&&cfg.apiUrl.startsWith('https://')){
       QNA.apiUrl=cfg.apiUrl;
       try{ localStorage.setItem('qna_api',cfg.apiUrl); }catch(e){}
-      Promise.all([loadQna(),loadDesc()]); return;
+    }
+    // docs 링크 적용
+    if(cfg.docs){
+      var prdBtn=document.getElementById('nav-doc-prd');
+      var specBtn=document.getElementById('nav-doc-spec');
+      if(prdBtn&&cfg.docs.prd){
+        prdBtn.href=cfg.docs.prd.url||'#';
+        var lbl=prdBtn.querySelector('.doc-label');
+        if(lbl&&cfg.docs.prd.label) lbl.textContent=cfg.docs.prd.label;
+      }
+      if(specBtn&&cfg.docs.spec){
+        specBtn.href=cfg.docs.spec.url||'#';
+        var lbl=specBtn.querySelector('.doc-label');
+        if(lbl&&cfg.docs.spec.label) lbl.textContent=cfg.docs.spec.label;
+      }
     }
   }catch(e){
     console.warn('[loadConfig] config.json 로드 실패:', e.message);
   }
-  // apiUrl이 localStorage에 있는데 config.json이 없어도 동작하도록
+  // QNA 데이터 로드 (config.json 또는 localStorage에 apiUrl 있으면)
   if(QNA.apiUrl){
-    Promise.all([loadQna(), loadDesc()]);
+    Promise.all([loadQna(),loadDesc()]);
     return;
   }
   var s=document.getElementById('qna-setup-inline');
@@ -9711,12 +9746,4 @@ var _tipStyle = document.getElementById('pay-balance-tip');
 </script>
 <div class="toast" id="app-toast"></div>
   <div id="hotspot-legend">
-    <div style="font-weight:700;margin-bottom:4px;color:#111">핫스팟 범례</div>
-    <div class="hl-row"><div class="hl-dot" style="background:#059669"></div><span>화면 이동</span></div>
-    <div class="hl-row"><div class="hl-dot" style="background:#7C3AED"></div><span>모달 열기</span></div>
-    <div class="hl-row"><div class="hl-dot" style="background:#D97706"></div><span>토스트 안내</span></div>
-    <div class="hl-row"><div class="hl-dot" style="background:#1A56DB"></div><span>기타 액션</span></div>
-  </div>
-</body>
-</html
->
+    <div style="font-weight:700;margin-bottom:4px

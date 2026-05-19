@@ -1,3 +1,13 @@
 {
-  "apiUrl": "https://script.google.com/macros/s/AKfycbxtQlkXSwzEUWN3ZqkUoMVHZvWEKN--en65T4qBNM2RrjprOUv9O0OZt0KlFX5v0sug1Q/exec"
+  "apiUrl": "https://script.google.com/macros/s/AKfycbxtQlkXSwzEUWN3ZqkUoMVHZvWEKN--en65T4qBNM2RrjprOUv9O0OZt0KlFX5v0sug1Q/exec",
+  "docs": {
+    "prd": {
+      "label": "PRD v2.0",
+      "url": "https://docs.google.com/document/d/1oPv59vOzFWnFgzsrySLLiLTTP1rtLWr1wbcSYeGRmDY/edit?usp=sharing"
+    },
+    "spec": {
+      "label": "기능명세서 v1.3",
+      "url": "https://docs.google.com/document/d/1JzI47yfnRwz7WLn8gLz8u84InCzG_bvdsBldyXhEjBI/edit?usp=sharing"
+    }
+  }
 }
