@@ -2940,17 +2940,14 @@ body {
 
     <!-- ① 미입력: 배너만 -->
     <div id="ob3-empty">
-      <div class="card" style="padding:16px;background:linear-gradient(135deg,var(--primary-l) 0%,#F0FDF4 100%);border:1px solid #BFDBFE">
-        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px">
-          <div style="font-size:28px;line-height:1">✨</div>
-          <div>
-            <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:5px">투자 현황을 한눈에 확인하세요</div>
-            <div style="font-size:11px;color:var(--text3);line-height:1.7">목표 금액과 평균 매수가를 입력하면<br>달성률과 수익률을 바로 볼 수 있어요</div>
-          </div>
+      <div style="margin:0 14px 12px;padding:11px 13px;background:var(--card2);border-radius:11px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <div style="min-width:0">
+          <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px">수익 · 달성률 확인</div>
+          <div style="font-size:10px;color:var(--text4);line-height:1.5">매수가·목표를 설정하면<br>수익률과 달성률을 볼 수 있어요</div>
         </div>
-        <div style="display:flex;gap:8px">
-          <button onclick="showModal('goal-modal')" style="flex:1;font-size:11px;font-weight:700;color:var(--primary);background:#fff;border:1px solid #BFDBFE;border-radius:9px;padding:9px 0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">🎯 목표 설정</button>
-          <button onclick="openProfitModal()" style="flex:1;font-size:11px;font-weight:700;color:#fff;background:var(--primary);border:none;border-radius:9px;padding:9px 0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">📊 매수가 입력</button>
+        <div style="display:flex;gap:5px;flex-shrink:0">
+          <button onclick="showModal('goal-modal')" style="font-size:10px;font-weight:600;color:var(--text2);background:var(--card);border:1px solid var(--border);border-radius:7px;padding:5px 9px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap">목표 설정</button>
+          <button onclick="openProfitModal()" style="font-size:10px;font-weight:600;color:#fff;background:var(--primary);border:none;border-radius:7px;padding:5px 9px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap">매수가 입력</button>
         </div>
       </div>
     </div><!-- /ob3-empty -->
