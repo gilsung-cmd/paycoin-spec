@@ -505,7 +505,7 @@ body {
 
 /* ══ PROGRESS ══ */
 .prog-wrap { background: var(--border); border-radius: 8px; height: 8px; overflow: hidden; }
-.prog-bar { height: 100%; border-radius: 8px; }
+.prog-bar { height: 100%; border-radius: 8px; transition: width 0.6s cubic-bezier(.4,0,.2,1); }
 
 /* ══ RANK TABLE ══ */
 .rank-header { display: flex; align-items: center; padding: 7px 14px; background: var(--card2); border-bottom: 1px solid var(--border); }
@@ -2882,25 +2882,144 @@ body {
   <div class="sbody">
     <div data-zone="asset-summary" class="asset-card" style="margin-bottom:10px">
       <div class="alabel">총 자산</div>
-      <div class="aamt">12,345,678<span style="font-size:15px;font-weight:500;opacity:.8"> 원</span></div>
-      <div class="achange"><span style="color:#FCA5A5">▲ +1,234원 (0.43%)</span></div>
-      <div class="abtn" style="font-size:10px;opacity:.6">2026.04.30 03:00 KST 기준</div>
-    </div>
-    <div data-zone="asset-chart" class="card" style="padding:12px">
-      <div style="display:flex;gap:5px;margin-bottom:10px">
-        <div class="chip active" style="font-size:10px;padding:3px 10px">1D</div>
-        <div class="chip" style="font-size:10px;padding:3px 10px">1W</div>
-        <div class="chip" style="font-size:10px;padding:3px 10px">1M</div>
-        <div class="chip" style="font-size:10px;padding:3px 10px">3M</div>
-      </div>
-      <div class="mini-chart">
-        <svg width="100%" height="76" viewBox="0 0 300 76" preserveAspectRatio="none">
-          <defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1A56DB" stop-opacity="0.15"/><stop offset="100%" stop-color="#1A56DB" stop-opacity="0"/></linearGradient></defs>
-          <path d="M0,58 C20,52 40,66 60,46 S100,18 140,28 S180,52 220,32 S260,18 300,22 L300,76 L0,76Z" fill="url(#cg)"/>
-          <path class="cline" d="M0,58 C20,52 40,66 60,46 S100,18 140,28 S180,52 220,32 S260,18 300,22" fill="none" stroke="#1A56DB" stroke-width="2" stroke-linecap="round"/>
-        </svg>
+      <div class="aamt"><span id="asset-total-amt">12,345,678</span><span style="font-size:15px;font-weight:500;opacity:.8"> 원</span></div>
+      <div class="achange">
+        <span id="asset-chg-display" style="color:#FCA5A5">▲ +1,234원 (0.43%)</span>
+        <span style="font-size:10px;opacity:0.55;margin-left:6px">직전 접속 대비</span>
       </div>
     </div>
+    <!-- ① 이번 달 자산 변동 추이 -->
+    <div data-zone="asset-chart" class="stitle">
+      <span>이번 달 자산 변동</span>
+      <span style="font-size:11px;color:var(--text4);font-weight:400">2026년 5월 기준</span>
+    </div>
+    <div class="card" style="padding:13px 16px">
+      <div style="display:flex;align-items:stretch">
+        <!-- 월초 -->
+        <div style="flex:1;text-align:center;padding:4px 0">
+          <div style="font-size:10px;color:var(--text4);margin-bottom:6px">월초</div>
+          <div style="font-size:15px;font-weight:800;color:var(--text);letter-spacing:-0.5px"><span id="asset-monthly-base">11,204,300</span></div>
+          <div style="font-size:10px;color:var(--text4);margin-top:5px">5월 1일 기준</div>
+        </div>
+        <!-- 구분선 -->
+        <div style="width:1px;background:var(--border);margin:2px 0;flex-shrink:0"></div>
+        <!-- 변동 -->
+        <div style="flex:1;text-align:center;padding:4px 0">
+          <div style="font-size:10px;color:var(--text4);margin-bottom:6px">월초 대비 변동</div>
+          <div id="asset-monthly-chg-wrap" style="font-size:15px;font-weight:800;color:var(--red);letter-spacing:-0.5px">+<span id="asset-monthly-chg-amt">1,141,378</span></div>
+          <div style="font-size:10px;color:var(--red);font-weight:700;margin-top:5px">+<span id="asset-monthly-chg-pct">10.2</span>%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 뷰어 전용: 온보딩 옵션 비교 토글 ── -->
+    <div style="display:flex;align-items:center;gap:5px;padding:0 14px 8px">
+      <span style="font-size:9px;color:var(--text4);white-space:nowrap">입력 전 화면:</span>
+      <button onclick="setOnboardOpt('current')" id="ob-btn-current" style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;border:1px solid var(--primary);background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">현재</button>
+      <button onclick="setOnboardOpt('opt1')"    id="ob-btn-opt1"    style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">옵션①</button>
+      <button onclick="setOnboardOpt('opt3')"    id="ob-btn-opt3"    style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">옵션③</button>
+    </div>
+
+    <!-- ── [현재] 기존 두 섹션 분리 방식 ── -->
+    <div id="onboard-current">
+
+      <!-- 투자 수익 분석 -->
+      <div class="stitle">
+        <span>투자 수익 분석</span>
+        <div style="display:flex;align-items:center;gap:5px">
+          <div id="profit-tab-filled" class="chip active" style="font-size:9px;padding:2px 7px;cursor:pointer" onclick="setProfitView('filled')">입력 후</div>
+          <div id="profit-tab-empty"  class="chip"        style="font-size:9px;padding:2px 7px;cursor:pointer" onclick="setProfitView('empty')">입력 전</div>
+          <button onclick="openProfitModal()" id="profit-btn" style="font-size:9px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:5px;padding:2px 8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">입력/수정</button>
+        </div>
+      </div>
+      <div class="card" style="padding:10px 13px" id="profit-card">
+        <div id="profit-body"><!-- JS 렌더링 --></div>
+      </div>
+
+      <!-- 목표 자산 달성률 -->
+      <div class="stitle">
+        <span>목표 자산 달성률</span>
+        <div style="display:flex;align-items:center;gap:5px">
+          <div id="goal-tab-filled" class="chip active" style="font-size:9px;padding:2px 7px;cursor:pointer" onclick="setGoalView('filled')">입력 후</div>
+          <div id="goal-tab-empty"  class="chip"        style="font-size:9px;padding:2px 7px;cursor:pointer" onclick="setGoalView('empty')">입력 전</div>
+          <button onclick="showModal('goal-modal')" id="goal-btn" style="font-size:9px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:5px;padding:2px 8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">목표 설정</button>
+        </div>
+      </div>
+      <div class="card" style="padding:13px" id="goal-card">
+        <!-- 입력 전 -->
+        <div id="goal-body-empty" style="display:none;align-items:center;justify-content:space-between;padding:6px 2px">
+          <div style="font-size:11px;color:var(--text3);line-height:1.5">목표 금액을 설정하면<br>달성률을 확인할 수 있어요</div>
+          <button onclick="showModal('goal-modal')" style="flex-shrink:0;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:7px 12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-left:10px">설정하기 →</button>
+        </div>
+        <!-- 입력 후 -->
+        <div id="goal-body-filled">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:7px">
+            <div>
+              <div style="font-size:10px;color:var(--text4);margin-bottom:2px">현재 자산</div>
+              <div style="font-size:15px;font-weight:800;color:var(--text);letter-spacing:-0.5px"><span id="asset-goal-current">12,345,678</span><span style="font-size:11px;font-weight:500;color:var(--text3)"> 원</span></div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:10px;color:var(--text4);margin-bottom:2px">목표 자산</div>
+              <div id="goal-target-amt" style="font-size:13px;font-weight:700;color:var(--text3);letter-spacing:-0.5px">20,000,000<span style="font-size:10px;font-weight:500"> 원</span></div>
+            </div>
+          </div>
+          <div class="prog-wrap" style="margin-bottom:6px">
+            <div id="goal-prog-bar" class="prog-bar" style="width:61.7%;background:linear-gradient(90deg,var(--primary),#3B82F6)"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div id="goal-remaining" style="font-size:10px;color:var(--text4)">7,654,322원 남음</div>
+            <div id="goal-pct-text" style="font-size:12px;font-weight:800;color:var(--primary)">61.7%</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /onboard-current -->
+
+    <!-- ── [옵션①] 통합 온보딩 카드 ── -->
+    <div id="onboard-opt1" style="display:none">
+      <div class="stitle">
+        <span>투자 현황 설정</span>
+        <span style="font-size:10px;color:var(--text4);font-weight:400">0 / 2 완료</span>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <!-- 목표 자산 항목 -->
+        <div style="display:flex;align-items:center;gap:12px;padding:13px;border-bottom:1px solid var(--border)">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--primary-l);border:1px solid #BFDBFE;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">🎯</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px">목표 자산 설정</div>
+            <div style="font-size:10px;color:var(--text4);line-height:1.5">목표 금액을 설정하면<br>달성률을 확인할 수 있어요</div>
+          </div>
+          <button onclick="showModal('goal-modal')" style="flex-shrink:0;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:7px 11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">설정하기</button>
+        </div>
+        <!-- 평균 매수가 항목 -->
+        <div style="display:flex;align-items:center;gap:12px;padding:13px">
+          <div style="width:36px;height:36px;border-radius:50%;background:#F0FDF4;border:1px solid #BBF7D0;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">📊</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px">평균 매수가 입력</div>
+            <div style="font-size:10px;color:var(--text4);line-height:1.5">코인별 매수가를 입력하면<br>수익률을 확인할 수 있어요</div>
+          </div>
+          <button onclick="openProfitModal()" style="flex-shrink:0;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:7px 11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">입력하기</button>
+        </div>
+      </div>
+    </div><!-- /onboard-opt1 -->
+
+    <!-- ── [옵션③] 단일 배너 ── -->
+    <div id="onboard-opt3" style="display:none">
+      <div class="card" style="padding:16px;background:linear-gradient(135deg,var(--primary-l) 0%,#F0FDF4 100%);border:1px solid #BFDBFE">
+        <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px">
+          <div style="font-size:28px;line-height:1">✨</div>
+          <div>
+            <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:5px">투자 현황을 한눈에 확인하세요</div>
+            <div style="font-size:11px;color:var(--text3);line-height:1.7">목표 금액과 평균 매수가를 입력하면<br>달성률과 수익률을 바로 볼 수 있어요</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button onclick="showModal('goal-modal')" style="flex:1;font-size:11px;font-weight:700;color:var(--primary);background:#fff;border:1px solid #BFDBFE;border-radius:9px;padding:9px 0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">🎯 목표 설정</button>
+          <button onclick="openProfitModal()" style="flex:1;font-size:11px;font-weight:700;color:#fff;background:var(--primary);border:none;border-radius:9px;padding:9px 0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">📊 매수가 입력</button>
+        </div>
+      </div>
+    </div><!-- /onboard-opt3 -->
+
     <div data-zone="asset-distribution" class="stitle">자산 비중</div>
     <div class="card" style="padding-bottom:4px">
 
@@ -3056,15 +3175,17 @@ body {
       </div><!-- /dist-exch-content -->
 
     </div><!-- /card -->
-    <div data-zone="asset-list" class="stitle">보유 자산</div>
     <!-- 연결 지갑 잔액 조회 오류 상태 (뷰어 토글) -->
-    <div style="display:flex;justify-content:flex-end;padding:0 14px 4px;gap:5px">
-      <button onclick="setWalletError('none')"
-        style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정상</button>
-      <button onclick="setWalletError('temp')"
-        style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">일시적 오류</button>
-      <button onclick="setWalletError('maintenance')"
-        style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">거래소 점검</button>
+    <div data-zone="asset-list" class="stitle" style="margin-top:6px">
+      <span>보유 자산</span>
+      <div style="display:flex;gap:5px">
+        <button onclick="setWalletError('none')"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정상</button>
+        <button onclick="setWalletError('temp')"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">일시적 오류</button>
+        <button onclick="setWalletError('maintenance')"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">거래소 점검</button>
+      </div>
     </div>
     <div class="wallet-row" onclick="nav('wallet-pci')"><div class="coin-icon">🪙</div><div class="winfo"><div class="wname">페이코인 PCI</div><div class="wprice">내 지갑</div></div><div class="wright"><div class="wkrw">8,245,000원</div><div class="wqty">100,000 PCI · 66.8%</div></div></div>
     <div class="wallet-row wallet-row-linked" onclick="nav('wallet-other')">
@@ -3080,7 +3201,7 @@ body {
         <div style="font-size:10px;color:var(--text4);margin-top:2px">코인원 점검중</div>
       </div>
     </div>
-    <div style="margin:14px"><button class="btn btn-ghost">+ 거래소 연결하기</button></div>
+    <div style="margin:14px"><button class="btn btn-ghost" onclick="showToast('WalletConnect 플로우를 실행합니다.')">+ 거래소 연결하기</button></div>
   </div>
   <div class="tab-bar" style="display:none!important">
     <div class="tab-item" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
@@ -3088,6 +3209,59 @@ body {
     <div class="tab-item" onclick="nav('payment')"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
     <div class="tab-item" onclick="nav('benefits')"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
     <div class="tab-item" onclick=""><div class="tab-icon">🛍️</div><div class="tab-lbl">쇼핑</div></div>
+  </div>
+  <!-- 투자 수익 분석 모달 -->
+  <div class="overlay" id="profit-modal">
+    <div class="modal" style="max-height:82vh;overflow-y:auto;scrollbar-width:none">
+      <div class="modal-handle"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="font-size:16px;font-weight:800;color:var(--text)">평균 매수가 입력/수정</div>
+        <button onclick="closeModal('profit-modal')" style="width:26px;height:26px;border-radius:50%;background:var(--card2);border:1px solid var(--border);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:16px">연결된 거래소 지갑별로 평균 매수가를 입력하세요.</div>
+      <div id="profit-modal-list"><!-- JS 렌더링 --></div>
+      <button onclick="saveProfitData()" class="btn btn-primary" style="margin-top:4px;margin-bottom:8px">저장</button>
+      <button onclick="closeModal('profit-modal')" class="btn btn-ghost">취소</button>
+    </div>
+  </div>
+
+  <!-- 목표 자산 설정 모달 -->
+  <div class="overlay" id="goal-modal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+        <div style="font-size:16px;font-weight:800;color:var(--text)">목표 자산 설정</div>
+        <button onclick="closeModal('goal-modal')" style="width:26px;height:26px;border-radius:50%;background:var(--card2);border:1px solid var(--border);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+      </div>
+      <!-- 현재 목표 표시 -->
+      <div style="background:var(--primary-l);border:1px solid #BFDBFE;border-radius:12px;padding:12px 16px;margin-bottom:16px;text-align:center">
+        <div style="font-size:10px;color:var(--primary);font-weight:600;margin-bottom:4px">현재 설정된 목표</div>
+        <div id="goal-current-display" style="font-size:18px;font-weight:800;color:var(--primary);letter-spacing:-0.5px">20,000,000 원</div>
+      </div>
+      <!-- 금액 입력 -->
+      <div style="margin-bottom:10px">
+        <div style="font-size:11px;font-weight:600;color:var(--text3);margin-bottom:6px">새 목표 금액 (원)</div>
+        <input id="goal-input" type="number" placeholder="목표 금액 입력"
+          style="width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Noto Sans KR',sans-serif;color:var(--text);background:var(--card2);outline:none"
+          oninput="updateGoalPreview()"
+          onfocus="this.style.borderColor='var(--primary)'"
+          onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <!-- 프리셋 버튼 -->
+      <div style="display:flex;gap:6px;margin-bottom:14px">
+        <button onclick="setGoalPreset(10000000)" style="flex:1;padding:7px 0;font-size:11px;font-weight:600;color:var(--text3);background:var(--card2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">1천만</button>
+        <button onclick="setGoalPreset(20000000)" style="flex:1;padding:7px 0;font-size:11px;font-weight:600;color:var(--text3);background:var(--card2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">2천만</button>
+        <button onclick="setGoalPreset(30000000)" style="flex:1;padding:7px 0;font-size:11px;font-weight:600;color:var(--text3);background:var(--card2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">3천만</button>
+        <button onclick="setGoalPreset(50000000)" style="flex:1;padding:7px 0;font-size:11px;font-weight:600;color:var(--text3);background:var(--card2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">5천만</button>
+      </div>
+      <!-- 달성률 미리보기 -->
+      <div id="goal-preview" style="display:none;background:#F0FDF4;border:1px solid #A7F3D0;border-radius:10px;padding:10px 14px;margin-bottom:14px;text-align:center">
+        <div style="font-size:10px;color:var(--green);font-weight:600;margin-bottom:3px">변경 후 예상 달성률</div>
+        <div id="goal-preview-text" style="font-size:17px;font-weight:800;color:var(--green)">--.--%</div>
+      </div>
+      <button onclick="saveGoal()" class="btn btn-primary" style="margin-bottom:8px">저장</button>
+      <button onclick="closeModal('goal-modal')" class="btn btn-ghost">취소</button>
+    </div>
   </div>
 </div>
   <!-- 더보기 메뉴 -->
@@ -6862,6 +7036,248 @@ function nav(key) {
 /* ══ MODAL ══ */
 function showModal(id) { document.getElementById(id).classList.add('show'); }
 function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+/* ══ PROFIT TRACKER ══ */
+(function(){
+  var fmt    = function(n){ return Math.round(n).toLocaleString('ko-KR'); };
+  var fmtDec = function(n, d){ return n.toLocaleString('ko-KR', {minimumFractionDigits:d, maximumFractionDigits:d}); };
+
+  var WALLETS = [
+    { key:'bithumb-PCI',  exch:'빗썸',  coin:'PCI', icon:'🪙', iconBg:'',        ovlBg:'#f57c00', ovlTxt:'빗', getQty:function(){ return window._C ? window._C.PCI.qb : 30000;    }, getPrice:function(){ return window._C ? window._C.PCI.p  : 82.45;      }, dec:2 },
+    { key:'coinone-BTC',  exch:'코인원', coin:'BTC', icon:'₿',  iconBg:'#FEF3C7', ovlBg:'#1a73e8', ovlTxt:'원', getQty:function(){ return window._C ? window._C.BTC.q  : 0.017521; }, getPrice:function(){ return window._C ? window._C.BTC.p  : 93450000;  }, dec:0 },
+    { key:'coinone-ETH',  exch:'코인원', coin:'ETH', icon:'Ξ',  iconBg:'#EEF2FF', ovlBg:'#1a73e8', ovlTxt:'원', getQty:function(){ return window._C ? window._C.ETH.q  : 0.049750; }, getPrice:function(){ return window._C ? window._C.ETH.p  : 4823000;   }, dec:0 },
+    { key:'korbit-XRP',   exch:'코빗',  coin:'XRP', icon:'◎',  iconBg:'#F0FDF4', ovlBg:'#6B21A8', ovlTxt:'코', getQty:function(){ return window._C ? window._C.XRP.q  : 100;       }, getPrice:function(){ return window._C ? window._C.XRP.p  : 820;        }, dec:2 }
+  ];
+
+  function activeWallets(){ return WALLETS.filter(function(w){ return w.getQty() > 0; }); }
+
+  function groupByExch(list) {
+    var map = {}, order = [];
+    list.forEach(function(w){
+      if(!map[w.exch]){ map[w.exch]=[]; order.push(w.exch); }
+      map[w.exch].push(w);
+    });
+    return order.map(function(e){ return {exch:e, wallets:map[e]}; });
+  }
+
+  /* 기본값: mock 데이터 pre-fill (입력 후 상태가 기본) */
+  var _avgBuy = {
+    'bithumb-PCI':  78.00,
+    'coinone-BTC':  96000000,
+    'coinone-ETH':  4500000,
+    'korbit-XRP':   750
+  };
+
+  /* 현재 토글 상태 */
+  var _profitView = 'filled';
+
+  /* 토글 전환 */
+  window.setProfitView = function(view) {
+    _profitView = view;
+    var tFilled = document.getElementById('profit-tab-filled');
+    var tEmpty  = document.getElementById('profit-tab-empty');
+    if(tFilled && tEmpty) {
+      tFilled.className = 'chip' + (view==='filled' ? ' active' : '');
+      tEmpty.className  = 'chip' + (view==='empty'  ? ' active' : '');
+    }
+    renderProfitCard();
+  };
+
+  /* 모달: 잔액 있는 지갑, 거래소 그룹 */
+  window.openProfitModal = function() {
+    var active = activeWallets();
+    var groups = groupByExch(active);
+    var html =
+      '<div style="background:var(--primary-l);border:1px solid #BFDBFE;border-radius:10px;padding:9px 12px;margin-bottom:14px;font-size:10px;color:var(--primary);line-height:1.6">' +
+        '💡 잔액이 <strong>0개 초과</strong>인 연결 지갑만 표시됩니다.<br>' +
+        '평균 매수가를 입력하면 실시간 수익/손실을 확인할 수 있어요.' +
+      '</div>';
+    if(active.length === 0) {
+      html += '<div style="text-align:center;padding:20px 0;font-size:12px;color:var(--text3)">잔액이 있는 연결 지갑이 없습니다.</div>';
+    }
+    groups.forEach(function(g) {
+      html += '<div style="margin-bottom:14px"><div style="font-size:11px;font-weight:800;color:var(--text);padding:0 2px 8px;border-bottom:2px solid var(--border);margin-bottom:10px">' + g.exch + '</div>';
+      g.wallets.forEach(function(w, i) {
+        var isLast = i === g.wallets.length - 1;
+        var qtyLabel = (w.coin==='BTC'||w.coin==='ETH') ? fmtDec(w.getQty(),6)+' '+w.coin : fmt(w.getQty())+' '+w.coin;
+        var saved = _avgBuy[w.key] != null ? _avgBuy[w.key] : '';
+        html +=
+          '<div style="'+(isLast?'':'margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);')+'">' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">' +
+              '<span style="font-size:11px;font-weight:700;color:var(--text)">'+w.coin+'</span>' +
+              '<span style="font-size:10px;color:var(--text4)">보유 '+qtyLabel+'</span>' +
+            '</div>' +
+            '<div style="display:flex;align-items:center;gap:8px">' +
+              '<div style="flex:1"><div style="font-size:9px;color:var(--text4);margin-bottom:3px">평균 매수가 (원)</div>' +
+                '<input data-key="'+w.key+'" type="number" placeholder="매수가 입력" value="'+saved+'" ' +
+                  'style="width:100%;box-sizing:border-box;padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:\'Noto Sans KR\',sans-serif;color:var(--text);background:var(--card);outline:none" ' +
+                  'onfocus="this.style.borderColor=\'var(--primary)\'" onblur="this.style.borderColor=\'var(--border)\'"></div>' +
+              '<div style="text-align:right;flex-shrink:0"><div style="font-size:9px;color:var(--text4);margin-bottom:3px">현재가</div>' +
+                '<div style="font-size:12px;font-weight:700;color:var(--text)">'+fmtDec(w.getPrice(),w.dec)+'원</div></div>' +
+            '</div>' +
+          '</div>';
+      });
+      html += '</div>';
+    });
+    document.getElementById('profit-modal-list').innerHTML = html;
+    showModal('profit-modal');
+  };
+
+  window.saveProfitData = function() {
+    document.querySelectorAll('#profit-modal-list input[data-key]').forEach(function(inp) {
+      var val = parseFloat(inp.value);
+      _avgBuy[inp.dataset.key] = isNaN(val) || val <= 0 ? null : val;
+    });
+    _profitView = 'filled';
+    setProfitView('filled');
+    closeModal('profit-modal');
+    showToast('저장되었습니다 ✓');
+  };
+
+  /* 카드 렌더링 */
+  function renderProfitCard() {
+    var body = document.getElementById('profit-body');
+    if(!body) return;
+
+    /* 입력/수정 버튼: 입력 전엔 숨김 */
+    var profitBtn = document.getElementById('profit-btn');
+    if(profitBtn) profitBtn.style.display = _profitView === 'empty' ? 'none' : '';
+
+    /* ── 입력 전 상태 ── */
+    if(_profitView === 'empty') {
+      body.innerHTML =
+        '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 2px">' +
+          '<div style="font-size:11px;color:var(--text3);line-height:1.5">평균 매수가를 입력하면<br>거래소별 수익을 확인할 수 있어요</div>' +
+          '<button onclick="openProfitModal()" style="flex-shrink:0;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:7px 12px;cursor:pointer;font-family:\'Noto Sans KR\',sans-serif;margin-left:10px">입력하기 →</button>' +
+        '</div>';
+      return;
+    }
+
+    /* ── 입력 후 상태 ── */
+    var active  = activeWallets();
+    var entered = active.filter(function(w){ return _avgBuy[w.key] != null; });
+    if(entered.length === 0) {
+      body.innerHTML = '<div style="text-align:center;padding:12px 0;font-size:11px;color:var(--text3)">입력된 매수가가 없습니다.<br><button onclick="openProfitModal()" style="margin-top:8px;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:7px 18px;cursor:pointer;font-family:\'Noto Sans KR\',sans-serif">입력하기 →</button></div>';
+      return;
+    }
+
+    var html = '<table style="width:100%;border-collapse:collapse">';
+    entered.forEach(function(w, idx) {
+      var avg   = _avgBuy[w.key];
+      var cur   = w.getPrice();
+      var qty   = w.getQty();
+      var diff  = (cur - avg) * qty;
+      var pct   = avg > 0 ? (cur - avg) / avg * 100 : 0;
+      var isUp  = diff >= 0;
+      var color = isUp ? '#EF4444' : '#3B82F6';
+      var arrow = isUp ? '▲' : '▼';
+      var border = idx < entered.length-1 ? 'border-bottom:1px solid var(--border);' : '';
+      var totalVal = cur * qty;
+      var bgStyle  = w.iconBg ? 'background:'+w.iconBg+';' : 'background:var(--primary-l);';
+      var ovlHtml  = '<div style="position:absolute;bottom:-2px;right:-2px;width:14px;height:14px;border-radius:50%;background:'+w.ovlBg+';border:1.5px solid var(--screen-bg);font-size:6px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff">'+w.ovlTxt+'</div>';
+      html +=
+        '<tr style="'+border+'">' +
+          '<td style="padding:7px 0">' +
+            '<div style="display:flex;align-items:center;gap:8px">' +
+              '<div style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;position:relative;border:1px solid var(--border);'+bgStyle+'">' +
+                w.icon + ovlHtml +
+              '</div>' +
+              '<div>' +
+                '<div style="font-size:13px;font-weight:600;color:var(--text)">'+w.coin+'</div>' +
+                '<div style="font-size:11px;color:var(--text4)">'+fmtDec(cur,w.dec)+'원</div>' +
+              '</div>' +
+            '</div>' +
+          '</td>' +
+          '<td style="padding:7px 0;text-align:right;white-space:nowrap;vertical-align:middle">' +
+            '<div style="font-size:13px;font-weight:700;color:var(--text)">'+fmt(totalVal)+'원</div>' +
+            '<div style="font-size:11px;color:'+color+';margin-top:2px">'+(isUp ? '+' : '-')+fmt(Math.abs(diff))+'원 ('+arrow+Math.abs(pct).toFixed(2)+'%)</div>' +
+          '</td>' +
+        '</tr>';
+    });
+    html += '</table>';
+    body.innerHTML = html;
+  }
+
+  window._renderProfitCard = renderProfitCard;
+  setTimeout(renderProfitCard, 500);
+})();
+setTimeout(function(){ if(typeof setGoalView==='function') setGoalView('filled'); }, 100);
+
+/* ══ ONBOARD OPTION VIEWER ══ */
+function setOnboardOpt(opt) {
+  ['current','opt1','opt3'].forEach(function(k) {
+    var el  = document.getElementById('onboard-' + k);
+    var btn = document.getElementById('ob-btn-' + k);
+    var on  = (k === opt);
+    if(el)  el.style.display  = on ? '' : 'none';
+    if(btn) {
+      btn.style.background = on ? 'var(--primary)' : 'var(--card2)';
+      btn.style.color      = on ? '#fff' : 'var(--text3)';
+      btn.style.borderColor= on ? 'var(--primary)' : 'var(--border)';
+    }
+  });
+  /* 현재 모드일 때 두 섹션 모두 입력 전으로 세팅해서 비교하기 쉽게 */
+  if(opt === 'current') {
+    if(typeof setProfitView === 'function') setProfitView('empty');
+    if(typeof setGoalView   === 'function') setGoalView('empty');
+  }
+}
+
+/* ══ GOAL SETTING ══ */
+const _CURRENT_ASSET = 12345678;
+let _goalAmount = 20000000;
+let _goalView = 'filled';
+
+function setGoalView(view) {
+  _goalView = view;
+  var tabFilled = document.getElementById('goal-tab-filled');
+  var tabEmpty  = document.getElementById('goal-tab-empty');
+  var bodyFilled = document.getElementById('goal-body-filled');
+  var bodyEmpty  = document.getElementById('goal-body-empty');
+  var goalBtn    = document.getElementById('goal-btn');
+  if(tabFilled)  tabFilled.className  = 'chip' + (view === 'filled' ? ' active' : '');
+  if(tabEmpty)   tabEmpty.className   = 'chip' + (view === 'empty'  ? ' active' : '');
+  if(bodyFilled) bodyFilled.style.display = view === 'filled' ? '' : 'none';
+  if(bodyEmpty)  bodyEmpty.style.display  = view === 'empty'  ? 'flex' : 'none';
+  if(goalBtn)    goalBtn.style.display    = view === 'filled' ? '' : 'none';
+}
+
+function setGoalPreset(amount) {
+  document.getElementById('goal-input').value = amount;
+  updateGoalPreview();
+}
+
+function updateGoalPreview() {
+  const val = parseInt(document.getElementById('goal-input').value);
+  const preview = document.getElementById('goal-preview');
+  if (!val || val <= 0) { preview.style.display = 'none'; return; }
+  const pct = Math.min((_CURRENT_ASSET / val) * 100, 100);
+  document.getElementById('goal-preview-text').textContent = pct.toFixed(1) + '%';
+  preview.style.display = 'block';
+}
+
+function saveGoal() {
+  const val = parseInt(document.getElementById('goal-input').value);
+  if (!val || val <= 0) { showToast('올바른 금액을 입력해주세요'); return; }
+  _goalAmount = val;
+  const pct = Math.min((_CURRENT_ASSET / val) * 100, 100);
+  const remaining = Math.max(val - _CURRENT_ASSET, 0);
+  const fmt = n => n.toLocaleString('ko-KR');
+  document.getElementById('goal-target-amt').innerHTML = fmt(val) + '<span style="font-size:10px;font-weight:500"> 원</span>';
+  document.getElementById('goal-remaining').textContent = fmt(remaining) + '원 남음';
+  document.getElementById('goal-pct-text').textContent = pct.toFixed(1) + '%';
+  document.getElementById('goal-prog-bar').style.width = pct.toFixed(1) + '%';
+  document.getElementById('goal-current-display').textContent = fmt(val) + ' 원';
+  /* 목표 달성률 % 텍스트 flip 모션 */
+  if(window._dgtUpdate) {
+    window._dgtUpdate('goal-pct-text', pct.toFixed(1)+'%', pct > (_goalAmount ? (_CURRENT_ASSET/(_goalAmount||val)*100) : 0) ? 1 : -1);
+  }
+  document.getElementById('goal-btn').textContent = '목표 수정';
+  document.getElementById('goal-input').value = '';
+  document.getElementById('goal-preview').style.display = 'none';
+  closeModal('goal-modal');
+  showToast('목표 자산이 설정되었습니다 🎯');
+}
 document.addEventListener('click', e => {
   if (e.target.classList.contains('overlay')) e.target.classList.remove('show');
 });
@@ -8460,16 +8876,105 @@ function fmtQty(qty, sym) {
     ETH:{ p:4823000,   q:0.049750,          prev:4823000   },
     XRP:{ p:820,       q:100,               prev:820       },
   };
+  window._C = C; /* 수익 트래커에서 실시간 가격 참조 */
 
   function total(){ return C.PCI.p*(C.PCI.qs+C.PCI.qb)+C.BTC.p*C.BTC.q+C.ETH.p*C.ETH.q+C.XRP.p*C.XRP.q; }
   function prevTotal(){ return C.PCI.prev*(C.PCI.qs+C.PCI.qb)+C.BTC.prev*C.BTC.q+C.ETH.prev*C.ETH.q+C.XRP.prev*C.XRP.q; }
 
+  /* 전역 노출 (saveGoal 등 외부 함수에서 사용) */
+  window._dgtBuild = buildDgt;
+  window._dgtInit  = initEl;
+  window._dgtUpdate = updateEl;
+  window._dgtAnim  = animDgt;
+
   /* 초기화 */
+  var MONTHLY_BASE = 11204300;
   setTimeout(function(){
-    initEl('home-total-amt', fmt(total()));
-    initEl('wt-ticker',      fmt(total())+'원');
-    initEl('we-ticker',      fmt(total())+'원');
+    initEl('home-total-amt',       fmt(total()));
+    initEl('wt-ticker',            fmt(total())+'원');
+    initEl('we-ticker',            fmt(total())+'원');
+    initEl('asset-total-amt',      fmt(total()));
+    initEl('asset-monthly-base',   fmt(MONTHLY_BASE));
+    var initChg = total() - MONTHLY_BASE;
+    initEl('asset-monthly-chg-amt', fmt(Math.abs(initChg)));
+    initEl('asset-goal-current',   fmt(total()));
+    renderDistMaps();
   }, 400);
+
+  /* ── 자산 비중 트리맵 재렌더 ── */
+  function renderDistMaps() {
+    var pciAmt    = C.PCI.p * (C.PCI.qs + C.PCI.qb);
+    var btcAmt    = C.BTC.p * C.BTC.q;
+    var ethAmt    = C.ETH.p * C.ETH.q;
+    var xrpAmt    = C.XRP.p * C.XRP.q;
+    var tot       = pciAmt + btcAmt + ethAmt + xrpAmt;
+    var pciPct    = pciAmt / tot * 100;
+    var btcPct    = btcAmt / tot * 100;
+    var ethPct    = ethAmt / tot * 100;
+    var xrpPct    = xrpAmt / tot * 100;
+    var restPct   = 100 - pciPct;
+
+    /* 자산별 트리맵 */
+    var assetEl = document.getElementById('dist-asset-map');
+    if(assetEl) {
+      assetEl.innerHTML =
+        '<div style="display:flex;gap:4px;height:120px;border-radius:10px;overflow:hidden;margin-bottom:10px">' +
+          '<div style="flex:'+pciPct.toFixed(1)+';background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center">' +
+            '<div style="font-size:13px;font-weight:800;color:var(--primary)">PCI</div>' +
+            '<div style="font-size:10px;color:var(--primary)">'+pciPct.toFixed(1)+'%</div>' +
+          '</div>' +
+          '<div style="flex:'+restPct.toFixed(1)+';display:flex;flex-direction:column;gap:3px">' +
+            '<div style="flex:'+btcPct.toFixed(1)+';background:#FEF3C7;border:1px solid #FDE68A;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center">' +
+              '<div style="font-size:11px;font-weight:700;color:#D97706">BTC</div>' +
+              '<div style="font-size:9px;color:#D97706">'+btcPct.toFixed(1)+'%</div>' +
+            '</div>' +
+            (ethPct > 0.5 ? '<div style="flex:'+ethPct.toFixed(1)+';background:#EEF2FF;border:1px solid #C7D2FE;border-radius:4px;display:flex;align-items:center;justify-content:center;min-height:6px"><div style="font-size:8px;font-weight:600;color:#4338CA">ETH '+ethPct.toFixed(1)+'%</div></div>' : '') +
+            (xrpPct > 0.3 ? '<div style="flex:'+xrpPct.toFixed(1)+';background:#FDF4FF;border:1px solid #E9D5FF;border-radius:4px;display:flex;align-items:center;justify-content:center;min-height:5px">'+(xrpPct>1?'<div style="font-size:8px;color:#7C3AED">XRP '+xrpPct.toFixed(1)+'%</div>':'')+'</div>' : '') +
+          '</div>' +
+        '</div>' +
+        '<div class="dist-row"><div class="dist-dot" style="background:var(--primary)"></div><div class="dist-lbl">PCI</div><div class="dist-pct">'+pciPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(pciAmt)+'원</div></div>' +
+        '<div class="dist-row"><div class="dist-dot" style="background:#D97706"></div><div class="dist-lbl">BTC</div><div class="dist-pct">'+btcPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(btcAmt)+'원</div></div>' +
+        '<div class="dist-row"><div class="dist-dot" style="background:#4338CA"></div><div class="dist-lbl">ETH</div><div class="dist-pct">'+ethPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(ethAmt)+'원</div></div>' +
+        '<div class="dist-row"><div class="dist-dot" style="background:#7C3AED"></div><div class="dist-lbl">XRP</div><div class="dist-pct">'+xrpPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(xrpAmt)+'원</div></div>';
+    }
+
+    /* 거래소별 트리맵 */
+    var walletAmt  = C.PCI.p * C.PCI.qs;
+    var bithumbAmt = C.PCI.p * C.PCI.qb;
+    var coinoneAmt = btcAmt + ethAmt;
+    var korbitAmt  = xrpAmt;
+    var wPct = walletAmt  / tot * 100;
+    var bPct = bithumbAmt / tot * 100;
+    var cPct = coinoneAmt / tot * 100;
+    var kPct = korbitAmt  / tot * 100;
+    var exchRest = 100 - wPct;
+
+    var exchEl = document.getElementById('dist-exch-map');
+    if(exchEl) {
+      exchEl.innerHTML =
+        '<div style="display:flex;gap:4px;height:120px;border-radius:10px;overflow:hidden;margin-bottom:10px">' +
+          '<div style="flex:'+wPct.toFixed(1)+';background:#EEF2FF;border:1px solid #C7D2FE;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center">' +
+            '<div style="font-size:13px;font-weight:800;color:#4338CA">내 지갑</div>' +
+            '<div style="font-size:10px;color:#4338CA">'+wPct.toFixed(1)+'%</div>' +
+          '</div>' +
+          '<div style="flex:'+exchRest.toFixed(1)+';display:flex;flex-direction:column;gap:3px">' +
+            '<div style="flex:'+bPct.toFixed(1)+';background:#FFF3E0;border:1px solid #FFE0B2;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center">' +
+              '<div style="font-size:11px;font-weight:700;color:#E65100">빗썸</div>' +
+              '<div style="font-size:9px;color:#E65100">'+bPct.toFixed(1)+'%</div>' +
+            '</div>' +
+            '<div style="flex:'+cPct.toFixed(1)+';background:#E3F2FD;border:1px solid #BBDEFB;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center">' +
+              '<div style="font-size:11px;font-weight:700;color:#0D47A1">코인원</div>' +
+              '<div style="font-size:9px;color:#0D47A1">'+cPct.toFixed(1)+'%</div>' +
+            '</div>' +
+            (kPct > 0.3 ? '<div style="flex:'+kPct.toFixed(1)+';background:#F3E8FF;border:1px solid #E9D5FF;border-radius:4px;min-height:5px;display:flex;flex-direction:column;align-items:center;justify-content:center">'+(kPct>1?'<div style="font-size:8px;color:#6B21A8">코빗 '+kPct.toFixed(1)+'%</div>':'')+'</div>' : '') +
+          '</div>' +
+        '</div>' +
+        '<div class="dist-row"><div class="dist-dot" style="background:#4338CA"></div><div class="dist-lbl">내 지갑 (PCI)</div><div class="dist-pct">'+wPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(walletAmt)+'원</div></div>' +
+        '<div class="dist-row"><div class="dist-dot" style="background:#E65100"></div><div class="dist-lbl">빗썸 (PCI)</div><div class="dist-pct">'+bPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(bithumbAmt)+'원</div></div>' +
+        '<div class="dist-row"><div class="dist-dot" style="background:#0D47A1"></div><div class="dist-lbl">코인원 (BTC·ETH)</div><div class="dist-pct">'+cPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(coinoneAmt)+'원</div></div>' +
+        '<div class="dist-row"><div class="dist-dot" style="background:#6B21A8"></div><div class="dist-lbl">코빗 (XRP)</div><div class="dist-pct">'+kPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(korbitAmt)+'원</div></div>';
+    }
+  }
 
   /* 5초마다 변동 */
   setInterval(function(){
@@ -8494,6 +8999,45 @@ function fmtQty(qty, sym) {
     /* 지갑 총자산 (연결됨 + 미연결) */
     updateEl('wt-ticker', fmt(tot)+'원', dir);
     updateEl('we-ticker', fmt(tot)+'원', dir);
+
+    /* 자산현황 — 총 자산 */
+    updateEl('asset-total-amt', fmt(tot), dir);
+    /* 자산현황 — 직전 접속 대비 변동 표시 */
+    var assetChgEl = document.getElementById('asset-chg-display');
+    if(assetChgEl){
+      var assetChgAmt = Math.abs(tot - prev);
+      var assetPct = prev ? (assetChgAmt/prev*100) : 0;
+      assetChgEl.textContent = (dir===1?'▲ +':'▼ -')+fmt(assetChgAmt)+'원 ('+assetPct.toFixed(2)+'%)';
+      colorFlash(assetChgEl, dir);
+    }
+    /* 자산현황 — 이번 달 변동 */
+    var mChg = tot - MONTHLY_BASE;
+    var mDir = mChg >= 0 ? 1 : -1;
+    updateEl('asset-monthly-chg-amt', fmt(Math.abs(mChg)), mDir);
+    var mChgWrap = document.getElementById('asset-monthly-chg-wrap');
+    if(mChgWrap){ mChgWrap.style.color = mDir===1 ? '#EF4444' : '#3B82F6'; }
+    var mPctEl = document.getElementById('asset-monthly-chg-pct');
+    if(mPctEl){
+      mPctEl.textContent = (Math.abs(mChg/MONTHLY_BASE*100)).toFixed(1);
+      mPctEl.parentElement.style.color = mDir===1 ? '#EF4444' : '#3B82F6';
+    }
+    /* 자산현황 — 목표 달성률 현재 자산 */
+    updateEl('asset-goal-current', fmt(tot), dir);
+    var gAmt = typeof _goalAmount !== 'undefined' ? _goalAmount : 20000000;
+    var gPct = Math.min(tot / gAmt * 100, 100);
+    var gRem = Math.max(gAmt - tot, 0);
+    var gPctEl = document.getElementById('goal-pct-text');
+    var gRemEl = document.getElementById('goal-remaining');
+    var gBar   = document.getElementById('goal-prog-bar');
+    if(gPctEl){ gPctEl.textContent = gPct.toFixed(1)+'%'; }
+    if(gRemEl){ gRemEl.textContent = fmt(gRem)+'원 남음'; }
+    if(gBar)  { gBar.style.width   = gPct.toFixed(1)+'%'; }
+
+    /* 자산현황 — 자산 비중 트리맵 */
+    renderDistMaps();
+
+    /* 자산현황 — 투자 수익 카드 */
+    if(window._renderProfitCard) window._renderProfitCard();
 
     /* 지갑 행 — 원화 금액은 숫자만 조용히 교체 (모션/색상 없음) */
     document.querySelectorAll('.wallet-row').forEach(function(row){
@@ -8958,190 +9502,4 @@ function generateAppsScriptCode() {
     '',
     '/** Description 시트 드롭다운 */',
     'function applyDropdowns() {',
-    '  const ss    = SpreadsheetApp.getActiveSpreadsheet();',
-    '  const sheet = ss.getSheetByName(SHEET_NAME_DESC);',
-    '  if (!sheet) { Logger.log(\'Description 시트 없음\'); return; }',
-    '',
-    '  // A열: screen_key',
-    '  sheet.getRange(\'A2:A1000\').setDataValidation(',
-    '    SpreadsheetApp.newDataValidation()',
-    '      .requireValueInList(SCREEN_KEYS, true)',
-    '      .setAllowInvalid(false)',
-    '      .setHelpText(\'화면을 선택하세요.\')',
-    '      .build()',
-    '  );',
-    '',
-    '  // D열: 중요도',
-    '  sheet.getRange(\'D2:D1000\').setDataValidation(',
-    '    SpreadsheetApp.newDataValidation()',
-    '      .requireValueInList([\'필수\', \'일반\', \'경고\', \'참고\', \'코드\'], true)',
-    '      .setAllowInvalid(false)',
-    '      .setHelpText(\'중요도를 선택하세요.\')',
-    '      .build()',
-    '  );',
-    '',
-    '  // E열: zone_id (현재 채워진 행만, 나머지는 onEdit 처리)',
-    '  const lastRow = Math.max(sheet.getLastRow(), 2);',
-    '  const aVals   = sheet.getRange(\'A2:A\' + lastRow).getValues();',
-    '',
-    '  aVals.forEach((row, i) => {',
-    '    const key    = String(row[0] || \'\').trim();',
-    '    const zones  = ZONE_MAP[key] || Object.values(ZONE_MAP).flat();',
-    '    const unique = [...new Set(zones)];',
-    '',
-    '    sheet.getRange(i + 2, 5).setDataValidation(',
-    '      SpreadsheetApp.newDataValidation()',
-    '        .requireValueInList(unique, true)',
-    '        .setAllowInvalid(true)',
-    '        .setHelpText(\'UI 영역 선택 (비워도 됨)\')',
-    '        .build()',
-    '    );',
-    '  });',
-    '',
-    '  Logger.log(\'Description 드롭다운 적용 완료 (\' + lastRow + \'행)\');',
-    '}',
-    '',
-    '/** Policy 시트 드롭다운 */',
-    'function applyPolicyDropdowns(sheet) {',
-    '  if (!sheet) {',
-    '    const ss = SpreadsheetApp.getActiveSpreadsheet();',
-    '    sheet = ss.getSheetByName(SHEET_NAME_POLICY);',
-    '  }',
-    '  if (!sheet) return;',
-    '',
-    '  // A열: 카테고리',
-    '  sheet.getRange(\'A2:A1000\').setDataValidation(',
-    '    SpreadsheetApp.newDataValidation()',
-    '      .requireValueInList(POLICY_CATEGORIES, true)',
-    '      .setAllowInvalid(false)',
-    '      .setHelpText(\'카테고리를 선택하세요.\')',
-    '      .build()',
-    '  );',
-    '',
-    '  // E열: 중요도',
-    '  sheet.getRange(\'E2:E1000\').setDataValidation(',
-    '    SpreadsheetApp.newDataValidation()',
-    '      .requireValueInList(POLICY_IMPORTANCE, true)',
-    '      .setAllowInvalid(false)',
-    '      .setHelpText(\'중요도를 선택하세요.\')',
-    '      .build()',
-    '  );',
-    '',
-    '  Logger.log(\'Policy 드롭다운 적용 완료\');',
-    '}',
-    '',
-    '',
-    '// ════════════════════════════════════════════════════',
-    '// onEdit 트리거 — Description A열 변경 시 E열 자동 갱신',
-    '// ════════════════════════════════════════════════════',
-    'function onEdit(e) {',
-    '  const sheet = e.range.getSheet();',
-    '  if (sheet.getName() !== SHEET_NAME_DESC) return;',
-    '  if (e.range.getColumn() !== 1) return;',
-    '  if (e.range.getRow() < 2) return;',
-    '',
-    '  const key    = String(e.value || \'\').trim();',
-    '  const zones  = ZONE_MAP[key] || [\'\'];',
-    '  const unique = [...new Set(zones)];',
-    '',
-    '  const targetCell = sheet.getRange(e.range.getRow(), 5);',
-    '  targetCell.clearContent();',
-    '  targetCell.setDataValidation(',
-    '    SpreadsheetApp.newDataValidation()',
-    '      .requireValueInList(unique, true)',
-    '      .setAllowInvalid(true)',
-    '      .setHelpText(\'UI 영역 선택 (비워도 됨)\')',
-    '      .build()',
-    '  );',
-    '}',
-    '',
-    '',
-    '// ════════════════════════════════════════════════════',
-    '// 트리거 설치 (최초 1회 실행)',
-    '// ════════════════════════════════════════════════════',
-    'function installTrigger() {',
-    '  const ss = SpreadsheetApp.getActiveSpreadsheet();',
-    '',
-    '  ScriptApp.getProjectTriggers().forEach(t => {',
-    '    if (t.getHandlerFunction() === \'onEdit\') ScriptApp.deleteTrigger(t);',
-    '  });',
-    '',
-    '  ScriptApp.newTrigger(\'onEdit\').forSpreadsheet(ss).onEdit().create();',
-    '  Logger.log(\'onEdit 트리거 등록 완료\');',
-    '}',
-    '',
-    '/** 전체 초기 설정 (최초 1회 실행) */',
-    'function setup() {',
-    '  getOrCreateDescSheet();',
-    '  getOrCreateQnaSheet();',
-    '  getOrCreatePolicySheet();',
-    '  installTrigger();',
-    '  Logger.log(\'전체 설정 완료\');',
-    '}',
-    '',
-    '',
-    '// ════════════════════════════════════════════════════',
-    '// 공통 응답',
-    '// ════════════════════════════════════════════════════',
-    'function jsonResponse(obj) {',
-    '  return ContentService',
-    '    .createTextOutput(JSON.stringify(obj))',
-    '    .setMimeType(ContentService.MimeType.JSON);',
-    '}',
-    ''
-  ].join('\n');
-
-  var pre = document.getElementById('apps-script-preview');
-  if (pre) pre.textContent = code;
-  window._appsScriptCode = code;
-}
-
-function copyAppsScript() {
-  var code = window._appsScriptCode || '';
-  if (!code) { generateAppsScriptCode(); code = window._appsScriptCode || ''; }
-  navigator.clipboard.writeText(code).then(function() {
-    var s = document.getElementById('copy-script-status');
-    if (s) { s.textContent = '✅ 클립보드에 복사됐습니다!'; setTimeout(function(){ s.textContent=''; }, 2500); }
-  });
-}
-
-function copyConfigJson() {
-  var cfg = '{\n  "apiUrl":       "← Apps Script 배포 URL 붙여넣기",\n  "projectName":  "← 프로젝트/앱 이름",\n  "primaryColor": "← 브랜드 컬러 HEX (예: #1A56DB)"\n}';
-  navigator.clipboard.writeText(cfg).then(function() {
-    var s = document.getElementById('copy-config-status');
-    if (s) { s.textContent = '✅ 복사됐습니다!'; setTimeout(function(){ s.textContent=''; }, 2500); }
-  });
-}
-
-/* showSheetGuide 오버라이드 */
-var _origShowSheetGuide = window.showSheetGuide;
-window.showSheetGuide = function() {
-  var overlay = document.getElementById('guide-overlay');
-  if (overlay) overlay.classList.add('open');
-  switchGuideTab('sheets');
-};
-
-
-/* ══ PAY BALANCE TOOLTIP ══ */
-document.addEventListener('click', function(e) {
-  var tip = document.getElementById('pay-balance-tip');
-  var btn = document.getElementById('pay-balance-tip-btn');
-  if (!tip) return;
-  if (btn && btn.contains(e.target)) return;
-  tip.style.display = 'none';
-});
-var _tipStyle = document.getElementById('pay-balance-tip');
-// show/hide via classList toggle handled inline
-
-</script>
-<div class="toast" id="app-toast"></div>
-  <div id="hotspot-legend">
-    <div style="font-weight:700;margin-bottom:4px;color:#111">핫스팟 범례</div>
-    <div class="hl-row"><div class="hl-dot" style="background:#059669"></div><span>화면 이동</span></div>
-    <div class="hl-row"><div class="hl-dot" style="background:#7C3AED"></div><span>모달 열기</span></div>
-    <div class="hl-row"><div class="hl-dot" style="background:#D97706"></div><span>토스트 안내</span></div>
-    <div class="hl-row"><div class="hl-dot" style="background:#1A56DB"></div><span>기타 액션</span></div>
-  </div>
-</body>
-</html
->
+    '  const ss    = SpreadsheetApp.getAc
