@@ -2912,99 +2912,17 @@ body {
       </div>
     </div>
 
-    <!-- ── 뷰어 전용: 온보딩 옵션 비교 토글 ── -->
-    <div style="display:flex;align-items:center;gap:5px;padding:0 14px 8px">
-      <span style="font-size:9px;color:var(--text4);white-space:nowrap">입력 전 화면:</span>
-      <button onclick="setOnboardOpt('current')" id="ob-btn-current" style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;border:1px solid var(--primary);background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">현재</button>
-      <button onclick="setOnboardOpt('opt1')"    id="ob-btn-opt1"    style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">옵션①</button>
-      <button onclick="setOnboardOpt('opt3')"    id="ob-btn-opt3"    style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">옵션③</button>
+    <!-- ── 뷰어 전용: 상태 토글 ── -->
+    <div style="display:flex;align-items:center;gap:4px;padding:0 14px 8px;flex-wrap:wrap">
+      <span style="font-size:9px;color:var(--text4);white-space:nowrap;margin-right:2px">상태:</span>
+      <button onclick="setOb3State('empty')"       id="ob3-btn-empty"       style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;border:1px solid var(--primary);background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">미입력</button>
+      <button onclick="setOb3State('goal-only')"   id="ob3-btn-goal-only"   style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">목표만</button>
+      <button onclick="setOb3State('profit-only')" id="ob3-btn-profit-only" style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">매수가만</button>
+      <button onclick="setOb3State('both')"        id="ob3-btn-both"        style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">둘 다</button>
     </div>
 
-    <!-- ── [현재] 기존 두 섹션 분리 방식 ── -->
-    <div id="onboard-current">
-
-      <!-- 투자 수익 분석 -->
-      <div class="stitle">
-        <span>투자 수익 분석</span>
-        <div style="display:flex;align-items:center;gap:5px">
-          <div id="profit-tab-filled" class="chip active" style="font-size:9px;padding:2px 7px;cursor:pointer" onclick="setProfitView('filled')">입력 후</div>
-          <div id="profit-tab-empty"  class="chip"        style="font-size:9px;padding:2px 7px;cursor:pointer" onclick="setProfitView('empty')">입력 전</div>
-          <button onclick="openProfitModal()" id="profit-btn" style="font-size:9px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:5px;padding:2px 8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">입력/수정</button>
-        </div>
-      </div>
-      <div class="card" style="padding:10px 13px" id="profit-card">
-        <div id="profit-body"><!-- JS 렌더링 --></div>
-      </div>
-
-      <!-- 목표 자산 달성률 -->
-      <div class="stitle">
-        <span>목표 자산 달성률</span>
-        <div style="display:flex;align-items:center;gap:5px">
-          <div id="goal-tab-filled" class="chip active" style="font-size:9px;padding:2px 7px;cursor:pointer" onclick="setGoalView('filled')">입력 후</div>
-          <div id="goal-tab-empty"  class="chip"        style="font-size:9px;padding:2px 7px;cursor:pointer" onclick="setGoalView('empty')">입력 전</div>
-          <button onclick="showModal('goal-modal')" id="goal-btn" style="font-size:9px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:5px;padding:2px 8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">목표 설정</button>
-        </div>
-      </div>
-      <div class="card" style="padding:13px" id="goal-card">
-        <!-- 입력 전 -->
-        <div id="goal-body-empty" style="display:none;align-items:center;justify-content:space-between;padding:6px 2px">
-          <div style="font-size:11px;color:var(--text3);line-height:1.5">목표 금액을 설정하면<br>달성률을 확인할 수 있어요</div>
-          <button onclick="showModal('goal-modal')" style="flex-shrink:0;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:7px 12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-left:10px">설정하기 →</button>
-        </div>
-        <!-- 입력 후 -->
-        <div id="goal-body-filled">
-          <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:7px">
-            <div>
-              <div style="font-size:10px;color:var(--text4);margin-bottom:2px">현재 자산</div>
-              <div style="font-size:15px;font-weight:800;color:var(--text);letter-spacing:-0.5px"><span id="asset-goal-current">12,345,678</span><span style="font-size:11px;font-weight:500;color:var(--text3)"> 원</span></div>
-            </div>
-            <div style="text-align:right">
-              <div style="font-size:10px;color:var(--text4);margin-bottom:2px">목표 자산</div>
-              <div id="goal-target-amt" style="font-size:13px;font-weight:700;color:var(--text3);letter-spacing:-0.5px">20,000,000<span style="font-size:10px;font-weight:500"> 원</span></div>
-            </div>
-          </div>
-          <div class="prog-wrap" style="margin-bottom:6px">
-            <div id="goal-prog-bar" class="prog-bar" style="width:61.7%;background:linear-gradient(90deg,var(--primary),#3B82F6)"></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div id="goal-remaining" style="font-size:10px;color:var(--text4)">7,654,322원 남음</div>
-            <div id="goal-pct-text" style="font-size:12px;font-weight:800;color:var(--primary)">61.7%</div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /onboard-current -->
-
-    <!-- ── [옵션①] 통합 온보딩 카드 ── -->
-    <div id="onboard-opt1" style="display:none">
-      <div class="stitle">
-        <span>투자 현황 설정</span>
-        <span style="font-size:10px;color:var(--text4);font-weight:400">0 / 2 완료</span>
-      </div>
-      <div class="card" style="padding:0;overflow:hidden">
-        <!-- 목표 자산 항목 -->
-        <div style="display:flex;align-items:center;gap:12px;padding:13px;border-bottom:1px solid var(--border)">
-          <div style="width:36px;height:36px;border-radius:50%;background:var(--primary-l);border:1px solid #BFDBFE;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">🎯</div>
-          <div style="flex:1">
-            <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px">목표 자산 설정</div>
-            <div style="font-size:10px;color:var(--text4);line-height:1.5">목표 금액을 설정하면<br>달성률을 확인할 수 있어요</div>
-          </div>
-          <button onclick="showModal('goal-modal')" style="flex-shrink:0;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:7px 11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">설정하기</button>
-        </div>
-        <!-- 평균 매수가 항목 -->
-        <div style="display:flex;align-items:center;gap:12px;padding:13px">
-          <div style="width:36px;height:36px;border-radius:50%;background:#F0FDF4;border:1px solid #BBF7D0;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">📊</div>
-          <div style="flex:1">
-            <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px">평균 매수가 입력</div>
-            <div style="font-size:10px;color:var(--text4);line-height:1.5">코인별 매수가를 입력하면<br>수익률을 확인할 수 있어요</div>
-          </div>
-          <button onclick="openProfitModal()" style="flex-shrink:0;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:7px 11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">입력하기</button>
-        </div>
-      </div>
-    </div><!-- /onboard-opt1 -->
-
-    <!-- ── [옵션③] 단일 배너 ── -->
-    <div id="onboard-opt3" style="display:none">
+    <!-- ① 미입력: 배너만 -->
+    <div id="ob3-empty">
       <div class="card" style="padding:16px;background:linear-gradient(135deg,var(--primary-l) 0%,#F0FDF4 100%);border:1px solid #BFDBFE">
         <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px">
           <div style="font-size:28px;line-height:1">✨</div>
@@ -3018,7 +2936,124 @@ body {
           <button onclick="openProfitModal()" style="flex:1;font-size:11px;font-weight:700;color:#fff;background:var(--primary);border:none;border-radius:9px;padding:9px 0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">📊 매수가 입력</button>
         </div>
       </div>
-    </div><!-- /onboard-opt3 -->
+    </div><!-- /ob3-empty -->
+
+    <!-- ② 목표만 등록: 목표 달성률 풀카드 + 수익 분석 미니 프롬프트 -->
+    <div id="ob3-goal-only" style="display:none">
+      <!-- 수익 분석 미니 프롬프트 -->
+      <div class="stitle">투자 수익 분석</div>
+      <div class="card" style="padding:11px 13px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:11px;color:var(--text3);line-height:1.6">평균 매수가를 입력하면<br>거래소별 수익을 확인할 수 있어요</div>
+          <button onclick="openProfitModal()" style="flex-shrink:0;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:7px 12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-left:10px">입력하기 →</button>
+        </div>
+      </div>
+      <!-- 목표 달성률 풀카드 -->
+      <div class="stitle">
+        <span>목표 자산 달성률</span>
+        <button onclick="showModal('goal-modal')" style="font-size:9px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:5px;padding:2px 8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">목표 수정</button>
+      </div>
+      <div class="card" style="padding:13px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:7px">
+          <div>
+            <div style="font-size:10px;color:var(--text4);margin-bottom:2px">현재 자산</div>
+            <div style="font-size:15px;font-weight:800;color:var(--text);letter-spacing:-0.5px">12,345,678<span style="font-size:11px;font-weight:500;color:var(--text3)"> 원</span></div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:10px;color:var(--text4);margin-bottom:2px">목표 자산</div>
+            <div style="font-size:13px;font-weight:700;color:var(--text3);letter-spacing:-0.5px">20,000,000<span style="font-size:10px;font-weight:500"> 원</span></div>
+          </div>
+        </div>
+        <div class="prog-wrap" style="margin-bottom:6px">
+          <div class="prog-bar" style="width:61.7%;background:linear-gradient(90deg,var(--primary),#3B82F6)"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:10px;color:var(--text4)">7,654,322원 남음</div>
+          <div style="font-size:12px;font-weight:800;color:var(--primary)">61.7%</div>
+        </div>
+      </div>
+    </div><!-- /ob3-goal-only -->
+
+    <!-- ③ 매수가만 등록: 수익 분석 풀카드 + 목표 달성률 미니 프롬프트 -->
+    <div id="ob3-profit-only" style="display:none">
+      <!-- 수익 분석 풀카드 -->
+      <div class="stitle">
+        <span>투자 수익 분석</span>
+        <button onclick="openProfitModal()" style="font-size:9px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:5px;padding:2px 8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">매수가 수정</button>
+      </div>
+      <div class="card" style="padding:10px 13px">
+        <table style="width:100%;border-collapse:collapse">
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:7px 0">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;position:relative;border:1px solid var(--border);background:var(--primary-l)">🪙<div style="position:absolute;bottom:-2px;right:-2px;width:14px;height:14px;border-radius:50%;background:#f57c00;border:1.5px solid var(--screen-bg);font-size:6px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff">빗</div></div>
+                <div><div style="font-size:13px;font-weight:600;color:var(--text)">PCI</div><div style="font-size:11px;color:var(--text4)">82.45원</div></div>
+              </div>
+            </td>
+            <td style="padding:7px 0;text-align:right;white-space:nowrap;vertical-align:middle">
+              <div style="font-size:13px;font-weight:700;color:var(--text)">2,473,500원</div>
+              <div style="font-size:11px;color:#EF4444;margin-top:2px">+133,500원 (▲5.72%)</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:7px 0">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;position:relative;border:1px solid var(--border);background:#FEF3C7">₿<div style="position:absolute;bottom:-2px;right:-2px;width:14px;height:14px;border-radius:50%;background:#1a73e8;border:1.5px solid var(--screen-bg);font-size:6px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff">원</div></div>
+                <div><div style="font-size:13px;font-weight:600;color:var(--text)">BTC</div><div style="font-size:11px;color:var(--text4)">93,450,000원</div></div>
+              </div>
+            </td>
+            <td style="padding:7px 0;text-align:right;white-space:nowrap;vertical-align:middle">
+              <div style="font-size:13px;font-weight:700;color:var(--text)">1,637,432원</div>
+              <div style="font-size:11px;color:#3B82F6;margin-top:2px">-223,568원 (▼2.33%)</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!-- 목표 달성률 미니 프롬프트 -->
+      <div class="stitle">목표 자산 달성률</div>
+      <div class="card" style="padding:11px 13px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:11px;color:var(--text3);line-height:1.6">목표 금액을 설정하면<br>달성률을 확인할 수 있어요</div>
+          <button onclick="showModal('goal-modal')" style="flex-shrink:0;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:7px 12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-left:10px">설정하기 →</button>
+        </div>
+      </div>
+    </div><!-- /ob3-profit-only -->
+
+    <!-- ④ 둘 다 등록 (라이브 데이터) -->
+    <div id="ob3-both" style="display:none">
+      <div class="stitle">
+        <span>투자 수익 분석</span>
+        <button onclick="openProfitModal()" id="profit-btn" style="font-size:9px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:5px;padding:2px 8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">입력/수정</button>
+      </div>
+      <div class="card" style="padding:10px 13px" id="profit-card">
+        <div id="profit-body"><!-- JS 렌더링 --></div>
+      </div>
+      <div class="stitle">
+        <span>목표 자산 달성률</span>
+        <button onclick="showModal('goal-modal')" id="goal-btn" style="font-size:9px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:5px;padding:2px 8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">목표 수정</button>
+      </div>
+      <div class="card" style="padding:13px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:7px">
+          <div>
+            <div style="font-size:10px;color:var(--text4);margin-bottom:2px">현재 자산</div>
+            <div style="font-size:15px;font-weight:800;color:var(--text);letter-spacing:-0.5px"><span id="asset-goal-current">12,345,678</span><span style="font-size:11px;font-weight:500;color:var(--text3)"> 원</span></div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:10px;color:var(--text4);margin-bottom:2px">목표 자산</div>
+            <div id="goal-target-amt" style="font-size:13px;font-weight:700;color:var(--text3);letter-spacing:-0.5px">20,000,000<span style="font-size:10px;font-weight:500"> 원</span></div>
+          </div>
+        </div>
+        <div class="prog-wrap" style="margin-bottom:6px">
+          <div id="goal-prog-bar" class="prog-bar" style="width:61.7%;background:linear-gradient(90deg,var(--primary),#3B82F6)"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div id="goal-remaining" style="font-size:10px;color:var(--text4)">7,654,322원 남음</div>
+          <div id="goal-pct-text" style="font-size:12px;font-weight:800;color:var(--primary)">61.7%</div>
+        </div>
+      </div>
+    </div><!-- /ob3-both -->
+
+    <!-- ⑤ 수정 상태: 모달 오픈 안내 강조 -->
 
     <div data-zone="asset-distribution" class="stitle">자산 비중</div>
     <div class="card" style="padding-bottom:4px">
@@ -7203,24 +7238,20 @@ function closeModal(id) { document.getElementById(id).classList.remove('show'); 
 })();
 setTimeout(function(){ if(typeof setGoalView==='function') setGoalView('filled'); }, 100);
 
-/* ══ ONBOARD OPTION VIEWER ══ */
-function setOnboardOpt(opt) {
-  ['current','opt1','opt3'].forEach(function(k) {
-    var el  = document.getElementById('onboard-' + k);
-    var btn = document.getElementById('ob-btn-' + k);
-    var on  = (k === opt);
-    if(el)  el.style.display  = on ? '' : 'none';
+/* ══ ONBOARD STATE VIEWER ══ */
+function setOb3State(state) {
+  ['empty','goal-only','profit-only','both'].forEach(function(k) {
+    var el  = document.getElementById('ob3-' + k);
+    var btn = document.getElementById('ob3-btn-' + k);
+    var on  = (k === state);
+    if(el)  el.style.display   = on ? '' : 'none';
     if(btn) {
-      btn.style.background = on ? 'var(--primary)' : 'var(--card2)';
-      btn.style.color      = on ? '#fff' : 'var(--text3)';
-      btn.style.borderColor= on ? 'var(--primary)' : 'var(--border)';
+      btn.style.background  = on ? 'var(--primary)' : 'var(--card2)';
+      btn.style.color       = on ? '#fff' : 'var(--text3)';
+      btn.style.borderColor = on ? 'var(--primary)' : 'var(--border)';
     }
   });
-  /* 현재 모드일 때 두 섹션 모두 입력 전으로 세팅해서 비교하기 쉽게 */
-  if(opt === 'current') {
-    if(typeof setProfitView === 'function') setProfitView('empty');
-    if(typeof setGoalView   === 'function') setGoalView('empty');
-  }
+  if(state === 'both' && window._renderProfitCard) window._renderProfitCard();
 }
 
 /* ══ GOAL SETTING ══ */
