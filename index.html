@@ -2571,15 +2571,15 @@ body {
       </div>
     </div>
     <div id="wt-list" data-zone="wallet-list"></div>
-    <!-- 디지털자산보호재단 플로팅 배너 (이관 대상자만 노출) -->
-    <div id="daf-banner" style="position:absolute;bottom:76px;left:12px;right:12px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border:1px solid #C7D2FE;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(99,102,241,.15);z-index:40">
-      <div style="flex:1">
-        <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:2px">디지털자산보호재단으로 이전된 자산 확인</div>
-        <div style="font-size:10px;color:var(--text3)">이관된 자산이 있습니다. 확인해 보세요.</div>
-      </div>
-      <button onclick="showToast('기존 디지털자산보호재단 자산 이전 페이지로 이동')" style="font-size:11px;font-weight:700;color:var(--primary);background:rgba(255,255,255,.7);border:1px solid #C7D2FE;border-radius:8px;padding:5px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;flex-shrink:0">확인</button>
-      <button onclick="document.getElementById('daf-banner').style.display='none'" style="width:20px;height:20px;border-radius:50%;background:rgba(99,102,241,.15);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--primary);flex-shrink:0;padding:0;line-height:1">✕</button>
+  </div>
+  <!-- 디지털자산보호재단 플로팅 배너 (이관 대상자만 노출) -->
+  <div id="daf-banner" style="position:absolute;bottom:76px;left:12px;right:12px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border:1px solid #C7D2FE;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(99,102,241,.15);z-index:40">
+    <div style="flex:1">
+      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:2px">디지털자산보호재단으로 이전된 자산 확인</div>
+      <div style="font-size:10px;color:var(--text3)">이관된 자산이 있습니다. 확인해 보세요.</div>
     </div>
+    <button onclick="showToast('기존 디지털자산보호재단 자산 이전 페이지로 이동')" style="font-size:11px;font-weight:700;color:var(--primary);background:rgba(255,255,255,.7);border:1px solid #C7D2FE;border-radius:8px;padding:5px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;flex-shrink:0">확인</button>
+    <button onclick="document.getElementById('daf-banner').style.display='none'" style="width:20px;height:20px;border-radius:50%;background:rgba(99,102,241,.15);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--primary);flex-shrink:0;padding:0;line-height:1">✕</button>
   </div>
   <div class="tab-bar">
     <div class="tab-item" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
