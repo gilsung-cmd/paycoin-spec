@@ -924,6 +924,8 @@ body {
 
     <button class="nav-btn" onclick="nav('payment')">💳 결제</button>
     <button class="nav-btn nav-sub" onclick="nav('payment-wc')">↳ 결제 (WC 미연결)</button>
+
+    <button class="nav-btn" onclick="nav('tx-history')">📋 거래내역</button>
   </div>
   </div><!-- /nav-screens -->
   </div><!-- /nav-screens-wrap -->
@@ -6895,6 +6897,55 @@ EWS DETAIL ═══════════════ -->
     </div>
   </div>
 
+<!-- ═══════════════ TX HISTORY — 거래내역 ═══════════════ -->
+<div class="screen" id="sc-tx-history">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="back-header" style="display:flex;align-items:center;padding:0 14px">
+    <span class="back-btn" style="margin-right:8px" onclick="nav('home')">‹</span>
+    <span class="back-title" style="flex:1;text-align:center">거래내역</span>
+    <span style="width:28px"></span>
+  </div>
+  <div class="sbody" style="background:var(--bg-root)">
+
+    <!-- 거래소 탭 -->
+    <div data-zone="tx-tabs" style="padding:10px 14px 8px;background:var(--card);border-bottom:1px solid var(--border)">
+      <div style="display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch">
+        <button id="tx-etab-all"     onclick="txExchTab('all')"     style="flex-shrink:0;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;border:1px solid var(--primary);background:var(--primary);color:#fff;cursor:pointer;font-family:inherit">전체</button>
+        <button id="tx-etab-wallet"  onclick="txExchTab('wallet')"  style="flex-shrink:0;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:inherit">내 지갑</button>
+        <button id="tx-etab-bithumb" onclick="txExchTab('bithumb')" style="flex-shrink:0;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:inherit">빗썸</button>
+        <button id="tx-etab-korbit"  onclick="txExchTab('korbit')"  style="flex-shrink:0;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:inherit">코빗</button>
+        <button id="tx-etab-coinone" onclick="txExchTab('coinone')" style="flex-shrink:0;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:inherit">코인원</button>
+      </div>
+    </div>
+
+    <!-- 7일 조회 안내 -->
+    <div id="tx-7day-notice" data-zone="tx-filter" style="display:none;margin:10px 14px 0;padding:7px 11px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;display:flex;align-items:center;gap:6px">
+      <span style="font-size:12px">⏱</span>
+      <span style="font-size:11px;color:#92400E;line-height:1.4">거래소 내역은 최근 <b>7일</b>만 조회할 수 있습니다.</span>
+    </div>
+
+    <!-- 유형 필터 칩 -->
+    <div data-zone="tx-filter" style="padding:10px 14px 0;display:flex;gap:6px;flex-wrap:wrap">
+      <button id="tx-ftype-all"    onclick="txTypeFilter('all')"    style="font-size:10px;font-weight:700;padding:4px 11px;border-radius:20px;border:1px solid var(--primary);background:var(--primary);color:#fff;cursor:pointer;font-family:inherit">전체</button>
+      <button id="tx-ftype-in"     onclick="txTypeFilter('in')"     style="font-size:10px;font-weight:700;padding:4px 11px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:inherit">입금</button>
+      <button id="tx-ftype-out"    onclick="txTypeFilter('out')"    style="font-size:10px;font-weight:700;padding:4px 11px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:inherit">출금</button>
+      <button id="tx-ftype-pay"    onclick="txTypeFilter('pay')"    style="font-size:10px;font-weight:700;padding:4px 11px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:inherit">결제 <span style="font-size:9px;opacity:.7">(코빗)</span></button>
+      <button id="tx-ftype-charge" onclick="txTypeFilter('charge')" style="font-size:10px;font-weight:700;padding:4px 11px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:inherit">충전 <span style="font-size:9px;opacity:.7">(코빗)</span></button>
+    </div>
+
+    <!-- 코인 안내 뱃지 -->
+    <div id="tx-coin-hint" style="padding:6px 14px 4px">
+      <div style="font-size:10px;color:var(--text4)">💡 <span id="tx-coin-hint-text">내 지갑: PCI · 빗썸: PCI · 코빗·코인원: BTC, ETH, XRP, POL, USDT, SOL, PCI</span></div>
+    </div>
+
+    <!-- 거래 목록 -->
+    <div id="tx-list-body" data-zone="tx-list" style="margin-top:8px;background:var(--card);border-top:1px solid var(--border)">
+    </div>
+
+    <div style="height:24px"></div>
+  </div>
+</div><!-- /sc-tx-history -->
+
     </div><!-- /phone-screen -->
   </div><!-- /phone-frame -->
 </div><!-- /phone-panel -->
@@ -7063,6 +7114,15 @@ EWS DETAIL ═══════════════ -->
     <div class="policy-screen-id">SCREEN_WALLET_MANAGE <span class="ptag p1">P1</span></div>
     <div class="policy-title">지갑 관리</div>
     <div class="policy-desc">연결된 거래소 지갑 목록 조회 및 관리. 거래소별 보유 코인, 인증 갱신, 노출 순서 변경 기능을 제공합니다.</div>
+  </div>
+</div>
+
+<!-- ── TX HISTORY ── -->
+<div class="policy-section" id="pol-tx-history" data-screen="tx-history">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_TX_HISTORY <span class="ptag p2">P2</span></div>
+    <div class="policy-title">거래내역</div>
+    <div class="policy-desc">거래소별·유형별 거래 내역 조회 화면 (UI 개선 시안). 탭: 전체 / 내 지갑 / 빗썸 / 코빗 / 코인원. 내 지갑은 PCI만 조회 가능하며 기간 제한 없음. 거래소 탭은 최근 7일 조회. 코빗은 결제·충전 내역 추가 제공. 이번 개발 범위 외 — UI 검토용 시안.</div>
   </div>
 </div>
 
@@ -7403,6 +7463,7 @@ const SCREEN_MAP = {
   'payment':      { sc:'sc-payment',      pol:'pol-payment',      ni:11 },
   'payment-wc':   { sc:'sc-payment-wc',   pol:'pol-payment-wc',   ni:11 },
   'wallet-manage':{ sc:'sc-wallet-manage', pol:'pol-wallet-manage', ni:12 },
+  'tx-history':   { sc:'sc-tx-history',   pol:'pol-tx-history',   ni:13 },
 };
 
 function nav(key) {
@@ -8900,7 +8961,7 @@ const QNA = {
   apiUrl: '',
   filter: 'all',
   items: [],
-  LABELS: {'home':'메인 홈','home-old':'메인 홈 (구)','wallet':'지갑','wallet-empty':'지갑(미연결)','wallet-pci':'지갑상세(PCI)','wallet-other':'지갑 상세 (WC 지갑)','asset':'자산현황','pci-info':'오늘의 PCI','token-detail':'토큰 상세','benefits':'혜택','prediction':'등락 예측','news':'최근 소식','news-detail':'소식 상세','payment':'결제','wallet-manage':'지갑 관리'},
+  LABELS: {'home':'메인 홈','home-old':'메인 홈 (구)','wallet':'지갑','wallet-empty':'지갑(미연결)','wallet-pci':'지갑상세(PCI)','wallet-other':'지갑 상세 (WC 지갑)','asset':'자산현황','pci-info':'오늘의 PCI','token-detail':'토큰 상세','benefits':'혜택','prediction':'등락 예측','news':'최근 소식','news-detail':'소식 상세','payment':'결제','wallet-manage':'지갑 관리','tx-history':'거래내역'},
   curScreen: function(){ var s=document.querySelector('.screen.active'); return s?s.id.replace('sc-',''):'home'; },
   curLabel: function(){ return this.LABELS[this.curScreen()]||this.curScreen(); },
   init: function(){ try{ this.apiUrl=localStorage.getItem('qna_api')||''; }catch(e){} }
@@ -9745,6 +9806,7 @@ function generateAppsScriptCode() {
     'news-detail':  ['', 'newsdet-header','newsdet-nav'],
     'payment':      ['', 'pay-summary','pay-buttons','pay-event-banner','pay-merchants','pay-recent'],
     'payment-wc':   ['', 'paywc-hero','paywc-coin-list','paywc-pci-row','paywc-btc-row','paywc-eth-row','paywc-cta'],
+    'tx-history':   ['', 'tx-tabs','tx-filter','tx-list'],
   };
   var zoneMapStr = JSON.stringify(zoneMapObj, null, 2);
 
@@ -10168,7 +10230,170 @@ document.addEventListener('click', function(e) {
 var _tipStyle = document.getElementById('pay-balance-tip');
 // show/hide via classList toggle handled inline
 
+/* ══ 거래내역 (TX HISTORY) ══ */
+var TX_EXCH = 'all';
+var TX_TYPE = 'all';
+
+var TX_DATA = [
+  /* 내 지갑 — PCI 전용, 기간 제한 없음 */
+  {date:'2026-05-19', time:'14:32', exchKey:'wallet', coin:'PCI', type:'in',     amt:5000,   desc:'입금'},
+  {date:'2026-05-18', time:'09:15', exchKey:'wallet', coin:'PCI', type:'out',    amt:2000,   desc:'출금'},
+  {date:'2026-05-12', time:'20:44', exchKey:'wallet', coin:'PCI', type:'in',     amt:10000,  desc:'입금'},
+  {date:'2026-04-30', time:'11:03', exchKey:'wallet', coin:'PCI', type:'out',    amt:3500,   desc:'출금'},
+  /* 빗썸 — PCI 전용, 7일 */
+  {date:'2026-05-19', time:'11:20', exchKey:'bithumb', coin:'PCI', type:'in',    amt:3500,   desc:'입금'},
+  {date:'2026-05-17', time:'16:50', exchKey:'bithumb', coin:'PCI', type:'out',   amt:1200,   desc:'출금'},
+  {date:'2026-05-15', time:'08:30', exchKey:'bithumb', coin:'PCI', type:'in',    amt:8000,   desc:'입금'},
+  /* 코빗 — 다코인 + 결제 + 충전, 7일 */
+  {date:'2026-05-20', time:'08:55', exchKey:'korbit',  coin:'BTC',  type:'in',   amt:0.00125,desc:'입금'},
+  {date:'2026-05-20', time:'10:30', exchKey:'korbit',  coin:'PCI',  type:'pay',  amt:32400,  desc:'결제'},
+  {date:'2026-05-19', time:'14:00', exchKey:'korbit',  coin:'PCI',  type:'charge',amt:50000, desc:'충전'},
+  {date:'2026-05-18', time:'12:22', exchKey:'korbit',  coin:'ETH',  type:'out',  amt:0.05,   desc:'출금'},
+  {date:'2026-05-17', time:'09:10', exchKey:'korbit',  coin:'XRP',  type:'in',   amt:1500,   desc:'입금'},
+  {date:'2026-05-16', time:'17:45', exchKey:'korbit',  coin:'USDT', type:'out',  amt:100,    desc:'출금'},
+  {date:'2026-05-15', time:'21:05', exchKey:'korbit',  coin:'PCI',  type:'pay',  amt:15800,  desc:'결제'},
+  /* 코인원 — 다코인, 7일 */
+  {date:'2026-05-19', time:'13:15', exchKey:'coinone', coin:'BTC',  type:'out',  amt:0.002,  desc:'출금'},
+  {date:'2026-05-18', time:'15:30', exchKey:'coinone', coin:'SOL',  type:'in',   amt:2.5,    desc:'입금'},
+  {date:'2026-05-17', time:'11:00', exchKey:'coinone', coin:'POL',  type:'in',   amt:500,    desc:'입금'},
+  {date:'2026-05-16', time:'09:20', exchKey:'coinone', coin:'PCI',  type:'out',  amt:8000,   desc:'출금'},
+  {date:'2026-05-15', time:'18:40', exchKey:'coinone', coin:'ETH',  type:'in',   amt:0.12,   desc:'입금'},
+];
+
+var TX_EXCH_LABELS = {wallet:'내 지갑', bithumb:'빗썸', korbit:'코빗', coinone:'코인원'};
+var TX_TYPE_ICONS  = {in:'↓', out:'↑', pay:'💳', charge:'⚡'};
+var TX_TYPE_COLORS = {in:'#059669', out:'#DC2626', pay:'#1A56DB', charge:'#D97706'};
+var TX_TYPE_BG     = {in:'#D1FAE5', out:'#FEE2E2', pay:'#DBEAFE',   charge:'#FEF3C7'};
+var TX_TYPE_LABELS = {in:'입금', out:'출금', pay:'결제', charge:'충전'};
+
+var TX_COIN_HINTS = {
+  all:     '내 지갑: PCI · 빗썸: PCI · 코빗·코인원: BTC, ETH, XRP, POL, USDT, SOL, PCI',
+  wallet:  '자체 지갑 보유 코인: PCI',
+  bithumb: '빗썸 보유 코인: PCI',
+  korbit:  '코빗 보유 코인: BTC, ETH, XRP, POL, USDT, SOL, PCI · 결제·충전 내역 포함',
+  coinone: '코인원 보유 코인: BTC, ETH, XRP, POL, USDT, SOL, PCI',
+};
+
+function txExchTab(tab) {
+  TX_EXCH = tab;
+  TX_TYPE = 'all';
+  /* 탭 버튼 활성 상태 */
+  ['all','wallet','bithumb','korbit','coinone'].forEach(function(k) {
+    var el = document.getElementById('tx-etab-' + k);
+    if (!el) return;
+    var on = (k === tab);
+    el.style.background  = on ? 'var(--primary)' : 'var(--card2)';
+    el.style.color       = on ? '#fff'            : 'var(--text3)';
+    el.style.borderColor = on ? 'var(--primary)'  : 'var(--border)';
+  });
+  /* 7일 안내 */
+  var notice = document.getElementById('tx-7day-notice');
+  if (notice) notice.style.display = (tab === 'wallet') ? 'none' : 'flex';
+  /* 결제·충전 칩 노출 여부 (코빗 전용) */
+  var showPay = (tab === 'all' || tab === 'korbit');
+  ['pay','charge'].forEach(function(t) {
+    var el = document.getElementById('tx-ftype-' + t);
+    if (el) el.style.display = showPay ? '' : 'none';
+  });
+  /* 유형 필터 리셋 */
+  txTypeFilter('all');
+  /* 코인 힌트 */
+  var hint = document.getElementById('tx-coin-hint-text');
+  if (hint) hint.textContent = TX_COIN_HINTS[tab] || '';
+  txRender();
+}
+
+function txTypeFilter(type) {
+  TX_TYPE = type;
+  ['all','in','out','pay','charge'].forEach(function(t) {
+    var el = document.getElementById('tx-ftype-' + t);
+    if (!el) return;
+    var on = (t === type);
+    el.style.background  = on ? 'var(--primary)' : 'var(--card2)';
+    el.style.color       = on ? '#fff'            : 'var(--text3)';
+    el.style.borderColor = on ? 'var(--primary)'  : 'var(--border)';
+  });
+  txRender();
+}
+
+function txFmtDate(d) {
+  var p = d.split('-');
+  return p[0] + '년 ' + parseInt(p[1]) + '월 ' + parseInt(p[2]) + '일';
+}
+
+function txFmtAmt(tx) {
+  var prefix = (tx.type === 'in' || tx.type === 'charge') ? '+' : '-';
+  var n = tx.amt;
+  var s;
+  if (tx.coin === 'BTC' || tx.coin === 'ETH' || tx.coin === 'SOL') {
+    s = n.toString();
+  } else if (Number.isInteger(n)) {
+    s = n.toLocaleString();
+  } else {
+    s = n.toString();
+  }
+  return prefix + s + ' ' + tx.coin;
+}
+
+function txRowHTML(tx) {
+  var icon     = TX_TYPE_ICONS[tx.type]  || '?';
+  var color    = TX_TYPE_COLORS[tx.type] || 'var(--text)';
+  var bg       = TX_TYPE_BG[tx.type]     || 'var(--card2)';
+  var label    = TX_TYPE_LABELS[tx.type] || tx.type;
+  var amtColor = (tx.type === 'in' || tx.type === 'charge') ? '#059669' : '#DC2626';
+  var amtStr   = txFmtAmt(tx);
+  var exchBadge = (TX_EXCH === 'all')
+    ? '<span style="font-size:9px;font-weight:600;color:var(--text4);background:var(--card2);border:1px solid var(--border);border-radius:5px;padding:1px 5px;margin-left:5px">' + (TX_EXCH_LABELS[tx.exchKey] || '') + '</span>'
+    : '';
+  return '<div style="display:flex;align-items:center;gap:11px;padding:10px 14px;border-bottom:1px solid var(--border)">'
+    + '<div style="width:38px;height:38px;border-radius:50%;background:' + bg + ';display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:' + color + ';font-weight:800">' + icon + '</div>'
+    + '<div style="flex:1;min-width:0">'
+    + '<div style="display:flex;align-items:center"><span style="font-size:13px;font-weight:600;color:var(--text)">' + label + '</span>' + exchBadge + '</div>'
+    + '<div style="font-size:11px;color:var(--text4);margin-top:2px">' + tx.coin + ' \xb7 ' + tx.time + '</div>'
+    + '</div>'
+    + '<div style="text-align:right;flex-shrink:0"><div style="font-size:13px;font-weight:700;color:' + amtColor + '">' + amtStr + '</div></div>'
+    + '</div>';
+}
+
+function txRender() {
+  var container = document.getElementById('tx-list-body');
+  if (!container) return;
+  var filtered = TX_DATA.filter(function(tx) {
+    if (TX_EXCH !== 'all' && tx.exchKey !== TX_EXCH) return false;
+    if (TX_TYPE !== 'all' && tx.type  !== TX_TYPE)   return false;
+    return true;
+  });
+  if (filtered.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:44px 20px;color:var(--text4);font-size:13px">해당 조건의 거래 내역이 없습니다.</div>';
+    return;
+  }
+  var groups = {}, order = [];
+  filtered.forEach(function(tx) {
+    if (!groups[tx.date]) { groups[tx.date] = []; order.push(tx.date); }
+    groups[tx.date].push(tx);
+  });
+  order = order.filter(function(v,i,a){return a.indexOf(v)===i;}).sort().reverse();
+  var html = '';
+  order.forEach(function(date) {
+    html += '<div style="font-size:11px;font-weight:700;color:var(--text4);padding:10px 14px 4px;background:var(--bg-root)">' + txFmtDate(date) + '</div>';
+    groups[date].forEach(function(tx){ html += txRowHTML(tx); });
+  });
+  container.innerHTML = html;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var _nav = window.nav;
+  if (_nav) {
+    window.nav = function(key) {
+      _nav(key);
+      if (key === 'tx-history') { TX_EXCH='all'; TX_TYPE='all'; txExchTab('all'); }
+    };
+  }
+  txRender();
+});
+
 </script>
 <div class="toast" id="app-toast"></div>
   <div id="hotspot-legend">
+    <div style="font-weight:700;margin-bottom:4px
     <div style="font-weight:700;margin-bottom:4px
