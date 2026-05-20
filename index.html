@@ -918,6 +918,7 @@ body {
     <button class="nav-btn" onclick="nav('token-detail')">🏦 토큰 상세</button>
     <button class="nav-btn" onclick="nav('benefits')">🎁 혜택</button>
     <button class="nav-btn" onclick="nav('prediction')">🔮 등락 예측</button>
+    <button class="nav-btn nav-sub" onclick="nav('prediction2')">↳ 등락 예측 v2 (Beta)</button>
 
     <button class="nav-btn" onclick="nav('news')">📰 최근 소식</button>
     <button class="nav-btn nav-sub" onclick="nav('news-detail')">↳ 소식 상세</button>
@@ -4478,12 +4479,15 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
     <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:var(--shadow-sm)" onclick="nav('prediction')">
       <div style="font-size:26px">🔮</div>
       <div style="flex:1"><div style="font-size:13px;font-weight:700;margin-bottom:2px;color:var(--text)">PCI 등락 예측</div><div style="font-size:11px;color:var(--text3)">등락 예측 맞추면 PCI 에어드랍</div></div>
-      <button class="btn btn-primary" style="width:auto;padding:8px 13px;font-size:11px">참여하기</button>
+      <button class="btn btn-primary" style="width:auto;padding:8px 13px;font-size:11px" onclick="event.stopPropagation();nav('prediction')">참여하기</button>
     </div>
-    <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:var(--shadow-sm)">
+    <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:var(--shadow-sm)" onclick="showToast('출석 룰렛 페이지로 이동')">
       <div style="font-size:26px">✅</div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:700;margin-bottom:2px;color:var(--text)">출석 룰렛</div><div style="font-size:11px;color:var(--text3)">매일 출석하고 PCI 받기</div></div>
-      <button class="btn btn-primary" style="width:auto;padding:8px 13px;font-size:11px" onclick="showToast('출석체크 페이지로 이동')">참여하기</button>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;margin-bottom:2px;color:var(--text)">출석 룰렛</div>
+        <div style="font-size:11px;color:var(--text3)">매일 출석하고 PCI 받기</div>
+      </div>
+      <span style="font-size:12px;font-weight:600;color:#059669;white-space:nowrap">참여 완료</span>
     </div>
     <div data-zone="ben-referral" class="stitle" style="margin-top:6px">추천/공유</div>
     <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:var(--shadow-sm)">
@@ -5253,6 +5257,393 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
       <button class="btn btn-primary" onclick="confirmVote()">확인</button>
       <button class="btn btn-ghost" style="margin-top:6px" onclick="closeModal('vote-modal')">취소</button>
     </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PREDICTION V2 ═══════════════ -->
+<div class="screen" id="sc-prediction2">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="back-header">
+    <span class="back-btn" onclick="history.back()">‹</span>
+    <span class="back-title">등락 예측 Beta</span>
+    <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer" onclick="showModal('pred2-guide-modal')">안내</span>
+  </div>
+  <div class="sbody" style="padding-bottom:32px">
+
+    <!-- ── 연속 참여 스트릭 (5일) ── -->
+    <div style="margin:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow-sm)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div>
+          <div style="font-size:15px;font-weight:800;color:var(--text)">3일 연속 참여 중 🔥</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">5일 채우면 +0.5 PCI 지급!</div>
+        </div>
+        <div style="font-size:11px;color:var(--primary);font-weight:600;background:var(--primary-l);padding:4px 10px;border-radius:20px">2일 남음</div>
+      </div>
+      <!-- 5일 트랙 -->
+      <div style="display:flex;align-items:center;gap:0">
+        <!-- Day 1 완료 -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:1">
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center">
+            <span style="font-size:14px;color:#fff;font-weight:700">✓</span>
+          </div>
+          <span style="font-size:10px;color:var(--text3)">1일</span>
+        </div>
+        <div style="height:2px;flex:0 0 12px;background:var(--primary);margin-bottom:15px"></div>
+        <!-- Day 2 완료 -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:1">
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center">
+            <span style="font-size:14px;color:#fff;font-weight:700">✓</span>
+          </div>
+          <span style="font-size:10px;color:var(--text3)">2일</span>
+        </div>
+        <div style="height:2px;flex:0 0 12px;background:var(--primary);margin-bottom:15px"></div>
+        <!-- Day 3 오늘 -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:1">
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--primary);border:3px solid #93C5FD;display:flex;align-items:center;justify-content:center">
+            <span style="font-size:10px;color:#fff;font-weight:800">오늘</span>
+          </div>
+          <span style="font-size:10px;color:var(--primary);font-weight:700">3일</span>
+        </div>
+        <div style="height:2px;flex:0 0 12px;background:var(--border);margin-bottom:15px"></div>
+        <!-- Day 4 미완료 -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:1">
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--card2);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center">
+            <span style="font-size:13px;color:var(--text4)">4</span>
+          </div>
+          <span style="font-size:10px;color:var(--text4)">4일</span>
+        </div>
+        <div style="height:2px;flex:0 0 12px;background:var(--border);margin-bottom:15px"></div>
+        <!-- Day 5 보너스 -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:1">
+          <div style="position:relative">
+            <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#FEF3C7,#FDE68A);border:2px dashed #F59E0B;display:flex;align-items:center;justify-content:center">
+              <span style="font-size:10px;color:#92400E;font-weight:800">🎁 5일</span>
+            </div>
+            <div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;font-weight:700;color:#92400E;background:#FEF3C7;padding:2px 6px;border-radius:6px;border:1px solid #FDE68A">+0.5 PCI</div>
+          </div>
+          <span style="font-size:10px;color:#F59E0B;font-weight:700">보너스</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 어제 예측 결과 요약 배너 ── -->
+    <div onclick="showModal('pred2-result-modal')" style="margin:0 14px 10px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:var(--shadow-sm)">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:18px">📊</span>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--text)">어제 예측 결과</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:1px">1회차 적중 · 2·3회차 대기중</div>
+        </div>
+      </div>
+      <span style="font-size:13px;color:var(--text3)">›</span>
+    </div>
+
+    <!-- ── 내일 예측 (스텝 구성) ── -->
+    <div style="margin:0 14px 8px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:13px;font-weight:700;color:var(--text)">내일 예측</div>
+      <div style="font-size:11px;color:var(--text3)">⏰ 마감 오늘 23:59</div>
+    </div>
+
+    <!-- 기준가 -->
+    <div style="margin:0 14px 10px;background:var(--primary-l);border-radius:10px;padding:8px 12px">
+      <span style="font-size:11px;color:var(--primary)">📌 기준가 (0시) <strong>₩43.20</strong></span>
+    </div>
+
+    <!-- 스텝 인디케이터 -->
+    <div style="margin:0 14px 12px;display:flex;align-items:center;gap:6px">
+      <div id="p2-step-dot-1" style="display:flex;align-items:center;gap:4px">
+        <div style="width:22px;height:22px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff">1</div>
+        <span style="font-size:11px;font-weight:600;color:var(--primary)">09:00</span>
+      </div>
+      <div style="flex:1;height:1.5px;background:var(--border)"></div>
+      <div id="p2-step-dot-2" style="display:flex;align-items:center;gap:4px">
+        <div style="width:22px;height:22px;border-radius:50%;background:var(--card2);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--text3)">2</div>
+        <span style="font-size:11px;font-weight:600;color:var(--text3)">15:00</span>
+      </div>
+      <div style="flex:1;height:1.5px;background:var(--border)"></div>
+      <div id="p2-step-dot-3" style="display:flex;align-items:center;gap:4px">
+        <div style="width:22px;height:22px;border-radius:50%;background:var(--card2);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--text3)">3</div>
+        <span style="font-size:11px;font-weight:600;color:var(--text3)">21:00</span>
+      </div>
+    </div>
+
+    <!-- 스텝 카드 (공통 컨테이너) -->
+    <div style="margin:0 14px 10px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-sm)">
+      <div id="p2-step-label" style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:14px">1회차 · 내일 오전 9시</div>
+
+      <!-- 방향 선택 -->
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <button id="pred2-r1-down" onclick="selectPred2Dir(1,'down')" style="flex:1;padding:12px;font-size:14px;font-weight:700;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;transition:all .15s">📉 하락</button>
+        <button id="pred2-r1-up"   onclick="selectPred2Dir(1,'up')"   style="flex:1;padding:12px;font-size:14px;font-weight:700;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;transition:all .15s">📈 상승</button>
+        <button id="pred2-r2-down" onclick="selectPred2Dir(2,'down')" style="flex:1;padding:12px;font-size:14px;font-weight:700;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;transition:all .15s;display:none">📉 하락</button>
+        <button id="pred2-r2-up"   onclick="selectPred2Dir(2,'up')"   style="flex:1;padding:12px;font-size:14px;font-weight:700;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;transition:all .15s;display:none">📈 상승</button>
+        <button id="pred2-r3-down" onclick="selectPred2Dir(3,'down')" style="flex:1;padding:12px;font-size:14px;font-weight:700;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;transition:all .15s;display:none">📉 하락</button>
+        <button id="pred2-r3-up"   onclick="selectPred2Dir(3,'up')"   style="flex:1;padding:12px;font-size:14px;font-weight:700;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;transition:all .15s;display:none">📈 상승</button>
+      </div>
+
+      <!-- 구간 선택 -->
+      <div style="display:flex;gap:8px" id="pred2-r1-ranges">
+        <button class="p2r-btn" onclick="selectPred2Range(1,1)" data-r="1" data-rv="1" style="flex:1;padding:10px 4px;font-size:11px;font-weight:600;border-radius:8px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;transition:all .15s">소폭<br><span style="font-size:10px;opacity:.8">1~3%</span></button>
+        <button class="p2r-btn" onclick="selectPred2Range(1,2)" data-r="1" data-rv="2" style="flex:1;padding:10px 4px;font-size:11px;font-weight:600;border-radius:8px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;transition:all .15s">중간<br><span style="font-size:10px;opacity:.8">3~5%</span></button>
+        <button class="p2r-btn" onclick="selectPred2Range(1,3)" data-r="1" data-rv="3" style="flex:1;padding:10px 4px;font-size:11px;font-weight:600;border-radius:8px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;transition:all .15s">큰폭<br><span style="font-size:10px;opacity:.8">5%↑</span></button>
+      </div>
+      <div style="display:flex;gap:8px;display:none" id="pred2-r2-ranges">
+        <button class="p2r-btn" onclick="selectPred2Range(2,1)" data-r="2" data-rv="1" style="flex:1;padding:10px 4px;font-size:11px;font-weight:600;border-radius:8px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;transition:all .15s">소폭<br><span style="font-size:10px;opacity:.8">1~3%</span></button>
+        <button class="p2r-btn" onclick="selectPred2Range(2,2)" data-r="2" data-rv="2" style="flex:1;padding:10px 4px;font-size:11px;font-weight:600;border-radius:8px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;transition:all .15s">중간<br><span style="font-size:10px;opacity:.8">3~5%</span></button>
+        <button class="p2r-btn" onclick="selectPred2Range(2,3)" data-r="2" data-rv="3" style="flex:1;padding:10px 4px;font-size:11px;font-weight:600;border-radius:8px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;transition:all .15s">큰폭<br><span style="font-size:10px;opacity:.8">5%↑</span></button>
+      </div>
+      <div style="display:flex;gap:8px;display:none" id="pred2-r3-ranges">
+        <button class="p2r-btn" onclick="selectPred2Range(3,1)" data-r="3" data-rv="1" style="flex:1;padding:10px 4px;font-size:11px;font-weight:600;border-radius:8px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;transition:all .15s">소폭<br><span style="font-size:10px;opacity:.8">1~3%</span></button>
+        <button class="p2r-btn" onclick="selectPred2Range(3,2)" data-r="3" data-rv="2" style="flex:1;padding:10px 4px;font-size:11px;font-weight:600;border-radius:8px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;transition:all .15s">중간<br><span style="font-size:10px;opacity:.8">3~5%</span></button>
+        <button class="p2r-btn" onclick="selectPred2Range(3,3)" data-r="3" data-rv="3" style="flex:1;padding:10px 4px;font-size:11px;font-weight:600;border-radius:8px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;transition:all .15s">큰폭<br><span style="font-size:10px;opacity:.8">5%↑</span></button>
+      </div>
+
+      <!-- 선택 요약 (이전 스텝) -->
+      <div id="p2-prev-summary" style="margin-top:10px;display:none"></div>
+    </div>
+
+    <!-- 이전 / 다음·확정 버튼 -->
+    <div style="margin:0 14px;display:flex;gap:8px">
+      <button id="pred2-prev-btn" onclick="pred2GoStep(-1)" style="padding:12px 20px;font-size:13px;font-weight:700;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;display:none">← 이전</button>
+      <button id="pred2-next-btn" onclick="pred2GoStep(1)" style="flex:1;padding:12px;font-size:13px;font-weight:700;border-radius:10px;border:none;background:var(--primary);color:#fff;cursor:pointer;opacity:.4;pointer-events:none">다음 →</button>
+    </div>
+    <div style="margin:10px 14px 0;text-align:center;font-size:11px;color:var(--text3)">광고 시청 시 회차별 1회 수정 가능 · 오늘 23:59 마감</div>
+
+    <!-- ── 수정하기 ── -->
+    <div style="margin:12px 14px 0;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;box-shadow:var(--shadow-sm)">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:10px">✏️ 예측 수정 <span style="font-size:10px;font-weight:400;color:var(--text4)">(광고 1회 시청 → 회차당 1회 수정)</span></div>
+      <div style="display:flex;gap:8px">
+        <button onclick="pred2RequestEdit(1)" style="flex:1;padding:9px 4px;font-size:11px;font-weight:600;border-radius:8px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer">1회차<br><span style="font-size:9px;opacity:.7">09:00</span></button>
+        <button onclick="pred2RequestEdit(2)" style="flex:1;padding:9px 4px;font-size:11px;font-weight:600;border-radius:8px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer">2회차<br><span style="font-size:9px;opacity:.7">15:00</span></button>
+        <button onclick="pred2RequestEdit(3)" style="flex:1;padding:9px 4px;font-size:11px;font-weight:600;border-radius:8px;border:1.5px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer">3회차<br><span style="font-size:9px;opacity:.7">21:00</span></button>
+      </div>
+    </div>
+
+    <!-- ── 참여내역 / 랭킹 탭 ── -->
+    <div style="display:flex;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--card);margin-top:14px;position:sticky;top:0;z-index:10">
+      <div id="pred2-pbt-history" onclick="showPred2Tab('history')" style="flex:1;padding:10px 0;text-align:center;font-size:12px;font-weight:700;cursor:pointer;color:var(--primary);border-bottom:2px solid var(--primary)">참여 내역</div>
+      <div id="pred2-pbt-ranking" onclick="showPred2Tab('ranking')" style="flex:1;padding:10px 0;text-align:center;font-size:12px;font-weight:600;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent">랭킹</div>
+    </div>
+
+    <!-- 참여 내역 탭 콘텐츠 -->
+    <div id="pred2-history">
+      <!-- 통계 카드 -->
+      <div style="margin:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;box-shadow:var(--shadow-sm)">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;text-align:center">
+          <div><div style="font-size:9px;color:var(--text4);margin-bottom:2px">당월 PCI</div><div style="font-size:16px;font-weight:800;color:var(--green)">8.50</div></div>
+          <div><div style="font-size:9px;color:var(--text4);margin-bottom:2px">적중률</div><div style="font-size:16px;font-weight:800">68%</div></div>
+          <div><div style="font-size:9px;color:var(--text4);margin-bottom:2px">참여</div><div style="font-size:16px;font-weight:800">45회</div></div>
+          <div><div style="font-size:9px;color:var(--text4);margin-bottom:2px">적중</div><div style="font-size:16px;font-weight:800">31회</div></div>
+        </div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--text3)">지난달 획득 PCI: <strong>6.50</strong></div>
+      </div>
+      <!-- 전월/당월 탭 -->
+      <div data-zone="pred2-calendar" style="padding:0 14px;margin-bottom:10px">
+        <div style="display:flex;gap:6px;margin-bottom:12px">
+          <button id="pred2-cal-tab-prev" onclick="switchPred2CalTab('prev')" style="flex:1;padding:7px 0;font-size:12px;font-weight:600;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .18s">전월 <span style="font-size:10px;font-weight:400;color:var(--text4)">(2026년 4월)</span></button>
+          <button id="pred2-cal-tab-curr" onclick="switchPred2CalTab('curr')" style="flex:1;padding:7px 0;font-size:12px;font-weight:700;border-radius:8px;border:1px solid var(--primary);background:var(--primary-l);color:var(--primary);cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .18s">당월 <span style="font-size:10px;font-weight:400">(2026년 5월)</span></button>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);text-align:center;margin-bottom:10px" id="pred2-cal-month-label">2026년 5월</div>
+        <div id="pred2-cal-curr-month">
+          <div class="cal-grid">
+            <div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">일</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">월</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">화</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">수</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">목</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">금</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">토</div>
+            <div class="cal-day cal-none"></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'1회차 📈+소폭 ✅ · 2회차 📉-큰폭 ⏳ · 3회차 📈+중간 ⏳')">1<div class="cal-tooltip">1회차 📈+소폭 ✅ · 2회차 📉-큰폭 ⏳ · 3회차 📈+중간 ⏳</div></div>
+            <div class="cal-day cal-wrong" onclick="showTip(this,'1회차 📈+소폭 ❌ · 2회차 📈+중간 ❌ · 3회차 📉-소폭 ✅')">2<div class="cal-tooltip">1회차 📈+소폭 ❌ · 2회차 📈+중간 ❌ · 3회차 📉-소폭 ✅</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'1회차 📉-소폭 ✅ · 2회차 📉-중간 ✅ · 3회차 📉-소폭 ✅')">3<div class="cal-tooltip">1회차 📉-소폭 ✅ · 2회차 📉-중간 ✅ · 3회차 📉-소폭 ✅</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'1회차 📈+소폭 ✅ · 2회차 📈+소폭 ✅ · 3회차 📈+중간 ✅')">4<div class="cal-tooltip">1회차 📈+소폭 ✅ · 2회차 📈+소폭 ✅ · 3회차 📈+중간 ✅</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'1회차 📉-큰폭 ✅ · 2회차 📉-소폭 ✅ · 3회차 📉-중간 ✅')">5<div class="cal-tooltip">1회차 📉-큰폭 ✅ · 2회차 📉-소폭 ✅ · 3회차 📉-중간 ✅</div></div>
+            <div class="cal-day cal-none">6</div><div class="cal-day cal-none">7</div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'1회차 📈+중간 ✅ · 2회차 📈+소폭 ✅ · 3회차 📈+큰폭 ✅')">8<div class="cal-tooltip">1회차 📈+중간 ✅ · 2회차 📈+소폭 ✅ · 3회차 📈+큰폭 ✅</div></div>
+            <div class="cal-day cal-wrong" onclick="showTip(this,'1회차 📈+소폭 ❌ · 2회차 📉-소폭 ✅ · 3회차 📈+소폭 ❌')">9<div class="cal-tooltip">1회차 📈+소폭 ❌ · 2회차 📉-소폭 ✅ · 3회차 📈+소폭 ❌</div></div>
+            <div class="cal-day cal-flat" onclick="showTip(this,'1회차 📈+소폭 — 변동없음')">10<div class="cal-tooltip">1회차 📈+소폭 — 변동없음</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'1회차 📈+소폭 ✅ · 2회차 📈+중간 ✅ · 3회차 📈+소폭 ✅')">11<div class="cal-tooltip">1회차 📈+소폭 ✅ · 2회차 📈+중간 ✅ · 3회차 📈+소폭 ✅</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'1회차 📉-소폭 ✅ · 2회차 📉-소폭 ✅ · 3회차 📉-소폭 ✅')">12<div class="cal-tooltip">1회차 📉-소폭 ✅ · 2회차 📉-소폭 ✅ · 3회차 📉-소폭 ✅</div></div>
+            <div class="cal-day cal-none">13</div><div class="cal-day cal-none">14</div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'1회차 📈+소폭 ✅ · 2회차 📈+소폭 ✅ · 3회차 📈+소폭 ✅')">15<div class="cal-tooltip">1회차 📈+소폭 ✅ · 2회차 📈+소폭 ✅ · 3회차 📈+소폭 ✅</div></div>
+            <div class="cal-day cal-wrong" onclick="showTip(this,'1회차 📉-소폭 ❌ · 2회차 📈+소폭 ✅ · 3회차 📉-소폭 ❌')">16<div class="cal-tooltip">1회차 📉-소폭 ❌ · 2회차 📈+소폭 ✅ · 3회차 📉-소폭 ❌</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'1회차 📈+소폭 ✅ · 2회차 📈+소폭 ✅ · 3회차 📈+소폭 ✅')">17<div class="cal-tooltip">1회차 📈+소폭 ✅ · 2회차 📈+소폭 ✅ · 3회차 📈+소폭 ✅</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'1회차 📉-소폭 ✅ · 2회차 📉-중간 ✅ · 3회차 📉-소폭 ✅')">18<div class="cal-tooltip">1회차 📉-소폭 ✅ · 2회차 📉-중간 ✅ · 3회차 📉-소폭 ✅</div></div>
+            <div class="cal-day cal-correct" onclick="showTip(this,'1회차 📈+중간 ✅ · 2회차 📈+소폭 ✅ · 3회차 📈+소폭 ✅')">19<div class="cal-tooltip">1회차 📈+중간 ✅ · 2회차 📈+소폭 ✅ · 3회차 📈+소폭 ✅</div></div>
+            <div class="cal-day cal-none">20</div>
+            <div class="cal-day cal-today" style="border:2px solid var(--primary)">21</div>
+          </div>
+        </div>
+        <div id="pred2-cal-prev-month" style="display:none">
+          <div class="cal-grid">
+            <div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">일</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">월</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">화</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">수</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">목</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">금</div><div style="font-size:9px;color:var(--text4);text-align:center;padding:3px">토</div>
+            <div class="cal-day cal-none"></div><div class="cal-day cal-none"></div>
+            <div class="cal-day cal-correct">1</div><div class="cal-day cal-wrong">2</div><div class="cal-day cal-correct">3</div><div class="cal-day cal-correct">4</div><div class="cal-day cal-none">5</div>
+            <div class="cal-day cal-none">6</div><div class="cal-day cal-correct">7</div><div class="cal-day cal-correct">8</div><div class="cal-day cal-wrong">9</div><div class="cal-day cal-correct">10</div><div class="cal-day cal-correct">11</div><div class="cal-day cal-none">12</div>
+            <div class="cal-day cal-none">13</div><div class="cal-day cal-correct">14</div><div class="cal-day cal-correct">15</div><div class="cal-day cal-flat">16</div><div class="cal-day cal-correct">17</div><div class="cal-day cal-correct">18</div><div class="cal-day cal-none">19</div>
+            <div class="cal-day cal-none">20</div><div class="cal-day cal-correct">21</div><div class="cal-day cal-wrong">22</div><div class="cal-day cal-correct">23</div><div class="cal-day cal-correct">24</div><div class="cal-day cal-correct">25</div><div class="cal-day cal-none">26</div>
+            <div class="cal-day cal-none">27</div><div class="cal-day cal-correct">28</div><div class="cal-day cal-correct">29</div><div class="cal-day cal-correct">30</div>
+          </div>
+        </div>
+        <!-- 범례 -->
+        <div style="display:flex;gap:12px;padding:6px 0 10px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:3px;background:#DBEAFE"></div>전체 적중</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:3px;background:#FEE2E2"></div>부분/오답</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:3px;background:#EEF2FF"></div>변동없음</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:3px;background:var(--border)"></div>미참여</div>
+        </div>
+        <!-- 유의사항 -->
+        <div style="padding:14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px">
+          <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:8px">📋 이벤트 유의사항</div>
+          <div style="font-size:10px;color:var(--text4);line-height:1.9">
+            · 본 이벤트는 당사 사정에 따라 사전 공지 없이 조건이 변경되거나 중단될 수 있습니다.<br>
+            · 예측은 오늘 23:59까지 입력해야 하며 이후 수정 불가합니다.<br>
+            · 수정은 회차별 1회에 한하여 광고 시청 후 가능합니다.<br>
+            · 기준가 대비 변동이 없는 경우(0%) 해당 회차는 무효 처리됩니다.<br>
+            · 5일 연속 참여 보너스(+0.5 PCI)는 익월 지급일에 함께 지급됩니다.<br>
+            · 리워드 PCI는 참여한 월의 익월에 자체 지갑으로 일괄 지급됩니다.<br>
+            · 부정한 방법으로 참여하거나 어뷰징이 확인된 경우 보상이 취소될 수 있습니다.<br>
+            · 문의사항은 고객센터를 통해 접수해주세요.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 랭킹 탭 콘텐츠 -->
+    <div id="pred2-ranking" style="display:none;padding-bottom:20px">
+      <!-- 서브탭 -->
+      <div style="display:flex;border-bottom:1px solid var(--border);background:var(--card2)">
+        <div id="pred2-rbt-monthly" onclick="showPred2RankingTab('monthly')" style="flex:1;padding:8px 0;text-align:center;font-size:11px;font-weight:700;cursor:pointer;color:var(--primary);border-bottom:2px solid var(--primary)">이번 달</div>
+        <div id="pred2-rbt-last" onclick="showPred2RankingTab('last')" style="flex:1;padding:8px 0;text-align:center;font-size:11px;font-weight:600;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent">지난달</div>
+        <div id="pred2-rbt-yearly" onclick="showPred2RankingTab('yearly')" style="flex:1;padding:8px 0;text-align:center;font-size:11px;font-weight:600;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent">연간</div>
+      </div>
+      <!-- 이번달 -->
+      <div id="pred2-rank-monthly">
+        <div style="margin:10px 14px 6px;background:var(--primary-l);border:1px solid #BFDBFE;border-radius:var(--radius);padding:12px">
+          <div style="font-size:10px;color:var(--primary);font-weight:600;margin-bottom:6px">내 순위</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="font-size:20px;font-weight:900;color:var(--primary)">#4</div>
+            <div><div style="font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace">AB12***</div><div style="font-size:10px;color:var(--text3)">45회 참여 · 적중 31회 (68.9%)</div></div>
+          </div>
+        </div>
+        <div style="margin:0 14px 4px;font-size:10px;color:var(--text4);padding:6px 0">※ 집계기준: 누적 적중 횟수 → 적중률 → 예측 입력 시간 빠른 순 · 상위 50명</div>
+        <div style="background:var(--card2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+          <div style="display:flex;padding:7px 14px">
+            <div style="width:28px;font-size:10px;font-weight:700;color:var(--text3)">순위</div>
+            <div style="flex:1.4;font-size:10px;font-weight:700;color:var(--text3)">구분(mycode)</div>
+            <div style="flex:0.8;text-align:center;font-size:10px;font-weight:700;color:var(--text3)">참여</div>
+            <div style="flex:0.8;text-align:center;font-size:10px;font-weight:700;color:var(--text3)">적중률</div>
+            <div style="flex:1.2;text-align:center;font-size:10px;font-weight:700;color:var(--text3)">내일 예측</div>
+          </div>
+        </div>
+        <div style="background:var(--card)">
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#D97706">🥇</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">XK93***</div><div style="flex:0.8;text-align:center;font-size:12px;font-weight:700">54회</div><div style="flex:0.8;text-align:center;font-size:11px;color:var(--text3)">88%</div><div style="flex:1.2;text-align:center;font-size:10px;font-weight:600;color:#059669">📈+소폭</div></div>
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#9CA3AF">🥈</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">PQ47***</div><div style="flex:0.8;text-align:center;font-size:12px;font-weight:700">51회</div><div style="flex:0.8;text-align:center;font-size:11px;color:var(--text3)">83%</div><div style="flex:1.2;text-align:center;font-size:10px;font-weight:600;color:#EF4444">📉-중간</div></div>
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:700;color:#CD7F32">🥉</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">TY28***</div><div style="flex:0.8;text-align:center;font-size:12px;font-weight:700">50회</div><div style="flex:0.8;text-align:center;font-size:11px;color:var(--text3)">80%</div><div style="flex:1.2;text-align:center;font-size:10px;color:var(--text4)">미입력</div></div>
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center;background:#FEFCE8;border-left:3px solid #FDE047"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">4</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700">AB12***</div><div style="flex:0.8;text-align:center;font-size:12px;font-weight:700">45회</div><div style="flex:0.8;text-align:center;font-size:11px;color:var(--text3)">69%</div><div style="flex:1.2;text-align:center;font-size:10px;font-weight:600;color:#059669">📈+소폭</div></div>
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">5</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">LR81***</div><div style="flex:0.8;text-align:center;font-size:12px;font-weight:700">44회</div><div style="flex:0.8;text-align:center;font-size:11px;color:var(--text3)">67%</div><div style="flex:1.2;text-align:center;font-size:10px;font-weight:600;color:#EF4444">📉-소폭</div></div>
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">6</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">CD90***</div><div style="flex:0.8;text-align:center;font-size:12px;font-weight:700">43회</div><div style="flex:0.8;text-align:center;font-size:11px;color:var(--text3)">65%</div><div style="flex:1.2;text-align:center;font-size:10px;font-weight:600;color:#059669">📈+중간</div></div>
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">7</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">MN56***</div><div style="flex:0.8;text-align:center;font-size:12px;font-weight:700">42회</div><div style="flex:0.8;text-align:center;font-size:11px;color:var(--text3)">63%</div><div style="flex:1.2;text-align:center;font-size:10px;font-weight:600;color:#EF4444">📉-소폭</div></div>
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">8</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">EF23***</div><div style="flex:0.8;text-align:center;font-size:12px;font-weight:700">40회</div><div style="flex:0.8;text-align:center;font-size:11px;color:var(--text3)">61%</div><div style="flex:1.2;text-align:center;font-size:10px;font-weight:600;color:#059669">📈+큰폭</div></div>
+          <div style="display:flex;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">9</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">GH45***</div><div style="flex:0.8;text-align:center;font-size:12px;font-weight:700">39회</div><div style="flex:0.8;text-align:center;font-size:11px;color:var(--text3)">59%</div><div style="flex:1.2;text-align:center;font-size:10px;color:var(--text4)">미입력</div></div>
+          <div style="display:flex;padding:10px 14px;align-items:center"><div style="width:28px;font-size:13px;font-weight:600;color:var(--text3)">10</div><div style="flex:1.4;font-size:11px;font-family:'JetBrains Mono',monospace">IJ67***</div><div style="flex:0.8;text-align:center;font-size:12px;font-weight:700">38회</div><div style="flex:0.8;text-align:center;font-size:11px;color:var(--text3)">57%</div><div style="flex:1.2;text-align:center;font-size:10px;font-weight:600;color:#EF4444">📉-중간</div></div>
+        </div>
+        <!-- 유의사항 -->
+        <div style="margin:12px 14px;padding:14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius)">
+          <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:8px">📋 이벤트 유의사항</div>
+          <div style="font-size:10px;color:var(--text4);line-height:1.9">
+            · 랭킹은 매월 1일 초기화되며, 당월 참여 내역 기준으로 집계됩니다.<br>
+            · 동순위 발생 시 적중률 → 예측 입력 시간이 빠른 순으로 순위가 결정됩니다.<br>
+            · 본 이벤트는 당사 사정에 따라 사전 공지 없이 조건이 변경되거나 중단될 수 있습니다.<br>
+            · 부정한 방법으로 참여하거나 어뷰징이 확인된 경우 보상이 취소될 수 있습니다.<br>
+            · 문의사항은 고객센터를 통해 접수해주세요.
+          </div>
+        </div>
+      </div>
+      <!-- 지난달 -->
+      <div id="pred2-rank-last" style="display:none">
+        <div style="margin:10px 14px 6px;background:var(--primary-l);border:1px solid #BFDBFE;border-radius:var(--radius);padding:12px">
+          <div style="font-size:10px;color:var(--primary);font-weight:600;margin-bottom:6px">내 순위 · 2026년 4월</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="font-size:20px;font-weight:900;color:var(--primary)">#3</div>
+            <div><div style="font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace">AB12***</div><div style="font-size:10px;color:var(--text3)">총 90회 참여 · 적중 72회 (80%) · 획득 6.50 PCI</div></div>
+          </div>
+        </div>
+        <div style="margin:10px 14px;padding:32px 20px;text-align:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)">
+          <div style="font-size:24px;margin-bottom:8px">📊</div>
+          <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px">지난달 최종 집계 완료</div>
+          <div style="font-size:11px;color:var(--text3)">상위 50명 전체 랭킹은 서비스 내 공지를 확인하세요.</div>
+        </div>
+      </div>
+      <!-- 연간 -->
+      <div id="pred2-rank-yearly" style="display:none">
+        <div style="margin:10px 14px;padding:32px 20px;text-align:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)">
+          <div style="font-size:24px;margin-bottom:8px">🏆</div>
+          <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px">연간 랭킹</div>
+          <div style="font-size:11px;color:var(--text3)">연간 랭킹은 연말 집계 후 공개됩니다.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- pred2 결과 모달 -->
+<div class="overlay" id="pred2-result-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px">어제 예측 결과</div>
+    <!-- 1회차: 적중 -->
+    <div style="background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="width:20px;height:20px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--primary)">1</div>
+          <span style="font-size:12px;font-weight:700;color:var(--text)">1회차 · 오전 9시</span>
+        </div>
+        <span style="font-size:11px;font-weight:700;color:#059669;background:#D1FAE5;padding:2px 8px;border-radius:20px">✅ 적중 +1 PCI</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3)">
+        <span>예측 <strong style="color:#059669">📈 상승 소폭</strong></span>
+        <span>기준가 ₩42.50 → <strong style="color:#059669">₩43.20 (+1.6%)</strong></span>
+      </div>
+    </div>
+    <!-- 2회차: 대기 -->
+    <div style="background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="width:20px;height:20px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--primary)">2</div>
+          <span style="font-size:12px;font-weight:700;color:var(--text)">2회차 · 오후 3시</span>
+        </div>
+        <span style="font-size:11px;color:var(--text3);background:var(--card);padding:2px 8px;border-radius:20px;border:1px solid var(--border)">⏳ 15:00 확인</span>
+      </div>
+      <div style="font-size:11px;color:var(--text3)">예측 <strong style="color:var(--text)">📉 하락 큰폭</strong> · 기준가 ₩42.50</div>
+    </div>
+    <!-- 3회차: 대기 -->
+    <div style="background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="width:20px;height:20px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--primary)">3</div>
+          <span style="font-size:12px;font-weight:700;color:var(--text)">3회차 · 밤 9시</span>
+        </div>
+        <span style="font-size:11px;color:var(--text3);background:var(--card);padding:2px 8px;border-radius:20px;border:1px solid var(--border)">⏳ 21:00 확인</span>
+      </div>
+      <div style="font-size:11px;color:var(--text3)">예측 <strong style="color:var(--text)">📈 상승 중간</strong> · 기준가 ₩42.50</div>
+    </div>
+    <button class="btn btn-primary" onclick="closeModal('pred2-result-modal')">닫기</button>
+  </div>
+</div>
+
+<!-- pred2 안내 모달 -->
+<div class="overlay" id="pred2-guide-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="font-size:32px;margin-bottom:6px">🔮</div>
+      <div style="font-size:15px;font-weight:800;color:var(--text)">등락 예측 Beta 안내</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+      <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">1</div><div style="font-size:12px;color:var(--text2);line-height:1.6">기준가: 매일 <strong>0시 PCI 가격</strong> 기준 / 거래소: 빗썸</div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">2</div><div style="font-size:12px;color:var(--text2);line-height:1.6">오늘 중으로 <strong>내일 3회차(9시·15시·21시)</strong> 등락 구간을 예측하세요</div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">3</div><div style="font-size:12px;color:var(--text2);line-height:1.6">예측 마감: <strong>오늘 23:59</strong> / 이후 수정 불가</div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">4</div><div style="font-size:12px;color:var(--text2);line-height:1.6">수정: <strong>광고 1회 시청당 1회차 수정 가능</strong> (마감 전까지)</div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">5</div><div style="font-size:12px;color:var(--text2);line-height:1.6">5일 연속 참여 시 <strong>+0.5 PCI 보너스</strong> 지급</div></div>
+    </div>
+    <button class="btn btn-primary" onclick="closeModal('pred2-guide-modal')">확인</button>
   </div>
 </div>
 
@@ -7068,6 +7459,15 @@ EWS DETAIL ═══════════════ -->
 </div>
 
 
+<!-- ── PREDICTION V2 ── -->
+<div class="policy-section" id="pol-prediction2" data-screen="prediction2">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_PREDICTION_V2 <span class="ptag p1">P1</span></div>
+    <div class="policy-title">등락 예측 Beta</div>
+    <div class="policy-desc">5지선다 % 구간 예측 · 하루 전 내일 3회차(9시/15시/21시) 일괄 예측 · 5일 연속 참여 보너스 +0.5 PCI</div>
+  </div>
+</div>
+
 <!-- ── NEWS ── -->
 <div class="policy-section" id="pol-news" data-screen="news">
   <div class="policy-header">
@@ -7464,6 +7864,7 @@ const SCREEN_MAP = {
   'payment-wc':   { sc:'sc-payment-wc',   pol:'pol-payment-wc',   ni:11 },
   'wallet-manage':{ sc:'sc-wallet-manage', pol:'pol-wallet-manage', ni:12 },
   'tx-history':   { sc:'sc-tx-history',   pol:'pol-tx-history',   ni:13 },
+  'prediction2':  { sc:'sc-prediction2',  pol:'pol-prediction2',  ni:14 },
 };
 
 function nav(key) {
@@ -7952,6 +8353,226 @@ function toggleNoti(el) {
     el.classList.remove('off');
     el.classList.add('on');
   }
+}
+
+/* ══ PREDICTION V2 ══ */
+var _pred2 = { 1:{dir:null,range:null}, 2:{dir:null,range:null}, 3:{dir:null,range:null} };
+var _pred2Step = 1;
+var _pred2StepLabels = ['','1회차 · 내일 오전 9시','2회차 · 내일 오후 3시','3회차 · 내일 밤 9시'];
+var _pred2RangeText  = ['','소폭(1~3%)','중간(3~5%)','큰폭(5%↑)'];
+
+function _pred2ActiveColor(round) {
+  var d = _pred2[round].dir;
+  return d === 'down' ? '#EF4444' : d === 'up' ? '#059669' : 'var(--primary)';
+}
+function _pred2ActiveBg(round) {
+  var d = _pred2[round].dir;
+  return d === 'down' ? '#FEE2E2' : d === 'up' ? '#D1FAE5' : 'var(--primary-l)';
+}
+
+function selectPred2Dir(round, dir) {
+  _pred2[round].dir = dir;
+  var ac = dir==='down'?'#EF4444':'#059669', ab = dir==='down'?'#FEE2E2':'#D1FAE5';
+  ['down','up'].forEach(function(d) {
+    var btn = document.getElementById('pred2-r'+round+'-'+d);
+    if (!btn) return;
+    var sel = d === dir;
+    btn.style.borderColor = sel ? ac : 'var(--border)';
+    btn.style.background  = sel ? ab : 'var(--card2)';
+    btn.style.color       = sel ? ac : 'var(--text3)';
+  });
+  /* 이미 구간 선택돼있으면 색 업데이트 */
+  if (_pred2[round].range) _pred2RefreshRanges(round);
+  _pred2RefreshNext();
+}
+
+function selectPred2Range(round, rv) {
+  _pred2[round].range = rv;
+  _pred2RefreshRanges(round);
+  _pred2RefreshNext();
+}
+
+function _pred2RefreshRanges(round) {
+  var ac = _pred2ActiveColor(round), ab = _pred2ActiveBg(round);
+  document.querySelectorAll('#pred2-r'+round+'-ranges .p2r-btn').forEach(function(btn) {
+    var sel = parseInt(btn.getAttribute('data-rv')) === _pred2[round].range;
+    btn.style.borderColor = sel ? ac : 'var(--border)';
+    btn.style.background  = sel ? ab : 'var(--card2)';
+    btn.style.color       = sel ? ac : 'var(--text3)';
+  });
+}
+
+function _pred2RefreshNext() {
+  var d = _pred2[_pred2Step];
+  var ready = d.dir && d.range;
+  var btn = document.getElementById('pred2-next-btn');
+  if (!btn) return;
+  btn.style.opacity = ready ? '1' : '.4';
+  btn.style.pointerEvents = ready ? 'auto' : 'none';
+  btn.textContent = _pred2Step < 3 ? '다음 →' : '예측 확정하기 ✓';
+}
+
+function _pred2RenderStep(step) {
+  _pred2Step = step;
+  /* 레이블 */
+  var lbl = document.getElementById('p2-step-label');
+  if (lbl) lbl.textContent = _pred2StepLabels[step];
+  /* 방향/구간 패널 토글 */
+  [1,2,3].forEach(function(r) {
+    var show = r === step;
+    ['down','up'].forEach(function(d) {
+      var btn = document.getElementById('pred2-r'+r+'-'+d);
+      if (btn) btn.style.display = show ? '' : 'none';
+    });
+    var rng = document.getElementById('pred2-r'+r+'-ranges');
+    if (rng) rng.style.display = show ? 'flex' : 'none';
+  });
+  /* 스텝 인디케이터 */
+  [1,2,3].forEach(function(r) {
+    var dot = document.getElementById('p2-step-dot-'+r);
+    if (!dot) return;
+    var circle = dot.querySelector('div');
+    var txt = dot.querySelector('span');
+    var done = r < step;
+    var active = r === step;
+    if (circle) {
+      circle.style.background = (done||active) ? 'var(--primary)' : 'var(--card2)';
+      circle.style.border = (done||active) ? 'none' : '1.5px solid var(--border)';
+      circle.style.color = (done||active) ? '#fff' : 'var(--text3)';
+      circle.textContent = done ? '✓' : r;
+    }
+    if (txt) txt.style.color = active ? 'var(--primary)' : done ? 'var(--text2)' : 'var(--text3)';
+  });
+  /* 이전 버튼 */
+  var prevBtn = document.getElementById('pred2-prev-btn');
+  if (prevBtn) prevBtn.style.display = step > 1 ? '' : 'none';
+  /* 이전 스텝 요약 */
+  var summary = document.getElementById('p2-prev-summary');
+  if (summary) {
+    if (step > 1) {
+      var lines = [];
+      for (var r = 1; r < step; r++) {
+        var p = _pred2[r];
+        if (p.dir && p.range) {
+          var dirTxt = p.dir==='up' ? '📈 상승' : '📉 하락';
+          lines.push('<span style="font-size:11px;padding:3px 8px;border-radius:14px;background:'+(p.dir==='up'?'#D1FAE5':'#FEE2E2')+';color:'+(p.dir==='up'?'#059669':'#EF4444')+';font-weight:600;margin-right:4px">'+(r)+'회차 '+dirTxt+' '+_pred2RangeText[p.range]+'</span>');
+        }
+      }
+      summary.innerHTML = lines.join('');
+      summary.style.display = '';
+    } else {
+      summary.style.display = 'none';
+    }
+  }
+  /* 현재 스텝 이미 선택돼있으면 버튼 복원 */
+  var d = _pred2[step];
+  if (d.dir) selectPred2Dir(step, d.dir);
+  if (d.range) _pred2RefreshRanges(step);
+  _pred2RefreshNext();
+}
+
+function pred2GoStep(delta) {
+  var next = _pred2Step + delta;
+  if (next < 1 || next > 3) return;
+  if (delta > 0 && next === 4) { submitPred2(); return; }
+  _pred2RenderStep(next);
+}
+
+function submitPred2() {
+  showToast('예측 완료! 결과는 내일 각 회차에 확인하세요 🔮');
+}
+
+/* ══ PRED2 TAB / CALENDAR / RANKING / EDIT ══ */
+function showPred2Tab(tab) {
+  var histBtn = document.getElementById('pred2-pbt-history');
+  var rankBtn = document.getElementById('pred2-pbt-ranking');
+  var histContent = document.getElementById('pred2-history');
+  var rankContent = document.getElementById('pred2-ranking');
+  if (!histBtn || !rankBtn) return;
+  if (tab === 'history') {
+    histBtn.style.color = 'var(--primary)';
+    histBtn.style.borderBottomColor = 'var(--primary)';
+    histBtn.style.fontWeight = '700';
+    rankBtn.style.color = 'var(--text3)';
+    rankBtn.style.borderBottomColor = 'transparent';
+    rankBtn.style.fontWeight = '600';
+    if (histContent) histContent.style.display = 'block';
+    if (rankContent) rankContent.style.display = 'none';
+  } else {
+    rankBtn.style.color = 'var(--primary)';
+    rankBtn.style.borderBottomColor = 'var(--primary)';
+    rankBtn.style.fontWeight = '700';
+    histBtn.style.color = 'var(--text3)';
+    histBtn.style.borderBottomColor = 'transparent';
+    histBtn.style.fontWeight = '600';
+    if (histContent) histContent.style.display = 'none';
+    if (rankContent) rankContent.style.display = 'block';
+  }
+}
+
+function switchPred2CalTab(which) {
+  var prevBtn = document.getElementById('pred2-cal-tab-prev');
+  var currBtn = document.getElementById('pred2-cal-tab-curr');
+  var prevCal = document.getElementById('pred2-cal-prev-month');
+  var currCal = document.getElementById('pred2-cal-curr-month');
+  if (!prevBtn || !currBtn) return;
+  if (which === 'prev') {
+    prevBtn.style.background = 'var(--primary-l)';
+    prevBtn.style.color = 'var(--primary)';
+    prevBtn.style.borderColor = 'var(--primary)';
+    prevBtn.style.fontWeight = '700';
+    currBtn.style.background = 'var(--card2)';
+    currBtn.style.color = 'var(--text3)';
+    currBtn.style.borderColor = 'var(--border)';
+    currBtn.style.fontWeight = '600';
+    if (prevCal) prevCal.style.display = 'block';
+    if (currCal) currCal.style.display = 'none';
+  } else {
+    currBtn.style.background = 'var(--primary-l)';
+    currBtn.style.color = 'var(--primary)';
+    currBtn.style.borderColor = 'var(--primary)';
+    currBtn.style.fontWeight = '700';
+    prevBtn.style.background = 'var(--card2)';
+    prevBtn.style.color = 'var(--text3)';
+    prevBtn.style.borderColor = 'var(--border)';
+    prevBtn.style.fontWeight = '600';
+    if (prevCal) prevCal.style.display = 'none';
+    if (currCal) currCal.style.display = 'block';
+  }
+}
+
+function showPred2RankingTab(tab) {
+  var tabs = ['monthly','last','yearly'];
+  tabs.forEach(function(t) {
+    var el = document.getElementById('pred2-rbt-' + t);
+    var content = document.getElementById('pred2-rank-' + t);
+    if (!el) return;
+    if (t === tab) {
+      el.style.color = 'var(--primary)';
+      el.style.borderBottomColor = 'var(--primary)';
+      el.style.fontWeight = '700';
+      if (content) content.style.display = 'block';
+    } else {
+      el.style.color = 'var(--text3)';
+      el.style.borderBottomColor = 'transparent';
+      el.style.fontWeight = '600';
+      if (content) content.style.display = 'none';
+    }
+  });
+}
+
+function pred2RequestEdit(round) {
+  var labels = ['', '1회차 (내일 오전 9시)', '2회차 (내일 오후 3시)', '3회차 (내일 밤 9시)'];
+  // Show confirm overlay — reuse simple toast for now, then re-render that step
+  showToast('광고 시청 후 ' + labels[round] + ' 수정 가능합니다');
+  // After simulated ad view, re-enable editing for that round
+  setTimeout(function() {
+    _pred2[round].dir = null;
+    _pred2[round].range = null;
+    _pred2Step = round;
+    _pred2RenderStep(round);
+    showToast(labels[round] + ' 예측을 다시 입력해주세요');
+  }, 1800);
 }
 
 /* ══ TOAST ══ */
