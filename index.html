@@ -905,6 +905,7 @@ body {
     <button class="nav-btn" onclick="nav('policy')" id="nav-btn-policy">📑 정책 및 기타</button>
     <div style="height:1px;background:var(--border);margin:4px 10px 6px"></div>
     <button class="nav-btn active" onclick="nav('home')">🏠 메인 홈</button>
+    <button class="nav-btn nav-sub" onclick="nav('home-old')">↳ 메인 홈 (구, 최초작성 - 참고용)</button>
 
     <button class="nav-btn" onclick="nav('wallet')">👛 지갑 (연결됨)</button>
     <button class="nav-btn nav-sub" onclick="nav('wallet-empty')">↳ 지갑 (미연결)</button>
@@ -1866,7 +1867,352 @@ body {
 <!-- ═══════════════ HOME ═══════════════ -->
 
 
-  <div class="screen active" id="sc-home">
+<div class="screen active" id="sc-home">
+  <!-- 상태바 -->
+  <div class="sbar" data-zone="home-header"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● WiFi 🔋</span></div>
+  <!-- 헤더 -->
+  <div class="aheader" data-zone="home-header" style="padding:10px 16px">
+    <div style="font-size:18px;font-weight:700;color:var(--primary);letter-spacing:-0.5px">paycoin</div>
+    <div class="hicons">
+      <div class="icon-btn" onclick="showModal('noti-modal')">🔔<div class="notif-dot">3</div></div>
+      <div class="icon-btn" onclick="showModal('mmm-home')">☰</div>
+    </div>
+  </div>
+  <div class="sbody">
+
+    <!-- ① 총 보유 자산 카드 (상황별 토글) -->
+    <!-- 상태 토글 버튼 -->
+    <div data-zone="home-asset" style="margin:0 14px 6px;display:flex;gap:5px">
+      <button onclick="home2AssetState(1)" id="h2as1" style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:8px;border:1px solid var(--primary);background:var(--primary);color:#fff;cursor:pointer;font-family:inherit">① 기본</button>
+      <button onclick="home2AssetState(2)" id="h2as2" style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text4);cursor:pointer;font-family:inherit">② 결제 0건</button>
+      <button onclick="home2AssetState(3)" id="h2as3" style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text4);cursor:pointer;font-family:inherit">③ 미연결</button>
+    </div>
+    <!-- 상태 1: 지갑 연결됨 -->
+    <!-- 상태 1: 기본 (지갑 연결됨) -->
+    <div id="h2as-s1" data-zone="home-asset" style="margin:0 14px 12px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:var(--shadow-sm)">
+      <div style="font-size:11px;color:var(--text4);font-weight:500;margin-bottom:6px">총 보유 자산</div>
+      <div onclick="nav('asset')" style="font-size:24px;font-weight:800;color:var(--text);letter-spacing:-1px;margin-bottom:14px;cursor:pointer">
+        1,234,567<span style="font-size:14px;font-weight:500;color:var(--text3)">원</span>
+        <span style="font-size:14px;color:var(--text4);font-weight:400"> ›</span>
+      </div>
+      <div style="height:1px;background:var(--border);margin-bottom:12px"></div>
+      <div style="display:flex;gap:0">
+        <div style="flex:1">
+          <div style="font-size:10px;color:var(--text4);margin-bottom:4px">이번 달 결제</div>
+          <div style="display:flex;align-items:center;gap:5px">
+            <div style="font-size:13px;font-weight:700;color:var(--text)">32,400원</div>
+            <div style="font-size:9px;font-weight:700;color:#fff;background:#FF6B00;border-radius:10px;padding:1px 6px;line-height:16px">4건</div>
+          </div>
+        </div>
+        <div style="width:1px;background:var(--border);margin:0 12px"></div>
+        <div style="flex:1">
+          <div style="font-size:10px;color:var(--text4);margin-bottom:4px">할인 혜택</div>
+          <div style="display:flex;align-items:center;gap:5px">
+            <div style="font-size:13px;font-weight:700;color:var(--green)">4,800원</div>
+            <div style="font-size:9px;font-weight:700;color:#fff;background:var(--green);border-radius:10px;padding:1px 6px;line-height:16px">12.9%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 상태 2: 결제 0건 -->
+    <div id="h2as-s2" data-zone="home-asset" style="display:none;margin:0 14px 12px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:var(--shadow-sm)">
+      <div style="font-size:11px;color:var(--text4);font-weight:500;margin-bottom:6px">총 보유 자산</div>
+      <div onclick="nav('asset')" style="font-size:24px;font-weight:800;color:var(--text);letter-spacing:-1px;margin-bottom:14px;cursor:pointer">
+        1,234,567<span style="font-size:14px;font-weight:500;color:var(--text3)">원</span>
+        <span style="font-size:14px;color:var(--text4);font-weight:400"> ›</span>
+      </div>
+      <div style="height:1px;background:var(--border);margin-bottom:12px"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:11px;color:var(--text3);line-height:1.7">아직 이번 달 결제를 안 하셨네요 🙂<br>이번 달도 결제 혜택 놓치지 마세요!</div>
+        <button onclick="nav('payment')" style="font-size:11px;font-weight:700;color:#fff;background:var(--primary);border:none;border-radius:8px;padding:7px 12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap">결제하기 →</button>
+      </div>
+    </div>
+    <!-- 상태 3: 지갑 미연결 -->
+    <div id="h2as-s3" data-zone="home-asset" style="display:none;margin:0 14px 12px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:var(--shadow-sm)">
+      <div style="font-size:11px;color:var(--text4);font-weight:500;margin-bottom:6px">총 보유 자산</div>
+      <div onclick="nav('asset')" style="font-size:24px;font-weight:800;color:var(--text);letter-spacing:-1px;margin-bottom:14px;cursor:pointer">
+        82,450<span style="font-size:14px;font-weight:500;color:var(--text3)">원</span>
+        <span style="font-size:14px;color:var(--text4);font-weight:400"> ›</span>
+      </div>
+      <div style="height:1px;background:var(--border);margin-bottom:12px"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:11px;color:var(--text3);line-height:1.6">결제에 사용할 자산을 연결하고<br>결제 혜택을 받아보세요</div>
+        <button onclick="showToast('WalletConnect 연결 플로우 실행')" style="font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:7px 12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap">연결하기 →</button>
+      </div>
+    </div>
+
+    <!-- ② 롤링 배너 -->
+    <div class="banner-container" data-zone="home-banner" id="banner-container2">
+      <div class="banner-track" id="banner-track2">
+        <div class="banner-slide bslide-1" onclick="nav('prediction')">
+          <div><div class="b-text-s">🎯 매일 참여 이벤트</div><div class="b-text-m">PCI 등락 예측하고 에어드랍!</div><div class="b-text-xs">빗썸 종가 기준 · 매일 자정 판정</div></div>
+          <div class="bcta">참여하기</div>
+        </div>
+        <div class="banner-slide bslide-2" onclick="nav('benefits')">
+          <div><div class="b-text-s">🌸 5월 한정 이벤트</div><div class="b-text-m">봄맞이 PCI 에어드랍 진행 중</div><div class="b-text-xs">5월 31일까지</div></div>
+          <div class="bcta">혜택 보기</div>
+        </div>
+        <div class="banner-slide bslide-3" onclick="nav('payment')">
+          <div><div class="b-text-s">💳 결제 혜택</div><div class="b-text-m">PCI로 결제하면 최대 15% 할인</div><div class="b-text-xs">가맹점별 상이</div></div>
+          <div class="bcta">지금 결제</div>
+        </div>
+      </div>
+      <div class="banner-dots" id="banner-dots2">
+        <div class="bdot active" id="bd20"></div>
+        <div class="bdot" id="bd21"></div>
+        <div class="bdot" id="bd22"></div>
+      </div>
+    </div>
+
+    <!-- ③ 메인 타일 2열 -->
+    <div data-zone="home-tiles" style="margin:0 14px 8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div onclick="nav('payment')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;cursor:pointer;box-shadow:var(--shadow-sm)">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px">결제(Pay)</div>
+        <div style="font-size:10px;color:var(--text4);margin-bottom:10px">결제하고 혜택받기</div>
+        <div style="font-size:28px;text-align:right">👛</div>
+      </div>
+      <div onclick="showToast('WalletConnect 연결 플로우 실행')" style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;cursor:pointer;box-shadow:var(--shadow-sm)">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px">거래소 지갑 연결</div>
+        <div style="font-size:10px;color:var(--text4);margin-bottom:10px">거래소 자산을 한눈에</div>
+        <div style="font-size:28px;text-align:right">🏦</div>
+      </div>
+    </div>
+
+    <!-- ④ 쇼핑 배너 (전체 폭) -->
+    <div data-zone="home-tiles" onclick="showToast('페이코인 쇼핑으로 이동')" style="margin:0 14px 12px;background:linear-gradient(120deg,#F0F9FF 0%,#E0F2FE 100%);border:1px solid #BAE6FD;border-radius:16px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:var(--shadow-sm)">
+      <div>
+        <div style="font-size:9px;font-weight:700;color:#0369A1;margin-bottom:3px;letter-spacing:0.04em">Paycoin Shopping</div>
+        <div style="font-size:14px;font-weight:800;color:#0C4A6E;line-height:1.4">아이패드<br><span style="color:#0EA5E9">특별 할인 혜택</span></div>
+      </div>
+      <div style="font-size:42px;line-height:1">💻</div>
+    </div>
+
+    <!-- ⑤ 서비스 타일 3열 -->
+    <div data-zone="home-tiles" style="margin:0 14px 12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+      <div onclick="showModal('pay-benefit-modal')" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:11px 10px;cursor:pointer;box-shadow:var(--shadow-sm)">
+        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px">결제 혜택</div>
+        <div style="font-size:9px;color:var(--text4);margin-bottom:8px">쓸수록 커지는</div>
+        <div style="font-size:24px;text-align:right">🎁</div>
+      </div>
+      <div onclick="showModal('pay-guide-modal')" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:11px 10px;cursor:pointer;box-shadow:var(--shadow-sm)">
+        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px">결제 가이드</div>
+        <div style="font-size:9px;color:var(--text4);margin-bottom:8px">처음 결제한다면</div>
+        <div style="font-size:24px;text-align:right">💡</div>
+      </div>
+      <div onclick="nav('pci-info')" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:11px 10px;cursor:pointer;box-shadow:var(--shadow-sm)">
+        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px">오늘의 PCI</div>
+        <div style="font-size:9px;color:var(--text4);margin-bottom:8px">주요 정보 보기</div>
+        <div style="font-size:24px;text-align:right">🔄</div>
+      </div>
+      <div onclick="showToast('현재 출석체크 페이지로 이동')" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:11px 10px;cursor:pointer;box-shadow:var(--shadow-sm)">
+        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px">출석 룰렛</div>
+        <div style="font-size:9px;color:var(--text4);margin-bottom:8px">매일 보상받기</div>
+        <div style="font-size:24px;text-align:right">🎰</div>
+      </div>
+      <div onclick="nav('prediction')" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:11px 10px;cursor:pointer;box-shadow:var(--shadow-sm)">
+        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px">등락 예측</div>
+        <div style="font-size:9px;color:var(--text4);margin-bottom:8px">시세 방향 맞추기</div>
+        <div style="font-size:24px;text-align:right">📈</div>
+      </div>
+      <div onclick="showToast('현재 친구 추천과 동일 동작 (OS 공유)')" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:11px 10px;cursor:pointer;box-shadow:var(--shadow-sm)">
+        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px">친구 추천</div>
+        <div style="font-size:9px;color:var(--text4);margin-bottom:8px">함께 혜택받기</div>
+        <div style="font-size:24px;text-align:right">👥</div>
+      </div>
+    </div>
+
+    <!-- ⑥ 최근 소식 -->
+    <div data-zone="home-news" style="margin:0 14px 20px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:var(--shadow-sm)">
+      <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:12px">최근 소식</div>
+      <div onclick="nav('news-detail')" style="padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer">
+        <div style="font-size:12px;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:3px">페이코인, 1분기 결제 거래량 전년비 230% 성장</div>
+        <div style="font-size:10px;color:var(--text4)">04.30</div>
+      </div>
+      <div onclick="nav('news-detail')" style="padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer">
+        <div style="font-size:12px;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:3px">다날핀테크, PCI 글로벌 결제 확대 파트너십 체결</div>
+        <div style="font-size:10px;color:var(--text4)">04.29</div>
+      </div>
+      <div onclick="nav('news-detail')" style="padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer">
+        <div style="font-size:12px;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:3px">페이코인 앱 v2.0 업데이트 출시 안내</div>
+        <div style="font-size:10px;color:var(--text4)">04.27</div>
+      </div>
+      <div onclick="nav('news-detail')" style="padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer">
+        <div style="font-size:12px;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:3px">페이프로토콜, 분산형 결제 인프라 기술 특허 취득</div>
+        <div style="font-size:10px;color:var(--text4)">04.25</div>
+      </div>
+      <div onclick="nav('news-detail')" style="padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer">
+        <div style="font-size:12px;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:3px">다날, 2025 핀테크 혁신대상 수상</div>
+        <div style="font-size:10px;color:var(--text4)">04.22</div>
+      </div>
+      <div onclick="nav('news')" style="padding:12px 0 2px;text-align:center;cursor:pointer">
+        <span style="font-size:12px;color:var(--text4);font-weight:500">더 보기 ›</span>
+      </div>
+    </div>
+
+  </div><!-- /sbody -->
+
+  <!-- 하단 탭바 -->
+  <div class="tab-bar">
+    <div class="tab-item active" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
+    <div class="tab-item" onclick="nav('wallet')"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
+    <div class="tab-item" onclick="nav('payment')"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
+    <div class="tab-item" onclick="nav('benefits')"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
+    <div class="tab-item"><div class="tab-icon">🛍️</div><div class="tab-lbl">쇼핑</div></div>
+  </div>
+
+
+  <!-- 알림 모달 -->
+  <div class="overlay" id="noti-modal" style="align-items:stretch">
+    <div style="width:100%;height:100%;background:var(--screen-bg);display:flex;flex-direction:column;overflow:hidden">
+      <div style="flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;background:var(--screen-bg);border-bottom:1px solid var(--border)">
+        <button onclick="closeModal('noti-modal')" style="font-size:18px;background:none;border:none;cursor:pointer;color:var(--text);padding:0;line-height:1">‹</button>
+        <div style="font-size:15px;font-weight:700;color:var(--text)">알림</div>
+        <button onclick="closeModal('noti-modal');showModal('noti-setting-modal')" style="font-size:13px;font-weight:600;color:var(--primary);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif">설정</button>
+      </div>
+      <div style="flex:1;overflow-y:auto;scrollbar-width:none;padding:16px 0">
+        <div style="padding:0 18px;font-size:13px;font-weight:800;color:var(--text);margin-bottom:12px">최근 알림</div>
+        <div style="padding:10px 18px;border-bottom:1px solid var(--border)">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;font-weight:600;color:var(--primary)">이벤트·혜택</span><span style="font-size:10px;color:var(--text4)">3분 전</span></div>
+          <div style="font-size:12px;color:var(--text);line-height:1.6">오늘 출석체크를 깜빡 하셨나봐요! 지금 출석체크 하고 PCI 리워드 혜택을 받아보세요.</div>
+        </div>
+        <div style="padding:10px 18px;border-bottom:1px solid var(--border)">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;font-weight:600;color:var(--text3)">주요 알림</span><span style="font-size:10px;color:var(--text4)">3분 전</span></div>
+          <div style="font-size:12px;color:var(--text);line-height:1.6">시스템 작업이 예정되어 있어요. 일정을 확인하고 서비스를 이용하는데 참고해주세요.</div>
+        </div>
+        <div style="padding:10px 18px;border-bottom:1px solid var(--border)">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;font-weight:600;color:var(--green)">PCI 시세</span><span style="font-size:10px;color:var(--text4)">1시간 전</span></div>
+          <div style="font-size:12px;color:var(--text);line-height:1.6">PCI가 전일 대비 <strong>▲ 5.23%</strong> 상승했어요. 현재 82.45원입니다.</div>
+        </div>
+        <div style="padding:16px 18px 8px;font-size:13px;font-weight:800;color:var(--text)">지난 알림</div>
+        <div style="padding:10px 18px;border-bottom:1px solid var(--border)">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;font-weight:600;color:var(--text3)">결제</span><span style="font-size:10px;color:var(--text4)">1일 전</span></div>
+          <div style="font-size:12px;color:var(--text);line-height:1.6">26,000원 결제 완료<br>도미노피자에서 26,000원이 결제되었습니다.</div>
+        </div>
+        <div style="padding:10px 18px;border-bottom:1px solid var(--border)">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;font-weight:600;color:var(--text3)">입출금</span><span style="font-size:10px;color:var(--text4)">3일 전</span></div>
+          <div style="font-size:12px;color:var(--text);line-height:1.6">페이코인(PCI) 200.12345678 PCI 출금 완료</div>
+        </div>
+        <div style="padding:20px 18px;text-align:center"><div style="font-size:11px;color:var(--text4)">최근 30일간의 알림을 확인할 수 있어요. (최대 100개)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 알림 설정 -->
+  <div class="overlay" id="noti-setting-modal" style="align-items:stretch">
+    <div style="width:100%;height:100%;background:var(--screen-bg);display:flex;flex-direction:column;overflow:hidden">
+      <div style="flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;background:var(--screen-bg);border-bottom:1px solid var(--border)">
+        <button onclick="closeModal('noti-setting-modal');showModal('noti-modal')" style="font-size:18px;background:none;border:none;cursor:pointer;color:var(--text);padding:0;line-height:1">‹</button>
+        <div style="font-size:15px;font-weight:700;color:var(--text)">알림 설정</div>
+        <div style="width:32px"></div>
+      </div>
+      <div style="flex:1;overflow-y:auto;scrollbar-width:none">
+        <div style="margin:14px 18px;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px">
+          <span style="font-size:14px">🔔</span>
+          <div style="flex:1;font-size:11px;color:var(--text3)">휴대폰의 앱 알림을 허용해주세요.</div>
+          <button onclick="showToast('알림 설정으로 이동')" style="font-size:11px;font-weight:700;color:var(--primary);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap">알림 켜기</button>
+        </div>
+        <div style="padding:14px 18px 8px;font-size:13px;font-weight:800;color:var(--text)">일반 알림</div>
+        <div style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)">
+            <div><div style="font-size:13px;font-weight:600;color:var(--text)">주요 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">서비스 중요 공지/안내사항 알림</div></div>
+            <div class="noti-toggle on" onclick="toggleNoti(this)"><div class="knob"></div></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)">
+            <div><div style="font-size:13px;font-weight:600;color:var(--text)">입출금 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">입금(리워드 포함)/출금 완료 시 알림</div></div>
+            <div class="noti-toggle on" onclick="toggleNoti(this)"><div class="knob"></div></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)">
+            <div><div style="font-size:13px;font-weight:600;color:var(--text)">결제 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">결제 관련 정보 발생 시 알림</div></div>
+            <div class="noti-toggle off" onclick="toggleNoti(this)"><div class="knob"></div></div>
+          </div>
+          <!-- 서비스 참여 알림 (부모) -->
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)">
+            <div><div style="font-size:13px;font-weight:600;color:var(--text)">서비스 참여 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">참여 가능한 활동 알림</div></div>
+            <div class="noti-toggle off" onclick="toggleServiceNoti(this)"><div class="knob"></div></div>
+          </div>
+          <!-- 출석 룰렛 (하위) -->
+          <div class="service-noti-child" style="display:flex;align-items:center;justify-content:space-between;padding:11px 18px 11px 32px;border-bottom:1px solid var(--border);background:var(--card2)">
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="font-size:11px;color:var(--text4)">└</span>
+              <div><div style="font-size:12px;font-weight:600;color:var(--text)">출석 룰렛</div><div style="font-size:10px;color:var(--text4);margin-top:1px">매일 출석 체크 알림</div></div>
+            </div>
+            <div class="noti-toggle off service-child-toggle" onclick="toggleChildNoti(this)"><div class="knob"></div></div>
+          </div>
+          <!-- 등락 예측 (하위) -->
+          <div class="service-noti-child" style="display:flex;align-items:center;justify-content:space-between;padding:11px 18px 11px 32px;border-bottom:1px solid var(--border);background:var(--card2)">
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="font-size:11px;color:var(--text4)">└</span>
+              <div><div style="font-size:12px;font-weight:600;color:var(--text)">등락 예측</div><div style="font-size:10px;color:var(--text4);margin-top:1px">참여 가능 시간 및 결과 알림</div></div>
+            </div>
+            <div class="noti-toggle off service-child-toggle" onclick="toggleChildNoti(this)"><div class="knob"></div></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px">
+            <div><div style="font-size:13px;font-weight:600;color:var(--text)">PCI 상승/하락 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">전일 대비 5% 이상 변동 시 알림</div></div>
+            <div class="noti-toggle off" onclick="toggleNoti(this)"><div class="knob"></div></div>
+          </div>
+        </div>
+        <div style="padding:14px 18px 8px;font-size:13px;font-weight:800;color:var(--text)">이벤트·혜택 알림</div>
+        <div style="background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer">
+            <div><div style="font-size:13px;font-weight:600;color:var(--text)">이벤트 및 혜택 알림 설정</div><div style="font-size:11px;color:var(--text4);margin-top:2px">다양한 혜택/이벤트 소식 알림 받기</div></div>
+            <span style="font-size:16px;color:var(--text4)">›</span>
+          </div>
+        </div>
+        <div style="height:30px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 더보기 메뉴 -->
+  <div class="overlay" id="mmm-home" style="align-items:flex-end">
+    <div style="width:100%;background:var(--card);border-radius:22px 22px 0 0;max-height:92%;overflow-y:auto;padding-bottom:16px;scrollbar-width:none;animation:slideUp .3s cubic-bezier(.16,1,.3,1)">
+      <!-- 핸들 + 닫기 -->
+      <div style="position:sticky;top:0;background:var(--card);padding:14px 18px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);z-index:10">
+        <div style="font-size:14px;font-weight:800;color:var(--text)">더보기</div>
+        <button onclick="closeModal('mmm-home')" style="width:26px;height:26px;border-radius:50%;background:var(--card2);border:1px solid var(--border);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+      </div>
+      <!-- 프로필 -->
+      <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border)">
+        <div style="width:38px;height:38px;border-radius:50%;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">👤</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--text)">김길성 님</div><div style="font-size:10px;color:var(--text4);margin-top:1px">Apple ID 연결됨</div></div>
+        <button style="font-size:10px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:7px;padding:5px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">✏️ 내 정보</button>
+      </div>
+      <!-- 바로가기 3개 -->
+      <div style="display:flex;border-bottom:1px solid var(--border)">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-home')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-home')"><span style="font-size:18px">🔔</span><span style="font-size:10px;color:var(--text3)">공지사항</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer" onclick="closeModal('mmm-home')"><span style="font-size:18px">❓</span><span style="font-size:10px;color:var(--text3)">고객지원</span></div>
+      </div>
+      <!-- 서비스 -->
+      <div style="padding:12px 18px 4px">
+        <div style="font-size:10px;font-weight:800;color:var(--text4);letter-spacing:.8px;margin-bottom:8px">서비스</div>
+        <div onclick="closeModal('mmm-home');nav('benefits')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:15px">🎰</span><span style="font-size:12px;color:var(--text)">출석 룰렛</span></div><span style="font-size:13px;color:var(--text4)">›</span></div>
+        <div onclick="closeModal('mmm-home');nav('prediction')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:15px">🔮</span><span style="font-size:12px;color:var(--text)">등락 예측</span></div><span style="font-size:13px;color:var(--text4)">›</span></div>
+        <div onclick="closeModal('mmm-home');nav('pci-info')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:15px">🪙</span><span style="font-size:12px;color:var(--text)">오늘의 PCI</span></div><span style="font-size:13px;color:var(--text4)">›</span></div>
+        <div onclick="closeModal('mmm-home');nav('benefits')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:15px">🎁</span><span style="font-size:12px;color:var(--text)">혜택</span></div><span style="font-size:13px;color:var(--text4)">›</span></div>
+        <div onclick="closeModal('mmm-home');nav('news')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:15px">📰</span><span style="font-size:12px;color:var(--text)">최근 소식</span></div><span style="font-size:13px;color:var(--text4)">›</span></div>
+        <div onclick="closeModal('mmm-home');nav('asset')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:15px">📊</span><span style="font-size:12px;color:var(--text)">자산현황</span></div><span style="font-size:13px;color:var(--text4)">›</span></div>
+        <div onclick="closeModal('mmm-home')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;cursor:pointer"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:15px">🛍️</span><span style="font-size:12px;color:var(--text)">페이코인 쇼핑</span></div><span style="font-size:13px;color:var(--text4)">›</span></div>
+      </div>
+      <!-- 정보 -->
+      <div style="padding:4px 18px 4px;border-top:6px solid var(--bg-root)">
+        <div style="font-size:10px;font-weight:800;color:var(--text4);letter-spacing:.8px;margin-bottom:8px;padding-top:10px">정보</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:15px">👥</span><span style="font-size:12px;color:var(--text)">친구 추천</span></div><button style="font-size:10px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:6px;padding:3px 8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif" onclick="showToast('친구 추천 링크 공유')">공유하기</button></div>
+        <div onclick="closeModal('mmm-home')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;cursor:pointer"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:15px">🎟️</span><span style="font-size:12px;color:var(--text)">이벤트 코드 등록</span></div><span style="font-size:13px;color:var(--text4)">›</span></div>
+      </div>
+      <!-- 설정/보안 -->
+      <div style="padding:4px 18px 4px;border-top:6px solid var(--bg-root)">
+        <div style="font-size:10px;font-weight:800;color:var(--text4);letter-spacing:.8px;margin-bottom:8px;padding-top:10px">설정/보안</div>
+        <div onclick="closeModal('mmm-home')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:15px">⚙️</span><span style="font-size:12px;color:var(--text)">환경설정</span></div><span style="font-size:13px;color:var(--text4)">›</span></div>
+        <div onclick="closeModal('mmm-home')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:15px">🔢</span><span style="font-size:12px;color:var(--text)">간편 비밀번호 변경</span></div><span style="font-size:13px;color:var(--text4)">›</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;cursor:pointer"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:15px">📱</span><span style="font-size:12px;color:var(--text)">앱 버전 정보</span></div><span style="font-size:11px;color:var(--text4)">v2.0.0 (40)</span></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /sc-home -->
+
+  <div class="screen" id="sc-home-old">
   <div class="sbar" data-zone="home-header"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● WiFi 🔋</span></div>
   <div class="aheader">
     <div class="logo">PAYCOIN</div>
@@ -2008,7 +2354,7 @@ body {
     <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.25</div><div class="news-txt">페이프로토콜, 분산형 결제 인프라 기술 특허 취득</div><div class="news-arr">›</div></div>
     <div class="news-item" onclick="nav('news-detail')"><div class="news-date">04.22</div><div class="news-txt">다날, 2025 핀테크 혁신대상 수상</div><div class="news-arr">›</div></div>  </div>
   <div class="tab-bar">
-    <div class="tab-item active" onclick="nav('home')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
+    <div class="tab-item active" onclick="nav('home-old')"><div class="tab-icon">🏠</div><div class="tab-lbl">홈</div></div>
     <div class="tab-item" onclick="nav('wallet')"><div class="tab-icon">👛</div><div class="tab-lbl">지갑</div></div>
     <div class="tab-item" onclick="nav('payment')"><div class="tab-icon">💳</div><div class="tab-lbl">결제</div></div>
     <div class="tab-item" onclick="nav('benefits')"><div class="tab-icon">🎁</div><div class="tab-lbl">혜택</div></div>
@@ -2912,21 +3258,21 @@ body {
     </div>
     <div class="card" style="padding:13px 16px">
       <div style="display:flex;align-items:stretch">
-        <!-- 월초 -->
+        <!-- 5월 1일 자산 -->
         <div style="flex:1;text-align:center;padding:4px 0">
-          <div style="font-size:10px;color:var(--text4);margin-bottom:6px">월초</div>
+          <div style="font-size:10px;color:var(--text4);margin-bottom:6px">5월 1일 자산</div>
           <div style="font-size:15px;font-weight:800;color:var(--text);letter-spacing:-0.5px"><span id="asset-monthly-base">11,204,300</span></div>
-          <div style="font-size:10px;color:var(--text4);margin-top:5px">5월 1일 기준</div>
         </div>
         <!-- 구분선 -->
         <div style="width:1px;background:var(--border);margin:2px 0;flex-shrink:0"></div>
-        <!-- 변동 -->
+        <!-- 이번달 변동 -->
         <div style="flex:1;text-align:center;padding:4px 0">
-          <div style="font-size:10px;color:var(--text4);margin-bottom:6px">월초 대비 변동</div>
+          <div style="font-size:10px;color:var(--text4);margin-bottom:6px">이번달 변동</div>
           <div id="asset-monthly-chg-wrap" style="font-size:15px;font-weight:800;color:var(--red);letter-spacing:-0.5px">+<span id="asset-monthly-chg-amt">1,141,378</span></div>
           <div style="font-size:10px;color:var(--red);font-weight:700;margin-top:5px">+<span id="asset-monthly-chg-pct">10.2</span>%</div>
         </div>
       </div>
+
     </div>
 
     <!-- ── 뷰어 전용: 상태 토글 ── -->
@@ -3082,19 +3428,19 @@ body {
         <!-- 상태 토글 (뷰어 전용) -->
         <div style="display:flex;gap:3px;align-items:center">
           <span style="font-size:8px;color:var(--text4);white-space:nowrap">상태:</span>
-          <button onclick="distState(1)" id="ds1" style="font-size:8px;padding:2px 5px;border-radius:4px;border:1px solid var(--primary);background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">①</button>
+          <button onclick="distState(3)" id="ds1" style="font-size:8px;padding:2px 5px;border-radius:4px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">①</button>
           <button onclick="distState(2)" id="ds2" style="font-size:8px;padding:2px 5px;border-radius:4px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">②</button>
-          <button onclick="distState(3)" id="ds3" style="font-size:8px;padding:2px 5px;border-radius:4px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">③</button>
-          <button onclick="distState(4)" id="ds4" style="font-size:8px;padding:2px 5px;border-radius:4px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">④</button>
+          <button onclick="distState(4)" id="ds3" style="font-size:8px;padding:2px 5px;border-radius:4px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">③</button>
+          <button onclick="distState(1)" id="ds4" style="font-size:8px;padding:2px 5px;border-radius:4px;border:1px solid var(--primary);background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">④</button>
         </div>
       </div>
 
       <!-- 상태 레전드 -->
       <div id="dist-legend" style="background:var(--card2);border-radius:8px;padding:7px 10px;margin-bottom:10px;font-size:9px;color:var(--text3);line-height:1.8">
-        <span style="font-weight:700;color:var(--primary)">① </span>기본 (다종 자산·다거래소)&nbsp;&nbsp;
+        <span style="font-weight:700;color:var(--primary)">① </span>자체지갑만 연결&nbsp;&nbsp;
         <span style="font-weight:700;color:var(--primary)">② </span>자산 전체 0원&nbsp;&nbsp;
-        <span style="font-weight:700;color:var(--primary)">③ </span>자체지갑만 연결&nbsp;&nbsp;
-        <span style="font-weight:700;color:var(--primary)">④ </span>1종 코인·다거래소
+        <span style="font-weight:700;color:var(--primary)">③ </span>1종 코인·다거래소&nbsp;&nbsp;
+        <span style="font-weight:700;color:var(--primary)">④ </span>기본 (다종 자산·다거래소)
       </div>
 
       <!--
@@ -3137,25 +3483,25 @@ body {
         <div id="dist-asset-map">
           <div style="display:flex;gap:4px;height:120px;border-radius:10px;overflow:hidden;margin-bottom:10px">
             <div style="flex:66.8;background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center">
-              <div style="font-size:13px;font-weight:800;color:var(--primary)">PCI</div>
+              <div style="font-size:11px;font-weight:800;color:var(--primary)">페이코인</div><div style="font-size:9px;font-weight:600;color:var(--primary)">(PCI)</div>
               <div style="font-size:10px;color:var(--primary)">66.8%</div>
             </div>
             <div style="flex:33.2;display:flex;flex-direction:column;gap:3px">
               <div style="flex:13.3;background:#FEF3C7;border:1px solid #FDE68A;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center">
-                <div style="font-size:11px;font-weight:700;color:#D97706">BTC</div>
+                <div style="font-size:10px;font-weight:700;color:#D97706">비트코인</div><div style="font-size:8px;color:#D97706">(BTC)</div>
                 <div style="font-size:9px;color:#D97706">13.3%</div>
               </div>
               <div style="flex:1.9;background:#EEF2FF;border:1px solid #C7D2FE;border-radius:4px;display:flex;align-items:center;justify-content:center;min-height:6px">
-                <div style="font-size:8px;font-weight:600;color:#4338CA">ETH 1.9%</div>
+                <div style="font-size:8px;font-weight:600;color:#4338CA">이더리움 1.9%</div>
               </div>
               <div style="flex:18;background:var(--card2);border:1px solid var(--border);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center">
                 <div style="font-size:9px;color:var(--text4)">미연결 18%</div>
               </div>
             </div>
           </div>
-          <div class="dist-row"><div class="dist-dot" style="background:var(--primary)"></div><div class="dist-lbl">PCI</div><div class="dist-pct">66.8%</div><div class="dist-amt">8,245,000원</div></div>
-          <div class="dist-row"><div class="dist-dot" style="background:#D97706"></div><div class="dist-lbl">BTC</div><div class="dist-pct">13.3%</div><div class="dist-amt">1,637,000원</div></div>
-          <div class="dist-row"><div class="dist-dot" style="background:#4338CA"></div><div class="dist-lbl">ETH</div><div class="dist-pct">1.9%</div><div class="dist-amt">240,000원</div></div>
+          <div class="dist-row"><div class="dist-dot" style="background:var(--primary)"></div><div class="dist-lbl">페이코인 (PCI)</div><div class="dist-pct">66.8%</div><div class="dist-amt">8,245,000원</div></div>
+          <div class="dist-row"><div class="dist-dot" style="background:#D97706"></div><div class="dist-lbl">비트코인 (BTC)</div><div class="dist-pct">13.3%</div><div class="dist-amt">1,637,000원</div></div>
+          <div class="dist-row"><div class="dist-dot" style="background:#4338CA"></div><div class="dist-lbl">이더리움 (ETH)</div><div class="dist-pct">1.9%</div><div class="dist-amt">240,000원</div></div>
         </div>
 
         <!-- ② 전체 잔액 0 / 조건: 연결된 자산이 여러 개이나 모두 잔액 0원 -->
@@ -3205,10 +3551,10 @@ body {
           <!-- 거래소별 범례: 거래소명 / 코인 목록 2줄 구조
                규칙: 1종 → 코인명 그대로 / 2종 → A · B /
                      3종 이상 → A · B 외 N종 (예: BTC · ETH 외 3종) -->
-          <div class="dist-row"><div class="dist-dot" style="background:#4338CA"></div><div class="dist-lbl">내 지갑<div class="dist-sub">PCI</div></div><div class="dist-pct">66.8%</div><div class="dist-amt">8,245,000원</div></div>
-          <div class="dist-row"><div class="dist-dot" style="background:#E65100"></div><div class="dist-lbl">빗썸<div class="dist-sub">PCI</div></div><div class="dist-pct">19.0%</div><div class="dist-amt">2,343,600원</div></div>
-          <div class="dist-row"><div class="dist-dot" style="background:#0D47A1"></div><div class="dist-lbl">코인원<div class="dist-sub">BTC · ETH</div></div><div class="dist-pct">13.3%</div><div class="dist-amt">1,637,000원</div></div>
-          <div class="dist-row"><div class="dist-dot" style="background:#6B21A8"></div><div class="dist-lbl">코빗<div class="dist-sub">XRP</div></div><div class="dist-pct">0.9%</div><div class="dist-amt">114,432원</div></div>
+          <div class="dist-row"><div class="dist-dot" style="background:#4338CA"></div><div class="dist-lbl">내 지갑 (PCI)</div><div class="dist-pct">66.8%</div><div class="dist-amt">8,245,000원</div></div>
+          <div class="dist-row"><div class="dist-dot" style="background:#E65100"></div><div class="dist-lbl">빗썸 (PCI)</div><div class="dist-pct">19.0%</div><div class="dist-amt">2,343,600원</div></div>
+          <div class="dist-row"><div class="dist-dot" style="background:#0D47A1"></div><div class="dist-lbl">코인원 (BTC · PCI 외 3종)</div><div class="dist-pct">13.3%</div><div class="dist-amt">1,637,000원</div></div>
+          <div class="dist-row"><div class="dist-dot" style="background:#6B21A8"></div><div class="dist-lbl">코빗 (XRP)</div><div class="dist-pct">0.9%</div><div class="dist-amt">114,432원</div></div>
         </div>
 
         <!-- ② 전체 잔액 0 / 조건: 연결된 자산이 있으나 모두 잔액 0원 (④의 0원 포함) -->
@@ -3606,27 +3952,26 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
     <div class="card" style="padding:12px;margin-bottom:10px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
         <div style="font-size:12px;font-weight:700;color:var(--text)">가격 추이</div>
-        <div style="display:flex;gap:4px">
-          <div class="chip active" style="font-size:10px;padding:2px 8px">1D</div>
-          <div class="chip" style="font-size:10px;padding:2px 8px">1W</div>
-          <div class="chip" style="font-size:10px;padding:2px 8px">1M</div>
+        <div style="display:flex;gap:4px" id="pci-chart-tabs">
+          <div class="chip active" style="font-size:10px;padding:2px 8px;cursor:pointer" onclick="pciChartSwitch('1D')">1D</div>
+          <div class="chip" style="font-size:10px;padding:2px 8px;cursor:pointer" onclick="pciChartSwitch('1W')">1W</div>
+          <div class="chip" style="font-size:10px;padding:2px 8px;cursor:pointer" onclick="pciChartSwitch('1M')">1M</div>
         </div>
       </div>
       <div style="position:relative">
-        <svg width="100%" height="80" viewBox="0 0 300 80" preserveAspectRatio="none">
+        <svg width="100%" height="80" viewBox="0 0 300 80" preserveAspectRatio="none" id="pci-chart-svg">
           <defs>
             <linearGradient id="pcig" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stop-color="#1A56DB" stop-opacity="0.18"/>
               <stop offset="100%" stop-color="#1A56DB" stop-opacity="0"/>
             </linearGradient>
           </defs>
-          <path d="M0,62 C20,56 35,68 55,48 S90,20 130,30 S175,54 210,34 S255,14 300,18 L300,80 L0,80Z" fill="url(#pcig)"/>
-          <path class="cline" d="M0,62 C20,56 35,68 55,48 S90,20 130,30 S175,54 210,34 S255,14 300,18" fill="none" stroke="#1A56DB" stroke-width="2" stroke-linecap="round"/>
-          <!-- 고가/저가 마커 -->
-          <circle cx="255" cy="14" r="3" fill="#EF4444"/>
-          <circle cx="35" cy="68" r="3" fill="#3B82F6"/>
+          <path id="pci-chart-fill" d="M0,62 C20,56 35,68 55,48 S90,20 130,30 S175,54 210,34 S255,14 300,18 L300,80 L0,80Z" fill="url(#pcig)"/>
+          <path id="pci-chart-line" class="cline" d="M0,62 C20,56 35,68 55,48 S90,20 130,30 S175,54 210,34 S255,14 300,18" fill="none" stroke="#1A56DB" stroke-width="2" stroke-linecap="round"/>
+          <circle id="pci-chart-high" cx="255" cy="14" r="3" fill="#EF4444"/>
+          <circle id="pci-chart-low" cx="35" cy="68" r="3" fill="#3B82F6"/>
         </svg>
-        <div style="display:flex;justify-content:space-between;margin-top:4px">
+        <div style="display:flex;justify-content:space-between;margin-top:4px" id="pci-chart-labels">
           <div style="font-size:9px;color:var(--text4)">00:00</div>
           <div style="font-size:9px;color:var(--text4)">06:00</div>
           <div style="font-size:9px;color:var(--text4)">12:00</div>
@@ -6570,6 +6915,10 @@ EWS DETAIL ═══════════════ -->
 
 <!-- ── HOME ── -->
 <div class="policy-section active" id="pol-home" data-screen="home">
+  <div class="policy-screen-title">🏠 메인 홈 v2 (시안)</div>
+  <div class="policy-desc">확정 디자인 시안 기반 메인 홈. 총 보유 자산 카드 / 롤링 배너 / 2열 메인 타일 / 쇼핑 배너 / 3열 서비스 타일 / 최근 소식으로 구성.</div>
+</div>
+<div class="policy-section" id="pol-home-old" data-screen="home-old">
   <div class="policy-header">
     <div class="policy-screen-id">SCREEN_HOME <span class="ptag p1">P1</span></div>
     <div class="policy-title">메인 홈</div>
@@ -7039,6 +7388,7 @@ EWS DETAIL ═══════════════ -->
 /* ══ NAVIGATION ══ */
 const SCREEN_MAP = {
   'home':         { sc:'sc-home',         pol:'pol-home',         ni:0 },
+  'home-old':     { sc:'sc-home-old',     pol:'pol-home-old',     ni:0 },
   'wallet':       { sc:'sc-wallet',       pol:'pol-wallet',       ni:1 },
   'wallet-empty': { sc:'sc-wallet-empty', pol:'pol-wallet-empty', ni:2  },
   'wallet-pci':   { sc:'sc-wallet-pci',   pol:'pol-wallet-pci',   ni:2 },
@@ -7344,6 +7694,34 @@ function updateBanner() {
 }
 setInterval(() => { bannerIdx = (bannerIdx + 1) % BANNER_COUNT; updateBanner(); }, 3000);
 
+/* ── HOME2 ROLLING BANNER ── */
+let banner2Idx = 0;
+const BANNER2_COUNT = 3;
+function updateBanner2() {
+  const track = document.getElementById('banner-track2');
+  if (!track) return;
+  track.style.transform = `translateX(-${banner2Idx * 100}%)`;
+  for (let i = 0; i < BANNER2_COUNT; i++) {
+    const d = document.getElementById('bd2' + i);
+    if (d) d.classList.toggle('active', i === banner2Idx);
+  }
+}
+setInterval(() => { banner2Idx = (banner2Idx + 1) % BANNER2_COUNT; updateBanner2(); }, 3000);
+
+/* ── HOME2 ASSET STATE TOGGLE ── */
+function home2AssetState(n) {
+  [1,2,3].forEach(function(i) {
+    var panel = document.getElementById('h2as-s' + i);
+    var btn   = document.getElementById('h2as' + i);
+    if (!panel || !btn) return;
+    var active = (i === n);
+    panel.style.display  = active ? '' : 'none';
+    btn.style.background = active ? 'var(--primary)' : 'var(--card)';
+    btn.style.color      = active ? '#fff' : 'var(--text4)';
+    btn.style.borderColor= active ? 'var(--primary)' : 'var(--border)';
+  });
+}
+
 /* ══ MERCHANT INFINITE SLIDE ══ */
 (function() {
   let mPos = 0;
@@ -7569,6 +7947,52 @@ function showToast(msg) {
 
 
 
+/* ══ PCI PRICE CHART ══ */
+var PCI_CHARTS = {
+  '1D': {
+    line: 'M0,62 C20,56 35,68 55,48 S90,20 130,30 S175,54 210,34 S255,14 300,18',
+    fill: 'M0,62 C20,56 35,68 55,48 S90,20 130,30 S175,54 210,34 S255,14 300,18 L300,80 L0,80Z',
+    high: {cx:255, cy:14}, low: {cx:35, cy:68},
+    labels: ['00:00','06:00','12:00','18:00','24:00']
+  },
+  '1W': {
+    line: 'M0,55 C15,50 30,42 60,38 S100,46 140,32 S180,18 220,24 S260,38 300,22',
+    fill: 'M0,55 C15,50 30,42 60,38 S100,46 140,32 S180,18 220,24 S260,38 300,22 L300,80 L0,80Z',
+    high: {cx:190, cy:18}, low: {cx:0, cy:55},
+    labels: ['월','화','수','목','금','토','일']
+  },
+  '1M': {
+    line: 'M0,70 C20,65 40,60 70,52 S110,40 150,44 S185,55 215,38 S245,22 270,18 S290,20 300,15',
+    fill: 'M0,70 C20,65 40,60 70,52 S110,40 150,44 S185,55 215,38 S245,22 270,18 S290,20 300,15 L300,80 L0,80Z',
+    high: {cx:298, cy:15}, low: {cx:0, cy:70},
+    labels: ['1일','8일','15일','22일','말일']
+  }
+};
+function pciChartSwitch(period) {
+  var data = PCI_CHARTS[period];
+  if (!data) return;
+  /* SVG 경로 업데이트 */
+  var fill = document.getElementById('pci-chart-fill');
+  var line = document.getElementById('pci-chart-line');
+  var high = document.getElementById('pci-chart-high');
+  var low  = document.getElementById('pci-chart-low');
+  if (fill) fill.setAttribute('d', data.fill);
+  if (line) line.setAttribute('d', data.line);
+  if (high) { high.setAttribute('cx', data.high.cx); high.setAttribute('cy', data.high.cy); }
+  if (low)  { low.setAttribute('cx',  data.low.cx);  low.setAttribute('cy',  data.low.cy); }
+  /* X축 레이블 */
+  var lblWrap = document.getElementById('pci-chart-labels');
+  if (lblWrap) {
+    lblWrap.innerHTML = data.labels.map(function(l){
+      return '<div style="font-size:9px;color:var(--text4)">'+l+'</div>';
+    }).join('');
+  }
+  /* 탭 활성 표시 */
+  var tabs = document.querySelectorAll('#pci-chart-tabs .chip');
+  tabs.forEach(function(t){ t.classList.remove('active'); });
+  tabs.forEach(function(t){ if(t.textContent===period) t.classList.add('active'); });
+}
+
 /* ══ ASSET DISTRIBUTION ══ */
 /*
  * [PRD] 자산 비중 섹션 조건별 표시 규칙 요약
@@ -7613,12 +8037,15 @@ function distSwitch(tab) {
  */
 function distState(n) {
   /* 버튼 활성 표시 */
+  /* 체크 순서 매핑: distState번호 → 버튼id (①③, ②②, ③④, ④①) */
+  var dsMap = {1:'ds4', 2:'ds2', 3:'ds1', 4:'ds3'};
   for (var i = 1; i <= 4; i++) {
     var btn = document.getElementById('ds' + i);
     if (!btn) continue;
-    btn.style.background = (i === n) ? 'var(--primary)' : 'var(--card2)';
-    btn.style.color      = (i === n) ? '#fff'           : 'var(--text3)';
-    btn.style.border     = (i === n) ? '1px solid var(--primary)' : '1px solid var(--border)';
+    var isActive = (dsMap[n] === 'ds' + i);
+    btn.style.background = isActive ? 'var(--primary)' : 'var(--card2)';
+    btn.style.color      = isActive ? '#fff'           : 'var(--text3)';
+    btn.style.border     = isActive ? '1px solid var(--primary)' : '1px solid var(--border)';
   }
   /* 모든 서브뷰 숨기기 */
   var ids = ['dist-asset-map','dist-asset-zero','dist-asset-single','dist-asset-onecoin',
@@ -8473,7 +8900,7 @@ const QNA = {
   apiUrl: '',
   filter: 'all',
   items: [],
-  LABELS: {'home':'메인 홈','wallet':'지갑','wallet-empty':'지갑(미연결)','wallet-pci':'지갑상세(PCI)','wallet-other':'지갑 상세 (WC 지갑)','asset':'자산현황','pci-info':'오늘의 PCI','token-detail':'토큰 상세','benefits':'혜택','prediction':'등락 예측','news':'최근 소식','news-detail':'소식 상세','payment':'결제','wallet-manage':'지갑 관리'},
+  LABELS: {'home':'메인 홈','home-old':'메인 홈 (구)','wallet':'지갑','wallet-empty':'지갑(미연결)','wallet-pci':'지갑상세(PCI)','wallet-other':'지갑 상세 (WC 지갑)','asset':'자산현황','pci-info':'오늘의 PCI','token-detail':'토큰 상세','benefits':'혜택','prediction':'등락 예측','news':'최근 소식','news-detail':'소식 상세','payment':'결제','wallet-manage':'지갑 관리'},
   curScreen: function(){ var s=document.querySelector('.screen.active'); return s?s.id.replace('sc-',''):'home'; },
   curLabel: function(){ return this.LABELS[this.curScreen()]||this.curScreen(); },
   init: function(){ try{ this.apiUrl=localStorage.getItem('qna_api')||''; }catch(e){} }
@@ -8983,22 +9410,22 @@ function fmtQty(qty, sym) {
       assetEl.innerHTML =
         '<div style="display:flex;gap:4px;height:120px;border-radius:10px;overflow:hidden;margin-bottom:10px">' +
           '<div style="flex:'+pciPct.toFixed(1)+';background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center">' +
-            '<div style="font-size:13px;font-weight:800;color:var(--primary)">PCI</div>' +
+            '<div style="font-size:11px;font-weight:800;color:var(--primary)">페이코인</div><div style="font-size:9px;font-weight:600;color:var(--primary)">(PCI)</div>' +
             '<div style="font-size:10px;color:var(--primary)">'+pciPct.toFixed(1)+'%</div>' +
           '</div>' +
           '<div style="flex:'+restPct.toFixed(1)+';display:flex;flex-direction:column;gap:3px">' +
             '<div style="flex:'+btcPct.toFixed(1)+';background:#FEF3C7;border:1px solid #FDE68A;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center">' +
-              '<div style="font-size:11px;font-weight:700;color:#D97706">BTC</div>' +
+              '<div style="font-size:10px;font-weight:700;color:#D97706">비트코인</div><div style="font-size:8px;color:#D97706">(BTC)</div>' +
               '<div style="font-size:9px;color:#D97706">'+btcPct.toFixed(1)+'%</div>' +
             '</div>' +
-            (ethPct > 0.5 ? '<div style="flex:'+ethPct.toFixed(1)+';background:#EEF2FF;border:1px solid #C7D2FE;border-radius:4px;display:flex;align-items:center;justify-content:center;min-height:6px"><div style="font-size:8px;font-weight:600;color:#4338CA">ETH '+ethPct.toFixed(1)+'%</div></div>' : '') +
-            (xrpPct > 0.3 ? '<div style="flex:'+xrpPct.toFixed(1)+';background:#FDF4FF;border:1px solid #E9D5FF;border-radius:4px;display:flex;align-items:center;justify-content:center;min-height:5px">'+(xrpPct>1?'<div style="font-size:8px;color:#7C3AED">XRP '+xrpPct.toFixed(1)+'%</div>':'')+'</div>' : '') +
+            (ethPct > 0.5 ? '<div style="flex:'+ethPct.toFixed(1)+';background:#EEF2FF;border:1px solid #C7D2FE;border-radius:4px;display:flex;align-items:center;justify-content:center;min-height:6px"><div style="font-size:8px;font-weight:600;color:#4338CA">이더리움 '+ethPct.toFixed(1)+'%</div></div>' : '') +
+            (xrpPct > 0.3 ? '<div style="flex:'+xrpPct.toFixed(1)+';background:#FDF4FF;border:1px solid #E9D5FF;border-radius:4px;display:flex;align-items:center;justify-content:center;min-height:5px">'+(xrpPct>1?'<div style="font-size:8px;color:#7C3AED">리플 '+xrpPct.toFixed(1)+'%</div>':'')+'</div>' : '') +
           '</div>' +
         '</div>' +
-        '<div class="dist-row"><div class="dist-dot" style="background:var(--primary)"></div><div class="dist-lbl">PCI</div><div class="dist-pct">'+pciPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(pciAmt)+'원</div></div>' +
-        '<div class="dist-row"><div class="dist-dot" style="background:#D97706"></div><div class="dist-lbl">BTC</div><div class="dist-pct">'+btcPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(btcAmt)+'원</div></div>' +
-        '<div class="dist-row"><div class="dist-dot" style="background:#4338CA"></div><div class="dist-lbl">ETH</div><div class="dist-pct">'+ethPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(ethAmt)+'원</div></div>' +
-        '<div class="dist-row"><div class="dist-dot" style="background:#7C3AED"></div><div class="dist-lbl">XRP</div><div class="dist-pct">'+xrpPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(xrpAmt)+'원</div></div>';
+        '<div class="dist-row"><div class="dist-dot" style="background:var(--primary)"></div><div class="dist-lbl">페이코인 (PCI)</div><div class="dist-pct">'+pciPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(pciAmt)+'원</div></div>' +
+        '<div class="dist-row"><div class="dist-dot" style="background:#D97706"></div><div class="dist-lbl">비트코인 (BTC)</div><div class="dist-pct">'+btcPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(btcAmt)+'원</div></div>' +
+        '<div class="dist-row"><div class="dist-dot" style="background:#4338CA"></div><div class="dist-lbl">이더리움 (ETH)</div><div class="dist-pct">'+ethPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(ethAmt)+'원</div></div>' +
+        '<div class="dist-row"><div class="dist-dot" style="background:#7C3AED"></div><div class="dist-lbl">리플 (XRP)</div><div class="dist-pct">'+xrpPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(xrpAmt)+'원</div></div>';
     }
 
     /* 거래소별 트리맵 */
@@ -9034,7 +9461,7 @@ function fmtQty(qty, sym) {
         '</div>' +
         '<div class="dist-row"><div class="dist-dot" style="background:#4338CA"></div><div class="dist-lbl">내 지갑 (PCI)</div><div class="dist-pct">'+wPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(walletAmt)+'원</div></div>' +
         '<div class="dist-row"><div class="dist-dot" style="background:#E65100"></div><div class="dist-lbl">빗썸 (PCI)</div><div class="dist-pct">'+bPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(bithumbAmt)+'원</div></div>' +
-        '<div class="dist-row"><div class="dist-dot" style="background:#0D47A1"></div><div class="dist-lbl">코인원 (BTC·ETH)</div><div class="dist-pct">'+cPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(coinoneAmt)+'원</div></div>' +
+        '<div class="dist-row"><div class="dist-dot" style="background:#0D47A1"></div><div class="dist-lbl">코인원 (BTC · PCI 외 3종)</div><div class="dist-pct">'+cPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(coinoneAmt)+'원</div></div>' +
         '<div class="dist-row"><div class="dist-dot" style="background:#6B21A8"></div><div class="dist-lbl">코빗 (XRP)</div><div class="dist-pct">'+kPct.toFixed(1)+'%</div><div class="dist-amt">'+fmt(korbitAmt)+'원</div></div>';
     }
   }
@@ -9303,6 +9730,7 @@ function generateAppsScriptCode() {
   // ZONE_MAP: screen_key → zone_id 목록 (현재 파일 기준 자동 생성)
   var zoneMapObj = {
     'home':         ['', 'home-header','home-asset','home-banner','home-tiles','home-news'],
+    'home-old':     ['', 'home-header','home-asset','home-banner','home-tiles','home-news'],
     'wallet':       ['', 'wallet-summary','wallet-tabs','wallet-pred-banner','wallet-list','wallet-empty-connect'],
     'wallet-empty': ['', 'wallet-empty-connect'],
     'wallet-manage':['', 'wm-notice-banner','wm-order-btn','wm-bithumb','wm-coinone','wm-korbit'],
