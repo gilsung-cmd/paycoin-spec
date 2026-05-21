@@ -5383,135 +5383,461 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
     <!-- 6px 구분선 -->
     <div style="height:6px;background:var(--card2)"></div>
 
-    <!-- ── 1회차 결과 ── -->
-    <div style="margin:12px 20px 10px;background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.06);overflow:hidden">
-      <button onclick="showModal('pred2-result-modal')" style="width:100%;padding:12px 14px;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;font-family:'Noto Sans KR',sans-serif">
-        <div style="width:36px;height:36px;border-radius:10px;background:#ECFDF5;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">✅</div>
-        <div style="flex:1;text-align:left">
-          <div style="font-size:10px;font-weight:700;color:#059669;margin-bottom:2px">1회차 · 오전 8시 결과</div>
-          <div style="font-size:13px;font-weight:700;color:#111827">📈 상승 · 0~3%</div>
-          <div style="font-size:11px;color:#6B7280;margin-top:1px">정답 · +1 PCI 획득</div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-          <span style="font-size:10px;font-weight:700;color:#059669;background:#ECFDF5;padding:2px 8px;border-radius:20px">완료</span>
-          <span style="font-size:11px;color:#9CA3AF">결과 보기 ›</span>
-        </div>
-      </button>
+                            <!-- ── 상태 토글 (개발용) ── -->
+    <div style="padding:8px 20px 0;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch">
+      <button id="p2sb-1" onclick="setPred2State(1)" style="flex-shrink:0;padding:4px 9px;border-radius:20px;font-size:9px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;background:var(--card2);color:var(--text3);border:1px solid var(--border)">①첫 참여</button>
+      <button id="p2sb-2" onclick="setPred2State(2)" style="flex-shrink:0;padding:4px 9px;border-radius:20px;font-size:9px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;background:var(--card2);color:var(--text3);border:1px solid var(--border)">②1회차 완료</button>
+      <button id="p2sb-3" onclick="setPred2State(3)" style="flex-shrink:0;padding:4px 9px;border-radius:20px;font-size:9px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;background:var(--primary);color:#fff;border:1px solid var(--primary)">③2회차 진행</button>
+      <button id="p2sb-4" onclick="setPred2State(4)" style="flex-shrink:0;padding:4px 9px;border-radius:20px;font-size:9px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;background:var(--card2);color:var(--text3);border:1px solid var(--border)">④2회차 완료</button>
+      <button id="p2sb-5" onclick="setPred2State(5)" style="flex-shrink:0;padding:4px 9px;border-radius:20px;font-size:9px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;background:var(--card2);color:var(--text3);border:1px solid var(--border)">⑤3회차 진행</button>
+      <button id="p2sb-6" onclick="setPred2State(6)" style="flex-shrink:0;padding:4px 9px;border-radius:20px;font-size:9px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;background:var(--card2);color:var(--text3);border:1px solid var(--border)">⑥전체 완료</button>
     </div>
 
+        <div id="pred2-state-1" style="display:none">
+    <div style="margin:12px 20px 10px;background:#fff;border-radius:14px;box-shadow:0 4px 16px rgba(26,86,219,0.12);overflow:hidden">
+      <div style="background:linear-gradient(135deg,#1A56DB 0%,#2563EB 100%);padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🔮</div>
+        <div style="flex:1">
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.7);margin-bottom:1px">1회차 · 자정~오전 4시</div>
+          <div style="font-size:13px;font-weight:800;color:#fff">마감까지 <span class="p2ctd-r1" style="font-weight:900">1시간 42분</span></div>
+        </div>
+        <span style="font-size:10px;font-weight:700;color:#1A56DB;background:#fff;padding:2px 9px;border-radius:20px;flex-shrink:0">진행중</span>
+      </div>
+      <div id="p2w1-wizard" style="padding:0 20px 20px">
+        <div id="p2w1-s0" style="padding:14px 0">
+          <div style="font-size:13px;color:var(--text3);margin-bottom:10px">지금까지의 예측 현황이에요</div>
+          <div style="display:flex;border-radius:6px;overflow:hidden;height:12px;margin-bottom:6px">
+            <div style="width:52%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#fff">52%</div>
+            <div style="flex:1;background:#EF4444;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#fff">48%</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:18px">
+            <span style="font-size:11px;color:var(--primary);font-weight:600">📈 상승</span>
+            <span style="font-size:11px;color:#EF4444;font-weight:600">📉 하락</span>
+          </div>
+          <button onclick="p2w1Go(1)" style="width:100%;padding:9px;font-size:13px;font-weight:700;border-radius:10px;border:none;background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">예측 참여하기 →</button>
+        </div>
+        <div id="p2w1-s1" style="display:none;padding:10px 0">
+          <div id="p2w1-s1-q" style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">오늘 자정 PCI, 어느 방향으로 갈까요?</div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:10px">마감까지 <span id="p2w1-s1-ctd" class="p2ctd-r1" style="font-weight:700">1시간 42분</span></div>
+          <div style="display:flex;gap:8px;margin-bottom:10px">
+            <button id="p2w1-btn-up" onclick="p2w1Dir('up')" style="flex:1;padding:10px 8px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px">
+              <span style="font-size:16px">📈</span><span style="font-size:13px;font-weight:700;color:var(--text)">상승</span>
+            </button>
+            <button id="p2w1-btn-down" onclick="p2w1Dir('down')" style="flex:1;padding:10px 8px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px">
+              <span style="font-size:16px">📉</span><span style="font-size:13px;font-weight:700;color:var(--text)">하락</span>
+            </button>
+          </div>
+        </div>
+        <div id="p2w1-s2" style="display:none;padding:10px 0">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px"><span id="p2w1-range-dir">상승</span> 폭은 얼마나 될까요?</div>
+          <div style="display:flex;gap:6px;margin-bottom:10px">
+            <button id="p2w1-btn-r1" onclick="p2w1Range(1)" style="flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center">
+              <div style="font-size:12px;font-weight:700;color:var(--text)">3% 이하</div><div style="font-size:9px;color:var(--text4);margin-top:2px">0%초과~3%</div>
+            </button>
+            <button id="p2w1-btn-r2" onclick="p2w1Range(2)" style="flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center">
+              <div style="font-size:12px;font-weight:700;color:var(--text)">3~5%</div><div style="font-size:9px;color:var(--text4);margin-top:2px">3%초과~5%</div>
+            </button>
+            <button id="p2w1-btn-r3" onclick="p2w1Range(3)" style="flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center">
+              <div style="font-size:12px;font-weight:700;color:var(--text)">5% 초과</div><div style="font-size:9px;color:var(--text4);margin-top:2px">5% 초과</div>
+            </button>
+          </div>
+        </div>
+        <div id="p2w1-s3" style="display:none;padding:10px 0">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">이렇게 예측할까요?</div>
+          <div id="p2w1-confirm-box" style="display:flex;align-items:center;justify-content:space-between;background:var(--card2);border-radius:10px;padding:10px 14px;margin-bottom:10px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:18px" id="p2w1-confirm-icon">📈</span>
+              <span style="font-size:14px;font-weight:800;color:var(--text)" id="p2w1-confirm-label">상승 · 3% 이하</span>
+            </div>
+            <button onclick="p2w1Go(1)" style="font-size:11px;color:var(--text4);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;padding:0">수정</button>
+          </div>
+          <button onclick="p2w1Submit()" style="width:100%;padding:11px;font-size:13px;font-weight:800;border-radius:10px;border:none;background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">확정하기 ✓</button>
+        </div>
+        <div id="p2w1-s4" style="display:none;padding:10px 0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <span style="font-size:16px">✅</span>
+            <span id="p2w1-done-round" style="font-size:13px;font-weight:800;color:var(--text)">1회차 예측 완료 &nbsp;</span>
+            <span id="p2w1-done-summary" style="font-size:12px;font-weight:700;color:#059669">📈 상승 · 3% 이하</span>
+          </div>
+          <div style="background:var(--card2);border-radius:10px;padding:10px 14px;margin-bottom:8px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:8px">
+              <span style="font-size:11px;color:var(--text3)">🕓 결과 확인</span>
+              <span id="p2w1-done-result-time" style="font-size:12px;font-weight:700;color:var(--text)">오전 8시 이후</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:11px;color:var(--text3)">📅 다음 참여</span>
+              <span id="p2w1-done-next" style="font-size:12px;font-weight:700;color:var(--text)">2회차 · 오전 8시 ~ 낮 12시</span>
+            </div>
+          </div>
+          <button onclick="p2w1EditWithAd()" style="width:100%;padding:9px;font-size:12px;font-weight:600;border-radius:9px;border:1px solid var(--border);background:none;color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">📺 광고 보고 수정하기</button>
+        </div>
+      </div>
+    </div>
+    <div style="margin-bottom:10px;margin-left:20px;margin-right:20px;border-radius:14px;background:#EEF2FF;border:1.5px solid #C7D2FE;padding:11px 14px;display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0"><span style="font-size:10px;font-weight:700;color:#4338CA;background:#C7D2FE;border:0.5px solid #A5B4FC;padding:3px 8px;border-radius:20px;white-space:nowrap">예정</span></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:3px">2회차 · 오전 8시~낮 12시</div>
+        <div style="font-size:14px;font-weight:700;color:#312E81;line-height:1.3">오전 8시부터 참여할 수 있어요</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px">아직 4시간 남았어요 ⏱</div>
+      </div>
+    </div>
+    <div style="margin-bottom:16px;margin-left:20px;margin-right:20px;border-radius:14px;background:var(--card2);border:1.5px dashed #C5CCE2;padding:11px 14px;display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0"><span style="font-size:10px;font-weight:700;color:#8B95B5;background:#EEF0F8;border:0.5px solid #C5CCE2;padding:3px 8px;border-radius:20px;white-space:nowrap">예정</span></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:3px">3회차 · 오후 4시~저녁 8시</div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.3">오후 4시 ~ 저녁 8시 참여</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px">잊지 말고 참여해주세요 🔔</div>
+      </div>
+    </div>
+    </div>
+
+<div id="pred2-state-2" style="display:none">
+    <div style="margin-bottom:10px;margin-left:20px;margin-right:20px;border-radius:14px;background:var(--card2);border:1px solid #FDE68A;box-shadow:none;overflow:hidden">
+      <button onclick="showPred2ResultModal()" style="width:100%;padding:11px 14px;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;font-family:'Noto Sans KR',sans-serif">
+        <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0">
+          <span style="font-size:10px;font-weight:700;color:#D97706;background:#FEF3C7;border:0.5px solid #FDE68A;padding:3px 8px;border-radius:20px;white-space:nowrap">대기중</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:3px">1회차 · 결과 대기</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.3">상승 · 0~3%</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px">잠시 후 결과가 발표돼요</div>
+        </div>
+        <div style="flex-shrink:0;align-self:center"><span style="font-size:11px;font-weight:700;color:#1A56DB;background:#EBF2FF;border:0.5px solid #BFDBFE;padding:4px 10px;border-radius:20px;white-space:nowrap">결과 확인</span></div>
+      </button>
+    </div>
+    <div style="margin-bottom:10px;margin-left:20px;margin-right:20px;border-radius:14px;background:#EEF2FF;border:1.5px solid #C7D2FE;box-shadow:none;padding:11px 14px;display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0">
+          <span style="font-size:10px;font-weight:700;color:#4338CA;background:#C7D2FE;border:0.5px solid #A5B4FC;padding:3px 8px;border-radius:20px;white-space:nowrap">예정</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:3px">2회차 · 오전 8시~낮 12시</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.3">오전 8시부터 참여할 수 있어요</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px">아직 4시간 남았어요 ⏱</div>
+        </div>
+    </div>
+    <div style="margin-bottom:16px;margin-left:20px;margin-right:20px;border-radius:14px;background:var(--card2);border:1.5px dashed #C5CCE2;box-shadow:none;padding:11px 14px;display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0">
+          <span style="font-size:10px;font-weight:700;color:#8B95B5;background:#EEF0F8;border:0.5px solid #C5CCE2;padding:3px 8px;border-radius:20px;white-space:nowrap">예정</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:3px">3회차 · 오후 4시~저녁 8시</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.3">오후 4시 ~ 저녁 8시 참여</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px">잊지 말고 참여해주세요 🔔</div>
+        </div>
+    </div>
+    </div>
+
+    <div id="pred2-state-3" style="display:block">
+    <div style="margin-top:12px;margin-bottom:10px;margin-left:20px;margin-right:20px;border-radius:14px;background:var(--card2);border:1px solid var(--border);box-shadow:none;overflow:hidden">
+      <button onclick="showPred2ResultModal()" style="width:100%;padding:11px 14px;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;font-family:'Noto Sans KR',sans-serif">
+        <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0">
+          <span style="font-size:10px;font-weight:700;color:var(--text4);background:var(--card);border:0.5px solid var(--border2);padding:3px 8px;border-radius:20px;white-space:nowrap">마감</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:3px">1회차 결과</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.3">상승 · 0~3%</div>
+          
+        </div>
+        <div style="flex-shrink:0;align-self:center"><span style="font-size:11px;font-weight:700;color:#1A56DB;background:#EBF2FF;border:0.5px solid #BFDBFE;padding:4px 10px;border-radius:20px;white-space:nowrap">결과 확인</span></div>
+      </button>
+    </div>
     <!-- ── 2회차 예측 위자드 ── -->
     <div style="margin:0 20px 10px;background:#fff;border-radius:14px;box-shadow:0 4px 16px rgba(26,86,219,0.12);overflow:hidden">
       <div style="background:linear-gradient(135deg,#1A56DB 0%,#2563EB 100%);padding:12px 14px;display:flex;align-items:center;gap:10px">
         <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🔮</div>
         <div style="flex:1">
-          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.7);margin-bottom:1px">2회차 · 오후 4시 결과</div>
-          <div style="font-size:13px;font-weight:800;color:#fff">기준가 ₩43.20 · 마감 12:00</div>
+          <div id="p2wiz-hdr-round" style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.7);margin-bottom:1px">2회차 · 오전 8시~낮 12시</div>
+          <div style="font-size:13px;font-weight:800;color:#fff">마감까지 <span id="p2wiz-hdr-ctd" class="p2ctd-r2" style="font-weight:900">2시간 15분</span></div>
         </div>
         <span style="font-size:10px;font-weight:700;color:#1A56DB;background:#fff;padding:2px 9px;border-radius:20px;flex-shrink:0">진행중</span>
       </div>
-      <div id="pred2-wizard" style="padding:0 14px 14px">
+      <!-- ── 2회차 예측 위자드 ── -->
+          <div id="pred2-wizard" style="padding:0 20px 20px">
 
-      <!-- Step 0: 현재 예측 현황 -->
-      <div id="p2w-s0" style="padding:14px 0">
-        <div style="font-size:13px;color:var(--text3);margin-bottom:10px">지금까지의 예측 현황이에요</div>
-        <div style="display:flex;border-radius:6px;overflow:hidden;height:12px;margin-bottom:6px">
-          <div style="width:58%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#fff">58%</div>
-          <div style="flex:1;background:#EF4444;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#fff">42%</div>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:18px">
-          <span style="font-size:11px;color:var(--primary);font-weight:600">📈 상승</span>
-          <span style="font-size:11px;color:#EF4444;font-weight:600">📉 하락</span>
-        </div>
-        <button onclick="p2WizGo(1)" style="width:100%;padding:9px;font-size:13px;font-weight:700;border-radius:10px;border:none;background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">예측 참여하기 →</button>
-      </div>
+            <!-- Step 0: 현재 예측 현황 -->
+            <div id="p2w-s0" style="padding:14px 0">
+              <div style="font-size:13px;color:var(--text3);margin-bottom:10px">지금까지의 예측 현황이에요</div>
+              <div style="display:flex;border-radius:6px;overflow:hidden;height:12px;margin-bottom:6px">
+                <div style="width:58%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#fff">58%</div>
+                <div style="flex:1;background:#EF4444;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#fff">42%</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:18px">
+                <span style="font-size:11px;color:var(--primary);font-weight:600">📈 상승</span>
+                <span style="font-size:11px;color:#EF4444;font-weight:600">📉 하락</span>
+              </div>
+              <button onclick="p2WizGo(1)" style="width:100%;padding:9px;font-size:13px;font-weight:700;border-radius:10px;border:none;background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">예측 참여하기 →</button>
+            </div>
 
-      <!-- Step 1: 방향 선택 -->
-      <div id="p2w-s1" style="display:none;padding:10px 0">
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">오늘 오후 4시 PCI, 어느 방향으로 갈까요?</div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:10px">기준가 ₩43.20 기준 · 마감 12:00</div>
-        <div style="display:flex;gap:8px;margin-bottom:10px">
-          <button id="p2w-btn-up" onclick="p2WizDir('up')" style="flex:1;padding:10px 8px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s">
-            <span style="font-size:16px">📈</span>
-            <span style="font-size:13px;font-weight:700;color:var(--text)">상승</span>
-          </button>
-          <button id="p2w-btn-down" onclick="p2WizDir('down')" style="flex:1;padding:10px 8px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s">
-            <span style="font-size:16px">📉</span>
-            <span style="font-size:13px;font-weight:700;color:var(--text)">하락</span>
-          </button>
-        </div>
-      </div>
+            <!-- Step 1: 방향 선택 -->
+            <div id="p2w-s1" style="display:none;padding:10px 0">
+              <div id="p2w-s1-q" style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">오늘 오후 4시 PCI, 어느 방향으로 갈까요?</div>
+              <div style="font-size:11px;color:var(--text3);margin-bottom:10px">마감까지 <span id="p2w-s1-ctd" class="p2ctd-r2" style="font-weight:700">2시간 15분</span></div>
+              <div style="display:flex;gap:8px;margin-bottom:10px">
+                <button id="p2w-btn-up" onclick="p2WizDir('up')" style="flex:1;padding:10px 8px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s">
+                  <span style="font-size:16px">📈</span>
+                  <span style="font-size:13px;font-weight:700;color:var(--text)">상승</span>
+                </button>
+                <button id="p2w-btn-down" onclick="p2WizDir('down')" style="flex:1;padding:10px 8px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s">
+                  <span style="font-size:16px">📉</span>
+                  <span style="font-size:13px;font-weight:700;color:var(--text)">하락</span>
+                </button>
+              </div>
+            </div>
 
-      <!-- Step 2: 범위 선택 -->
-      <div id="p2w-s2" style="display:none;padding:10px 0">
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px"><span id="p2w-range-dir">상승</span> 폭은 얼마나 될까요?</div>
-        <div style="display:flex;gap:6px;margin-bottom:10px">
-          <button id="p2w-btn-r1" onclick="p2WizRange(1)" style="flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center;transition:all .15s">
-            <div style="font-size:12px;font-weight:700;color:var(--text)">3% 이하</div>
-            <div style="font-size:9px;color:var(--text4);margin-top:2px">0%초과~3%</div>
-          </button>
-          <button id="p2w-btn-r2" onclick="p2WizRange(2)" style="flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center;transition:all .15s">
-            <div style="font-size:12px;font-weight:700;color:var(--text)">3~5%</div>
-            <div style="font-size:9px;color:var(--text4);margin-top:2px">3%초과~5%</div>
-          </button>
-          <button id="p2w-btn-r3" onclick="p2WizRange(3)" style="flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center;transition:all .15s">
-            <div style="font-size:12px;font-weight:700;color:var(--text)">5% 초과</div>
-            <div style="font-size:9px;color:var(--text4);margin-top:2px">5% 초과</div>
-          </button>
-        </div>
-      </div>
+            <!-- Step 2: 범위 선택 -->
+            <div id="p2w-s2" style="display:none;padding:10px 0">
+              <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px"><span id="p2w-range-dir">상승</span> 폭은 얼마나 될까요?</div>
+              <div style="display:flex;gap:6px;margin-bottom:10px">
+                <button id="p2w-btn-r1" onclick="p2WizRange(1)" style="flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center;transition:all .15s">
+                  <div style="font-size:12px;font-weight:700;color:var(--text)">3% 이하</div>
+                  <div style="font-size:9px;color:var(--text4);margin-top:2px">0%초과~3%</div>
+                </button>
+                <button id="p2w-btn-r2" onclick="p2WizRange(2)" style="flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center;transition:all .15s">
+                  <div style="font-size:12px;font-weight:700;color:var(--text)">3~5%</div>
+                  <div style="font-size:9px;color:var(--text4);margin-top:2px">3%초과~5%</div>
+                </button>
+                <button id="p2w-btn-r3" onclick="p2WizRange(3)" style="flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center;transition:all .15s">
+                  <div style="font-size:12px;font-weight:700;color:var(--text)">5% 초과</div>
+                  <div style="font-size:9px;color:var(--text4);margin-top:2px">5% 초과</div>
+                </button>
+              </div>
+            </div>
 
-      <!-- Step 3: 확인 -->
-      <div id="p2w-s3" style="display:none;padding:10px 0">
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">이렇게 예측할까요?</div>
-        <div id="p2w-confirm-box" style="display:flex;align-items:center;justify-content:space-between;background:var(--card2);border-radius:10px;padding:10px 14px;margin-bottom:10px">
-          <div style="display:flex;align-items:center;gap:8px">
-            <span style="font-size:18px" id="p2w-confirm-icon">📈</span>
-            <span style="font-size:14px;font-weight:800;color:var(--text)" id="p2w-confirm-label">상승 · 3% 이하</span>
+            <!-- Step 3: 확인 -->
+            <div id="p2w-s3" style="display:none;padding:10px 0">
+              <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">이렇게 예측할까요?</div>
+              <div id="p2w-confirm-box" style="display:flex;align-items:center;justify-content:space-between;background:var(--card2);border-radius:10px;padding:10px 14px;margin-bottom:10px">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span style="font-size:18px" id="p2w-confirm-icon">📈</span>
+                  <span style="font-size:14px;font-weight:800;color:var(--text)" id="p2w-confirm-label">상승 · 3% 이하</span>
+                </div>
+                <button onclick="p2WizGo(1)" style="font-size:11px;color:var(--text4);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;padding:0">수정</button>
+              </div>
+              <button onclick="p2WizSubmit()" style="width:100%;padding:11px;font-size:13px;font-weight:800;border-radius:10px;border:none;background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">확정하기 ✓</button>
+            </div>
+
+            <!-- Step 4: 완료 -->
+            <div id="p2w-s4" style="display:none;padding:10px 0">
+
+              <!-- 완료 한 줄 -->
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+                <span style="font-size:16px">✅</span>
+                <span id="p2w-done-round" style="font-size:13px;font-weight:800;color:var(--text)">2회차 예측 완료 &nbsp;</span>
+                <span id="p2w-done-summary" style="font-size:12px;font-weight:700;color:#059669">📈 상승 · 3% 이하</span>
+              </div>
+
+              <!-- 결과 확인 + 다음 회차 통합 카드 -->
+              <div style="background:var(--card2);border-radius:10px;padding:10px 14px;margin-bottom:8px">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:8px">
+                  <span style="font-size:11px;color:var(--text3)">🕓 결과 확인</span>
+                  <span id="p2w-done-result-time" style="font-size:12px;font-weight:700;color:var(--text)">오후 4시 이후</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <span style="font-size:11px;color:var(--text3)">📅 다음 참여</span>
+                  <span id="p2w-done-next" style="font-size:12px;font-weight:700;color:var(--text)">3회차 · 오후 4시 ~ 오후 8시</span>
+                </div>
+              </div>
+
+              <!-- 광고 보고 수정 -->
+              <button onclick="p2WizEditWithAd()" style="width:100%;padding:9px;font-size:12px;font-weight:600;border-radius:9px;border:1px solid var(--border);background:none;color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">📺 광고 보고 수정하기</button>
+
+            </div>
+
           </div>
-          <button onclick="p2WizGo(1)" style="font-size:11px;color:var(--text4);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;padding:0">수정</button>
+    </div>
+    <div style="margin-bottom:16px;margin-left:20px;margin-right:20px;border-radius:14px;background:var(--card2);border:1.5px dashed #C5CCE2;box-shadow:none;padding:11px 14px;display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0">
+          <span style="font-size:10px;font-weight:700;color:#8B95B5;background:#EEF0F8;border:0.5px solid #C5CCE2;padding:3px 8px;border-radius:20px;white-space:nowrap">예정</span>
         </div>
-        <button onclick="p2WizSubmit()" style="width:100%;padding:11px;font-size:13px;font-weight:800;border-radius:10px;border:none;background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">확정하기 ✓</button>
-      </div>
-
-      <!-- Step 4: 완료 -->
-      <div id="p2w-s4" style="display:none;padding:10px 0">
-
-        <!-- 완료 한 줄 -->
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-          <span style="font-size:16px">✅</span>
-          <span style="font-size:13px;font-weight:800;color:var(--text)">2회차 예측 완료 &nbsp;</span>
-          <span id="p2w-done-summary" style="font-size:12px;font-weight:700;color:#059669">📈 상승 · 3% 이하</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:3px">3회차 · 오후 4시~저녁 8시</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.3">오후 4시 ~ 저녁 8시 참여</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px">잊지 말고 참여해주세요 🔔</div>
         </div>
-
-        <!-- 결과 확인 + 다음 회차 통합 카드 -->
-        <div style="background:var(--card2);border-radius:10px;padding:10px 14px;margin-bottom:8px">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:8px">
-            <span style="font-size:11px;color:var(--text3)">🕓 결과 확인</span>
-            <span style="font-size:12px;font-weight:700;color:var(--text)">오후 4시 이후</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <span style="font-size:11px;color:var(--text3)">📅 다음 참여</span>
-            <span style="font-size:12px;font-weight:700;color:var(--text)">3회차 · 오후 4시 ~ 오후 8시</span>
-          </div>
-        </div>
-
-        <!-- 광고 보고 수정 -->
-        <button onclick="p2WizEditWithAd()" style="width:100%;padding:9px;font-size:12px;font-weight:600;border-radius:9px;border:1px solid var(--border);background:none;color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">📺 광고 보고 수정하기</button>
-
-      </div>
-
-      </div>
+    </div>
     </div>
 
-    <!-- ── 3회차 예정 ── -->
-    <div style="margin:0 20px 16px;background:#FAFBFF;border-radius:12px;padding:12px 14px;border:1.5px dashed #C5CCE2;display:flex;align-items:center;gap:10px">
-      <div style="width:36px;height:36px;border-radius:10px;background:#EEF0F8;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">⏳</div>
-      <div style="flex:1">
-        <div style="font-size:10px;font-weight:700;color:#8B95B5;margin-bottom:3px">3회차 · 자정 결과</div>
-        <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:2px">오후 4시부터 오후 8시까지 참여 가능해요.</div>
-        <div style="font-size:11px;color:#8B95B5">잊지 말고 참여해주세요 🔔</div>
+    <div id="pred2-state-4" style="display:none">
+    <div style="margin-top:12px;margin-bottom:10px;margin-left:20px;margin-right:20px;border-radius:14px;background:var(--card2);border:1px solid var(--border);box-shadow:none;overflow:hidden">
+      <button onclick="showPred2ResultModal()" style="width:100%;padding:11px 14px;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;font-family:'Noto Sans KR',sans-serif">
+        <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0">
+          <span style="font-size:10px;font-weight:700;color:var(--text4);background:var(--card);border:0.5px solid var(--border2);padding:3px 8px;border-radius:20px;white-space:nowrap">마감</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:3px">1회차 결과</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.3">상승 · 0~3%</div>
+          
+        </div>
+        <div style="flex-shrink:0;align-self:center"><span style="font-size:11px;font-weight:700;color:#1A56DB;background:#EBF2FF;border:0.5px solid #BFDBFE;padding:4px 10px;border-radius:20px;white-space:nowrap">결과 확인</span></div>
+      </button>
+    </div>
+    <div style="margin-bottom:10px;margin-left:20px;margin-right:20px;border-radius:14px;background:var(--card2);border:1px solid #FDE68A;box-shadow:none;overflow:hidden">
+      <button onclick="showPred2ResultModal()" style="width:100%;padding:11px 14px;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;font-family:'Noto Sans KR',sans-serif">
+        <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0">
+          <span style="font-size:10px;font-weight:700;color:#D97706;background:#FEF3C7;border:0.5px solid #FDE68A;padding:3px 8px;border-radius:20px;white-space:nowrap">대기중</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:3px">2회차 · 결과 대기</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.3">하락 · 5% 초과</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px">잠시 후 결과가 발표돼요</div>
+        </div>
+        <div style="flex-shrink:0;align-self:center"><span style="font-size:11px;font-weight:700;color:#1A56DB;background:#EBF2FF;border:0.5px solid #BFDBFE;padding:4px 10px;border-radius:20px;white-space:nowrap">결과 확인</span></div>
+      </button>
+    </div>
+    <div style="margin-bottom:16px;margin-left:20px;margin-right:20px;border-radius:14px;background:#EEF2FF;border:1.5px solid #C7D2FE;box-shadow:none;padding:11px 14px;display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0">
+          <span style="font-size:10px;font-weight:700;color:#4338CA;background:#C7D2FE;border:0.5px solid #A5B4FC;padding:3px 8px;border-radius:20px;white-space:nowrap">예정</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:3px">3회차 · 오후 4시~저녁 8시</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.3">오후 4시부터 참여할 수 있어요</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px">아직 2시간 남았어요 ⏱</div>
+        </div>
+    </div>
+    </div>
+
+        <div id="pred2-state-5" style="display:none">
+    <div style="margin-top:12px;margin-bottom:10px;margin-left:20px;margin-right:20px;border-radius:14px;background:var(--card2);border:1px solid var(--border);overflow:hidden">
+      <button onclick="showPred2ResultModal()" style="width:100%;padding:11px 14px;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;font-family:'Noto Sans KR',sans-serif">
+        <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0"><span style="font-size:10px;font-weight:700;color:var(--text4);background:var(--card);border:0.5px solid var(--border2);padding:3px 8px;border-radius:20px;white-space:nowrap">마감</span></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:3px">1회차 결과</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.3">상승 · 0~3%</div>
+        </div>
+        <div style="flex-shrink:0;align-self:center"><span style="font-size:11px;font-weight:700;color:#1A56DB;background:#EBF2FF;border:0.5px solid #BFDBFE;padding:4px 10px;border-radius:20px;white-space:nowrap">결과 확인</span></div>
+      </button>
+    </div>
+    <div style="margin-top:0px;margin-bottom:10px;margin-left:20px;margin-right:20px;border-radius:14px;background:var(--card2);border:1px solid var(--border);overflow:hidden">
+      <button onclick="showPred2ResultModal()" style="width:100%;padding:11px 14px;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;font-family:'Noto Sans KR',sans-serif">
+        <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0"><span style="font-size:10px;font-weight:700;color:var(--text4);background:var(--card);border:0.5px solid var(--border2);padding:3px 8px;border-radius:20px;white-space:nowrap">마감</span></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:3px">2회차 결과</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.3">하락 · 5% 초과</div>
+        </div>
+        <div style="flex-shrink:0;align-self:center"><span style="font-size:11px;font-weight:700;color:#1A56DB;background:#EBF2FF;border:0.5px solid #BFDBFE;padding:4px 10px;border-radius:20px;white-space:nowrap">결과 확인</span></div>
+      </button>
+    </div>
+    <div style="margin:0px 20px 16px;background:#fff;border-radius:14px;box-shadow:0 4px 16px rgba(26,86,219,0.12);overflow:hidden">
+      <div style="background:linear-gradient(135deg,#1A56DB 0%,#2563EB 100%);padding:12px 14px;display:flex;align-items:center;gap:10px">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🔮</div>
+        <div style="flex:1">
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.7);margin-bottom:1px">3회차 · 오후 4시~저녁 8시</div>
+          <div style="font-size:13px;font-weight:800;color:#fff">마감까지 <span class="p2ctd-r3" style="font-weight:900">4시간 30분</span></div>
+        </div>
+        <span style="font-size:10px;font-weight:700;color:#1A56DB;background:#fff;padding:2px 9px;border-radius:20px;flex-shrink:0">진행중</span>
       </div>
-      <span style="font-size:10px;font-weight:600;color:#8B95B5;background:#EEF0F8;border:1px dashed #C5CCE2;padding:2px 9px;border-radius:20px;flex-shrink:0;align-self:flex-start">예정</span>
+      <div id="p2w3-wizard" style="padding:0 20px 20px">
+        <div id="p2w3-s0" style="padding:14px 0">
+          <div style="font-size:13px;color:var(--text3);margin-bottom:10px">지금까지의 예측 현황이에요</div>
+          <div style="display:flex;border-radius:6px;overflow:hidden;height:12px;margin-bottom:6px">
+            <div style="width:61%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#fff">61%</div>
+            <div style="flex:1;background:#EF4444;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#fff">39%</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:18px">
+            <span style="font-size:11px;color:var(--primary);font-weight:600">📈 상승</span>
+            <span style="font-size:11px;color:#EF4444;font-weight:600">📉 하락</span>
+          </div>
+          <button onclick="p2w3Go(1)" style="width:100%;padding:9px;font-size:13px;font-weight:700;border-radius:10px;border:none;background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">예측 참여하기 →</button>
+        </div>
+        <div id="p2w3-s1" style="display:none;padding:10px 0">
+          <div id="p2w3-s1-q" style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">오늘 자정 PCI, 어느 방향으로 갈까요?</div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:10px">마감까지 <span id="p2w3-s1-ctd" class="p2ctd-r3" style="font-weight:700">4시간 30분</span></div>
+          <div style="display:flex;gap:8px;margin-bottom:10px">
+            <button id="p2w3-btn-up" onclick="p2w3Dir('up')" style="flex:1;padding:10px 8px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px">
+              <span style="font-size:16px">📈</span><span style="font-size:13px;font-weight:700;color:var(--text)">상승</span>
+            </button>
+            <button id="p2w3-btn-down" onclick="p2w3Dir('down')" style="flex:1;padding:10px 8px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px">
+              <span style="font-size:16px">📉</span><span style="font-size:13px;font-weight:700;color:var(--text)">하락</span>
+            </button>
+          </div>
+        </div>
+        <div id="p2w3-s2" style="display:none;padding:10px 0">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px"><span id="p2w3-range-dir">상승</span> 폭은 얼마나 될까요?</div>
+          <div style="display:flex;gap:6px;margin-bottom:10px">
+            <button id="p2w3-btn-r1" onclick="p2w3Range(1)" style="flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center">
+              <div style="font-size:12px;font-weight:700;color:var(--text)">3% 이하</div><div style="font-size:9px;color:var(--text4);margin-top:2px">0%초과~3%</div>
+            </button>
+            <button id="p2w3-btn-r2" onclick="p2w3Range(2)" style="flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center">
+              <div style="font-size:12px;font-weight:700;color:var(--text)">3~5%</div><div style="font-size:9px;color:var(--text4);margin-top:2px">3%초과~5%</div>
+            </button>
+            <button id="p2w3-btn-r3" onclick="p2w3Range(3)" style="flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center">
+              <div style="font-size:12px;font-weight:700;color:var(--text)">5% 초과</div><div style="font-size:9px;color:var(--text4);margin-top:2px">5% 초과</div>
+            </button>
+          </div>
+        </div>
+        <div id="p2w3-s3" style="display:none;padding:10px 0">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">이렇게 예측할까요?</div>
+          <div id="p2w3-confirm-box" style="display:flex;align-items:center;justify-content:space-between;background:var(--card2);border-radius:10px;padding:10px 14px;margin-bottom:10px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:18px" id="p2w3-confirm-icon">📈</span>
+              <span style="font-size:14px;font-weight:800;color:var(--text)" id="p2w3-confirm-label">상승 · 3% 이하</span>
+            </div>
+            <button onclick="p2w3Go(1)" style="font-size:11px;color:var(--text4);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;padding:0">수정</button>
+          </div>
+          <button onclick="p2w3Submit()" style="width:100%;padding:11px;font-size:13px;font-weight:800;border-radius:10px;border:none;background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">확정하기 ✓</button>
+        </div>
+        <div id="p2w3-s4" style="display:none;padding:10px 0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <span style="font-size:16px">✅</span>
+            <span id="p2w3-done-round" style="font-size:13px;font-weight:800;color:var(--text)">3회차 예측 완료 &nbsp;</span>
+            <span id="p2w3-done-summary" style="font-size:12px;font-weight:700;color:#059669">📈 상승 · 3% 이하</span>
+          </div>
+          <div style="background:var(--card2);border-radius:10px;padding:10px 14px;margin-bottom:8px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:8px">
+              <span style="font-size:11px;color:var(--text3)">🕓 결과 확인</span>
+              <span id="p2w3-done-result-time" style="font-size:12px;font-weight:700;color:var(--text)">자정 이후</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:11px;color:var(--text3)">📅 다음 참여</span>
+              <span id="p2w3-done-next" style="font-size:12px;font-weight:700;color:var(--text)">오늘의 마지막 회차예요</span>
+            </div>
+          </div>
+          <button onclick="p2w3EditWithAd()" style="width:100%;padding:9px;font-size:12px;font-weight:600;border-radius:9px;border:1px solid var(--border);background:none;color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">📺 광고 보고 수정하기</button>
+        </div>
+      </div>
+    </div>
+    </div>
+
+<div id="pred2-state-6" style="display:none">
+    <div style="margin-top:12px;margin-bottom:10px;margin-left:20px;margin-right:20px;border-radius:14px;background:var(--card2);border:1px solid var(--border);box-shadow:none;overflow:hidden">
+      <button onclick="showPred2ResultModal()" style="width:100%;padding:11px 14px;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;font-family:'Noto Sans KR',sans-serif">
+        <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0">
+          <span style="font-size:10px;font-weight:700;color:var(--text4);background:var(--card);border:0.5px solid var(--border2);padding:3px 8px;border-radius:20px;white-space:nowrap">마감</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:3px">1회차 결과</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.3">상승 · 0~3%</div>
+          
+        </div>
+        <div style="flex-shrink:0;align-self:center"><span style="font-size:11px;font-weight:700;color:#1A56DB;background:#EBF2FF;border:0.5px solid #BFDBFE;padding:4px 10px;border-radius:20px;white-space:nowrap">결과 확인</span></div>
+      </button>
+    </div>
+    <div style="margin-bottom:10px;margin-left:20px;margin-right:20px;border-radius:14px;background:var(--card2);border:1px solid var(--border);box-shadow:none;overflow:hidden">
+      <button onclick="showPred2ResultModal()" style="width:100%;padding:11px 14px;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;font-family:'Noto Sans KR',sans-serif">
+        <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0">
+          <span style="font-size:10px;font-weight:700;color:var(--text4);background:var(--card);border:0.5px solid var(--border2);padding:3px 8px;border-radius:20px;white-space:nowrap">마감</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:3px">2회차 결과</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.3">하락 · 5% 초과</div>
+          
+        </div>
+        <div style="flex-shrink:0;align-self:center"><span style="font-size:11px;font-weight:700;color:#1A56DB;background:#EBF2FF;border:0.5px solid #BFDBFE;padding:4px 10px;border-radius:20px;white-space:nowrap">결과 확인</span></div>
+      </button>
+    </div>
+    <div style="margin-bottom:16px;margin-left:20px;margin-right:20px;border-radius:14px;background:var(--card2);border:1px solid #FDE68A;box-shadow:none;overflow:hidden">
+      <button onclick="showPred2ResultModal()" style="width:100%;padding:11px 14px;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;font-family:'Noto Sans KR',sans-serif">
+        <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0">
+          <span style="font-size:10px;font-weight:700;color:#D97706;background:#FEF3C7;border:0.5px solid #FDE68A;padding:3px 8px;border-radius:20px;white-space:nowrap">대기중</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:3px">3회차 · 결과 대기</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);line-height:1.3">상승 · 3~5%</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px">잠시 후 결과가 발표돼요</div>
+        </div>
+        <div style="flex-shrink:0;align-self:center"><span style="font-size:11px;font-weight:700;color:#1A56DB;background:#EBF2FF;border:0.5px solid #BFDBFE;padding:4px 10px;border-radius:20px;white-space:nowrap">결과 확인</span></div>
+      </button>
+    </div>
     </div>
 
     <!-- 6px 구분선 -->
@@ -5835,48 +6161,38 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
   </div>
 </div>
 
-<!-- pred2 결과 모달 -->
-<div class="overlay" id="pred2-result-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:14px">예측 결과</div>
-    <!-- 1회차: 정답 -->
-    <div style="background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:8px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-        <div style="display:flex;align-items:center;gap:6px">
-          <div style="width:20px;height:20px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--primary)">1</div>
-          <span style="font-size:12px;font-weight:700;color:var(--text)">1회차 · 오전 8시</span>
-        </div>
-        <span style="font-size:11px;font-weight:700;color:#059669;background:#D1FAE5;padding:2px 8px;border-radius:20px">✅ 정답 +1 PCI</span>
+<!-- pred2 통합 결과 모달 -->
+<div class="overlay" id="pred2-unified-modal" onclick="if(event.target===this)closeModal('pred2-unified-modal')">
+  <div class="modal" style="padding:0;border-radius:20px;overflow:hidden;max-height:80vh;display:flex;flex-direction:column">
+
+    <!-- 헤더 + PCI 요약 한줄 -->
+    <div style="padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F3F4F6;flex-shrink:0">
+      <div>
+        <div style="font-size:11px;color:#6B7280;margin-bottom:2px">오늘 획득한 PCI</div>
+        <span id="pred2um-total" style="font-size:20px;font-weight:900;color:#1A56DB">+2.00 PCI</span>
       </div>
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3)">
-        <span>예측 <strong style="color:#059669">📈 상승 · 3% 이하</strong></span>
-        <span>기준가 ₩42.50 → <strong style="color:#059669">₩43.20 (+1.6%)</strong></span>
+      <button onclick="closeModal('pred2-unified-modal')" style="width:28px;height:28px;border-radius:50%;background:#F3F4F6;border:none;color:#6B7280;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Noto Sans KR',sans-serif">✕</button>
+    </div>
+
+    <!-- 결과 상태 토글 -->
+    <div style="padding:8px 14px;border-bottom:1px solid #F3F4F6;flex-shrink:0">
+      <div style="display:flex;gap:5px;overflow-x:auto;scrollbar-width:none">
+        <button id="p2um-t-정답" onclick="setModalResultType('정답')" style="flex-shrink:0;padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;background:#059669;color:#fff;border:none">예측 성공</button>
+        <button id="p2um-t-오답" onclick="setModalResultType('오답')" style="flex-shrink:0;padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;background:#F3F4F6;color:#6B7280;border:none">예측 실패</button>
+        <button id="p2um-t-대기" onclick="setModalResultType('대기')" style="flex-shrink:0;padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;background:#F3F4F6;color:#6B7280;border:none">대기</button>
+        <button id="p2um-t-집계중" onclick="setModalResultType('집계중')" style="flex-shrink:0;padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;background:#F3F4F6;color:#6B7280;border:none">집계중</button>
+        <button id="p2um-t-예정" onclick="setModalResultType('예정')" style="flex-shrink:0;padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;background:#F3F4F6;color:#6B7280;border:none">예정</button>
+        <button id="p2um-t-미참여" onclick="setModalResultType('미참여')" style="flex-shrink:0;padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;background:#F3F4F6;color:#6B7280;border:none">미참여</button>
       </div>
     </div>
-    <!-- 2회차: 대기 -->
-    <div style="background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:8px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-        <div style="display:flex;align-items:center;gap:6px">
-          <div style="width:20px;height:20px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--primary)">2</div>
-          <span style="font-size:12px;font-weight:700;color:var(--text)">2회차 · 오후 4시</span>
-        </div>
-        <span style="font-size:11px;color:var(--text3);background:var(--card);padding:2px 8px;border-radius:20px;border:1px solid var(--border)">⏳ 16:00 확인</span>
-      </div>
-      <div style="font-size:11px;color:var(--text3)">예측 <strong style="color:var(--text)">📉 하락 · 5% 초과</strong> · 기준가 ₩42.50</div>
+
+    <!-- 회차별 결과 -->
+    <div id="pred2um-rounds" style="overflow-y:auto;padding:12px 14px 6px;flex:1"></div>
+
+    <!-- 닫기 -->
+    <div style="padding:6px 14px 14px;flex-shrink:0">
+      <button onclick="closeModal('pred2-unified-modal')" style="width:100%;padding:11px;font-size:14px;font-weight:700;border-radius:12px;border:none;background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">확인</button>
     </div>
-    <!-- 3회차: 대기 -->
-    <div style="background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:16px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-        <div style="display:flex;align-items:center;gap:6px">
-          <div style="width:20px;height:20px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--primary)">3</div>
-          <span style="font-size:12px;font-weight:700;color:var(--text)">3회차 · 자정</span>
-        </div>
-        <span style="font-size:11px;color:var(--text3);background:var(--card);padding:2px 8px;border-radius:20px;border:1px solid var(--border)">⏳ 자정 확인</span>
-      </div>
-      <div style="font-size:11px;color:var(--text3)">예측 <strong style="color:var(--text)">📈 상승 · 3~5%</strong> · 기준가 ₩42.50</div>
-    </div>
-    <button class="btn btn-primary" onclick="closeModal('pred2-result-modal')">닫기</button>
   </div>
 </div>
 
@@ -8571,7 +8887,7 @@ function toggleNoti(el) {
 /* ══ PREDICTION V2 ══ */
 var _pred2 = { 1:{dir:null,range:null}, 2:{dir:null,range:null}, 3:{dir:null,range:null} };
 var _pred2Step = 1;
-var _pred2StepLabels = ['','1회차 · 오전 8시 결과','2회차 · 오후 4시 결과','3회차 · 자정 결과'];
+var _pred2StepLabels = ['','1회차 · 자정~오전 4시','2회차 · 오전 8시~낮 12시','3회차 · 오후 4시~저녁 8시'];
 var _pred2RangeText  = ['','3% 이하','3~5%','5% 초과'];
 
 function _pred2ActiveColor(round) {
@@ -8617,6 +8933,219 @@ function _pred2RefreshRanges(round) {
 
 /* ══ PRED2 WIZARD ══ */
 var _p2Wiz = { dir: null, range: null };
+
+      // ── 상태 토글 ──
+      var _p2State = 3;
+      var _p2StateData = {
+        1: { r1:'진행중', r2:'예정',   r3:'예정',   total:'+0 PCI',    badge:'진행중' },
+        2: { r1:'대기',   r2:'예정',   r3:'예정',   total:'+0 PCI',    badge:'대기중' },
+        3: { r1:'정답',   r2:'진행중', r3:'예정',   total:'+1.00 PCI', badge:'진행중' },
+        4: { r1:'정답',   r2:'대기',   r3:'예정',   total:'+1.00 PCI', badge:'대기중' },
+        5: { r1:'정답',   r2:'정답',   r3:'진행중', total:'+2.00 PCI', badge:'진행중' },
+        6: { r1:'정답',   r2:'정답',   r3:'대기',   total:'+2.00 PCI', badge:'대기중' }
+      };
+
+
+      // ── 회차별 독립 위자드 팩토리 ──
+      function _p2MakeWiz(pfx, roundLabel) {
+        var _w = { dir:null, range:null };
+        window[pfx+'Go'] = function(step) {
+          for (var s=0;s<=4;s++) {
+            var el=document.getElementById(pfx+'-s'+s);
+            if (el) el.style.display=(s===step)?'block':'none';
+          }
+        };
+        window[pfx+'Dir'] = function(dir) {
+          _w.dir=dir; _w.range=null;
+          var isUp=dir==='up', ac=isUp?'#059669':'#EF4444', ab=isUp?'#D1FAE5':'#FEE2E2';
+          ['up','down'].forEach(function(d){
+            var b=document.getElementById(pfx+'-btn-'+d); if(!b)return;
+            b.style.borderColor=d===dir?ac:'var(--border)'; b.style.background=d===dir?ab:'var(--card2)';
+          });
+          var de=document.getElementById(pfx+'-range-dir'); if(de)de.textContent=isUp?'상승':'하락';
+          [1,2,3].forEach(function(r){var b=document.getElementById(pfx+'-btn-r'+r);if(b){b.style.borderColor='var(--border)';b.style.background='var(--card2)';}});
+          setTimeout(function(){window[pfx+'Go'](2);},180);
+        };
+        window[pfx+'Range'] = function(rv) {
+          _w.range=rv;
+          var isUp=_w.dir==='up', ac=isUp?'#059669':'#EF4444', ab=isUp?'#D1FAE5':'#FEE2E2';
+          [1,2,3].forEach(function(r){
+            var b=document.getElementById(pfx+'-btn-r'+r); if(!b)return;
+            b.style.borderColor=r===rv?ac:'var(--border)'; b.style.background=r===rv?ab:'var(--card2)';
+          });
+          var lbls=['','3% 이하','3~5%','5% 초과'], dt=isUp?'상승':'하락', ic=isUp?'📈':'📉';
+          var ei=document.getElementById(pfx+'-confirm-icon'); if(ei)ei.textContent=ic;
+          var el=document.getElementById(pfx+'-confirm-label'); if(el){el.textContent=dt+' · '+lbls[rv];el.style.color=ac;}
+          var eb=document.getElementById(pfx+'-confirm-box'); if(eb)eb.style.background=ab;
+          setTimeout(function(){window[pfx+'Go'](3);},180);
+        };
+        window[pfx+'Submit'] = function() {
+          var lbls=['','3% 이하','3~5%','5% 초과'], isUp=_w.dir==='up';
+          var dt=isUp?'상승':'하락', ic=isUp?'📈':'📉';
+          var el=document.getElementById(pfx+'-done-summary');
+          if(el){el.textContent=ic+' '+dt+' · '+lbls[_w.range]; el.style.color=isUp?'#059669':'#EF4444';}
+          window[pfx+'Go'](4);
+          showToast(roundLabel+' 예측이 확정되었어요!');
+        };
+        window[pfx+'EditWithAd'] = function() {
+          showToast('광고 시청 후 수정 가능해요');
+          setTimeout(function(){window[pfx+'Go'](1);},500);
+        };
+      }
+      // ── 위자드 라운드별 설정 ──
+      var _p2WizRoundCfg = {
+        1: { label:'1회차', pTime:'자정~오전 4시',    ctdClass:'p2ctd-r1', ctdInit:'1시간 42분',
+             q:'오늘 자정 PCI, 어느 방향으로 갈까요?',      resultT:'오전 8시 이후', nextR:'2회차 · 오전 8시 ~ 낮 12시' },
+        2: { label:'2회차', pTime:'오전 8시~낮 12시',  ctdClass:'p2ctd-r2', ctdInit:'2시간 15분',
+             q:'오늘 오후 4시 PCI, 어느 방향으로 갈까요?',  resultT:'오후 4시 이후', nextR:'3회차 · 오후 4시 ~ 저녁 8시' },
+        3: { label:'3회차', pTime:'오후 4시~저녁 8시', ctdClass:'p2ctd-r3', ctdInit:'4시간 30분',
+             q:'오늘 자정 PCI, 어느 방향으로 갈까요?',      resultT:'자정 이후',    nextR:'오늘의 마지막 회차예요' }
+      };
+      var _p2WizActiveRound = 2;
+
+      function showPred2Wizard(round) {
+        _p2WizActiveRound = round;
+        var cfg = _p2WizRoundCfg[round] || _p2WizRoundCfg[2];
+        // 외부 카드 헤더
+        var hdrR = document.getElementById('p2wiz-hdr-round');
+        if (hdrR) hdrR.textContent = cfg.label + ' · ' + cfg.pTime;
+        var hdrC = document.getElementById('p2wiz-hdr-ctd');
+        if (hdrC) { hdrC.className = cfg.ctdClass; hdrC.textContent = cfg.ctdInit; }
+        // Step 1
+        var s1q = document.getElementById('p2w-s1-q');
+        if (s1q) s1q.textContent = cfg.q;
+        var s1c = document.getElementById('p2w-s1-ctd');
+        if (s1c) { s1c.className = cfg.ctdClass; s1c.textContent = cfg.ctdInit; }
+        // Step 4
+        var dR = document.getElementById('p2w-done-round');
+        if (dR) dR.textContent = cfg.label + ' 예측 완료  ';
+        var dT = document.getElementById('p2w-done-result-time');
+        if (dT) dT.textContent = cfg.resultT;
+        var dN = document.getElementById('p2w-done-next');
+        if (dN) dN.textContent = cfg.nextR;
+        // 상태 전환 (내부에서 p2WizGo(0) 자동 호출됨)
+        setPred2State(3);
+      }
+      function setPred2State(n) {
+        _p2State = n;
+        // Hide all states
+        for (var i=1; i<=6; i++) {
+          var el = document.getElementById('pred2-state-'+i);
+          if (el) el.style.display='none';
+        }
+        // Show selected state
+        var target = document.getElementById('pred2-state-'+n);
+        if (target) target.style.display='block';
+        // Update toggle buttons
+        for (var i=1; i<=6; i++) {
+          var btn = document.getElementById('p2sb-'+i);
+          if (!btn) continue;
+          if (i===n) {
+            btn.style.background='var(--primary)'; btn.style.color='#fff'; btn.style.border='1px solid var(--primary)';
+          } else {
+            btn.style.background='var(--card2)'; btn.style.color='var(--text3)'; btn.style.border='1px solid var(--border)';
+          }
+        }
+        // reset wizard when showing state 3 or 4
+        if (n===3||n===4) { p2WizGo(0); }
+        if (n===1 && typeof p2w1Go==='function') { p2w1Go(0); }
+        if (n===5 && typeof p2w3Go==='function') { p2w3Go(0); }
+      }
+
+      // ── 통합 결과 모달 ──
+      var _p2RoundConfig = [
+        { round:'1회차', time:'자정~오전 4시', prediction:'📈 상승 · 0~3%',    base:'₩42.50', result:'₩43.20 (+1.6%)', pci:'+1.00 PCI', resultTime:'오전 8시' },
+        { round:'2회차', time:'오전 8시~낮 12시', prediction:'📉 하락 · 5% 초과', base:'₩43.20', result:'₩43.80 (+1.4%)', pci:'+1.00 PCI', resultTime:'오후 4시' },
+        { round:'3회차', time:'오후 4시~저녁 8시',     prediction:'📈 상승 · 3~5%',    base:'₩43.80', result:'₩44.20 (+1.0%)', pci:'+1.00 PCI', resultTime:'자정' }
+      ];
+      // 시나리오별 각 회차 상태 조합
+      var _p2ModalScenarios = {
+        '정답':   ['정답',  '정답',  '정답'],
+        '오답':   ['오답',  '오답',  '오답'],
+        '대기':   ['정답',  '대기',  '예정'],
+        '집계중': ['정답',  '집계중','예정'],
+        '예정':   ['대기',  '예정',  '예정'],
+        '미참여': ['정답',  '미참여','미참여']
+      };
+      var _p2ModalResultType = '정답';
+
+      function setModalResultType(type) {
+        _p2ModalResultType = type;
+        var types = ['정답','오답','대기','집계중','예정','미참여'];
+        var activeColors = { '정답':'#059669','오답':'#DC2626','대기':'#D97706','집계중':'#4338CA','예정':'#6B7280','미참여':'#374151' };
+        for (var i=0; i<types.length; i++) {
+          var btn = document.getElementById('p2um-t-'+types[i]);
+          if (!btn) continue;
+          btn.style.background = (types[i]===type) ? activeColors[types[i]] : '#F3F4F6';
+          btn.style.color = (types[i]===type) ? '#fff' : '#6B7280';
+        }
+        renderModalRounds();
+      }
+
+      function renderModalRounds() {
+        var listEl = document.getElementById('pred2um-rounds');
+        if (!listEl) return;
+        var scenario = _p2ModalScenarios[_p2ModalResultType] || ['예정','예정','예정'];
+        var smMap = {
+          '정답':   { border:'#A7F3D0', iconBg:'#D1FAE5', icon:'✅', badge:'예측 성공', badgeC:'#059669', badgeBg:'#D1FAE5', type:'result',  correct:true  },
+          '오답':   { border:'#FECACA', iconBg:'#FEE2E2', icon:'❌', badge:'예측 실패', badgeC:'#DC2626', badgeBg:'#FEE2E2', type:'result',  correct:false },
+          '대기':   { border:'#FDE68A', iconBg:'#FEF3C7', icon:'⏳', badge:'결과 대기',badgeC:'#D97706', badgeBg:'#FEF3C7', type:'waiting', correct:false },
+          '집계중': { border:'#C7D2FE', iconBg:'#EEF2FF', icon:'📊', badge:'집계중',   badgeC:'#4338CA', badgeBg:'#E0E7FF', type:'counting',correct:false },
+          '예정':   { border:'#E5E7EB', iconBg:'#F3F4F6', icon:'🕐', badge:'예정',     badgeC:'#9CA3AF', badgeBg:'#F3F4F6', type:'none',    correct:false },
+          '미참여': { border:'#E5E7EB', iconBg:'#F3F4F6', icon:'➖', badge:'미참여',   badgeC:'#9CA3AF', badgeBg:'#F3F4F6', type:'skipped', correct:false }
+        };
+        var html = '';
+        for (var i=0; i<3; i++) {
+          var cfg = _p2RoundConfig[i];
+          var st  = scenario[i] || '예정';
+          var sm  = smMap[st] || smMap['예정'];
+          html += '<div style="border:1.5px solid '+sm.border+';border-radius:14px;overflow:hidden;margin-bottom:8px">';
+          // 헤더 행
+          html += '<div style="display:flex;align-items:center;padding:10px 12px;gap:10px">';
+          html += '<div style="width:28px;height:28px;border-radius:7px;background:'+sm.iconBg+';display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">'+sm.icon+'</div>';
+          html += '<div style="flex:1"><div style="font-size:12px;font-weight:800;color:#111827">'+cfg.round+' <span style="font-weight:500;color:#6B7280">· '+cfg.time+'</span></div>';
+          html += '<div style="font-size:10px;color:#9CA3AF;margin-top:1px">'+(sm.type==='skipped' ? '이 회차에는 참여하지 않았어요' : cfg.prediction)+'</div></div>';
+          html += '<span style="font-size:10px;font-weight:700;color:'+sm.badgeC+';background:'+sm.badgeBg+';padding:2px 9px;border-radius:20px;flex-shrink:0">'+sm.badge+'</span>';
+          html += '</div>';
+          // 상세 스트립
+          if (sm.type === 'result') {
+            var pciVal = sm.correct ? cfg.pci : '+0 PCI';
+            var pciC   = sm.correct ? '#059669' : '#DC2626';
+            html += '<div style="background:#FAFBFC;border-top:1px solid #F3F4F6;padding:7px 12px;display:flex">';
+            html += '<div style="flex:1;text-align:center"><div style="font-size:9px;color:#9CA3AF;margin-bottom:1px">기준가</div><div style="font-size:11px;font-weight:700;color:#374151">'+cfg.base+'</div></div>';
+            html += '<div style="width:1px;background:#E5E7EB;margin:3px 0"></div>';
+            html += '<div style="flex:1;text-align:center"><div style="font-size:9px;color:#9CA3AF;margin-bottom:1px">결과</div><div style="font-size:11px;font-weight:700;color:#374151">'+cfg.result+'</div></div>';
+            html += '<div style="width:1px;background:#E5E7EB;margin:3px 0"></div>';
+            html += '<div style="flex:1;text-align:center"><div style="font-size:9px;color:#9CA3AF;margin-bottom:1px">획득 PCI</div><div style="font-size:11px;font-weight:700;color:'+pciC+'">'+pciVal+'</div></div>';
+            html += '</div>';
+          } else if (sm.type === 'waiting') {
+            html += '<div style="background:#FFFBEB;border-top:1px solid #FDE68A;padding:7px 12px;display:flex;align-items:center;justify-content:space-between">';
+            html += '<span style="font-size:11px;color:#D97706">결과 발표 예정</span>';
+            html += '<span style="font-size:11px;font-weight:700;color:#D97706">'+cfg.resultTime+' 이후 확인 가능</span>';
+            html += '</div>';
+          } else if (sm.type === 'counting') {
+            html += '<div style="background:#F5F3FF;border-top:1px solid #C7D2FE;padding:7px 12px;text-align:center">';
+            html += '<span style="font-size:11px;color:#4338CA">결과를 집계하고 있어요, 잠시만 기다려주세요</span>';
+            html += '</div>';
+          } else if (sm.type === 'skipped') {
+            html += '<div style="background:#F9FAFB;border-top:1px solid #E5E7EB;padding:7px 12px;display:flex;align-items:center;justify-content:space-between">';
+            html += '<span style="font-size:11px;color:#9CA3AF">이 회차는 참여하지 않았어요</span>';
+            html += '<span style="font-size:10px;color:#D1D5DB">획득 PCI 없음</span>';
+            html += '</div>';
+          }
+          html += '</div>';
+        }
+        listEl.innerHTML = html;
+      }
+
+      function showPred2ResultModal() {
+        var d = _p2StateData[_p2State] || _p2StateData[3];
+        var totalEl = document.getElementById('pred2um-total');
+        if (totalEl) totalEl.textContent = d.total;
+        setModalResultType('정답');
+        showModal('pred2-unified-modal');
+      }
+
 
 function p2WizGo(step) {
   for (var s = 0; s <= 4; s++) {
@@ -8684,7 +9213,7 @@ function p2WizSubmit() {
   var el = document.getElementById('p2w-done-summary');
   if (el) { el.textContent = summary; el.style.color = isUp ? '#059669' : '#EF4444'; }
   p2WizGo(4);
-  showToast('2회차 예측이 확정되었어요!');
+  var _wzCfg = _p2WizRoundCfg[_p2WizActiveRound]||_p2WizRoundCfg[2]; showToast(_wzCfg.label+' 예측이 확정되었어요!');
 }
 
 /* 광고 보고 수정 */
@@ -8864,7 +9393,7 @@ function showPred2RankingTab(tab) {
 }
 
 function pred2RequestEdit(round) {
-  var labels = ['', '1회차 (오전 8시 결과)', '2회차 (오후 4시 결과)', '3회차 (자정 결과)'];
+  var labels = ['', '1회차 (자정~오전 4시)', '2회차 (오전 8시~낮 12시)', '3회차 (오후 4시~저녁 8시)'];
   // Show confirm overlay — reuse simple toast for now, then re-render that step
   showToast('광고 시청 후 ' + labels[round] + ' 수정 가능합니다');
   // After simulated ad view, re-enable editing for that round
@@ -11316,6 +11845,28 @@ document.addEventListener('DOMContentLoaded', function() {
   txRender();
 });
 
+
+      // ── 참여 마감 카운트다운 (위자드 카드용 시뮬레이션) ──
+      (function() {
+        var _p2ctd = { r1: 1*3600+42*60, r2: 2*3600+15*60, r3: 4*3600+30*60 };
+        function fmt(s) {
+          if (s <= 0) return '마감';
+          var h = Math.floor(s/3600), m = Math.floor((s%3600)/60);
+          return h > 0 ? h+'시간 '+m+'분' : m+'분';
+        }
+        setInterval(function() {
+          ['r1','r2','r3'].forEach(function(k) {
+            if (_p2ctd[k] > 0) _p2ctd[k]--;
+            var els = document.querySelectorAll('.p2ctd-'+k);
+            var txt = fmt(_p2ctd[k]);
+            for (var i=0;i<els.length;i++) els[i].textContent = txt;
+          });
+        }, 1000);
+      })();
+      // ── 초기 상태 표시 (모든 함수 정의 후) ──
+      _p2MakeWiz('p2w1','1회차');
+      _p2MakeWiz('p2w3','3회차');
+      setPred2State(3);
 </script>
 <div class="toast" id="app-toast"></div>
   <div id="hotspot-legend">
