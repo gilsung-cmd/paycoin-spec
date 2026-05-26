@@ -2943,7 +2943,7 @@ body {
       <div class="up" style="font-size:12px">▲ 5.23% (전일 대비)</div>
     </div>
     <div data-zone="wpci-actions" style="display:flex;gap:8px;margin:0 14px 8px">
-      <button class="btn btn-primary" style="flex:1" onclick="showModal('withdraw-modal')">출금하기</button>
+      <button class="btn btn-primary" style="flex:1" onclick="nav('wallet-pci-send')">출금하기</button>
       <button class="btn btn-secondary" style="flex:1" onclick="nav('pci-info')">오늘의 PCI</button>
     </div>
     <div style="margin:0 14px 14px">
@@ -3206,6 +3206,88 @@ body {
       <button class="btn btn-primary" onclick="closeModal('withdraw-modal')">다음 단계</button>
       <button class="btn btn-ghost" style="margin-top:7px" onclick="closeModal('withdraw-modal')">취소</button>
     </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════ 보내기 (PCI 출금) ═══════════════ -->
+<div class="screen" id="sc-wallet-pci-send">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="back-header">
+    <span class="back-btn" onclick="nav('wallet-pci')">‹</span>
+    <span class="back-title">보내기</span>
+  </div>
+  <div class="sbody" style="background:#F4F5FA;padding:0">
+
+    <!-- ── 코인 정보 ── -->
+    <div style="background:#fff;padding:14px 18px 0">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:14px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:36px;border-radius:50%;background:#EEF2FF;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🪙</div>
+          <div>
+            <div style="font-size:15px;font-weight:800;color:#111827;display:flex;align-items:center;gap:5px">
+              페이코인 <span style="font-size:12px;font-weight:600;color:#9CA3AF">PCI</span>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:17px;font-weight:800;color:#111827">20.3067</div>
+          <div style="font-size:11px;color:#9CA3AF;margin-top:1px">≈ 1,468 원</div>
+        </div>
+      </div>
+      <div style="background:#F4F5FA;margin:0 -18px;padding:11px 18px;display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:13px;color:#6B7280">네트워크</span>
+        <span style="font-size:13px;font-weight:600;color:#111827">Paycoin</span>
+      </div>
+    </div>
+
+    <!-- ── 받을 주소 / 메모 ── -->
+    <div style="background:#fff;margin-top:8px;padding:18px 18px 20px">
+      <div style="font-size:14px;font-weight:700;color:#111827;margin-bottom:14px">받을 주소 / 메모(선택)</div>
+      <!-- 주소 입력 -->
+      <div style="display:flex;align-items:center;border:1px solid #E5E7EB;border-radius:10px;padding:12px 14px;background:#fff;margin-bottom:10px">
+        <input placeholder="받는 주소 입력" style="flex:1;border:none;outline:none;font-size:14px;color:#111827;background:transparent;font-family:'Noto Sans KR',sans-serif" />
+        <div style="font-size:20px;color:#9CA3AF;margin-left:8px;cursor:pointer;flex-shrink:0">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <path d="M14 14h3v3m0 4h4v-4m-4 0h-3v4"/>
+          </svg>
+        </div>
+      </div>
+      <!-- 메모 입력 -->
+      <div style="border:1px solid #E5E7EB;border-radius:10px;padding:12px 14px;background:#fff">
+        <input placeholder="메모 입력(선택)" style="width:100%;border:none;outline:none;font-size:14px;color:#111827;background:transparent;font-family:'Noto Sans KR',sans-serif" />
+      </div>
+    </div>
+
+    <!-- ── 보낼 수량 ── -->
+    <div style="background:#fff;margin-top:8px;padding:18px 18px 22px">
+      <div style="font-size:14px;font-weight:700;color:#111827;margin-bottom:14px">보낼 수량</div>
+      <!-- 수량 입력 -->
+      <div style="display:flex;align-items:center;border:1px solid #E5E7EB;border-radius:10px;padding:12px 14px;background:#fff;margin-bottom:14px">
+        <input placeholder="0.000000000" type="number" style="flex:1;border:none;outline:none;font-size:14px;color:#9CA3AF;background:transparent;font-family:'Noto Sans KR',sans-serif" />
+        <span style="font-size:13px;font-weight:600;color:#374151;margin-right:10px">PCI</span>
+        <button onclick="showToast('전액이 입력되었습니다')" style="padding:5px 12px;border-radius:20px;border:1.5px solid var(--primary);background:#fff;color:var(--primary);font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap">ALL</button>
+      </div>
+      <!-- 수수료 / 최종 수량 -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:13px;color:#6B7280">수수료</span>
+        <span style="font-size:13px;color:#111827">0.00000000 PCI</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <span style="font-size:13px;color:#6B7280">최종 수량</span>
+        <div style="text-align:right">
+          <div style="font-size:13px;font-weight:600;color:#111827">0.00000000 PCI</div>
+          <div style="font-size:11px;color:#9CA3AF;margin-top:2px">≈ 0 원</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- ── 다음 버튼 (고정) ── -->
+  <div style="padding:12px 18px 28px;background:#fff;border-top:1px solid #F3F4F6">
+    <button style="width:100%;padding:15px;border-radius:12px;border:none;background:#D1D5DB;color:#9CA3AF;font-size:16px;font-weight:700;cursor:not-allowed;font-family:'Noto Sans KR',sans-serif">다음</button>
   </div>
 </div>
 
@@ -8381,6 +8463,7 @@ const SCREEN_MAP = {
   'wallet':       { sc:'sc-wallet',       pol:'pol-wallet',       ni:1 },
   'wallet-empty': { sc:'sc-wallet-empty', pol:'pol-wallet-empty', ni:2  },
   'wallet-pci':   { sc:'sc-wallet-pci',   pol:'pol-wallet-pci',   ni:2 },
+  'wallet-pci-send':{ sc:'sc-wallet-pci-send', pol:'pol-wallet-pci-send', ni:2 },
   'wallet-other': { sc:'sc-wallet-other', pol:'pol-wallet-other', ni:3 },
   'asset':        { sc:'sc-asset',        pol:'pol-asset',        ni:4 },
   'pci-info':     { sc:'sc-pci-info',     pol:'pol-pci-info',     ni:5 },
