@@ -3392,30 +3392,6 @@ body {
         <span style="font-size:10px;opacity:0.55;margin-left:6px">직전 접속 대비</span>
       </div>
     </div>
-    <!-- ① 이번 달 자산 변동 추이 -->
-    <div data-zone="asset-chart" class="stitle">
-      <span>이번 달 자산 변동</span>
-      <span style="font-size:11px;color:var(--text4);font-weight:400">2026년 5월 기준</span>
-    </div>
-    <div class="card" style="padding:13px 16px">
-      <div style="display:flex;align-items:stretch">
-        <!-- 5월 1일 자산 -->
-        <div style="flex:1;text-align:center;padding:4px 0">
-          <div style="font-size:10px;color:var(--text4);margin-bottom:6px">5월 1일 자산</div>
-          <div style="font-size:15px;font-weight:800;color:var(--text);letter-spacing:-0.5px"><span id="asset-monthly-base">11,204,300</span></div>
-        </div>
-        <!-- 구분선 -->
-        <div style="width:1px;background:var(--border);margin:2px 0;flex-shrink:0"></div>
-        <!-- 이번달 변동 -->
-        <div style="flex:1;text-align:center;padding:4px 0">
-          <div style="font-size:10px;color:var(--text4);margin-bottom:6px">이번달 변동</div>
-          <div id="asset-monthly-chg-wrap" style="font-size:15px;font-weight:800;color:var(--red);letter-spacing:-0.5px">+<span id="asset-monthly-chg-amt">1,141,378</span></div>
-          <div style="font-size:10px;color:var(--red);font-weight:700;margin-top:5px">+<span id="asset-monthly-chg-pct">10.2</span>%</div>
-        </div>
-      </div>
-
-    </div>
-
     <!-- ── 뷰어 전용: 상태 토글 ── -->
     <div style="display:flex;align-items:center;gap:4px;padding:0 14px 8px;flex-wrap:wrap">
       <span style="font-size:9px;color:var(--text4);white-space:nowrap;margin-right:2px">상태:</span>
@@ -4862,7 +4838,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
       <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px">📋 이벤트 규칙</div>
       <div style="display:flex;flex-direction:column;gap:10px">
         <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">1</div><div style="font-size:12px;color:var(--text2);line-height:1.5">기준 거래소: <strong>빗썸</strong> · 매일 KST 00:00 종가 비교</div></div>
-        <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">2</div><div style="font-size:12px;color:var(--text2);line-height:1.5">참여 시간: 매일 <strong>KST 00:00 ~ 21:59</strong> (22:00 이후 참여 불가)</div></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">2</div><div style="font-size:12px;color:var(--text2);line-height:1.5">참여 시간: 매일 <strong>KST 00:00 ~ 20:00</strong> (20:00 이후 참여 불가)</div></div>
         <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">3</div><div style="font-size:12px;color:var(--text2);line-height:1.5">1일 1회 참여 · <strong>선택 변경 가능</strong> (광고 시청 필요)</div></div>
         <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">4</div><div style="font-size:12px;color:var(--text2);line-height:1.5">정답 시 PCI 보상 누적 → <strong>익월 1~2주차 일괄 지급</strong></div></div>
         <div style="display:flex;gap:10px;align-items:flex-start"><div style="width:22px;height:22px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary)">5</div><div style="font-size:12px;color:var(--text2);line-height:1.5">지급 지갑: 페이코인 앱 <strong>자체 지갑</strong>으로 지급</div></div>
@@ -4911,7 +4887,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         <button onclick="setPredState('voted')"
           style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">참여완료</button>
         <button onclick="setPredState('closed')"
-          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">참여불가(22~24시)</button>
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">참여불가(20~24시)</button>
         <span style="width:1px;background:var(--border);margin:2px 2px"></span>
         <button onclick="setPredResult('done')"
           style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정답</button>
@@ -4925,12 +4901,21 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
           style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text4);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">어제 미참여</button>
       </div>
 
-      <!-- ── 참여불가 상태 (22:00~23:59) ── -->
+      <!-- 기준 종가 데이터 상태 토글 (뷰어 전용) -->
+      <div style="display:flex;justify-content:flex-end;align-items:center;padding:4px 14px 0;gap:4px;flex-wrap:wrap">
+        <span style="font-size:9px;color:var(--text4);margin-right:2px">기준 종가:</span>
+        <button id="pbp-none" onclick="setPredBaseError('none')"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정상</button>
+        <button id="pbp-error" onclick="setPredBaseError('error')"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">확인중(오류/점검)</button>
+      </div>
+
+      <!-- ── 참여불가 상태 (20:00~23:59) ── -->
       <div id="pred-state-closed" style="display:none">
         <div style="margin:8px 14px 0;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:var(--radius);padding:14px;text-align:center">
           <div style="font-size:22px;margin-bottom:6px">🔒</div>
           <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:4px">지금은 참여할 수 없어요</div>
-          <div style="font-size:11px;color:var(--text3);line-height:1.7">참여 가능 시간은 매일 <strong>00:00 ~ 21:59</strong>입니다.<br>내일 00:00부터 다시 참여할 수 있어요.</div>
+          <div style="font-size:11px;color:var(--text3);line-height:1.7">참여 가능 시간은 매일 <strong>00:00 ~ 20:00</strong>입니다.<br>내일 00:00부터 다시 참여할 수 있어요.</div>
         </div>
         <div style="margin:6px 14px 0;display:flex;justify-content:flex-end">
           <button onclick="showModal('pred-result-modal')" style="font-size:10px;color:var(--text4);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;padding:0">어제 결과 확인하기 ›</button>
@@ -4955,8 +4940,10 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         </div>
       <div data-zone="pred-base-price" style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;text-align:center;box-shadow:var(--shadow-sm)">
         <div style="font-size:11px;color:var(--text4);margin-bottom:3px">04.29 빗썸 종가 (오늘의 기준값)</div>
-        <div style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:2px">78.45원</div>
-        <div style="font-size:10px;color:var(--text4)">이 금액보다 오늘(04.30) 종가가 높으면 상승</div>
+        <div class="pred-base-normal" style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:2px">78.45원</div>
+        <div class="pred-base-error" style="display:none;font-size:18px;font-weight:700;color:var(--text3);margin-bottom:2px">⏳ 종가 확인중</div>
+        <div class="pred-base-normal" style="font-size:10px;color:var(--text4)">이 금액보다 오늘(04.30) 종가가 높으면 상승</div>
+        <div class="pred-base-error" style="display:none;font-size:10px;color:var(--text4)">잠시 후 다시 확인해 주세요</div>
       </div>
 
       <!-- 현황 바 -->
@@ -4989,8 +4976,10 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         </div>
       <div data-zone="pred-base-price" style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;text-align:center;box-shadow:var(--shadow-sm)">
         <div style="font-size:11px;color:var(--text4);margin-bottom:3px">04.29 빗썸 종가 (오늘의 기준값)</div>
-        <div style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:2px">78.45원</div>
-        <div style="font-size:10px;color:var(--text4)">이 금액보다 오늘(04.30) 종가가 높으면 상승</div>
+        <div class="pred-base-normal" style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:2px">78.45원</div>
+        <div class="pred-base-error" style="display:none;font-size:18px;font-weight:700;color:var(--text3);margin-bottom:2px">⏳ 종가 확인중</div>
+        <div class="pred-base-normal" style="font-size:10px;color:var(--text4)">이 금액보다 오늘(04.30) 종가가 높으면 상승</div>
+        <div class="pred-base-error" style="display:none;font-size:10px;color:var(--text4)">잠시 후 다시 확인해 주세요</div>
       </div>
 
       <!-- 현황 바 -->
@@ -5370,14 +5359,14 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
     </div>
   </div>
 
-  <!-- 21:58 이후 선택 변경 시 경고 모달 -->
+  <!-- 19:58 이후 선택 변경 시 경고 모달 -->
   <div class="overlay" id="late-change-modal" style="align-items:center;justify-content:center">
     <div class="modal" style="max-width:280px">
       <div class="modal-handle"></div>
       <div style="text-align:center;margin-bottom:16px">
         <div style="font-size:32px;margin-bottom:8px">⏰</div>
         <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px">참여 마감이 얼마 남지 않았어요</div>
-        <div style="font-size:12px;color:var(--text3);line-height:1.7">현재 <strong>21:58</strong>입니다.<br>광고 시청 중 22:00가 넘어가면<br>변경이 불가합니다.</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.7">현재 <strong>19:58</strong>입니다.<br>광고 시청 중 20:00가 넘어가면<br>변경이 불가합니다.</div>
       </div>
       <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:10px 12px;margin-bottom:16px">
         <div style="font-size:11px;color:#92400E;line-height:1.7">
@@ -8336,7 +8325,6 @@ EWS DETAIL ═══════════════ -->
 <tr><td><span class="key">wother-actions</span><button class="guide-copy-btn" onclick="copyText('wother-actions')">복사</button></td><td>지갑상세기타 — 버튼</td></tr>
 <tr><td><span class="key">wother-txguide</span><button class="guide-copy-btn" onclick="copyText('wother-txguide')">복사</button></td><td>지갑상세기타 — 거래내역안내</td></tr>
 <tr><td><span class="key">asset-summary</span><button class="guide-copy-btn" onclick="copyText('asset-summary')">복사</button></td><td>자산현황 — 합계</td></tr>
-<tr><td><span class="key">asset-chart</span><button class="guide-copy-btn" onclick="copyText('asset-chart')">복사</button></td><td>자산현황 — 차트</td></tr>
 <tr><td><span class="key">asset-distribution</span><button class="guide-copy-btn" onclick="copyText('asset-distribution')">복사</button></td><td>자산현황 — 비중</td></tr>
 <tr><td><span class="key">asset-list</span><button class="guide-copy-btn" onclick="copyText('asset-list')">복사</button></td><td>자산현황 — 목록</td></tr>
 <tr><td><span class="key">pci-price</span><button class="guide-copy-btn" onclick="copyText('pci-price')">복사</button></td><td>PCI정보 — 시세</td></tr>
@@ -8883,17 +8871,17 @@ function confirmVote() {
   document.querySelector(pendingVote === 'up' ? '.vote-up' : '.vote-down').classList.add('sel');
   const area = document.getElementById('change-btn-area');
   if (area && !area.querySelector('button')) {
-    area.innerHTML = '<div style="margin:0 14px 8px;display:flex;gap:6px;align-items:center"><button class="btn btn-ghost" style="font-size:11px;flex:1" onclick="changeVote()">선택 변경하기 (광고 시청 필요)</button><button onclick="showLateChangeModal()" style="font-size:9px;font-weight:600;padding:6px 8px;border-radius:7px;background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;cursor:pointer;font-family:\'Noto Sans KR\',sans-serif;white-space:nowrap">21:58↗</button></div>';
+    area.innerHTML = '<div style="margin:0 14px 8px;display:flex;gap:6px;align-items:center"><button class="btn btn-ghost" style="font-size:11px;flex:1" onclick="changeVote()">선택 변경하기 (광고 시청 필요)</button><button onclick="showLateChangeModal()" style="font-size:9px;font-weight:600;padding:6px 8px;border-radius:7px;background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;cursor:pointer;font-family:\'Noto Sans KR\',sans-serif;white-space:nowrap">19:58↗</button></div>';
   }
 }
-/* ═══ [PRD 수정 필요] 광고 시청 후 자정 초과 시 선택 변경 정책 ═══
-   엣지 케이스: 21:59에 광고 시청 시작 → 22:01에 복귀 시 변경 취소 처리
+/* ═══ [PRD 수정 필요] 광고 시청 후 마감 초과 시 선택 변경 정책 ═══
+   엣지 케이스: 19:59에 광고 시청 시작 → 20:01에 복귀 시 변경 취소 처리
 
    결정: 변경 완료 시점 기준 (엄격 적용)
-     - 광고 시청 버튼 클릭 전 21:58 이후라면 사전 경고 표시
-       "현재 HH:MM입니다. 광고 시청 중 22:00가 넘어가면 변경이 불가합니다."
-     - 변경 완료 시점이 22:00 이후면 변경 불가 처리
-     - 버퍼(유예 시간) 없음 — 22:00이 명확한 마감선
+     - 광고 시청 버튼 클릭 전 19:58 이후라면 사전 경고 표시
+       "현재 HH:MM입니다. 광고 시청 중 20:00가 넘어가면 변경이 불가합니다."
+     - 변경 완료 시점이 20:00 이후면 변경 불가 처리
+     - 버퍼(유예 시간) 없음 — 20:00이 명확한 마감선
 
    사유: 버퍼 적용 시 전날 수정 + 당일 재참여 구조가 되어
          UI/UX 혼란 및 정책 복잡도 증가
@@ -8933,7 +8921,7 @@ function startAdWatch() {
   }, 1000);
 }
 function confirmAdWatch() {
-  // 21:58 경고 모달에서 "그래도 변경하기" 클릭 시 바로 광고 시청으로
+  // 19:58 경고 모달에서 "그래도 변경하기" 클릭 시 바로 광고 시청으로
   closeLateChangeModal();
   startAdWatch();
 }
@@ -8941,7 +8929,7 @@ function cancelAdWatch() {
   document.getElementById('ad-confirm-modal').classList.remove('open');
 }
 
-/* 21:58 이후 수정 요청 시뮬레이션 */
+/* 19:58 이후 수정 요청 시뮬레이션 */
 function showLateChangeModal() {
   document.getElementById('late-change-modal').classList.add('open');
 }
@@ -9966,6 +9954,25 @@ function setPredState(state) {
   if(voted)  voted.style.display  = (state==='voted')  ? 'block' : 'none';
   if(closed) closed.style.display = (state==='closed') ? 'block' : 'none';
 }
+/* 기준 종가 데이터 표시 상태 토글 (정상 ↔ 종가 확인중) */
+function setPredBaseError(mode) {
+  var isError = mode === 'error';
+  var normals = document.querySelectorAll('.pred-base-normal');
+  var errors  = document.querySelectorAll('.pred-base-error');
+  for (var i=0; i<normals.length; i++) normals[i].style.display = isError ? 'none' : '';
+  for (var j=0; j<errors.length;  j++) errors[j].style.display  = isError ? ''     : 'none';
+  /* 토글 버튼 활성화 표시 동기화 */
+  var btnN = document.getElementById('pbp-none');
+  var btnE = document.getElementById('pbp-error');
+  if (btnN && btnE) {
+    btnN.style.background = isError ? 'var(--card2)'      : 'var(--primary-l)';
+    btnN.style.color      = isError ? 'var(--text3)'      : 'var(--primary)';
+    btnN.style.border     = isError ? '1px solid var(--border)' : '1px solid #BFDBFE';
+    btnE.style.background = isError ? '#FFFBEB'           : 'var(--card2)';
+    btnE.style.color      = isError ? '#92400E'           : 'var(--text3)';
+    btnE.style.border     = isError ? '1px solid #FDE68A' : '1px solid var(--border)';
+  }
+}
 function setPredResult(result) {
   setPredState('voted');
   showModal('pred-result-modal');
@@ -10978,15 +10985,11 @@ function fmtQty(qty, sym) {
   window._dgtAnim  = animDgt;
 
   /* 초기화 */
-  var MONTHLY_BASE = 11204300;
   setTimeout(function(){
     initEl('home-total-amt',       fmt(total()));
     initEl('wt-ticker',            fmt(total())+'원');
     initEl('we-ticker',            fmt(total())+'원');
     initEl('asset-total-amt',      fmt(total()));
-    initEl('asset-monthly-base',   fmt(MONTHLY_BASE));
-    var initChg = total() - MONTHLY_BASE;
-    initEl('asset-monthly-chg-amt', fmt(Math.abs(initChg)));
     initEl('asset-goal-current',   fmt(total()));
     renderDistMaps();
   }, 400);
@@ -11099,17 +11102,6 @@ function fmtQty(qty, sym) {
       var assetPct = prev ? (assetChgAmt/prev*100) : 0;
       assetChgEl.textContent = (dir===1?'▲ +':'▼ -')+fmt(assetChgAmt)+'원 ('+assetPct.toFixed(2)+'%)';
       colorFlash(assetChgEl, dir);
-    }
-    /* 자산현황 — 이번 달 변동 */
-    var mChg = tot - MONTHLY_BASE;
-    var mDir = mChg >= 0 ? 1 : -1;
-    updateEl('asset-monthly-chg-amt', fmt(Math.abs(mChg)), mDir);
-    var mChgWrap = document.getElementById('asset-monthly-chg-wrap');
-    if(mChgWrap){ mChgWrap.style.color = mDir===1 ? '#EF4444' : '#3B82F6'; }
-    var mPctEl = document.getElementById('asset-monthly-chg-pct');
-    if(mPctEl){
-      mPctEl.textContent = (Math.abs(mChg/MONTHLY_BASE*100)).toFixed(1);
-      mPctEl.parentElement.style.color = mDir===1 ? '#EF4444' : '#3B82F6';
     }
     /* 자산현황 — 목표 달성률 현재 자산 */
     updateEl('asset-goal-current', fmt(tot), dir);
@@ -11337,7 +11329,7 @@ function generateAppsScriptCode() {
     'wallet-manage':['', 'wm-notice-banner','wm-order-btn','wm-bithumb','wm-coinone','wm-korbit'],
     'wallet-pci':   ['', 'wpci-header','wpci-actions','wpci-address','wpci-price','wpci-txlist'],
     'wallet-other': ['', 'wother-header','wother-actions','wother-txguide'],
-    'asset':        ['', 'asset-summary','asset-chart','asset-distribution','asset-list'],
+    'asset':        ['', 'asset-summary','asset-distribution','asset-list'],
     'pci-info':     ['', 'pci-price', 'pci-exchanges'],
     'token-detail': ['', 'token-header','token-price','token-wallet'],
     'benefits':     ['', 'ben-banner','ben-daily','ben-referral','ben-payment'],
@@ -11388,7 +11380,7 @@ function generateAppsScriptCode() {
     '  \'wallet-manage\': [\'\', \'wm-notice-banner\', \'wm-order-btn\', \'wm-bithumb\', \'wm-coinone\', \'wm-korbit\'],',
     '  \'wallet-pci\':    [\'\', \'wpci-header\', \'wpci-actions\', \'wpci-address\', \'wpci-price\', \'wpci-txlist\'],',
     '  \'wallet-other\':  [\'\', \'wother-header\', \'wother-actions\', \'wother-txguide\'],',
-    '  \'asset\':         [\'\', \'asset-summary\', \'asset-chart\', \'asset-distribution\', \'asset-list\'],',
+    '  \'asset\':         [\'\', \'asset-summary\', \'asset-distribution\', \'asset-list\'],',
     '  \'pci-info\':      [\'\', \'pci-price\', \'pci-exchanges\'],   // pci-pred-banner 제거 (HTML 미사용)',
     '  \'token-detail\':  [\'\', \'token-header\', \'token-price\', \'token-wallet\'],',
     '  \'benefits\':      [\'\', \'ben-banner\', \'ben-daily\', \'ben-referral\', \'ben-payment\'],',
