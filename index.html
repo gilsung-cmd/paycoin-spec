@@ -4882,10 +4882,8 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
 
       <!-- 상태 전환 토글 (뷰어 전용) -->
       <div style="display:flex;justify-content:flex-end;padding:4px 14px 0;gap:4px;flex-wrap:wrap">
-        <button onclick="setPredState('none')"
-          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">미참여</button>
-        <button onclick="setPredState('voted')"
-          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">참여완료</button>
+        <button onclick="setPredState('active')"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">참여 가능</button>
         <button onclick="setPredState('closed')"
           style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">참여불가(20~24시)</button>
         <span style="width:1px;background:var(--border);margin:2px 2px"></span>
@@ -4910,6 +4908,21 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
           style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">확인중(오류/점검)</button>
       </div>
 
+      <!-- 연속 참여 일차 토글 (뷰어 전용) -->
+      <div style="display:flex;justify-content:flex-end;align-items:center;padding:4px 14px 0;gap:4px;flex-wrap:wrap">
+        <span style="font-size:9px;color:var(--text4);margin-right:2px">연속 일차:</span>
+        <button id="pds-1" onclick="setPredDayStreak(1)"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">1일차</button>
+        <button id="pds-2" onclick="setPredDayStreak(2)"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">2일차</button>
+        <button id="pds-3" onclick="setPredDayStreak(3)"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">3일차</button>
+        <button id="pds-4" onclick="setPredDayStreak(4)"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">4일차</button>
+        <button id="pds-5" onclick="setPredDayStreak(5)"
+          style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">5일차(보너스)</button>
+      </div>
+
       <!-- ── 참여불가 상태 (20:00~23:59) ── -->
       <div id="pred-state-closed" style="display:none">
         <div style="margin:8px 14px 0;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:var(--radius);padding:14px;text-align:center">
@@ -4922,86 +4935,89 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         </div>
       </div>
 
-      <!-- ── 미참여 상태 (후킹 메시지 + 투표) ── -->
-      <div id="pred-state-none">
-        <!-- 후킹 메시지 (컴팩트 배너) -->
-        <div style="margin:8px 14px 0;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border:1px solid #C7D2FE;border-radius:var(--radius);padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
-          <div style="display:flex;align-items:center;gap:8px">
-            <span style="font-size:18px">🔮</span>
-            <div>
-              <div style="font-size:12px;font-weight:700;color:var(--text)">오늘의 예측에 참여해보세요!</div>
-              <div style="font-size:10px;color:var(--text3)">맞히면 PCI 리워드를 드려요</div>
+      <!-- ── 참여 가능 상태 (미참여·참여완료 통합) ── -->
+      <!-- 참여완료 표현은 castVote → confirmVote 가 vote-btn 에 .sel 클래스를 부여하고
+           change-btn-area 에 '선택 변경하기' 버튼을 동적 주입하는 방식으로 처리됩니다. -->
+      <div id="pred-state-active">
+
+        <!-- 5일 연속 참여 스트릭 -->
+        <div data-zone="pred-streak" style="margin:8px 14px 4px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;box-shadow:var(--shadow-sm)">
+          <div style="display:flex;align-items:center;gap:5px;margin-bottom:10px">
+            <span style="font-size:13px">🔥</span>
+            <span id="pred-streak-label" style="font-size:12px;font-weight:700;color:var(--text)">2일 연속 진행중</span>
+            <span style="margin-left:auto;font-size:10px;color:var(--text4)">5일 연속 시 <strong style="color:#F59E0B">+0.5 PCI</strong></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0">
+            <!-- Day 1 -->
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:4px">
+              <div id="pred-dot-1" style="width:12px;height:12px;border-radius:50%;background:var(--primary)"></div>
+              <span id="pred-dot-lbl-1" style="font-size:9px;color:var(--primary);font-weight:600">1</span>
+            </div>
+            <div id="pred-conn-1" style="flex:0.5;height:1.5px;background:var(--primary);margin-bottom:13px"></div>
+            <!-- Day 2 -->
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:4px">
+              <div id="pred-dot-2" style="width:12px;height:12px;border-radius:50%;background:var(--primary)"></div>
+              <span id="pred-dot-lbl-2" style="font-size:9px;color:var(--primary);font-weight:600">2</span>
+            </div>
+            <div id="pred-conn-2" style="flex:0.5;height:1.5px;background:var(--primary);margin-bottom:13px"></div>
+            <!-- Day 3 (오늘) -->
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:4px">
+              <div id="pred-dot-3" style="width:14px;height:14px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--primary)"></div>
+              <span id="pred-dot-lbl-3" style="font-size:9px;color:var(--primary);font-weight:700">오늘</span>
+            </div>
+            <div id="pred-conn-3" style="flex:0.5;height:1.5px;border-top:1.5px dashed var(--border);margin-bottom:13px"></div>
+            <!-- Day 4 -->
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:4px">
+              <div id="pred-dot-4" style="width:12px;height:12px;border-radius:50%;background:var(--card);border:1.5px solid var(--border)"></div>
+              <span id="pred-dot-lbl-4" style="font-size:9px;color:var(--text4)">4</span>
+            </div>
+            <div id="pred-conn-4" style="flex:0.5;height:1.5px;border-top:1.5px dashed var(--border);margin-bottom:13px"></div>
+            <!-- Day 5 (보너스) -->
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:4px;position:relative">
+              <div id="pred-bonus-tip" style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);white-space:nowrap;background:#F59E0B;color:#fff;font-size:8px;font-weight:700;padding:2px 5px;border-radius:4px;line-height:1.4">
+                +0.5 PCI
+                <div style="position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);border-left:3px solid transparent;border-right:3px solid transparent;border-top:4px solid #F59E0B"></div>
+              </div>
+              <div id="pred-dot-5" style="width:12px;height:12px;border-radius:50%;background:#FEF3C7;border:1.5px dashed #F59E0B"></div>
+              <span id="pred-dot-lbl-5" style="font-size:9px;color:#F59E0B;font-weight:700">5</span>
             </div>
           </div>
         </div>
+
         <!-- 어제 결과 링크 -->
         <div style="margin:6px 14px 0;display:flex;justify-content:flex-end">
           <button onclick="showModal('pred-result-modal')" style="font-size:10px;color:var(--text4);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;padding:0">어제 결과 확인하기 ›</button>
         </div>
-      <div data-zone="pred-base-price" style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;text-align:center;box-shadow:var(--shadow-sm)">
-        <div style="font-size:11px;color:var(--text4);margin-bottom:3px">04.29 빗썸 종가 (오늘의 기준값)</div>
-        <div class="pred-base-normal" style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:2px">78.45원</div>
-        <div class="pred-base-error" style="display:none;font-size:18px;font-weight:700;color:var(--text3);margin-bottom:2px">⏳ 종가 확인중</div>
-        <div class="pred-base-normal" style="font-size:10px;color:var(--text4)">이 금액보다 오늘(04.30) 종가가 높으면 상승</div>
-        <div class="pred-base-error" style="display:none;font-size:10px;color:var(--text4)">잠시 후 다시 확인해 주세요</div>
-      </div>
 
-      <!-- 현황 바 -->
-      <div data-zone="pred-stats-bar" style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm)">
-        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;margin-bottom:6px">
-          <span class="up">▲ 상승 62.3%</span><span class="dn">▼ 하락 37.7%</span>
+        <!-- 기준 종가 카드 -->
+        <div data-zone="pred-base-price" style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;text-align:center;box-shadow:var(--shadow-sm)">
+          <div style="font-size:11px;color:var(--text4);margin-bottom:3px">04.29 빗썸 종가 (오늘의 기준값)</div>
+          <div class="pred-base-normal" style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:2px">78.45원</div>
+          <div class="pred-base-error" style="display:none;font-size:18px;font-weight:700;color:var(--text3);margin-bottom:2px">⏳ 종가 확인중</div>
+          <div class="pred-base-normal" style="font-size:10px;color:var(--text4)">이 금액보다 오늘(04.30) 종가가 높으면 상승</div>
+          <div class="pred-base-error" style="display:none;font-size:10px;color:var(--text4)">잠시 후 다시 확인해 주세요</div>
         </div>
-        <div style="display:flex;gap:3px">
-          <div class="prog-wrap" style="flex:62"><div class="prog-bar" style="width:100%;background:var(--red)"></div></div>
-          <div class="prog-wrap" style="flex:38"><div class="prog-bar" style="width:100%;background:var(--primary)"></div></div>
+
+        <!-- 현황 바 -->
+        <div data-zone="pred-stats-bar" style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm)">
+          <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;margin-bottom:6px">
+            <span class="up">▲ 상승 62.3%</span><span class="dn">▼ 하락 37.7%</span>
+          </div>
+          <div style="display:flex;gap:3px">
+            <div class="prog-wrap" style="flex:62"><div class="prog-bar" style="width:100%;background:var(--red)"></div></div>
+            <div class="prog-wrap" style="flex:38"><div class="prog-bar" style="width:100%;background:var(--primary)"></div></div>
+          </div>
         </div>
-      </div>
 
-      <!-- 투표 버튼 -->
-      <div data-zone="pred-vote-btns" style="display:flex;gap:8px;margin:0 14px 6px" id="vote-btns">
-        <button class="vote-btn vote-up" onclick="castVote('up')">▲<br><span class="vote-sub">상승</span></button>
-        <button class="vote-btn vote-down" onclick="castVote('down')">▼<br><span class="vote-sub">하락</span></button>
-      </div>
-      <div id="change-btn-area"></div>
-
-      <!-- 결과 안내 -->
-      <div style="text-align:center;font-size:10px;color:var(--text4);padding:6px 0 0">결과는 내일 KST 09:00 이후 확인 가능합니다</div>
-      </div>
-
-      <!-- ── 참여완료 상태 ── -->
-      <div id="pred-state-voted" style="display:none">
-        <!-- 어제 결과 링크 (참여완료) -->
-        <div style="margin:8px 14px 0;display:flex;justify-content:flex-end">
-          <button onclick="showModal('pred-result-modal')" style="font-size:10px;color:var(--text4);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;padding:0">어제 결과 확인하기 ›</button>
+        <!-- 투표 버튼 -->
+        <div data-zone="pred-vote-btns" style="display:flex;gap:8px;margin:0 14px 6px" id="vote-btns">
+          <button class="vote-btn vote-up" onclick="castVote('up')">▲<br><span class="vote-sub">상승</span></button>
+          <button class="vote-btn vote-down" onclick="castVote('down')">▼<br><span class="vote-sub">하락</span></button>
         </div>
-      <div data-zone="pred-base-price" style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;text-align:center;box-shadow:var(--shadow-sm)">
-        <div style="font-size:11px;color:var(--text4);margin-bottom:3px">04.29 빗썸 종가 (오늘의 기준값)</div>
-        <div class="pred-base-normal" style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:2px">78.45원</div>
-        <div class="pred-base-error" style="display:none;font-size:18px;font-weight:700;color:var(--text3);margin-bottom:2px">⏳ 종가 확인중</div>
-        <div class="pred-base-normal" style="font-size:10px;color:var(--text4)">이 금액보다 오늘(04.30) 종가가 높으면 상승</div>
-        <div class="pred-base-error" style="display:none;font-size:10px;color:var(--text4)">잠시 후 다시 확인해 주세요</div>
-      </div>
+        <div id="change-btn-area"></div>
 
-      <!-- 현황 바 -->
-      <div data-zone="pred-stats-bar" style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm)">
-        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;margin-bottom:6px">
-          <span class="up">▲ 상승 62.3%</span><span class="dn">▼ 하락 37.7%</span>
-        </div>
-        <div style="display:flex;gap:3px">
-          <div class="prog-wrap" style="flex:62"><div class="prog-bar" style="width:100%;background:var(--red)"></div></div>
-          <div class="prog-wrap" style="flex:38"><div class="prog-bar" style="width:100%;background:var(--primary)"></div></div>
-        </div>
-      </div>
-
-      <!-- 투표 버튼 -->
-      <div data-zone="pred-vote-btns" style="display:flex;gap:8px;margin:0 14px 6px" id="vote-btns">
-        <button class="vote-btn vote-up" onclick="castVote('up')">▲<br><span class="vote-sub">상승</span></button>
-        <button class="vote-btn vote-down" onclick="castVote('down')">▼<br><span class="vote-sub">하락</span></button>
-      </div>
-      <div id="change-btn-area"></div>
-
-      <!-- 결과 안내 -->
-      <div style="text-align:center;font-size:10px;color:var(--text4);padding:6px 0 0">결과는 내일 KST 09:00 이후 확인 가능합니다</div>
+        <!-- 결과 안내 -->
+        <div style="text-align:center;font-size:10px;color:var(--text4);padding:6px 0 0">결과는 내일 KST 09:00 이후 확인 가능합니다</div>
       </div>
 
     </div><!-- /pred-top-area -->
@@ -9947,12 +9963,68 @@ async function submitPolicyA(id) {
 
 /* ══ 등락예측 상태 토글 ══ */
 function setPredState(state) {
-  var none   = document.getElementById('pred-state-none');
-  var voted  = document.getElementById('pred-state-voted');
+  /* 미참여·참여완료 통합: 'none'/'voted'는 'active'로 매핑 (하위호환) */
+  var normalized = (state === 'closed') ? 'closed' : 'active';
+  var active = document.getElementById('pred-state-active');
   var closed = document.getElementById('pred-state-closed');
-  if(none)   none.style.display   = (state==='none')   ? 'block' : 'none';
-  if(voted)  voted.style.display  = (state==='voted')  ? 'block' : 'none';
-  if(closed) closed.style.display = (state==='closed') ? 'block' : 'none';
+  if(active) active.style.display = (normalized === 'active') ? 'block' : 'none';
+  if(closed) closed.style.display = (normalized === 'closed') ? 'block' : 'none';
+}
+/* 연속 참여 일차 시각화 (day: 1~5, "오늘"이 며칠차인지) */
+function setPredDayStreak(day) {
+  day = Math.max(1, Math.min(5, day | 0));
+  var lbl = document.getElementById('pred-streak-label');
+  if (lbl) lbl.textContent = (day === 1) ? '오늘 시작하기' : ((day - 1) + '일 연속 진행중');
+  for (var i = 1; i <= 5; i++) {
+    var dot = document.getElementById('pred-dot-' + i);
+    var dlb = document.getElementById('pred-dot-lbl-' + i);
+    if (!dot || !dlb) continue;
+    if (i < day) {
+      /* 완료 */
+      dot.style.cssText = 'width:12px;height:12px;border-radius:50%;background:var(--primary)';
+      dlb.style.cssText = 'font-size:9px;color:var(--primary);font-weight:600';
+      dlb.textContent = i;
+    } else if (i === day) {
+      /* 오늘 */
+      dot.style.cssText = 'width:14px;height:14px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--primary)';
+      dlb.style.cssText = 'font-size:9px;color:var(--primary);font-weight:700';
+      dlb.textContent = '오늘';
+    } else if (i === 5) {
+      /* 5일차 보너스 (미래) */
+      dot.style.cssText = 'width:12px;height:12px;border-radius:50%;background:#FEF3C7;border:1.5px dashed #F59E0B';
+      dlb.style.cssText = 'font-size:9px;color:#F59E0B;font-weight:700';
+      dlb.textContent = i;
+    } else {
+      /* 미래 (일반) */
+      dot.style.cssText = 'width:12px;height:12px;border-radius:50%;background:var(--card);border:1.5px solid var(--border)';
+      dlb.style.cssText = 'font-size:9px;color:var(--text4)';
+      dlb.textContent = i;
+    }
+  }
+  /* 커넥터: i < day → solid primary / 그 외 → dashed border */
+  for (var c = 1; c <= 4; c++) {
+    var conn = document.getElementById('pred-conn-' + c);
+    if (!conn) continue;
+    if (c < day) {
+      conn.style.cssText = 'flex:0.5;height:1.5px;background:var(--primary);margin-bottom:13px';
+    } else {
+      conn.style.cssText = 'flex:0.5;height:1.5px;border-top:1.5px dashed var(--border);margin-bottom:13px';
+    }
+  }
+  /* 토글 버튼 활성화 표시 */
+  for (var b = 1; b <= 5; b++) {
+    var btn = document.getElementById('pds-' + b);
+    if (!btn) continue;
+    if (b === day) {
+      if (b === 5) {
+        btn.style.background = '#FFFBEB'; btn.style.color = '#92400E'; btn.style.border = '1px solid #FDE68A';
+      } else {
+        btn.style.background = 'var(--primary-l)'; btn.style.color = 'var(--primary)'; btn.style.border = '1px solid #BFDBFE';
+      }
+    } else {
+      btn.style.background = 'var(--card2)'; btn.style.color = 'var(--text3)'; btn.style.border = '1px solid var(--border)';
+    }
+  }
 }
 /* 기준 종가 데이터 표시 상태 토글 (정상 ↔ 종가 확인중) */
 function setPredBaseError(mode) {
