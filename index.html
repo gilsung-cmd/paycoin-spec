@@ -920,6 +920,8 @@ body {
     <button class="nav-btn" onclick="nav('prediction')">🔮 등락 예측</button>
     <!-- 메뉴 노출 보류 (화면/skeleton/policy 정의는 그대로 유지) -->
     <!-- <button class="nav-btn nav-sub" onclick="nav('prediction2')">↳ 등락 예측 v2 (Beta)</button> -->
+    <button class="nav-btn nav-sub" onclick="nav('prediction3')">↳ 등락 예측 v3 (시안A·현재가)</button>
+    <button class="nav-btn nav-sub" onclick="nav('prediction4')">↳ 등락 예측 v4 (시안B·배율)</button>
 
     <button class="nav-btn" onclick="nav('news')">📰 최근 소식</button>
     <button class="nav-btn nav-sub" onclick="nav('news-detail')">↳ 소식 상세</button>
@@ -6307,6 +6309,564 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
   </div>
 </div>
 
+<!-- ═══════════════ PREDICTION V3 (시안 A · 현재가 기준 · 3라운드) ═══════════════ -->
+<div class="screen" id="sc-prediction3">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="back-header">
+    <span class="back-btn" onclick="history.back()">‹</span>
+    <span class="back-title">등락 예측 v3 (시안A)</span>
+    <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer" onclick="showModal('pred3-guide-modal')">안내</span>
+  </div>
+
+  <div class="sbody" style="padding-bottom:20px">
+
+    <!-- 정책 요약 배너 -->
+    <div style="margin:10px 14px 8px;background:var(--primary-l);border:1px solid #BFDBFE;border-radius:10px;padding:9px 12px;font-size:10px;color:var(--primary);line-height:1.55">
+      <strong>참여 시점 현재가 = 내 기준가</strong> · 하루 3라운드 (결과 09시 / 15시 / 21시)
+    </div>
+
+    <!-- 상태 토글 (뷰어 전용) -->
+    <div style="display:flex;justify-content:flex-end;padding:4px 14px 0;gap:4px;flex-wrap:wrap">
+      <span style="font-size:9px;color:var(--text4);margin-right:2px">상태:</span>
+      <button id="p3s-s1" onclick="setPred3State('s1')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">S1 미참여</button>
+      <button id="p3s-s2" onclick="setPred3State('s2')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">S2 결과대기</button>
+      <button id="p3s-s3" onclick="setPred3State('s3')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">S3 적중</button>
+      <button id="p3s-s4" onclick="setPred3State('s4')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">S4 실패</button>
+      <button id="p3s-s6" onclick="setPred3State('s6')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">S6 당일종료</button>
+      <button id="p3s-s7" onclick="setPred3State('s7')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">S7 참여불가</button>
+    </div>
+
+    <!-- 라운드 토글 -->
+    <div style="display:flex;justify-content:flex-end;padding:4px 14px 0;gap:4px;flex-wrap:wrap">
+      <span style="font-size:9px;color:var(--text4);margin-right:2px">라운드:</span>
+      <button id="p3r-1" onclick="setPred3Round(1)" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">1R (~07시)</button>
+      <button id="p3r-2" onclick="setPred3Round(2)" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">2R (~13시)</button>
+      <button id="p3r-3" onclick="setPred3Round(3)" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">3R (~19시)</button>
+    </div>
+
+    <!-- 라운드 헤더 (공통) -->
+    <div id="p3-round-header" style="margin:8px 14px 0;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-d) 100%);border-radius:14px;padding:14px 16px;color:#fff">
+      <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.78);margin-bottom:3px"><span id="p3-round-name">2라운드</span> · <span id="p3-round-result">오후 3시</span> 결과</div>
+      <div style="font-size:18px;font-weight:800"><span id="p3-round-cta">참여 마감까지</span> <span id="p3-round-ctd" style="font-weight:900">02:34:17</span></div>
+    </div>
+
+    <!-- ── A-S1: 참여 가능 (미참여) ── -->
+    <div id="p3-s1">
+      <div style="margin:10px 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center;box-shadow:var(--shadow-sm)">
+        <div style="font-size:10px;color:var(--text4);margin-bottom:4px">현재 PCI 가격</div>
+        <div style="font-size:26px;font-weight:800;color:var(--text);letter-spacing:-0.5px;margin-bottom:6px">₩ 82.45<span style="font-size:13px;font-weight:500;color:var(--text3)">원</span></div>
+        <div style="font-size:10px;color:var(--primary);background:var(--primary-l);border-radius:8px;padding:4px 9px;display:inline-block">💡 참여하면 이 가격이 내 기준가가 돼요</div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin:0 14px 8px">
+        <button class="vote-btn vote-up" onclick="showPred3Confirm('up')">📈<br><span class="vote-sub">오른다</span></button>
+        <button class="vote-btn vote-down" onclick="showPred3Confirm('down')">📉<br><span class="vote-sub">내린다</span></button>
+      </div>
+
+      <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:11px;font-weight:700;color:var(--text)">📊 시장 심리</span>
+          <span style="font-size:10px;color:var(--text4)">참여자 1,204명</span>
+        </div>
+        <div style="display:flex;border-radius:6px;overflow:hidden;height:14px;margin-bottom:6px">
+          <div style="width:73%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff">73%</div>
+          <div style="flex:1;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff">27%</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:600">
+          <span class="up">▲ 오른다</span>
+          <span class="dn">▼ 내린다</span>
+        </div>
+        <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:10px;color:var(--text4);line-height:1.6">
+          ※ 사용자마다 기준가가 다르므로 <strong>방향성 심리</strong>만 표시합니다.<br>과거 다수 의견 적중률: <strong style="color:var(--text2)">54.7%</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── A-S2: 참여 완료 (결과 대기) ── -->
+    <div id="p3-s2" style="display:none">
+      <div style="margin:10px 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow-sm)">
+        <div style="font-size:10px;color:var(--text4);margin-bottom:5px">내 예측</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span style="font-size:20px">📈</span>
+          <span style="font-size:15px;font-weight:800;color:var(--red)">오른다</span>
+          <span style="margin-left:auto;font-size:10px;font-weight:700;color:#fff;background:var(--primary);padding:3px 9px;border-radius:6px">참여완료</span>
+        </div>
+        <div style="height:1px;background:var(--border);margin-bottom:10px"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:10px;color:var(--text4)">내 기준가</span>
+          <span style="font-size:12px;font-weight:700;color:var(--text2)">82.45원</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:10px;color:var(--text4)">현재가</span>
+          <span style="font-size:12px;font-weight:700;color:var(--text)">83.27원 <span style="color:var(--red);font-size:10px">▲ +0.99%</span></span>
+        </div>
+        <div style="background:var(--primary-l);border-radius:8px;padding:6px 10px;font-size:10px;color:var(--primary);text-align:center;margin-top:6px">현재 추세로는 적중이에요!</div>
+      </div>
+
+      <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:11px;font-weight:700;color:var(--text)">📊 시장 심리</span>
+          <span style="font-size:10px;color:var(--text4)">참여자 2,841명</span>
+        </div>
+        <div style="display:flex;border-radius:6px;overflow:hidden;height:14px;margin-bottom:14px;position:relative">
+          <div style="width:73%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff">73%</div>
+          <div style="flex:1;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff">27%</div>
+          <div style="position:absolute;top:-6px;left:35%;font-size:9px;font-weight:700;color:var(--red);background:#fff;border:1px solid var(--red);padding:1px 5px;border-radius:8px">← 나</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:600">
+          <span class="up">▲ 오른다</span>
+          <span class="dn">▼ 내린다</span>
+        </div>
+      </div>
+
+      <div style="margin:0 14px;background:var(--card2);border-radius:10px;padding:9px 12px;font-size:10px;color:var(--text3);text-align:center">
+        🔮 3라운드는 오후 1시에 열려요
+      </div>
+    </div>
+
+    <!-- ── A-S3: 적중 ── -->
+    <div id="p3-s3" style="display:none">
+      <div style="margin:10px 14px 8px;background:linear-gradient(135deg,#FEF3C7,#FDE68A);border:1px solid #F59E0B;border-radius:14px;padding:18px 16px;text-align:center;box-shadow:var(--shadow-sm)">
+        <div style="font-size:38px;margin-bottom:6px">🎉</div>
+        <div style="font-size:16px;font-weight:800;color:#92400E;margin-bottom:3px">예측 적중!</div>
+        <div style="font-size:11px;color:#92400E;line-height:1.6">+15 PCI가 적립되었어요</div>
+      </div>
+
+      <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+          <span style="font-size:10px;color:var(--text4)">내 기준가</span>
+          <span style="font-size:12px;font-weight:700;color:var(--text2)">82.45원</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+          <span style="font-size:10px;color:var(--text4)">결과 가격 <span style="color:var(--primary);font-size:9px">(15:00 기준)</span></span>
+          <span style="font-size:12px;font-weight:700;color:var(--text)">83.27원</span>
+        </div>
+        <div style="height:1px;background:var(--border);margin:6px 0"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:10px;color:var(--text4)">결과</span>
+          <span style="font-size:12px;font-weight:800;color:var(--red)">📈 상승 (+0.99%)</span>
+        </div>
+      </div>
+
+      <button onclick="setPred3State('s1');setPred3Round(3)" style="margin:0 14px;width:calc(100% - 28px);padding:12px;font-size:13px;font-weight:700;border-radius:10px;border:none;background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">3라운드 참여하기 →</button>
+    </div>
+
+    <!-- ── A-S4: 실패 ── -->
+    <div id="p3-s4" style="display:none">
+      <div style="margin:10px 14px 8px;background:#F4F5FA;border:1px solid var(--border);border-radius:14px;padding:18px 16px;text-align:center">
+        <div style="font-size:38px;margin-bottom:6px">😢</div>
+        <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:3px">아쉽게 빗나갔어요</div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.6">다음 라운드에 도전해 보세요</div>
+      </div>
+
+      <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+          <span style="font-size:10px;color:var(--text4)">내 기준가</span>
+          <span style="font-size:12px;font-weight:700;color:var(--text2)">82.45원</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+          <span style="font-size:10px;color:var(--text4)">결과 가격 <span style="color:var(--primary);font-size:9px">(15:00 기준)</span></span>
+          <span style="font-size:12px;font-weight:700;color:var(--text)">81.30원</span>
+        </div>
+        <div style="height:1px;background:var(--border);margin:6px 0"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:10px;color:var(--text4)">결과</span>
+          <span style="font-size:12px;font-weight:800;color:var(--primary)">📉 하락 (-1.39%)</span>
+        </div>
+      </div>
+
+      <button onclick="setPred3State('s1');setPred3Round(3)" style="margin:0 14px;width:calc(100% - 28px);padding:12px;font-size:13px;font-weight:700;border-radius:10px;border:none;background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">3라운드 참여하기 →</button>
+    </div>
+
+    <!-- ── A-S6: 당일 참여 종료 (3라운드 모두 완료) ── -->
+    <div id="p3-s6" style="display:none">
+      <div style="margin:10px 14px 8px;background:linear-gradient(135deg,var(--primary),var(--primary-d));border-radius:14px;padding:16px;color:#fff;text-align:center">
+        <div style="font-size:13px;font-weight:700;margin-bottom:2px;opacity:0.85">오늘 3라운드 모두 완료!</div>
+        <div style="font-size:24px;font-weight:800">오늘 획득 +30 PCI</div>
+      </div>
+
+      <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;font-weight:700;color:var(--text4)">1R</span><span style="font-size:11px">📈 오른다</span></div>
+          <span style="font-size:11px;font-weight:700;color:var(--green)">✅ 적중 · +15 PCI</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;font-weight:700;color:var(--text4)">2R</span><span style="font-size:11px">📈 오른다</span></div>
+          <span style="font-size:11px;font-weight:700;color:var(--green)">✅ 적중 · +15 PCI</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;font-weight:700;color:var(--text4)">3R</span><span style="font-size:11px">📉 내린다</span></div>
+          <span style="font-size:11px;font-weight:700;color:#92400E;background:#FFFBEB;padding:2px 8px;border-radius:6px">⏳ 집계중</span>
+        </div>
+      </div>
+
+      <div style="margin:0 14px;background:var(--card2);border-radius:10px;padding:9px 12px;font-size:10px;color:var(--text3);text-align:center;line-height:1.7">
+        🌙 밤 9시 결과는 21:00에 공개됩니다<br>내일 1라운드: <strong style="color:var(--text2)">자정 00:00</strong>
+      </div>
+    </div>
+
+    <!-- ── A-S7: 참여 불가 시간 (21:00~24:00) ── -->
+    <div id="p3-s7" style="display:none">
+      <div style="margin:10px 14px 8px;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:14px;padding:20px 16px;text-align:center">
+        <div style="font-size:28px;margin-bottom:8px">🌙</div>
+        <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:6px">오늘 예측이 마감되었어요</div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.7">자정(00:00)부터 내일 예측에<br>참여할 수 있어요</div>
+      </div>
+
+      <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px;text-align:center;box-shadow:var(--shadow-sm)">
+        <div style="font-size:10px;color:var(--text4);margin-bottom:4px">🕛 내일 1라운드 시작까지</div>
+        <div style="font-size:22px;font-weight:800;color:var(--primary);letter-spacing:-0.5px">01:24:33</div>
+      </div>
+
+      <button onclick="showModal('pred3-result-modal')" style="margin:0 14px;width:calc(100% - 28px);padding:12px;font-size:13px;font-weight:700;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text2);cursor:pointer;font-family:'Noto Sans KR',sans-serif">오늘 결과 보기</button>
+    </div>
+
+  </div>
+
+  <!-- 확정 모달 -->
+  <div class="overlay" id="pred3-confirm-modal" style="align-items:center;justify-content:center">
+    <div class="modal" style="max-width:300px">
+      <div class="modal-handle"></div>
+      <div style="text-align:center;margin-bottom:16px">
+        <div style="font-size:32px;margin-bottom:6px">🔮</div>
+        <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px">예측을 확정할까요?</div>
+      </div>
+      <div style="background:var(--card2);border-radius:10px;padding:13px;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:11px;color:var(--text4)">기준가</span><span style="font-size:12px;font-weight:700;color:var(--text)">82.45원</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:11px;color:var(--text4)">예측</span><span id="pred3-cv-dir" style="font-size:12px;font-weight:700;color:var(--red)">📈 오른다</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text4)">결과 확인</span><span id="pred3-cv-time" style="font-size:12px;font-weight:700;color:var(--primary)">오후 3시</span></div>
+      </div>
+      <div style="font-size:10px;color:var(--text4);text-align:center;margin-bottom:14px;line-height:1.6">확정 후에는 변경할 수 없어요</div>
+      <button class="btn btn-primary" style="margin-bottom:8px" onclick="closeModal('pred3-confirm-modal');setPred3State('s2')">확정하기</button>
+      <button class="btn btn-ghost" onclick="closeModal('pred3-confirm-modal')">취소</button>
+    </div>
+  </div>
+
+  <!-- 안내 모달 -->
+  <div class="overlay" id="pred3-guide-modal" style="align-items:center;justify-content:center">
+    <div class="modal" style="max-width:300px;padding-bottom:14px">
+      <div class="modal-handle"></div>
+      <div style="text-align:center;margin-bottom:14px">
+        <div style="font-size:28px;margin-bottom:5px">🔮</div>
+        <div style="font-size:14px;font-weight:800;color:var(--text)">시안 A · 현재가 기준</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:14px">
+        <div style="display:flex;gap:9px"><div style="width:20px;height:20px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--primary);flex-shrink:0">1</div><div style="font-size:11px;color:var(--text2);line-height:1.55">참여 시점 <strong>현재가</strong>가 내 기준가 (사용자별 상이)</div></div>
+        <div style="display:flex;gap:9px"><div style="width:20px;height:20px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--primary);flex-shrink:0">2</div><div style="font-size:11px;color:var(--text2);line-height:1.55">하루 <strong>3라운드</strong> · 결과 09시 / 15시 / 21시</div></div>
+        <div style="display:flex;gap:9px"><div style="width:20px;height:20px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--primary);flex-shrink:0">3</div><div style="font-size:11px;color:var(--text2);line-height:1.55">이전 라운드 마감 즉시 다음 라운드 오픈 · 21:00~24:00 참여 불가</div></div>
+        <div style="display:flex;gap:9px"><div style="width:20px;height:20px;border-radius:50%;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--primary);flex-shrink:0">4</div><div style="font-size:11px;color:var(--text2);line-height:1.55">기준가 상이 → 분포 대신 <strong>방향성 심리 비중</strong> 표시</div></div>
+      </div>
+      <button class="btn btn-primary" onclick="closeModal('pred3-guide-modal')">확인</button>
+    </div>
+  </div>
+
+  <!-- 결과 보기 모달 -->
+  <div class="overlay" id="pred3-result-modal" style="align-items:center;justify-content:center">
+    <div class="modal" style="max-width:300px;padding-bottom:14px">
+      <div class="modal-handle"></div>
+      <div style="text-align:center;margin-bottom:12px">
+        <div style="font-size:14px;font-weight:800;color:var(--text)">오늘의 결과</div>
+      </div>
+      <div style="background:var(--card2);border-radius:10px;padding:12px;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:11px"><span style="color:var(--text4)">1R · 09:00 결과</span><span style="color:var(--green);font-weight:700">적중 +15</span></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:11px"><span style="color:var(--text4)">2R · 15:00 결과</span><span style="color:var(--green);font-weight:700">적중 +15</span></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:11px"><span style="color:var(--text4)">3R · 21:00 결과</span><span style="color:#92400E;font-weight:700">집계중</span></div>
+      </div>
+      <button class="btn btn-primary" onclick="closeModal('pred3-result-modal')">확인</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════ PREDICTION V4 (시안 B · 2라운드 소수의견 배율) ═══════════════ -->
+<div class="screen" id="sc-prediction4">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="back-header">
+    <span class="back-btn" onclick="history.back()">‹</span>
+    <span class="back-title">등락 예측 v4 (시안B)</span>
+    <span style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer" onclick="showModal('pred4-guide-modal')">안내</span>
+  </div>
+
+  <div class="sbody" style="padding-bottom:20px">
+
+    <!-- 정책 요약 배너 -->
+    <div style="margin:10px 14px 8px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:10px;padding:9px 12px;font-size:10px;color:#92400E;line-height:1.55">
+      <strong>공통 기준가 + 소수의견 배율</strong> · 하루 2라운드 (결과 14시 / 익일 00시)
+    </div>
+
+    <!-- 상태 토글 -->
+    <div style="display:flex;justify-content:flex-end;padding:4px 14px 0;gap:4px;flex-wrap:wrap">
+      <span style="font-size:9px;color:var(--text4);margin-right:2px">상태:</span>
+      <button id="p4s-s1" onclick="setPred4State('s1')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">S1 미참여</button>
+      <button id="p4s-s2" onclick="setPred4State('s2')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">S2 결과대기</button>
+      <button id="p4s-s3" onclick="setPred4State('s3')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">S3 적중</button>
+      <button id="p4s-s4" onclick="setPred4State('s4')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">S4 실패</button>
+      <button id="p4s-s5" onclick="setPred4State('s5')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">S5 집계중</button>
+      <button id="p4s-s6" onclick="setPred4State('s6')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">S6 당일완료</button>
+    </div>
+
+    <!-- 라운드 토글 -->
+    <div style="display:flex;justify-content:flex-end;padding:4px 14px 0;gap:4px;flex-wrap:wrap">
+      <span style="font-size:9px;color:var(--text4);margin-right:2px">라운드:</span>
+      <button id="p4r-am" onclick="setPred4Round('am')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">오전 (00~10시)</button>
+      <button id="p4r-pm" onclick="setPred4Round('pm')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">오후 (14~20시)</button>
+    </div>
+
+    <!-- 라운드 헤더 -->
+    <div style="margin:8px 14px 0;background:linear-gradient(135deg,#92400E,#F59E0B);border-radius:14px;padding:14px 16px;color:#fff">
+      <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.88);margin-bottom:3px"><span id="p4-round-name">오전 라운드</span> · <span id="p4-round-result">오후 2시</span> 결과</div>
+      <div style="font-size:18px;font-weight:800"><span id="p4-round-cta">참여 마감까지</span> <span id="p4-round-ctd" style="font-weight:900">03:12:08</span></div>
+    </div>
+
+    <!-- ── B-S1: 참여 가능 (미참여) ── -->
+    <div id="p4-s1">
+      <div style="margin:10px 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow-sm)">
+        <!-- 기준가 (라운드 공통) -->
+        <div style="text-align:center;margin-bottom:12px">
+          <div style="font-size:10px;color:var(--text4);margin-bottom:4px"><span id="p4-base-time">오늘 00:00</span> 기준가 <span style="color:var(--primary)">(전원 동일)</span></div>
+          <div style="font-size:24px;font-weight:800;color:var(--text);letter-spacing:-0.5px">₩ 82.45<span style="font-size:13px;font-weight:500;color:var(--text3)">원</span></div>
+        </div>
+        <div style="height:1px;background:var(--border);margin-bottom:10px"></div>
+        <!-- 현재가 (참고용 · 실시간 갱신) -->
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:5px">
+            <span style="font-size:10px;color:var(--text4)">현재가</span>
+            <span style="font-size:8px;font-weight:600;color:var(--primary);background:var(--primary-l);padding:1px 5px;border-radius:4px">참고용</span>
+          </div>
+          <div style="text-align:right">
+            <span style="font-size:13px;font-weight:700;color:var(--text)">₩ 81.99원</span>
+            <span style="font-size:11px;font-weight:700;color:var(--primary);margin-left:4px">▼ -0.55%</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:11px;font-weight:700;color:var(--text)">📊 커뮤니티 예측</span>
+          <span style="font-size:10px;color:var(--text4)">참여자 1,847명</span>
+        </div>
+        <div style="display:flex;border-radius:6px;overflow:hidden;height:14px;margin-bottom:6px">
+          <div style="width:76%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff">76%</div>
+          <div style="flex:1;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff">24%</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:600">
+          <span class="up">▲ 오른다 (다수)</span>
+          <span class="dn">▼ 내린다 (소수 · 2.0x)</span>
+        </div>
+      </div>
+
+      <!-- 투표 버튼 (배율 표시) -->
+      <div style="margin:0 14px 8px">
+        <button onclick="showPred4Confirm('up','1.0')" style="width:100%;padding:14px;border-radius:12px;border:1.5px solid var(--border);background:var(--card);cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;box-shadow:var(--shadow-sm)">
+          <div style="display:flex;align-items:center;gap:9px">
+            <span style="font-size:22px">📈</span>
+            <span style="font-size:14px;font-weight:800;color:var(--text)">오른다</span>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:var(--text3);background:var(--card2);padding:4px 10px;border-radius:7px">기본 1.0x</span>
+        </button>
+        <button onclick="showPred4Confirm('down','2.0')" style="width:100%;padding:14px;border-radius:12px;border:1.5px solid #F59E0B;background:#FFFBEB;cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-sm)">
+          <div style="display:flex;align-items:center;gap:9px">
+            <span style="font-size:22px">📉</span>
+            <span style="font-size:14px;font-weight:800;color:var(--text)">내린다</span>
+          </div>
+          <span style="font-size:11px;font-weight:800;color:#fff;background:#F59E0B;padding:4px 10px;border-radius:7px">🔥 소수의견 2.0x</span>
+        </button>
+      </div>
+
+      <!-- 배율 표 -->
+      <div style="margin:0 14px;background:var(--card2);border-radius:10px;padding:10px 12px;font-size:9px;color:var(--text3);line-height:1.7">
+        <div style="font-weight:700;color:var(--text2);margin-bottom:3px">소수의견 배율 안내</div>
+        51~60% : 1.2x · 61~70% : 1.5x · 71~80% : <strong style="color:#F59E0B">2.0x</strong> · 81~90% : 2.5x · 91% 이상 : 3.0x<br>
+        ※ 최종 배율은 마감 시 확정됩니다
+      </div>
+    </div>
+
+    <!-- ── B-S2: 참여 완료 (결과 대기) ── -->
+    <div id="p4-s2" style="display:none">
+      <div style="margin:10px 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow-sm)">
+        <div style="font-size:10px;color:var(--text4);margin-bottom:5px">내 예측</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span style="font-size:20px">📉</span>
+          <span style="font-size:15px;font-weight:800;color:var(--primary)">내린다</span>
+          <span style="margin-left:auto;font-size:10px;font-weight:800;color:#fff;background:#F59E0B;padding:3px 9px;border-radius:6px">🔥 소수의견 2.0x</span>
+        </div>
+        <div style="height:1px;background:var(--border);margin-bottom:10px"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:10px;color:var(--text4)">공통 기준가</span>
+          <span style="font-size:12px;font-weight:700;color:var(--text2)">82.45원</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:10px;color:var(--text4)">현재가</span>
+          <span style="font-size:12px;font-weight:700;color:var(--text)">81.99원 <span style="color:var(--primary);font-size:10px">▼ -0.55%</span></span>
+        </div>
+        <div style="background:var(--primary-l);border-radius:8px;padding:6px 10px;font-size:10px;color:var(--primary);text-align:center;margin-top:6px">현재 추세로는 적중이에요!</div>
+      </div>
+
+      <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:11px;font-weight:700;color:var(--text)">📊 커뮤니티 예측</span>
+          <span style="font-size:10px;color:var(--text4)">참여자 2,841명</span>
+        </div>
+        <div style="display:flex;border-radius:6px;overflow:hidden;height:14px;margin-bottom:14px;position:relative">
+          <div style="width:76%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff">76%</div>
+          <div style="flex:1;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff">24%</div>
+          <div style="position:absolute;top:-6px;left:88%;font-size:9px;font-weight:700;color:var(--primary);background:#fff;border:1px solid var(--primary);padding:1px 5px;border-radius:8px">← 나</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:600">
+          <span class="up">▲ 오른다 (다수)</span>
+          <span class="dn">▼ 내린다 (소수 · 2.0x)</span>
+        </div>
+      </div>
+
+      <div style="margin:0 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:9px 12px;font-size:10px;color:#92400E;text-align:center;line-height:1.6">
+        🔥 배율은 마감 시 확정 · 현재 추이 기준 <strong>2.0x 예상</strong>
+      </div>
+    </div>
+
+    <!-- ── B-S3: 적중 (소수의견 배율 적용) ── -->
+    <div id="p4-s3" style="display:none">
+      <div style="margin:10px 14px 8px;background:linear-gradient(135deg,#FEF3C7,#FDE68A);border:1px solid #F59E0B;border-radius:14px;padding:18px 16px;text-align:center;box-shadow:var(--shadow-sm)">
+        <div style="font-size:38px;margin-bottom:6px">🎉</div>
+        <div style="font-size:16px;font-weight:800;color:#92400E;margin-bottom:3px">소수의견 적중!</div>
+        <div style="font-size:11px;color:#92400E;line-height:1.6">+20 PCI 적립 <strong>(2.0x 배율 적용)</strong></div>
+      </div>
+
+      <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+          <span style="font-size:10px;color:var(--text4)">공통 기준가</span>
+          <span style="font-size:12px;font-weight:700;color:var(--text2)">82.45원</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+          <span style="font-size:10px;color:var(--text4)">결과 가격 <span style="color:var(--primary);font-size:9px">(14:00 기준)</span></span>
+          <span style="font-size:12px;font-weight:700;color:var(--text)">81.99원</span>
+        </div>
+        <div style="height:1px;background:var(--border);margin:6px 0"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:10px;color:var(--text4)">결과</span>
+          <span style="font-size:12px;font-weight:800;color:var(--primary)">📉 하락 (-0.55%)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:10px;color:var(--text4)">기본 보상 × 배율</span>
+          <span style="font-size:11px;font-weight:700;color:var(--text2)">10 PCI × <span style="color:#F59E0B">2.0x</span> = <span style="color:#F59E0B">20 PCI</span></span>
+        </div>
+      </div>
+
+      <div style="margin:0 14px;background:var(--card2);border-radius:10px;padding:9px 12px;font-size:10px;color:var(--text3);text-align:center">
+        🌅 오후 라운드는 오후 2시에 시작돼요
+      </div>
+    </div>
+
+    <!-- ── B-S4: 실패 ── -->
+    <div id="p4-s4" style="display:none">
+      <div style="margin:10px 14px 8px;background:#F4F5FA;border:1px solid var(--border);border-radius:14px;padding:18px 16px;text-align:center">
+        <div style="font-size:38px;margin-bottom:6px">😢</div>
+        <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:3px">아쉽게 빗나갔어요</div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.6">오후 라운드에 도전해 보세요</div>
+      </div>
+
+      <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+          <span style="font-size:10px;color:var(--text4)">공통 기준가</span>
+          <span style="font-size:12px;font-weight:700;color:var(--text2)">82.45원</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+          <span style="font-size:10px;color:var(--text4)">결과 가격 <span style="color:var(--primary);font-size:9px">(14:00 기준)</span></span>
+          <span style="font-size:12px;font-weight:700;color:var(--text)">83.27원</span>
+        </div>
+        <div style="height:1px;background:var(--border);margin:6px 0"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:10px;color:var(--text4)">결과</span>
+          <span style="font-size:12px;font-weight:800;color:var(--red)">📈 상승 (+0.99%)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── B-S5: 집계 중 ── -->
+    <div id="p4-s5" style="display:none">
+      <div style="margin:10px 14px 8px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:14px;padding:18px 16px;text-align:center">
+        <div style="font-size:32px;margin-bottom:6px">⏳</div>
+        <div style="font-size:14px;font-weight:800;color:#92400E;margin-bottom:6px">오전 라운드 집계 중</div>
+        <div style="font-size:11px;color:#92400E;line-height:1.7">결과 발표까지<br><strong style="font-size:18px">03:22:10</strong></div>
+      </div>
+
+      <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px;box-shadow:var(--shadow-sm)">
+        <div style="font-size:10px;color:var(--text4);margin-bottom:4px">내 예측</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:18px">📉</span>
+          <span style="font-size:14px;font-weight:800;color:var(--primary)">내린다</span>
+          <span style="margin-left:auto;font-size:10px;font-weight:800;color:#fff;background:#F59E0B;padding:3px 9px;border-radius:6px">🔥 2.0x 확정</span>
+        </div>
+      </div>
+
+      <div style="margin:0 14px;background:var(--card2);border-radius:10px;padding:9px 12px;font-size:10px;color:var(--text3);text-align:center">
+        🌅 오후 라운드는 오후 2시에 열려요
+      </div>
+    </div>
+
+    <!-- ── B-S6: 당일 양 라운드 완료 ── -->
+    <div id="p4-s6" style="display:none">
+      <div style="margin:10px 14px 8px;background:linear-gradient(135deg,#92400E,#F59E0B);border-radius:14px;padding:16px;color:#fff;text-align:center">
+        <div style="font-size:13px;font-weight:700;margin-bottom:2px;opacity:0.9">오늘 2라운드 모두 완료!</div>
+        <div style="font-size:24px;font-weight:800">오늘 획득 +35 PCI</div>
+      </div>
+
+      <div style="margin:0 14px 8px;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm)">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;font-weight:700;color:var(--text4)">오전</span><span style="font-size:11px">📉 내린다 <span style="color:#F59E0B;font-weight:700">2.0x</span></span></div>
+          <span style="font-size:11px;font-weight:700;color:var(--green)">✅ 적중 · +20</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;font-weight:700;color:var(--text4)">오후</span><span style="font-size:11px">📈 오른다 <span style="color:var(--text4);font-weight:700">1.5x</span></span></div>
+          <span style="font-size:11px;font-weight:700;color:var(--green)">✅ 적중 · +15</span>
+        </div>
+      </div>
+
+      <div style="margin:0 14px;background:var(--card2);border-radius:10px;padding:9px 12px;font-size:10px;color:var(--text3);text-align:center">
+        내일 오전 라운드: <strong style="color:var(--text2)">자정 00:00</strong>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 확정 모달 -->
+  <div class="overlay" id="pred4-confirm-modal" style="align-items:center;justify-content:center">
+    <div class="modal" style="max-width:300px">
+      <div class="modal-handle"></div>
+      <div style="text-align:center;margin-bottom:16px">
+        <div id="pred4-cv-icon" style="font-size:32px;margin-bottom:6px">🔥</div>
+        <div id="pred4-cv-title" style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px">소수 의견을 선택했어요!</div>
+      </div>
+      <div style="background:var(--card2);border-radius:10px;padding:13px;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:11px;color:var(--text4)">예측</span><span id="pred4-cv-dir" style="font-size:12px;font-weight:700;color:var(--primary)">📉 내린다</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:11px;color:var(--text4)">예상 배율</span><span id="pred4-cv-mul" style="font-size:12px;font-weight:800;color:#F59E0B">2.0x</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--text4)">기대 보상</span><span id="pred4-cv-reward" style="font-size:12px;font-weight:700;color:var(--text)">~20 PCI</span></div>
+      </div>
+      <div style="font-size:10px;color:var(--text4);text-align:center;margin-bottom:14px;line-height:1.6">최종 배율은 마감 시 확정됩니다</div>
+      <button class="btn btn-primary" style="margin-bottom:8px" onclick="closeModal('pred4-confirm-modal');setPred4State('s2')">확정하기</button>
+      <button class="btn btn-ghost" onclick="closeModal('pred4-confirm-modal')">취소</button>
+    </div>
+  </div>
+
+  <!-- 안내 모달 -->
+  <div class="overlay" id="pred4-guide-modal" style="align-items:center;justify-content:center">
+    <div class="modal" style="max-width:300px;padding-bottom:14px">
+      <div class="modal-handle"></div>
+      <div style="text-align:center;margin-bottom:14px">
+        <div style="font-size:28px;margin-bottom:5px">🔥</div>
+        <div style="font-size:14px;font-weight:800;color:var(--text)">시안 B · 소수의견 배율</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:14px">
+        <div style="display:flex;gap:9px"><div style="width:20px;height:20px;border-radius:50%;background:#FEF3C7;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#92400E;flex-shrink:0">1</div><div style="font-size:11px;color:var(--text2);line-height:1.55">라운드 오픈 시점 <strong>공통 기준가</strong> (전원 동일)</div></div>
+        <div style="display:flex;gap:9px"><div style="width:20px;height:20px;border-radius:50%;background:#FEF3C7;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#92400E;flex-shrink:0">2</div><div style="font-size:11px;color:var(--text2);line-height:1.55">하루 <strong>2라운드</strong> · 결과 14시 / 익일 00시</div></div>
+        <div style="display:flex;gap:9px"><div style="width:20px;height:20px;border-radius:50%;background:#FEF3C7;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#92400E;flex-shrink:0">3</div><div style="font-size:11px;color:var(--text2);line-height:1.55">소수 의견 선택 시 <strong>1.2x ~ 3.0x 배율</strong> 적용</div></div>
+        <div style="display:flex;gap:9px"><div style="width:20px;height:20px;border-radius:50%;background:#FEF3C7;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#92400E;flex-shrink:0">4</div><div style="font-size:11px;color:var(--text2);line-height:1.55">배율은 마감 시 확정 (참여 중에는 예상치 표시)</div></div>
+      </div>
+      <button class="btn btn-primary" onclick="closeModal('pred4-guide-modal')">확인</button>
+    </div>
+  </div>
+
+</div>
+
 <!-- ═══════════════ NEWS LIST ═══════════════ -->
  NEWS LIST ═══════════════ -->
 <div class="screen" id="sc-news">
@@ -8089,6 +8649,22 @@ EWS DETAIL ═══════════════ -->
   </div>
 </div>
 
+<div class="policy-section" id="pol-prediction3" data-screen="prediction3">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_PREDICTION_V3 <span class="ptag p2">P2</span></div>
+    <div class="policy-title">등락 예측 v3 (시안 A · 현재가 기준)</div>
+    <div class="policy-desc">참여 시점 현재가 = 내 기준가. 하루 3라운드 (결과 09:00 / 15:00 / 21:00), 21:00~24:00 참여 불가. 사용자별 기준가 상이로 방향성 심리 비중만 표시.</div>
+  </div>
+</div>
+
+<div class="policy-section" id="pol-prediction4" data-screen="prediction4">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_PREDICTION_V4 <span class="ptag p2">P2</span></div>
+    <div class="policy-title">등락 예측 v4 (시안 B · 소수의견 배율)</div>
+    <div class="policy-desc">라운드 오픈 시점 공통 기준가. 하루 2라운드 (결과 14:00 / 익일 00:00). 소수 의견 선택 시 1.2x ~ 3.0x 배율 적용 (마감 시 확정).</div>
+  </div>
+</div>
+
 <!-- ── NEWS ── -->
 <div class="policy-section" id="pol-news" data-screen="news">
   <div class="policy-header">
@@ -8486,6 +9062,8 @@ const SCREEN_MAP = {
   'wallet-manage':{ sc:'sc-wallet-manage', pol:'pol-wallet-manage', ni:12 },
   'tx-history':   { sc:'sc-tx-history',   pol:'pol-tx-history',   ni:13 },
   'prediction2':  { sc:'sc-prediction2',  pol:'pol-prediction2',  ni:14 },
+  'prediction3':  { sc:'sc-prediction3',  pol:'pol-prediction3',  ni:8 },
+  'prediction4':  { sc:'sc-prediction4',  pol:'pol-prediction4',  ni:8 },
 };
 
 function nav(key) {
@@ -9971,6 +10549,129 @@ function setPredState(state) {
   if(active) active.style.display = (normalized === 'active') ? 'block' : 'none';
   if(closed) closed.style.display = (normalized === 'closed') ? 'block' : 'none';
 }
+/* ─── PRED V3 (시안 A: 현재가 기준 · 3라운드) ─── */
+function setPred3State(s) {
+  var states = ['s1','s2','s3','s4','s6','s7'];
+  for (var i=0; i<states.length; i++) {
+    var el = document.getElementById('p3-' + states[i]);
+    if (el) el.style.display = (states[i] === s) ? 'block' : 'none';
+    var btn = document.getElementById('p3s-' + states[i]);
+    if (btn) {
+      if (states[i] === s) {
+        btn.style.background = 'var(--primary-l)'; btn.style.color = 'var(--primary)'; btn.style.border = '1px solid #BFDBFE';
+      } else {
+        btn.style.background = 'var(--card2)'; btn.style.color = 'var(--text3)'; btn.style.border = '1px solid var(--border)';
+      }
+    }
+  }
+  /* S7(참여불가)일 때 헤더 카운트다운 라벨 변경 */
+  var ctaEl = document.getElementById('p3-round-cta');
+  var ctdEl = document.getElementById('p3-round-ctd');
+  if (s === 's7') {
+    if (ctaEl) ctaEl.textContent = '내일 1라운드까지';
+    if (ctdEl) ctdEl.textContent = '01:24:33';
+  } else {
+    if (ctaEl) ctaEl.textContent = '참여 마감까지';
+    if (ctdEl) ctdEl.textContent = '02:34:17';
+  }
+}
+function setPred3Round(r) {
+  var info = {
+    1: {name:'1라운드', result:'오전 9시'},
+    2: {name:'2라운드', result:'오후 3시'},
+    3: {name:'3라운드', result:'밤 9시'}
+  };
+  var i = info[r] || info[2];
+  var n = document.getElementById('p3-round-name');
+  var t = document.getElementById('p3-round-result');
+  if (n) n.textContent = i.name;
+  if (t) t.textContent = i.result;
+  /* 확정 모달의 결과 시각도 동기화 */
+  var cv = document.getElementById('pred3-cv-time');
+  if (cv) cv.textContent = i.result;
+  /* 토글 버튼 활성화 */
+  for (var k=1; k<=3; k++) {
+    var btn = document.getElementById('p3r-' + k);
+    if (!btn) continue;
+    if (k === r) {
+      btn.style.background = 'var(--primary-l)'; btn.style.color = 'var(--primary)'; btn.style.border = '1px solid #BFDBFE';
+    } else {
+      btn.style.background = 'var(--card2)'; btn.style.color = 'var(--text3)'; btn.style.border = '1px solid var(--border)';
+    }
+  }
+}
+function showPred3Confirm(dir) {
+  var dirEl = document.getElementById('pred3-cv-dir');
+  if (dirEl) {
+    dirEl.textContent = dir === 'up' ? '📈 오른다' : '📉 내린다';
+    dirEl.style.color = dir === 'up' ? 'var(--red)' : 'var(--primary)';
+  }
+  showModal('pred3-confirm-modal');
+}
+
+/* ─── PRED V4 (시안 B: 2라운드 · 소수의견 배율) ─── */
+function setPred4State(s) {
+  var states = ['s1','s2','s3','s4','s5','s6'];
+  for (var i=0; i<states.length; i++) {
+    var el = document.getElementById('p4-' + states[i]);
+    if (el) el.style.display = (states[i] === s) ? 'block' : 'none';
+    var btn = document.getElementById('p4s-' + states[i]);
+    if (btn) {
+      if (states[i] === s) {
+        btn.style.background = 'var(--primary-l)'; btn.style.color = 'var(--primary)'; btn.style.border = '1px solid #BFDBFE';
+      } else {
+        btn.style.background = 'var(--card2)'; btn.style.color = 'var(--text3)'; btn.style.border = '1px solid var(--border)';
+      }
+    }
+  }
+}
+function setPred4Round(r) {
+  var info = {
+    am: {name:'오전 라운드', result:'오후 2시', base:'오늘 00:00'},
+    pm: {name:'오후 라운드', result:'익일 00:00', base:'오늘 14:00'}
+  };
+  var i = info[r] || info.am;
+  var n = document.getElementById('p4-round-name');
+  var t = document.getElementById('p4-round-result');
+  var b = document.getElementById('p4-base-time');
+  if (n) n.textContent = i.name;
+  if (t) t.textContent = i.result;
+  if (b) b.textContent = i.base;
+  ['am','pm'].forEach(function(k){
+    var btn = document.getElementById('p4r-' + k);
+    if (!btn) return;
+    if (k === r) {
+      btn.style.background = 'var(--primary-l)'; btn.style.color = 'var(--primary)'; btn.style.border = '1px solid #BFDBFE';
+    } else {
+      btn.style.background = 'var(--card2)'; btn.style.color = 'var(--text3)'; btn.style.border = '1px solid var(--border)';
+    }
+  });
+}
+function showPred4Confirm(dir, mul) {
+  var mulNum = parseFloat(mul);
+  var isMinor = mulNum > 1.0;
+  var dirEl = document.getElementById('pred4-cv-dir');
+  var mulEl = document.getElementById('pred4-cv-mul');
+  var rwdEl = document.getElementById('pred4-cv-reward');
+  var icnEl = document.getElementById('pred4-cv-icon');
+  var titEl = document.getElementById('pred4-cv-title');
+  if (dirEl) {
+    dirEl.textContent = dir === 'up' ? '📈 오른다' : '📉 내린다';
+    dirEl.style.color = dir === 'up' ? 'var(--red)' : 'var(--primary)';
+  }
+  if (mulEl) {
+    mulEl.textContent = mul + 'x';
+    mulEl.style.color = isMinor ? '#F59E0B' : 'var(--text2)';
+  }
+  if (rwdEl) {
+    var reward = Math.round(10 * mulNum);
+    rwdEl.textContent = '~' + reward + ' PCI';
+  }
+  if (icnEl) icnEl.textContent = isMinor ? '🔥' : '🔮';
+  if (titEl) titEl.textContent = isMinor ? '소수 의견을 선택했어요!' : '예측을 확정할까요?';
+  showModal('pred4-confirm-modal');
+}
+
 /* 연속 참여 일차 시각화 (day: 1~5, "오늘"이 며칠차인지) */
 function setPredDayStreak(day) {
   day = Math.max(1, Math.min(5, day | 0));
@@ -11310,6 +12011,8 @@ function fmtQty(qty, sym) {
     'benefits':     'sk-benefits',
     'prediction':   'sk-prediction',
     'prediction2':  'sk-prediction2',
+    'prediction3':  'sk-prediction',
+    'prediction4':  'sk-prediction',
     'news':         'sk-news',
     'news-detail':  'sk-news-detail',
     'payment':      'sk-payment',
