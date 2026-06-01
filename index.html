@@ -5091,24 +5091,26 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         </div>
       </div>
 
-      <!-- 오늘 회차 (컴팩트) -->
+      <!-- 오늘 회차 (컴팩트) — 각 회차 박스 안에 결과 발표 시각 동봉 -->
       <div style="margin:8px 14px 0;padding:11px 12px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:12px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="margin-bottom:7px">
           <span style="font-size:11px;color:var(--pp-muted);font-weight:700;letter-spacing:0.5px">오늘 회차</span>
-          <span style="font-size:10px;color:var(--pp-muted);font-weight:500">09:00 · 15:00 · 21:00</span>
         </div>
         <div style="display:flex;gap:6px">
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:7px;background:var(--pp-warn-soft);border:1px solid var(--pp-line);border-radius:8px">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px;background:var(--pp-warn-soft);border:1px solid var(--pp-line);border-radius:8px">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pp-warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg>
-            <span style="font-size:10px;font-weight:700;color:var(--pp-warn)">1회차</span>
+            <span style="font-size:10px;font-weight:700;color:var(--pp-warn);line-height:1">1회차</span>
+            <span style="font-size:9px;font-weight:500;color:var(--pp-warn);opacity:0.75;line-height:1">결과 09:00</span>
           </div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:7px;background:var(--pp-bg);border:1px solid var(--pp-line);border-radius:8px">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px;background:var(--pp-bg);border:1px solid var(--pp-line);border-radius:8px">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pp-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            <span style="font-size:10px;font-weight:700;color:var(--pp-muted)">2회차</span>
+            <span style="font-size:10px;font-weight:700;color:var(--pp-muted);line-height:1">2회차</span>
+            <span style="font-size:9px;font-weight:500;color:var(--pp-muted);opacity:0.75;line-height:1">결과 15:00</span>
           </div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:7px;background:var(--pp-bg);border:1px solid var(--pp-line);border-radius:8px">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px;background:var(--pp-bg);border:1px solid var(--pp-line);border-radius:8px">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pp-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            <span style="font-size:10px;font-weight:700;color:var(--pp-muted)">3회차</span>
+            <span style="font-size:10px;font-weight:700;color:var(--pp-muted);line-height:1">3회차</span>
+            <span style="font-size:9px;font-weight:500;color:var(--pp-muted);opacity:0.75;line-height:1">결과 21:00</span>
           </div>
         </div>
       </div>
