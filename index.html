@@ -4938,7 +4938,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
 
       <!-- 질문 카드 (컴팩트) -->
       <div style="margin:10px 14px 0;padding:13px 14px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:14px">
-        <div id="pn-ref-msg" style="font-size:11px;color:var(--pp-muted);font-weight:700;letter-spacing:0.4px;margin-bottom:10px">오늘 09:00 종가는 지금보다…</div>
+        <div id="pn-ref-msg" style="font-size:12px;color:var(--pp-ink);font-weight:700;margin-bottom:10px">오늘 09:00 종가, 지금보다 오를까요?</div>
         <div id="pn-vote-area" style="display:flex;gap:8px">
           <button id="pn-vote-up" onclick="showPnConfirm('up')" style="flex:1;padding:12px 12px;background:var(--pp-up-soft);border:1.5px solid var(--pp-up-border);border-radius:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--pp-up-ink)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
@@ -4995,16 +4995,16 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
     <!-- ── S2: 참여 완료 (결과 대기) — 펜슬 디자인 ── -->
     <div id="pn-s2" style="display:none">
 
-      <!-- 내 예측 카드 (컴팩트) -->
-      <div style="margin:10px 14px 0;padding:13px 14px;background:var(--pp-up-soft);border:1.5px solid var(--pp-up-border);border-radius:14px;display:flex;align-items:center;gap:11px">
-        <div style="width:40px;height:40px;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--pp-up)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+      <!-- 내 예측 카드 (더 컴팩트 · 인라인 한 줄) -->
+      <div style="margin:10px 14px 0;padding:10px 12px;background:var(--pp-up-soft);border:1.5px solid var(--pp-up-border);border-radius:12px;display:flex;align-items:center;gap:10px">
+        <div style="width:30px;height:30px;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pp-up)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
         </div>
-        <div style="flex:1;display:flex;flex-direction:column;gap:2px">
-          <div style="font-size:10px;color:var(--pp-up-ink);font-weight:700;letter-spacing:0.5px">내 예측</div>
-          <div style="font-size:17px;color:var(--pp-up-ink);font-weight:800;letter-spacing:-0.4px">오른다</div>
-          <div style="font-size:10.5px;color:var(--pp-up-ink);font-weight:500;opacity:0.8">오늘 06:14에 확정</div>
+        <div style="flex:1;display:flex;align-items:center;gap:8px">
+          <span style="font-size:10px;color:var(--pp-up-ink);font-weight:700;letter-spacing:0.4px">내 예측</span>
+          <span style="font-size:15px;color:var(--pp-up-ink);font-weight:800;letter-spacing:-0.3px">오른다</span>
         </div>
+        <span style="font-size:10px;color:var(--pp-up-ink);font-weight:500;opacity:0.75;white-space:nowrap">06:14 확정</span>
       </div>
 
       <!-- 비교 카드 (컴팩트) -->
@@ -5714,23 +5714,36 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
     </div>
   </div>
 
-  <!-- ═══ 광고 시청 변경 사전 경고 모달 (3-tier 텍스트는 setPnAdWarn 으로 갱신) ═══ -->
+  <!-- ═══ 광고 시청 변경 사전 안내 모달 ═══ -->
   <div class="overlay" id="pn-ad-warn-modal" style="align-items:center;justify-content:center">
     <div class="modal" style="max-width:300px">
       <div class="modal-handle"></div>
       <div style="text-align:center;margin-bottom:14px">
-        <div id="pn-aw-icon" style="font-size:32px;margin-bottom:6px">⏰</div>
-        <div id="pn-aw-title" style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px">참여 마감이 얼마 남지 않았어요</div>
-        <div id="pn-aw-desc" style="font-size:12px;color:var(--text3);line-height:1.7"><strong>마감 2분 전</strong>입니다.<br>광고 시청 중 참여 마감 시간을 초과하면<br>변경이 불가합니다.</div>
+        <div id="pn-aw-icon" style="font-size:32px;margin-bottom:6px">📺</div>
+        <div id="pn-aw-title" style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px">광고 시청하고 선택을 바꿀까요?</div>
+        <div id="pn-aw-desc" style="font-size:12px;color:var(--text3);line-height:1.7">광고 시청 후 마감 전까지<br>한 번 선택을 변경할 수 있어요.</div>
       </div>
       <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:10px 12px;margin-bottom:14px">
         <div style="font-size:11px;color:#92400E;line-height:1.7">
           · 광고 시청은 약 5~30초 소요될 수 있어요.<br>
-          · 그래도 변경을 원하시면 바로 진행해주세요.
+          · 광고 시청 중 마감 시간을 초과하면 변경이 불가합니다.
         </div>
       </div>
-      <button class="btn btn-primary" style="margin-bottom:8px" onclick="closeModal('pn-ad-warn-modal');showToast('광고 시청 시작 (시뮬레이션)')">그래도 변경하기</button>
+      <button class="btn btn-primary" style="margin-bottom:8px" onclick="closeModal('pn-ad-warn-modal');startPnAdPlay()">광고 시청 시작</button>
       <button class="btn btn-ghost" style="font-size:12px" onclick="closeModal('pn-ad-warn-modal')">취소</button>
+    </div>
+  </div>
+
+  <!-- ═══ 광고 시청 재생 모달 (시뮬레이션) ═══ -->
+  <div class="overlay" id="pn-ad-playing-modal" style="align-items:center;justify-content:center;background:rgba(0,0,0,0.85)">
+    <div style="text-align:center;color:#fff;padding:32px;max-width:280px">
+      <div style="font-size:48px;margin-bottom:14px">📺</div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:6px">광고 시청 중…</div>
+      <div style="font-size:11px;opacity:0.7;margin-bottom:22px">잠시만 기다려주세요</div>
+      <div style="background:rgba(255,255,255,0.18);border-radius:8px;height:6px;width:220px;margin:0 auto 12px;overflow:hidden">
+        <div id="pn-ad-progress-bar" style="background:#fff;height:100%;width:0%;border-radius:8px;transition:width 3s linear"></div>
+      </div>
+      <div id="pn-ad-progress-text" style="font-size:11px;opacity:0.7">3초 후 완료</div>
     </div>
   </div>
 
@@ -11284,7 +11297,7 @@ function setPnRound(r) {
     }
   }
   /* S1 핵심 컨셉 안내 (질문 카드) */
-  if (refMsg) refMsg.textContent = '오늘 ' + i.result + ' 종가는 지금보다…';
+  if (refMsg) refMsg.textContent = '오늘 ' + i.result + ' 종가, 지금보다 오를까요?';
   if (resultLabelInline) resultLabelInline.textContent = i.result;
   /* 확정 모달의 결과 시각도 동기화 */
   var cv = document.getElementById('pn-cv-time');
@@ -11392,6 +11405,43 @@ function showPnResultModal(type) {
   /* type: 'win' / 'lose' / 'void' / 'summary' */
   var id = 'pn-result-' + type;
   showModal(id);
+}
+/* 광고 시청 재생 (시뮬레이션) — 3초 후 광고 완료 → S1 으로 전환하여 사용자가 다시 선택 가능하게 */
+function startPnAdPlay() {
+  var bar = document.getElementById('pn-ad-progress-bar');
+  var txt = document.getElementById('pn-ad-progress-text');
+  if (!bar || !txt) return;
+  /* 모달 표시 + 진행 바 리셋 */
+  showModal('pn-ad-playing-modal');
+  bar.style.transition = 'none';
+  bar.style.width = '0%';
+  setTimeout(function(){
+    bar.style.transition = 'width 3s linear';
+    bar.style.width = '100%';
+  }, 50);
+  /* 카운트다운 텍스트 */
+  var count = 3;
+  txt.textContent = count + '초 후 완료';
+  var timer = setInterval(function(){
+    count--;
+    if (count > 0) {
+      txt.textContent = count + '초 후 완료';
+    } else {
+      clearInterval(timer);
+      txt.textContent = '완료!';
+      setTimeout(function(){
+        /* 광고 완료 → 모달 닫고 S1 으로 전환 (변경 가능 상태) */
+        closeModal('pn-ad-playing-modal');
+        /* 마감 임박 라벨 초기화 (광고 시청 후엔 평시로) */
+        setPnAdWarn('off');
+        /* S1 으로 전환 — 사용자가 다시 오른다/내린다 선택 가능 */
+        setPnState('s1');
+        if (typeof showToast === 'function') {
+          showToast('광고 시청 완료 · 선택을 다시 해주세요');
+        }
+      }, 600);
+    }
+  }, 1000);
 }
 /* 하단 탭: 참여 내역 / 랭킹 */
 function showPnTab(t) {
