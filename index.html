@@ -4926,7 +4926,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
           <div style="height:1px;background:var(--pp-line);margin:10px 0"></div>
           <div style="display:flex;gap:6px;align-items:flex-start">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--pp-ink-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-            <span style="font-size:11px;color:var(--pp-ink-2);font-weight:500;line-height:1.5">지금 '예측 확정'을 누르면 이 가격이 내 기준가가 돼요. <span id="pn-result-label-inline">09:00</span> 종가와 비교해 적중을 판정합니다.</span>
+            <span style="font-size:11px;color:var(--pp-ink-2);font-weight:500;line-height:1.5">지금 참여하면 이 가격이 내 기준가가 돼요.</span>
           </div>
         </div>
         <div class="pn-base-err" style="display:none;text-align:center;padding:6px 0">
@@ -11271,7 +11271,6 @@ function setPnRound(r) {
   var rlabel = document.getElementById('pn-rresult-label');
   var rbadge = document.getElementById('pn-rbadge-text');
   var refMsg = document.getElementById('pn-ref-msg');
-  var resultLabelInline = document.getElementById('pn-result-label-inline');
   /* 회차 라벨 갱신 — rname 은 setPnState 에서 innerHTML 으로 다시 그려지므로 textContent 보조 */
   if (rname) rname.textContent = i.name;
   if (rbadge) {
@@ -11298,7 +11297,6 @@ function setPnRound(r) {
   }
   /* S1 핵심 컨셉 안내 (질문 카드) */
   if (refMsg) refMsg.textContent = '오늘 ' + i.result + ' 종가, 지금보다 오를까요?';
-  if (resultLabelInline) resultLabelInline.textContent = i.result;
   /* 확정 모달의 결과 시각도 동기화 */
   var cv = document.getElementById('pn-cv-time');
   if (cv) cv.textContent = i.result;
