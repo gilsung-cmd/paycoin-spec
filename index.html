@@ -11462,6 +11462,26 @@ function showPnTab(t) {
       el.style.fontWeight = '600';
     }
   });
+  /* 결과/랭킹 진입 시 sticky 탭으로 자동 스크롤 (sbody 영역 내부에서) */
+  var tabEl = document.getElementById('pn-tab-' + t);
+  if (tabEl) {
+    var sbody = tabEl.closest('.sbody');
+    if (sbody) {
+      /* sbody 내 sticky 탭 위치까지 scrollTop 조정 */
+      var sbodyRect = sbody.getBoundingClientRect();
+      var tabRect = tabEl.getBoundingClientRect();
+      var offset = (tabRect.top - sbodyRect.top) + sbody.scrollTop;
+      try {
+        sbody.scrollTo({ top: offset, behavior: 'smooth' });
+      } catch(e) {
+        sbody.scrollTop = offset;
+      }
+    } else if (tabEl.scrollIntoView) {
+      try {
+        tabEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch(e) { tabEl.scrollIntoView(); }
+    }
+  }
 }
 /* 달력 탭: 전월 / 당월 */
 function switchPnCalTab(t) {
