@@ -41,6 +41,31 @@
   --radius-lg: 22px;
   --phone-w:   375px;
   --phone-h:   780px;
+
+  /* ══ PENCIL DESIGN TOKENS (등락예측 sc-prediction 전용) ══ */
+  --pp-bg:           #F4F5F7;
+  --pp-card:         #FFFFFF;
+  --pp-ink:          #0F1115;
+  --pp-ink-2:        #4B5563;
+  --pp-muted:        #9CA3AF;
+  --pp-line:         #ECEEF1;
+  --pp-line-2:       #E5E7EB;
+  --pp-up:           #E11D48;
+  --pp-up-ink:       #9F1239;
+  --pp-up-soft:      #FFF1F2;
+  --pp-up-border:    #FCA5A5;
+  --pp-down:         #2563EB;
+  --pp-down-ink:     #1E3A8A;
+  --pp-down-soft:    #EFF6FF;
+  --pp-down-border:  #93C5FD;
+  --pp-success:      #059669;
+  --pp-success-soft: #ECFDF5;
+  --pp-success-border:#86EFAC;
+  --pp-warn:         #D97706;
+  --pp-warn-soft:    #FFFBEB;
+  --pp-warn-ink:     #92400E;
+  --pp-brand:        #FF2D2D;
+  --pp-brand-soft:   #FFF5F5;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -4839,27 +4864,28 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
 
   <div class="sbody" style="padding-bottom:24px">
 
-    <!-- 뷰어 전용 토글 묶음 (라운드/상태/기준가/광고변경) -->
+    <!-- 뷰어 전용 토글 (상태·회차·기준가·광고변경) -->
     <div style="margin:4px 14px 0;padding:6px 8px;background:var(--card2);border-radius:8px;display:flex;flex-direction:column;gap:3px">
-      <!-- 상태 + 라운드 (한 줄) -->
       <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
         <span style="font-size:9px;color:var(--text4);margin-right:1px;min-width:30px">상태</span>
-        <button id="pn-s-s1" onclick="setPnState('s1')" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">미참여</button>
-        <button id="pn-s-s2" onclick="setPnState('s2')" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--card);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">결과대기</button>
-        <button id="pn-s-s7" onclick="setPnState('s7')" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--card);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">다음날대기</button>
-        <span style="width:1px;background:var(--border);margin:1px 3px;align-self:stretch"></span>
-        <span style="font-size:9px;color:var(--text4)">라운드</span>
-        <button id="pn-r-1" onclick="setPnRound(1)" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--card);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">1R</button>
-        <button id="pn-r-2" onclick="setPnRound(2)" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">2R</button>
-        <button id="pn-r-3" onclick="setPnRound(3)" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--card);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">3R</button>
+        <button id="pn-s-s1" onclick="setPnState('s1')" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">S1 미참여</button>
+        <button id="pn-s-s2" onclick="setPnState('s2')" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--card);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">S2 대기</button>
+        <button id="pn-s-s3" onclick="setPnState('s3')" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--card);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">S3 적중</button>
+        <button id="pn-s-s4" onclick="setPnState('s4')" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--card);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">S4 실패</button>
+        <button id="pn-s-s5" onclick="setPnState('s5')" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--card);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">S5 무효</button>
+        <button id="pn-s-s6" onclick="setPnState('s6')" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--card);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">S6 다음날대기</button>
       </div>
-      <!-- 기준가 + 광고 변경 라벨 (한 줄) -->
       <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
-        <span style="font-size:9px;color:var(--text4);margin-right:1px;min-width:30px">기준가</span>
+        <span style="font-size:9px;color:var(--text4);margin-right:1px;min-width:30px">회차</span>
+        <button id="pn-r-1" onclick="setPnRound(1)" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">1회차</button>
+        <button id="pn-r-2" onclick="setPnRound(2)" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--card);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">2회차</button>
+        <button id="pn-r-3" onclick="setPnRound(3)" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--card);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">3회차</button>
+        <span style="width:1px;background:var(--border);margin:1px 3px;align-self:stretch"></span>
+        <span style="font-size:9px;color:var(--text4)">기준가</span>
         <button id="pn-cmc-ok"  onclick="setPnCmc('ok')"  style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정상</button>
         <button id="pn-cmc-err" onclick="setPnCmc('err')" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--card);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">CMC 오류</button>
         <span style="width:1px;background:var(--border);margin:1px 3px;align-self:stretch"></span>
-        <span style="font-size:9px;color:var(--text4)">광고 변경</span>
+        <span style="font-size:9px;color:var(--text4)">광고</span>
         <button id="pn-ad-off" onclick="setPnAdWarn('off')" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">평시</button>
         <button id="pn-ad-t2"  onclick="setPnAdWarn('t2')"  style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--card);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">2분</button>
         <button id="pn-ad-t1"  onclick="setPnAdWarn('t1')"  style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--card);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">1분</button>
@@ -4867,185 +4893,416 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
       </div>
     </div>
 
-    <!-- 회차 정보 (슬림 한 줄, S7 에서는 숨김) -->
-    <div id="pn-round-card" style="margin:8px 14px 0;display:flex;align-items:center;justify-content:space-between;padding:2px 4px">
-      <div style="display:inline-flex;align-items:center;gap:6px">
-        <span style="width:6px;height:6px;border-radius:50%;background:var(--primary)"></span>
-        <span style="font-size:12px;color:var(--text);font-weight:700"><span id="pn-rname">2회차</span></span>
-        <span style="font-size:11px;color:var(--text3)">· <span id="pn-rresult">오후 3시</span> 결과</span>
-      </div>
-      <span id="pn-rcount" style="font-size:11px;color:var(--text4);font-weight:500">회차 2/3</span>
-    </div>
-
-    <!-- 카운트다운 (별도 슬림 라인) -->
-    <div id="pn-countdown-line" style="margin:4px 14px 0;display:flex;align-items:center;justify-content:space-between;padding:2px 4px">
-      <span id="pn-rcta" style="font-size:11px;color:var(--text4)">참여 마감까지</span>
-      <span id="pn-rctd" style="font-size:14px;font-weight:800;color:var(--text);font-family:'JetBrains Mono',monospace;letter-spacing:-0.3px">02:34:17</span>
+    <!-- 회차 배지 (펜슬 패턴: ● [상태] | 결과 발표 [시각]) -->
+    <div id="pn-round-card" style="margin:12px 16px 0;display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--pp-brand-soft);border-radius:12px">
+      <span id="pn-rdot" style="width:8px;height:8px;border-radius:50%;background:var(--pp-brand);flex-shrink:0"></span>
+      <span id="pn-rbadge-text" style="font-size:13px;color:var(--pp-brand);font-weight:700;font-family:'Noto Sans KR',sans-serif"><span id="pn-rname">1회차</span> 진행 중</span>
+      <span style="width:1px;height:12px;background:var(--pp-line-2)"></span>
+      <span style="font-size:13px;color:var(--pp-ink-2);font-weight:500;font-family:'Noto Sans KR',sans-serif"><span id="pn-rresult-label">결과 발표 오늘 09:00</span></span>
     </div>
 
     <!-- 오늘 참여 결과 보기 칩 (회차 ≥ 2 에서만 노출) -->
-    <div id="pn-prev-round-chip-wrap" style="margin:6px 14px 0;display:none;justify-content:flex-end">
-      <button id="pn-prev-round-chip" onclick="showPnResultModal('summary')" style="font-size:11px;font-weight:600;color:var(--text3);background:transparent;border:none;padding:2px 4px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">오늘 참여 결과 보기 ›</button>
+    <div id="pn-prev-round-chip-wrap" style="margin:8px 16px 0;display:none;justify-content:flex-end">
+      <button id="pn-prev-round-chip" onclick="showPnResultModal('summary')" style="font-size:11px;font-weight:600;color:var(--pp-ink-2);background:transparent;border:none;padding:2px 4px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">오늘 참여 결과 보기 ›</button>
     </div>
 
-    <!-- ── S1: 참여 가능 (미참여) ── -->
+    <!-- ── S1: 참여 가능 (펜슬 디자인) ── -->
     <div id="pn-s1">
 
-      <!-- 현재가 카드 -->
-      <div id="pn-base-card" style="margin:10px 14px 10px;padding:20px 16px;background:#F4F5FA;border-radius:14px;text-align:center">
+      <!-- 가격 카드 -->
+      <div id="pn-base-card" style="margin:12px 16px 0;padding:18px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:16px">
         <div class="pn-base-ok">
-          <div style="font-size:11px;color:var(--text3);margin-bottom:6px">현재 PCI 가격 <span style="color:var(--text4);font-size:10px">(CMC 기준)</span></div>
-          <div style="font-size:30px;font-weight:900;color:var(--text);letter-spacing:-1px">₩ 82.45<span style="font-size:16px;font-weight:700;color:var(--text2)">원</span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0">
+            <span style="font-size:12px;color:var(--pp-muted);font-weight:600;letter-spacing:0.5px">현재 PCI 가격 · CMC</span>
+            <span style="display:inline-flex;align-items:center;gap:4px;background:var(--pp-up-soft);color:var(--pp-up);padding:4px 8px;border-radius:999px">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M10 7H17V14"/></svg>
+              <span style="font-size:11px;font-weight:700">24h +0.84%</span>
+            </span>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:6px;margin-top:10px">
+            <span style="font-size:40px;font-weight:800;color:var(--pp-ink);letter-spacing:-1px;line-height:1">₩ 132.45</span>
+            <span style="font-size:14px;font-weight:600;color:var(--pp-muted);padding-bottom:6px">KRW</span>
+          </div>
+          <div style="height:1px;background:var(--pp-line);margin:14px 0"></div>
+          <div style="display:flex;gap:8px;align-items:flex-start">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pp-ink-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            <span style="font-size:12.5px;color:var(--pp-ink-2);font-weight:500;line-height:1.5">지금 '예측 확정'을 누르면 이 가격이 내 기준가가 돼요. <span id="pn-result-label-inline">09:00</span> 종가와 비교해 적중을 판정합니다.</span>
+          </div>
         </div>
-        <div class="pn-base-err" style="display:none">
+        <div class="pn-base-err" style="display:none;text-align:center;padding:8px 0">
           <div style="font-size:28px;margin-bottom:6px">⏳</div>
-          <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:4px">기준가 확인중</div>
-          <div style="font-size:11px;color:var(--text3);line-height:1.6">CoinMarketCap 환율을 가져오는 중이에요<br>잠시 후 다시 확인해 주세요</div>
+          <div style="font-size:14px;font-weight:800;color:var(--pp-ink);margin-bottom:4px">기준가 확인중</div>
+          <div style="font-size:11px;color:var(--pp-ink-2);line-height:1.6">CoinMarketCap 환율을 가져오는 중이에요<br>잠시 후 다시 확인해 주세요</div>
         </div>
       </div>
 
-      <!-- 핵심 컨셉 안내 (회차별 동적) -->
-      <div style="margin:0 14px 12px;text-align:center">
-        <div id="pn-ref-msg" style="font-size:13px;color:var(--text2);font-weight:600;line-height:1.55">오후 3시 종가가 지금 가격보다 오를까요? 내릴까요?</div>
-      </div>
-
-      <!-- 투표 버튼 (컴팩트) -->
-      <div id="pn-vote-area" style="display:flex;gap:8px;margin:0 14px 16px">
-        <button id="pn-vote-up" onclick="showPnConfirm('up')" style="flex:1;padding:14px 0;background:#FEE2E2;border:none;border-radius:14px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M10 7H17V14"/></svg>
-          <span style="font-size:15px;font-weight:800;color:#EF4444">오른다</span>
-        </button>
-        <button id="pn-vote-down" onclick="showPnConfirm('down')" style="flex:1;padding:14px 0;background:#DBEAFE;border:none;border-radius:14px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7L17 17"/><path d="M10 17H17V10"/></svg>
-          <span style="font-size:15px;font-weight:800;color:#3B82F6">내린다</span>
-        </button>
-      </div>
-
-      <!-- 커뮤니티 심리 -->
-      <div style="margin:0 14px 14px">
-        <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:10px">커뮤니티 심리</div>
-        <div style="display:flex;border-radius:6px;overflow:hidden;height:10px;margin-bottom:10px">
-          <div style="width:73%;background:#EF4444"></div>
-          <div style="flex:1;background:#3B82F6"></div>
+      <!-- 질문 카드 (오른다/내린다 선택) -->
+      <div style="margin:12px 16px 0;padding:18px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:16px">
+        <div id="pn-ref-msg" style="font-size:12px;color:var(--pp-muted);font-weight:700;letter-spacing:0.5px;margin-bottom:14px">오늘 09:00 종가는 지금보다…</div>
+        <div id="pn-vote-area" style="display:flex;gap:10px">
+          <button id="pn-vote-up" onclick="showPnConfirm('up')" style="flex:1;padding:18px 16px;background:var(--pp-up-soft);border:1.5px solid var(--pp-up-border);border-radius:14px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--pp-up-ink)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            <span style="font-size:18px;font-weight:800;color:var(--pp-up-ink)">오른다</span>
+            <span style="font-size:11px;font-weight:600;color:var(--pp-up-ink);letter-spacing:1px;opacity:0.7">UP</span>
+          </button>
+          <button id="pn-vote-down" onclick="showPnConfirm('down')" style="flex:1;padding:18px 16px;background:var(--pp-down-soft);border:1.5px solid var(--pp-down-border);border-radius:14px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--pp-down-ink)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/></svg>
+            <span style="font-size:18px;font-weight:800;color:var(--pp-down-ink)">내린다</span>
+            <span style="font-size:11px;font-weight:600;color:var(--pp-down-ink);letter-spacing:1px;opacity:0.7">DOWN</span>
+          </button>
         </div>
-        <div style="display:flex;gap:16px;font-size:12px;font-weight:600">
-          <span style="display:inline-flex;align-items:center;gap:5px;color:var(--text2)"><span style="width:7px;height:7px;border-radius:50%;background:#EF4444"></span>오른다 <strong style="color:var(--text)">73%</strong></span>
-          <span style="display:inline-flex;align-items:center;gap:5px;color:var(--text2)"><span style="width:7px;height:7px;border-radius:50%;background:#3B82F6"></span>내린다 <strong style="color:var(--text)">27%</strong></span>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:14px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--pp-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <span style="font-size:11.5px;color:var(--pp-muted);font-weight:500">선택 후 마감 전까지 광고 1회 시청으로 변경 가능</span>
         </div>
       </div>
 
-      <!-- 결과 발표 시각 -->
-      <div style="margin:0 14px 12px;padding:12px 14px;background:#F4F5FA;border-radius:10px">
-        <div style="font-size:11px;color:var(--text3);font-weight:600;margin-bottom:8px">결과 발표 시각</div>
-        <div style="display:flex;gap:8px">
-          <div id="pn-rt-1" style="flex:1;text-align:center;padding:6px 0;background:var(--card);border-radius:8px;border:1px solid var(--border)">
-            <div style="font-size:9px;color:var(--text4);margin-bottom:2px">1회차</div>
-            <div style="font-size:12px;font-weight:800;color:var(--text2);font-family:'JetBrains Mono',monospace">09:00</div>
+      <!-- 카운트다운 카드 -->
+      <div style="margin:12px 16px 0;padding:12px 14px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:14px;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:6px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--pp-ink-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15" y2="11"/><circle cx="12" cy="14" r="8"/></svg>
+          <span id="pn-rcta" style="font-size:12.5px;color:var(--pp-ink-2);font-weight:600">참여 마감까지</span>
+        </div>
+        <span id="pn-rctd" style="font-size:18px;font-weight:800;color:var(--pp-ink);font-family:'JetBrains Mono',monospace;letter-spacing:-0.4px">02 : 47 : 13</span>
+      </div>
+
+      <!-- 시장 심리 카드 -->
+      <div style="margin:12px 16px 0;padding:16px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div>
+            <div style="font-size:11px;color:var(--pp-muted);font-weight:700;letter-spacing:0.8px;margin-bottom:2px">지금 시장 분위기</div>
+            <div style="font-size:14px;color:var(--pp-ink);font-weight:700">방향성 비중</div>
           </div>
-          <div id="pn-rt-2" style="flex:1;text-align:center;padding:6px 0;background:var(--primary-l);border-radius:8px;border:1px solid #BFDBFE">
-            <div style="font-size:9px;color:var(--primary);margin-bottom:2px;font-weight:700">2회차</div>
-            <div style="font-size:12px;font-weight:800;color:var(--primary);font-family:'JetBrains Mono',monospace">15:00</div>
-          </div>
-          <div id="pn-rt-3" style="flex:1;text-align:center;padding:6px 0;background:var(--card);border-radius:8px;border:1px solid var(--border)">
-            <div style="font-size:9px;color:var(--text4);margin-bottom:2px">3회차</div>
-            <div style="font-size:12px;font-weight:800;color:var(--text2);font-family:'JetBrains Mono',monospace">21:00</div>
-          </div>
+          <span style="background:var(--pp-line);color:var(--pp-ink-2);padding:4px 8px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:0.5px">참고용</span>
         </div>
+        <div style="display:flex;border-radius:10px;overflow:hidden;height:36px;margin-bottom:10px">
+          <div style="width:73%;background:var(--pp-up);display:flex;align-items:center;padding:0 12px"><span style="color:#fff;font-size:13px;font-weight:800">오른다 73%</span></div>
+          <div style="flex:1;background:var(--pp-down);display:flex;align-items:center;justify-content:flex-end;padding:0 12px"><span style="color:#fff;font-size:13px;font-weight:800">27%</span></div>
+        </div>
+        <div style="font-size:11.5px;color:var(--pp-muted);font-weight:500;line-height:1.5">각 사용자의 기준가가 다르기 때문에 '실제 예측 분포'가 아닌 방향 선택 비중만 보여드려요.</div>
       </div>
 
-      <!-- 과거 다수 의견 적중률 안내 -->
-      <div style="margin:0 14px;padding:12px 14px;display:flex;align-items:flex-start;gap:8px;background:var(--card2);border-radius:10px">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text4)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-        <span style="font-size:11px;color:var(--text3);line-height:1.6">과거 다수 의견 적중률은 평균 <strong style="color:var(--text2)">58%</strong>입니다. 시장 분위기를 참고만 하세요.</span>
+      <!-- 과거 다수 의견 적중률 -->
+      <div style="margin:12px 16px 0;padding:14px;background:var(--pp-warn-soft);border-radius:14px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:11px;color:var(--pp-warn-ink);font-weight:700;letter-spacing:0.6px;margin-bottom:2px">과거 다수 의견 적중률</div>
+          <div style="font-size:11.5px;color:var(--pp-warn-ink);font-weight:500;opacity:0.85">최근 30회차 평균 · 참고용</div>
+        </div>
+        <div style="font-size:22px;font-weight:800;color:var(--pp-warn-ink);letter-spacing:-0.4px">58%</div>
       </div>
     </div>
 
-    <!-- ── S2: 참여 완료 (결과 대기) ── -->
+    <!-- ── S2: 참여 완료 (결과 대기) — 펜슬 디자인 ── -->
     <div id="pn-s2" style="display:none">
 
-      <!-- 내 예측 카드 (컴팩트) -->
-      <div style="margin:10px 14px 12px;padding:16px;background:#F4F5FA;border-radius:14px">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-          <span style="font-size:11px;color:var(--text3);font-weight:600">내 예측</span>
-          <span style="display:inline-flex;align-items:center;gap:5px;background:#EEF2FF;color:#4338CA;padding:3px 9px;border-radius:20px">
-            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-            <span style="font-size:10px;font-weight:700">참여 완료</span>
+      <!-- 내 예측 카드 (up-soft, with red border) -->
+      <div style="margin:12px 16px 0;padding:18px;background:var(--pp-up-soft);border:1.5px solid var(--pp-up-border);border-radius:16px;display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--pp-up)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+          <div style="font-size:11px;color:var(--pp-up-ink);font-weight:700;letter-spacing:0.6px">내 예측</div>
+          <div style="font-size:22px;color:var(--pp-up-ink);font-weight:800;letter-spacing:-0.5px">오른다</div>
+          <div style="font-size:11.5px;color:var(--pp-up-ink);font-weight:500;opacity:0.8">오늘 06:14에 확정</div>
+        </div>
+      </div>
+
+      <!-- 비교 카드 (기준값 / 현재가) -->
+      <div style="margin:12px 16px 0;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:16px;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px">
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="font-size:11px;color:var(--pp-muted);font-weight:600;letter-spacing:0.4px">내 기준가 · 06:14 고정</span>
+            </div>
+            <span style="font-size:24px;font-weight:800;color:var(--pp-ink);letter-spacing:-0.6px">₩ 132.45</span>
+          </div>
+          <span style="font-size:11px;color:var(--pp-muted);font-weight:600">기준값</span>
+        </div>
+        <div style="height:1px;background:var(--pp-line)"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--pp-up-soft)">
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="font-size:11px;color:var(--pp-up-ink);font-weight:600;letter-spacing:0.4px">지금 가격 · LIVE</span>
+            </div>
+            <span style="font-size:24px;font-weight:800;color:var(--pp-up-ink);letter-spacing:-0.6px">₩ 134.10</span>
+          </div>
+          <span style="display:inline-flex;align-items:center;gap:4px;background:var(--pp-up);color:#fff;padding:6px 10px;border-radius:999px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+            <span style="font-size:12px;font-weight:800">+1.25%</span>
           </span>
-          <span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M10 7H17V14"/></svg>
-            <span style="font-size:16px;font-weight:800;color:#EF4444">오른다</span>
-          </span>
+        </div>
+      </div>
+
+      <!-- 카운트다운 (결과 발표까지) -->
+      <div style="margin:12px 16px 0;padding:12px 14px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:14px;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:6px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--pp-ink-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15" y2="11"/><circle cx="12" cy="14" r="8"/></svg>
+          <span style="font-size:12.5px;color:var(--pp-ink-2);font-weight:600">결과 발표까지</span>
+        </div>
+        <span style="font-size:18px;font-weight:800;color:var(--pp-ink);font-family:'JetBrains Mono',monospace;letter-spacing:-0.4px">03 : 27 : 42</span>
+      </div>
+
+      <!-- 광고 시청 변경 카드 -->
+      <div style="margin:12px 16px 0;padding:16px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:16px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pp-ink-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          <span style="font-size:14px;font-weight:700;color:var(--pp-ink)">선택을 바꾸고 싶다면</span>
+        </div>
+        <div style="font-size:12.5px;color:var(--pp-ink-2);font-weight:500;line-height:1.5;margin-bottom:10px">광고 1회 시청 후 마감 전까지 한 번 선택을 변경할 수 있어요.</div>
+        <button onclick="showModal('pn-ad-warn-modal')" style="width:100%;padding:12px 16px;background:var(--pp-bg);border:1px solid var(--pp-line);border-radius:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--pp-ink)" stroke="var(--pp-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span style="font-size:14px;font-weight:700;color:var(--pp-ink)">광고 보고 선택 변경</span>
+        </button>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:10px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--pp-warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span style="font-size:11.5px;color:var(--pp-warn);font-weight:600">광고 시청 중 마감(09:00)을 넘기면 변경할 수 없어요.</span>
+        </div>
+      </div>
+
+      <!-- 오늘 회차 (1·2·3 진행 상태) -->
+      <div style="margin:12px 16px 0;padding:14px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:12px;color:var(--pp-muted);font-weight:700;letter-spacing:0.6px">오늘 회차</span>
+          <span style="font-size:11px;color:var(--pp-muted);font-weight:500">09:00 · 15:00 · 21:00</span>
         </div>
         <div style="display:flex;gap:8px">
-          <div style="flex:1;background:var(--card);border-radius:10px;padding:10px 12px;text-align:center">
-            <div style="font-size:10px;color:var(--text4);margin-bottom:3px">내 기준가</div>
-            <div style="font-size:13px;font-weight:800;color:var(--text2)">₩ 82.45<span style="font-size:10px;font-weight:600">원</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px;background:var(--pp-warn-soft);border:1px solid var(--pp-line);border-radius:10px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--pp-warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg>
+            <span style="font-size:11px;font-weight:700;color:var(--pp-warn)">1회차</span>
           </div>
-          <div style="flex:1;background:var(--card);border-radius:10px;padding:10px 12px;text-align:center">
-            <div style="font-size:10px;color:var(--text4);margin-bottom:3px">현재가</div>
-            <div style="font-size:13px;font-weight:800;color:var(--text)">₩ 83.27<span style="font-size:10px;font-weight:600">원</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px;background:var(--pp-bg);border:1px solid var(--pp-line);border-radius:10px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--pp-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span style="font-size:11px;font-weight:700;color:var(--pp-muted)">2회차</span>
           </div>
-        </div>
-      </div>
-
-      <!-- 커뮤니티 심리 -->
-      <div style="margin:0 14px 12px">
-        <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:10px">커뮤니티 심리</div>
-        <div style="display:flex;border-radius:6px;overflow:hidden;height:10px;margin-bottom:10px">
-          <div style="width:73%;background:#EF4444"></div>
-          <div style="flex:1;background:#3B82F6"></div>
-        </div>
-        <div style="display:flex;gap:16px;font-size:12px;font-weight:600">
-          <span style="display:inline-flex;align-items:center;gap:5px;color:var(--text2)"><span style="width:7px;height:7px;border-radius:50%;background:#EF4444"></span>오른다 <strong style="color:var(--text)">73%</strong></span>
-          <span style="display:inline-flex;align-items:center;gap:5px;color:var(--text2)"><span style="width:7px;height:7px;border-radius:50%;background:#3B82F6"></span>내린다 <strong style="color:var(--text)">27%</strong></span>
-        </div>
-      </div>
-
-      <!-- 선택 변경 (광고 시청) + 마감 임박 라벨 -->
-      <div style="margin:0 14px 12px;display:flex;gap:6px;align-items:stretch">
-        <button onclick="showModal('pn-ad-warn-modal')" style="flex:1;padding:12px;font-size:12px;font-weight:600;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text2);cursor:pointer;font-family:'Noto Sans KR',sans-serif">선택 변경하기 <span style="color:var(--text4);font-size:10px;font-weight:500">(광고 시청)</span></button>
-        <button id="pn-ad-warn-btn" onclick="showModal('pn-ad-warn-modal')" style="display:none;font-size:10px;font-weight:700;padding:0 12px;border-radius:10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap"></button>
-      </div>
-
-      <!-- 결과 발표 시각 (S1 와 동일 포맷) -->
-      <div style="margin:0 14px 12px;padding:12px 14px;background:#F4F5FA;border-radius:10px">
-        <div style="font-size:11px;color:var(--text3);font-weight:600;margin-bottom:8px">결과 발표 시각</div>
-        <div style="display:flex;gap:8px">
-          <div id="pn-s2-rt-1" style="flex:1;text-align:center;padding:6px 0;background:var(--card);border-radius:8px;border:1px solid var(--border)">
-            <div style="font-size:9px;color:var(--text4);margin-bottom:2px">1회차</div>
-            <div style="font-size:12px;font-weight:800;color:var(--text2);font-family:'JetBrains Mono',monospace">09:00</div>
-          </div>
-          <div id="pn-s2-rt-2" style="flex:1;text-align:center;padding:6px 0;background:var(--primary-l);border-radius:8px;border:1px solid #BFDBFE">
-            <div style="font-size:9px;color:var(--primary);margin-bottom:2px;font-weight:700">2회차</div>
-            <div style="font-size:12px;font-weight:800;color:var(--primary);font-family:'JetBrains Mono',monospace">15:00</div>
-          </div>
-          <div id="pn-s2-rt-3" style="flex:1;text-align:center;padding:6px 0;background:var(--card);border-radius:8px;border:1px solid var(--border)">
-            <div style="font-size:9px;color:var(--text4);margin-bottom:2px">3회차</div>
-            <div style="font-size:12px;font-weight:800;color:var(--text2);font-family:'JetBrains Mono',monospace">21:00</div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px;background:var(--pp-bg);border:1px solid var(--pp-line);border-radius:10px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--pp-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span style="font-size:11px;font-weight:700;color:var(--pp-muted)">3회차</span>
           </div>
         </div>
-      </div>
-
-      <!-- 과거 다수 의견 적중률 안내 -->
-      <div style="margin:0 14px;padding:12px 14px;display:flex;align-items:flex-start;gap:8px;background:var(--card2);border-radius:10px">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text4)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-        <span style="font-size:11px;color:var(--text3);line-height:1.6">과거 다수 의견 적중률은 평균 <strong style="color:var(--text2)">58%</strong>입니다. 시장 분위기를 참고만 하세요.</span>
       </div>
     </div>
 
+    <!-- ── S3: 결과 적중 (펜슬 풀스크린) ── -->
+    <div id="pn-s3" style="display:none">
 
-    <!-- ── S7: 다음날 대기 (21:00~24:00) — 간소화 ── -->
-    <div id="pn-s7" style="display:none">
-
-      <!-- 헤더 (큰 아이콘 + 타이틀 + 안내) -->
-      <div style="text-align:center;margin:32px 14px 20px">
-        <div style="width:72px;height:72px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 14px">🌙</div>
-        <div style="font-size:18px;font-weight:800;color:var(--text);margin-bottom:8px;letter-spacing:-0.3px">오늘 예측이 마감되었어요</div>
-        <div style="font-size:12px;color:var(--text3);line-height:1.7">내일 자정(00:00)부터<br>다시 참여할 수 있어요</div>
+      <!-- 적중 카드 (success-soft, 큰) -->
+      <div style="margin:12px 16px 0;padding:22px;background:var(--pp-success-soft);border:1.5px solid var(--pp-success-border);border-radius:18px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:48px;height:48px;border-radius:999px;background:var(--pp-success);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div style="font-size:18px;font-weight:800;color:var(--pp-success);letter-spacing:-0.3px">적중했어요</div>
+            <div style="font-size:11.5px;color:var(--pp-success);font-weight:500;margin-top:2px;opacity:0.9">예측 방향이 맞았어요</div>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:12px;color:var(--pp-ink-2);font-weight:600">+12 PCI 적립</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--pp-success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <div style="font-size:11.5px;color:var(--pp-success);font-weight:600;line-height:1.5;opacity:0.9">이달의 적중 보상은 다음 달 1일 자체 지갑으로 자동 지급돼요.</div>
       </div>
 
-      <!-- 오늘 참여 결과 보기 버튼 -->
-      <button onclick="showPnResultModal('summary')" style="margin:0 14px;width:calc(100% - 28px);padding:13px;font-size:13px;font-weight:700;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text2);cursor:pointer;font-family:'Noto Sans KR',sans-serif">오늘 참여 결과 보기</button>
+      <!-- 비교 카드 -->
+      <div style="margin:12px 16px 0;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:16px;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--pp-line)">
+          <span style="font-size:12.5px;color:var(--pp-ink-2);font-weight:600">내 예측</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:800;color:var(--pp-up-ink)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            오른다
+          </span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--pp-line)">
+          <span style="font-size:12.5px;color:var(--pp-ink-2);font-weight:600">내 기준가</span>
+          <span style="font-size:14px;font-weight:800;color:var(--pp-ink)">₩ 132.45</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--pp-success-soft);border-bottom:1px solid var(--pp-line)">
+          <span style="font-size:12.5px;color:var(--pp-success);font-weight:600">09:00 종가</span>
+          <span style="font-size:14px;font-weight:800;color:var(--pp-success)">₩ 134.20</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px">
+          <span style="font-size:12.5px;color:var(--pp-ink-2);font-weight:600">등락률</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;background:var(--pp-up);color:#fff;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:800">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+            +1.32%
+          </span>
+        </div>
+      </div>
+
+      <!-- 액션 -->
+      <div style="margin:12px 16px 0;display:flex;gap:10px">
+        <button onclick="showPnResultModal('summary')" style="flex:1;padding:14px 12px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;color:var(--pp-ink-2)">오늘 결과 모아보기</button>
+        <button onclick="setPnState('s1');setPnRound(2)" style="flex:1;padding:14px 12px;background:var(--pp-ink);border:none;border-radius:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;color:#fff">2회차 참여 →</button>
+      </div>
+    </div>
+
+    <!-- ── S4: 결과 실패 (펜슬 풀스크린) ── -->
+    <div id="pn-s4" style="display:none">
+
+      <!-- 실패 카드 (중립 톤) -->
+      <div style="margin:12px 16px 0;padding:22px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:18px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:48px;height:48px;border-radius:999px;background:var(--pp-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--pp-ink-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="15" x2="16" y2="15"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          </div>
+          <div>
+            <div style="font-size:18px;font-weight:800;color:var(--pp-ink);letter-spacing:-0.3px">이번엔 아쉬워요</div>
+            <div style="font-size:11.5px;color:var(--pp-ink-2);font-weight:500;margin-top:2px">예측 방향이 빗나갔어요</div>
+          </div>
+        </div>
+        <div style="font-size:11.5px;color:var(--pp-muted);font-weight:500;line-height:1.55">가격은 늘 변동성이 있어요. 다음 회차에 다시 시도해보세요.</div>
+      </div>
+
+      <!-- 비교 카드 -->
+      <div style="margin:12px 16px 0;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:16px;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--pp-line)">
+          <span style="font-size:12.5px;color:var(--pp-ink-2);font-weight:600">내 예측</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:800;color:var(--pp-up-ink)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            오른다
+          </span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--pp-line)">
+          <span style="font-size:12.5px;color:var(--pp-ink-2);font-weight:600">내 기준가</span>
+          <span style="font-size:14px;font-weight:800;color:var(--pp-ink)">₩ 132.45</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--pp-down-soft);border-bottom:1px solid var(--pp-line)">
+          <span style="font-size:12.5px;color:var(--pp-down-ink);font-weight:600">09:00 종가</span>
+          <span style="font-size:14px;font-weight:800;color:var(--pp-down-ink)">₩ 131.10</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px">
+          <span style="font-size:12.5px;color:var(--pp-ink-2);font-weight:600">등락률</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;background:var(--pp-down);color:#fff;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:800">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+            -1.02%
+          </span>
+        </div>
+      </div>
+
+      <!-- 액션 -->
+      <div style="margin:12px 16px 0;display:flex;gap:10px">
+        <button onclick="showPnResultModal('summary')" style="flex:1;padding:14px 12px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;color:var(--pp-ink-2)">오늘 결과 모아보기</button>
+        <button onclick="setPnState('s1');setPnRound(2)" style="flex:1;padding:14px 12px;background:var(--pp-ink);border:none;border-radius:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;color:#fff">2회차 참여 →</button>
+      </div>
+    </div>
+
+    <!-- ── S5: 결과 무효 (펜슬 풀스크린) ── -->
+    <div id="pn-s5" style="display:none">
+
+      <!-- 무효 카드 (warn 톤) -->
+      <div style="margin:12px 16px 0;padding:22px;background:var(--pp-warn-soft);border:1.5px solid #FDE68A;border-radius:18px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:48px;height:48px;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--pp-warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div style="font-size:18px;font-weight:800;color:var(--pp-warn-ink);letter-spacing:-0.3px">무효 처리됐어요</div>
+            <div style="font-size:11.5px;color:var(--pp-warn-ink);font-weight:500;margin-top:2px;opacity:0.85">기준가와 결과 종가가 같아요</div>
+          </div>
+        </div>
+        <div style="font-size:11.5px;color:var(--pp-warn-ink);font-weight:500;line-height:1.55;opacity:0.9">내 기준가와 결과 종가가 동일해서 적중 판정이 보류됐어요. 보상은 지급되지 않습니다.</div>
+      </div>
+
+      <!-- 비교 카드 -->
+      <div style="margin:12px 16px 0;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:16px;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--pp-line)">
+          <span style="font-size:12.5px;color:var(--pp-ink-2);font-weight:600">내 예측</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:800;color:var(--pp-up-ink)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            오른다
+          </span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--pp-line)">
+          <span style="font-size:12.5px;color:var(--pp-ink-2);font-weight:600">내 기준가</span>
+          <span style="font-size:14px;font-weight:800;color:var(--pp-ink)">₩ 132.45</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--pp-warn-soft);border-bottom:1px solid var(--pp-line)">
+          <span style="font-size:12.5px;color:var(--pp-warn-ink);font-weight:600">09:00 종가</span>
+          <span style="font-size:14px;font-weight:800;color:var(--pp-warn-ink)">₩ 132.45</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px">
+          <span style="font-size:12.5px;color:var(--pp-ink-2);font-weight:600">등락률</span>
+          <span style="font-size:13px;font-weight:800;color:var(--pp-warn-ink)">0.00%</span>
+        </div>
+      </div>
+
+      <!-- 액션 -->
+      <div style="margin:12px 16px 0;display:flex;gap:10px">
+        <button onclick="showModal('pn-guide-modal')" style="flex:1;padding:14px 12px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;color:var(--pp-ink-2)">무효 처리 기준</button>
+        <button onclick="setPnState('s1');setPnRound(2)" style="flex:1;padding:14px 12px;background:var(--pp-ink);border:none;border-radius:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;color:#fff">2회차 참여 →</button>
+      </div>
+    </div>
+
+    <!-- ── S6: 다음날 대기 (이전 S7 → 펜슬 디자인) ── -->
+    <div id="pn-s6" style="display:none">
+
+      <!-- 큰 시계 아이콘 + 안내 -->
+      <div style="margin:32px 16px 0;text-align:center">
+        <div style="width:96px;height:96px;border-radius:999px;background:var(--pp-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--pp-muted)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div style="font-size:12px;color:var(--pp-muted);font-weight:600;margin-bottom:6px">오늘 마지막 회차 결과 발표 완료</div>
+        <div style="font-size:20px;font-weight:800;color:var(--pp-ink);letter-spacing:-0.3px;margin-bottom:8px">내일 1회차 대기 중</div>
+        <div style="font-size:12px;color:var(--pp-ink-2);font-weight:500;line-height:1.7">내일 00:00부터 1회차 참여가 시작돼요</div>
+      </div>
+
+      <!-- 카운트다운 -->
+      <div style="margin:18px 16px 0;padding:14px 16px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:14px;display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:12px;color:var(--pp-ink-2);font-weight:600">내일 1회차 오픈까지</span>
+        <span style="font-size:18px;font-weight:800;color:var(--pp-ink);font-family:'JetBrains Mono',monospace;letter-spacing:-0.4px">02 : 41 : 09</span>
+      </div>
+
+      <!-- 오늘 회차 결과 -->
+      <div style="margin:12px 16px 0;padding:14px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <span style="font-size:12px;color:var(--pp-muted);font-weight:700;letter-spacing:0.6px">오늘 회차 결과</span>
+          <span style="background:var(--pp-success-soft);color:var(--pp-success);font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px">3회차 모두 참여</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--pp-bg);border-radius:10px">
+            <span style="font-size:11px;font-weight:700;color:var(--pp-muted);min-width:34px">1회차</span>
+            <span style="display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;color:var(--pp-up-ink);flex:1">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+              오른다
+            </span>
+            <span style="font-size:10.5px;font-weight:700;color:var(--pp-success);background:var(--pp-success-soft);padding:3px 8px;border-radius:6px">적중</span>
+            <span style="font-size:13px;font-weight:800;color:var(--pp-ink)">+12</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--pp-bg);border-radius:10px">
+            <span style="font-size:11px;font-weight:700;color:var(--pp-muted);min-width:34px">2회차</span>
+            <span style="display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;color:var(--pp-up-ink);flex:1">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+              오른다
+            </span>
+            <span style="font-size:10.5px;font-weight:700;color:var(--pp-success);background:var(--pp-success-soft);padding:3px 8px;border-radius:6px">적중</span>
+            <span style="font-size:13px;font-weight:800;color:var(--pp-ink)">+12</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--pp-bg);border-radius:10px">
+            <span style="font-size:11px;font-weight:700;color:var(--pp-muted);min-width:34px">3회차</span>
+            <span style="display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;color:var(--pp-down-ink);flex:1">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/></svg>
+              내린다
+            </span>
+            <span style="font-size:10.5px;font-weight:700;color:var(--pp-muted);background:var(--pp-bg);border:1px solid var(--pp-line);padding:3px 8px;border-radius:6px">실패</span>
+            <span style="font-size:13px;font-weight:800;color:var(--pp-muted)">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 오늘 획득 합계 -->
+      <div style="margin:12px 16px 0;padding:14px 16px;background:var(--pp-ink);border-radius:14px;display:flex;align-items:center;justify-content:space-between;color:#fff">
+        <span style="font-size:12px;color:rgba(255,255,255,0.7);font-weight:600">오늘 획득</span>
+        <span style="font-size:22px;font-weight:800;display:inline-flex;align-items:center;gap:6px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 12h-4V8"/></svg>
+          +24 PCI
+        </span>
+      </div>
+
+      <!-- 액션 -->
+      <div style="margin:12px 16px 0;display:flex;gap:10px">
+        <button onclick="showPnTab('history')" style="flex:1;padding:14px 12px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;color:var(--pp-ink-2)">결과 내역</button>
+        <button onclick="showPnTab('ranking')" style="flex:1;padding:14px 12px;background:var(--pp-ink);border:none;border-radius:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;color:#fff">랭킹 확인 →</button>
+      </div>
     </div>
 
     <!-- ═══ 하단 sticky 탭 (참여 내역 / 랭킹) ═══ -->
@@ -10939,9 +11196,9 @@ async function submitPolicyA(id) {
    광고 변경: off / t2 (2분 전) / t1 (1분 전) / t0 (곧 마감)
    ═════════════════════════════════════════════════════════════════ */
 function setPnState(s) {
-  /* 's6' 은 'S2 = 결과 대기'와 동일 정책으로 통합되어 제거됨. 하위호환으로 's6' 입력 시 's2' 로 폴백 */
-  if (s === 's6') s = 's2';
-  var states = ['s1','s2','s7'];
+  /* 's7' 은 펜슬 설계에서 's6 다음날 대기'로 통합됨 — 하위호환 폴백 */
+  if (s === 's7') s = 's6';
+  var states = ['s1','s2','s3','s4','s5','s6'];
   for (var i=0; i<states.length; i++) {
     var el = document.getElementById('pn-' + states[i]);
     if (el) el.style.display = (states[i] === s) ? 'block' : 'none';
@@ -10950,26 +11207,44 @@ function setPnState(s) {
       if (states[i] === s) {
         btn.style.background = 'var(--primary-l)'; btn.style.color = 'var(--primary)'; btn.style.border = '1px solid #BFDBFE';
       } else {
-        btn.style.background = 'var(--card2)'; btn.style.color = 'var(--text3)'; btn.style.border = '1px solid var(--border)';
+        btn.style.background = 'var(--card)'; btn.style.color = 'var(--text3)'; btn.style.border = '1px solid var(--border)';
       }
     }
   }
-  /* 라운드 카드 — S7 에서는 통째로 숨김 */
+  /* 회차 배지 — S6 (다음날 대기) 에서는 통째로 숨김 / 그 외 상태별 라벨·톤 갱신 */
   var roundCard = document.getElementById('pn-round-card');
-  if (roundCard) roundCard.style.display = (s === 's7') ? 'none' : '';
-  /* 헤더 카운트다운 라벨 — 상태별 변경 */
-  var ctaEl = document.getElementById('pn-rcta');
-  var ctdEl = document.getElementById('pn-rctd');
-  if (s === 's2') {
-    if (ctaEl) ctaEl.textContent = '결과 발표까지';
-    if (ctdEl) ctdEl.textContent = '02:34:17';
-  } else if (s === 's1') {
-    if (ctaEl) ctaEl.textContent = '참여 마감까지';
-    if (ctdEl) ctdEl.textContent = '02:34:17';
+  var rdot      = document.getElementById('pn-rdot');
+  var rbadge    = document.getElementById('pn-rbadge-text');
+  var rname     = document.getElementById('pn-rname');
+  var rlabel    = document.getElementById('pn-rresult-label');
+  if (roundCard) roundCard.style.display = (s === 's6') ? 'none' : 'flex';
+  if (s === 's1' && rdot && rbadge && rlabel) {
+    /* 브랜드 톤 — 진행 중 */
+    roundCard.style.background = 'var(--pp-brand-soft)';
+    rdot.style.background = 'var(--pp-brand)';
+    rbadge.style.color = 'var(--pp-brand)';
+    rbadge.innerHTML = '<span id="pn-rname">' + (rname ? rname.textContent : '1회차') + '</span> 진행 중';
+    rlabel.textContent = '결과 발표 오늘 ' + (s === 's1' ? document.getElementById('pn-rctd-time-base')?.textContent || '09:00' : '09:00');
+  } else if ((s === 's2') && rdot && rbadge && rlabel) {
+    /* 회색 톤 — 참여 완료 */
+    roundCard.style.background = 'var(--pp-bg)';
+    rdot.style.background = 'var(--pp-ink-2)';
+    rbadge.style.color = 'var(--pp-ink-2)';
+    rbadge.innerHTML = '<span id="pn-rname">' + (rname ? rname.textContent : '1회차') + '</span> 참여 완료';
+  } else if ((s === 's3' || s === 's4' || s === 's5') && rdot && rbadge && rlabel) {
+    /* 회색 톤 — 결과 발표 */
+    roundCard.style.background = 'var(--pp-bg)';
+    rdot.style.background = 'var(--pp-ink-2)';
+    rbadge.style.color = 'var(--pp-ink-2)';
+    rbadge.innerHTML = '<span id="pn-rname">' + (rname ? rname.textContent : '1회차') + '</span> 결과 발표';
+    if (rlabel) rlabel.textContent = '오늘 ' + (document.getElementById('pn-cv-time')?.textContent || '09:00') + ' 종가 기준';
   }
-  /* 오늘 참여 결과 보기 칩 — S7 숨김. 추가 조건은 setPnRound 에서 처리 (1회차에서는 숨김) */
+  /* 카운트다운 칩 (S2 만 노출) — 더미 처리 */
+  /* 오늘 참여 결과 보기 칩 — S1·S2 에서만 노출. 회차 1 인 경우 setPnRound 가 또 숨김 처리 */
   var chipWrap = document.getElementById('pn-prev-round-chip-wrap');
-  if (chipWrap) chipWrap.style.display = (s === 's7') ? 'none' : '';
+  if (chipWrap) {
+    chipWrap.style.display = (s === 's1' || s === 's2') ? 'flex' : 'none';
+  }
 }
 function setPnRound(r) {
   var info = {
@@ -10977,47 +11252,51 @@ function setPnRound(r) {
     2: {name:'2회차', result:'오후 3시'},
     3: {name:'3회차', result:'밤 9시'}
   };
-  var i = info[r] || info[2];
-  var n = document.getElementById('pn-rname');
-  var t = document.getElementById('pn-rresult');
-  var c = document.getElementById('pn-rcount');
+  var info2 = {
+    1: {name:'1회차', result:'09:00', resultK:'오전 9시'},
+    2: {name:'2회차', result:'15:00', resultK:'오후 3시'},
+    3: {name:'3회차', result:'21:00', resultK:'밤 9시'}
+  };
+  var i = info2[r] || info2[1];
+  var rname  = document.getElementById('pn-rname');
+  var rlabel = document.getElementById('pn-rresult-label');
+  var rbadge = document.getElementById('pn-rbadge-text');
   var refMsg = document.getElementById('pn-ref-msg');
-  if (n) n.textContent = i.name;
-  if (t) t.textContent = i.result;
-  if (c) c.textContent = '회차 ' + r + '/3';
-  /* 가격 카드 하단의 핵심 컨셉 메시지 (예: "오후 3시 종가가 지금 가격보다 오를까요? 내릴까요?") */
-  if (refMsg) refMsg.textContent = i.result + ' 종가가 지금 가격보다 오를까요? 내릴까요?';
-  /* S2 결과 시각 안내 텍스트 동기화 */
-  var rt = document.getElementById('pn-s2-resulttime');
-  if (rt) rt.textContent = i.result;
-  /* 결과 발표 시각 섹션 — 현재 회차 강조 (S1·S2 양쪽 동기화) */
-  ['pn-rt-','pn-s2-rt-'].forEach(function(prefix){
-    [1,2,3].forEach(function(k){
-      var box = document.getElementById(prefix + k);
-      if (!box) return;
-      if (k === r) {
-        box.style.background = 'var(--primary-l)';
-        box.style.border = '1px solid #BFDBFE';
-        box.children[0].style.color = 'var(--primary)';
-        box.children[0].style.fontWeight = '700';
-        box.children[1].style.color = 'var(--primary)';
-      } else {
-        box.style.background = 'var(--card)';
-        box.style.border = '1px solid var(--border)';
-        box.children[0].style.color = 'var(--text4)';
-        box.children[0].style.fontWeight = '400';
-        box.children[1].style.color = 'var(--text2)';
+  var resultLabelInline = document.getElementById('pn-result-label-inline');
+  /* 회차 라벨 갱신 — rname 은 setPnState 에서 innerHTML 으로 다시 그려지므로 textContent 보조 */
+  if (rname) rname.textContent = i.name;
+  if (rbadge) {
+    /* rbadge 의 마지막 텍스트 부분만 갱신 (예: "1회차 진행 중" → "2회차 진행 중") */
+    var oldText = rbadge.innerText || rbadge.textContent || '';
+    var tail = oldText.replace(/^[0-9]+회차\s*/,'');  /* 회차 부분 제거 → '진행 중' 같은 꼬리 */
+    rbadge.innerHTML = '<span id="pn-rname">' + i.name + '</span> ' + tail;
+  }
+  if (rlabel) {
+    /* 결과 발표 시각 라벨 — 상태에 따라 형식이 다름 */
+    var curState = (function(){
+      var arr = ['s1','s2','s3','s4','s5','s6'];
+      for (var k=0;k<arr.length;k++) {
+        var el = document.getElementById('pn-'+arr[k]);
+        if (el && el.style.display !== 'none') return arr[k];
       }
-    });
-  });
+      return 's1';
+    })();
+    if (curState === 's3' || curState === 's4' || curState === 's5') {
+      rlabel.textContent = '오늘 ' + i.result + ' 종가 기준';
+    } else {
+      rlabel.textContent = '결과 발표 오늘 ' + i.result;
+    }
+  }
+  /* S1 핵심 컨셉 안내 (질문 카드) */
+  if (refMsg) refMsg.textContent = '오늘 ' + i.result + ' 종가는 지금보다…';
+  if (resultLabelInline) resultLabelInline.textContent = i.result;
   /* 확정 모달의 결과 시각도 동기화 */
   var cv = document.getElementById('pn-cv-time');
   if (cv) cv.textContent = i.result;
   /* 오늘 참여 결과 보기 칩 — 1회차에서는 숨김 (이전 회차 결과 없음) */
   var chipWrap = document.getElementById('pn-prev-round-chip-wrap');
   if (chipWrap && chipWrap.style.display !== 'none') {
-    /* 상태가 s7 일 때는 setPnState 가 이미 숨김 처리. r === 1 인 경우에만 칩 숨김 */
-    chipWrap.style.display = (r === 1) ? 'none' : '';
+    chipWrap.style.display = (r === 1) ? 'none' : 'flex';
   }
   /* 토글 버튼 활성화 */
   for (var k=1; k<=3; k++) {
