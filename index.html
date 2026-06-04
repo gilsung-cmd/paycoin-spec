@@ -5031,8 +5031,8 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         <div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--pp-line)">
           <div style="width:22px;height:22px;border-radius:50%;background:var(--pp-brand-soft);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--pp-brand);flex-shrink:0">4</div>
           <div style="flex:1">
-            <div style="font-size:12px;font-weight:700;color:var(--pp-ink);margin-bottom:2px">광고 1회 시청으로 선택 변경 가능</div>
-            <div style="font-size:10.5px;color:var(--pp-ink-2);line-height:1.5">마감 전까지 1번에 한해 변경할 수 있어요</div>
+            <div style="font-size:12px;font-weight:700;color:var(--pp-ink);margin-bottom:2px">광고 시청 후 선택 변경 가능</div>
+            <div style="font-size:10.5px;color:var(--pp-ink-2);line-height:1.5">마감 전까지 광고 시청 시 변경할 수 있어요</div>
           </div>
         </div>
 
@@ -5115,7 +5115,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         </div>
         <div style="display:flex;align-items:center;gap:5px;margin-top:10px">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--pp-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-          <span style="font-size:10.5px;color:var(--pp-muted);font-weight:500">선택 후 마감 전까지 광고 1회 시청으로 변경 가능</span>
+          <span style="font-size:10.5px;color:var(--pp-muted);font-weight:500">선택 후 마감 전까지 광고 시청 시 변경 가능</span>
         </div>
       </div>
 
@@ -5234,7 +5234,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--pp-ink-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
           <span style="font-size:12.5px;font-weight:700;color:var(--pp-ink)">선택을 바꾸고 싶다면</span>
         </div>
-        <div style="font-size:11px;color:var(--pp-ink-2);font-weight:500;line-height:1.45;margin-bottom:8px">광고 1회 시청 후 마감 전까지 한 번 선택을 변경할 수 있어요.</div>
+        <div style="font-size:11px;color:var(--pp-ink-2);font-weight:500;line-height:1.45;margin-bottom:8px">광고 시청 후 마감 전까지 선택을 변경할 수 있어요.</div>
         <button onclick="showModal('pn-ad-warn-modal')" style="width:100%;padding:10px 14px;background:var(--pp-bg);border:1px solid var(--pp-line);border-radius:10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--pp-ink)" stroke="var(--pp-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           <span style="font-size:12.5px;font-weight:700;color:var(--pp-ink)">광고 보고 선택 변경</span>
@@ -5338,7 +5338,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
     </div>
 
     <!-- ═══ 하단 sticky 탭 (참여 내역 / 랭킹) ═══ -->
-    <div style="display:flex;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--card);position:sticky;top:0;z-index:10;margin-top:16px">
+    <div id="pn-sticky-tab" style="display:flex;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--card);position:sticky;top:0;z-index:10;margin-top:16px">
       <div id="pn-tab-history" onclick="showPnTab('history')" style="flex:1;padding:10px 0;text-align:center;font-size:12px;font-weight:700;cursor:pointer;color:var(--primary);border-bottom:2px solid var(--primary);font-family:'Noto Sans KR',sans-serif">참여 내역</div>
       <div id="pn-tab-ranking" onclick="showPnTab('ranking')" style="flex:1;padding:10px 0;text-align:center;font-size:12px;font-weight:600;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;font-family:'Noto Sans KR',sans-serif">랭킹</div>
     </div>
@@ -5810,7 +5810,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
       <div style="text-align:center;margin-bottom:14px">
         <div id="pn-aw-icon" style="font-size:32px;margin-bottom:6px">📺</div>
         <div id="pn-aw-title" style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px">광고 시청하고 선택을 바꿀까요?</div>
-        <div id="pn-aw-desc" style="font-size:12px;color:var(--text3);line-height:1.7">광고 시청 후 마감 전까지<br>한 번 선택을 변경할 수 있어요.</div>
+        <div id="pn-aw-desc" style="font-size:12px;color:var(--text3);line-height:1.7">광고 시청 후 마감 전까지<br>선택을 변경할 수 있어요.</div>
       </div>
       <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:10px 12px;margin-bottom:14px">
         <div style="font-size:11px;color:#92400E;line-height:1.7">
@@ -11699,6 +11699,10 @@ function setPnUserType(type) {
   var s1 = document.getElementById('pn-s1');
   var s2 = document.getElementById('pn-s2');
   var s6 = document.getElementById('pn-s6');
+  /* 하단 sticky 탭 + 참여 내역 + 랭킹 — 첫 참여자에게는 통째 숨김 */
+  var stickyTab = document.getElementById('pn-sticky-tab');
+  var history = document.getElementById('pn-history');
+  var ranking = document.getElementById('pn-ranking');
   if (type === 'first') {
     /* 소개 화면만 노출 */
     if (intro) intro.style.display = 'block';
@@ -11707,9 +11711,15 @@ function setPnUserType(type) {
     if (s1) s1.style.display = 'none';
     if (s2) s2.style.display = 'none';
     if (s6) s6.style.display = 'none';
+    if (stickyTab) stickyTab.style.display = 'none';
+    if (history) history.style.display = 'none';
+    if (ranking) ranking.style.display = 'none';
   } else {
     /* 기존 흐름 복원 — 현재 시간대·참여 상태에 따라 화면 결정 */
     if (intro) intro.style.display = 'none';
+    if (stickyTab) stickyTab.style.display = 'flex';
+    if (history) history.style.display = '';      /* showPnTab 이 활성 탭 따라 갱신 */
+    /* ranking 은 showPnTab 이 관리 */
     var slot = window._pnCurSlot || '1';
     if (slot === 'end') {
       setPnState('s6');
@@ -11927,7 +11937,7 @@ function setPnAdWarn(tier, opts) {
   var tit  = document.getElementById('pn-aw-title');
   var desc = document.getElementById('pn-aw-desc');
   var cfg = {
-    'off': {show:false, icon:'📺', title:'광고 시청하고 선택을 바꿀까요?', desc:'광고 시청 후 마감 전까지<br>한 번 선택을 변경할 수 있어요.'},
+    'off': {show:false, icon:'📺', title:'광고 시청하고 선택을 바꿀까요?', desc:'광고 시청 후 마감 전까지<br>선택을 변경할 수 있어요.'},
     't2' : {label:'마감 2분 전', bg:'#FFFBEB', color:'#92400E', border:'#FDE68A', icon:'⏰', title:'참여 마감이 얼마 남지 않았어요', desc:'<strong>마감 2분 전</strong>입니다.<br>광고 시청 중 참여 마감 시간을 초과하면<br>변경이 불가합니다.'},
     't1' : {label:'1분 전',      bg:'#FED7AA', color:'#9A3412', border:'#FB923C', icon:'⏰', title:'참여 마감 1분 전이에요',          desc:'<strong>1분 전</strong>입니다.<br>광고 시청 중 참여 마감 시간을 초과하면<br>변경이 불가합니다.'},
     't0' : {label:'곧 마감',     bg:'#FEF2F2', color:'#991B1B', border:'#FCA5A5', icon:'🚨', title:'곧 마감됩니다',                    desc:'<strong>1분 미만</strong> 남았어요.<br>광고 시청 중 참여 마감 시간을 초과하면<br>변경이 불가합니다.'}
