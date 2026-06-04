@@ -5321,7 +5321,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
               내린다
             </span>
             <span style="font-size:9.5px;font-weight:700;color:var(--pp-muted);background:var(--pp-bg);border:1px solid var(--pp-line);padding:2px 7px;border-radius:5px">실패</span>
-            <span style="font-size:12px;font-weight:800;color:var(--pp-muted)">—</span>
+            <span style="font-size:12px;font-weight:800;color:var(--pp-ink)">+2</span>
           </div>
         </div>
       </div>
@@ -5331,7 +5331,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         <span style="font-size:11px;color:rgba(255,255,255,0.7);font-weight:600">오늘 획득</span>
         <span style="font-size:18px;font-weight:800;display:inline-flex;align-items:center;gap:5px">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 12h-4V8"/></svg>
-          +30 PCI
+          +32 PCI
         </span>
       </div>
 
@@ -5660,13 +5660,17 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
     </div>
   </div>
 
-  <!-- ═══ 결과 모달 — 실패 ═══ -->
+  <!-- ═══ 결과 모달 — 실패 (기본 참여 리워드 +2 PCI 지급) ═══ -->
   <div class="overlay" id="pn-result-lose" style="align-items:center;justify-content:center">
     <div class="modal" style="max-width:320px">
       <div style="text-align:center;margin-bottom:14px">
         <div style="width:60px;height:60px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px">😢</div>
         <div style="font-size:20px;font-weight:800;color:var(--text);margin-bottom:6px">아쉽게 빗나갔어요</div>
         <div style="font-size:11px;color:var(--text3)">오른다 예측했지만 결과는 하락이에요</div>
+      </div>
+      <div style="background:var(--primary-l);border:1px solid #BFDBFE;border-radius:12px;padding:14px;display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🎁</div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:800;color:var(--text)">+2 PCI 적립</div><div style="font-size:10px;color:var(--text3);margin-top:1px">참여 리워드 · 내 지갑에 곧 반영됩니다</div></div>
       </div>
       <div style="background:var(--card2);border-radius:10px;padding:13px;margin-bottom:14px">
         <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-size:11px;color:var(--text4)">내 기준가</span><span style="font-size:12px;font-weight:700;color:var(--text)">₩ 82.45원</span></div>
@@ -5772,12 +5776,12 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         <div style="display:flex;align-items:center;gap:8px;padding:6px 0">
           <span style="font-size:9px;font-weight:700;color:var(--text4);background:var(--card);padding:3px 8px;border-radius:20px">3R</span>
           <span style="font-size:12px;color:var(--text);flex:1">📉 내린다</span>
-          <span style="font-size:10px;font-weight:700;color:var(--text3)">× 실패 —</span>
+          <span style="font-size:10px;font-weight:700;color:var(--primary)">× 실패 +2</span>
         </div>
       </div>
       <div style="background:var(--text);border-radius:10px;padding:11px 14px;color:#fff;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
         <span style="font-size:11px;color:rgba(255,255,255,0.7)">오늘 획득</span>
-        <span style="font-size:15px;font-weight:800;display:flex;align-items:center;gap:4px"><span style="font-size:12px">🪙</span> +30 PCI</span>
+        <span style="font-size:15px;font-weight:800;display:flex;align-items:center;gap:4px"><span style="font-size:12px">🪙</span> +32 PCI</span>
       </div>
       <button class="btn btn-primary" style="background:var(--text)" onclick="closeModal('pn-result-summary')">닫기</button>
     </div>
