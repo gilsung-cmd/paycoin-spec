@@ -11563,16 +11563,19 @@ function _pnUpdateToggleStates() {
   var isEnd  = slot === 'end';
   var is1R   = slot === '1';
 
-  /* 그룹별 비활성 조건 매핑 */
+  /* 그룹별 비활성 조건 매핑
+     원칙: 종료 시간대(S6)에서는 시간대 토글 외 모든 그룹 비활성.
+            1회차 시간대에서는 '직전 회차 시뮬·결과 모달' 비활성.
+            광고 변경·마감 초과는 S2(참여 완료) 일 때만 활성. */
   var disabledMap = {
-    'pn-tg-part':       isEnd,                  /* 종료(S6)에서는 참여 토글 무의미 */
-    'pn-tg-prev':       is1R,                   /* 1회차 시간대에서는 직전 회차 시뮬 불필요 */
+    'pn-tg-part':       isEnd,                  /* 종료에서 참여 토글 무의미 */
+    'pn-tg-prev':       isEnd || is1R,          /* 1회차·종료에서는 직전 회차 시뮬 불필요 */
     'pn-tg-cd':         isEnd,                  /* 종료에서는 카운트다운 카드 없음 */
     'pn-tg-px':         isEnd,                  /* 종료에서는 가격 카드 없음 */
     'pn-tg-cmc':        isEnd,                  /* 종료에서는 가격 카드 없음 */
-    'pn-tg-ad-label':   !participated || isEnd, /* 광고 변경은 S2(참여 완료)에서만 의미 있음 */
+    'pn-tg-ad-label':   !participated || isEnd, /* 광고 변경은 S2(참여 완료)에서만 */
     'pn-tg-ad-overrun': !participated || isEnd, /* 광고 마감 초과도 S2에서만 */
-    'pn-tg-result':     is1R                    /* 1회차 시간대에서는 결과 모달 노출 불필요 */
+    'pn-tg-result':     isEnd || is1R           /* 1회차·종료에서는 결과 모달 노출 불필요 */
   };
   Object.keys(disabledMap).forEach(function(gid){
     var g = document.getElementById(gid);
