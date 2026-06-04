@@ -997,6 +997,15 @@ body {
     <span style="font-size:12px;font-weight:800;color:var(--text);letter-spacing:-0.2px">등락예측 검토 토글</span>
   </div>
 
+  <!-- 사용자 유형 (첫 참여자 / 기존 회원) -->
+  <div id="pn-tg-user" style="margin-bottom:10px;transition:opacity .15s">
+    <div style="font-size:10px;font-weight:700;color:var(--text4);letter-spacing:0.4px;margin-bottom:5px">사용자 유형</div>
+    <div style="display:flex;gap:4px">
+      <button id="pn-user-returning-btn" onclick="setPnUserType('returning')" style="flex:1;font-size:10px;font-weight:600;padding:4px 0;border-radius:6px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:inherit">기존 회원</button>
+      <button id="pn-user-first-btn"     onclick="setPnUserType('first')"     style="flex:1;font-size:10px;font-weight:600;padding:4px 0;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">첫 참여자</button>
+    </div>
+  </div>
+
   <!-- 시간대 -->
   <div id="pn-tg-slot" style="margin-bottom:10px;transition:opacity .15s">
     <div style="font-size:10px;font-weight:700;color:var(--text4);letter-spacing:0.4px;margin-bottom:5px">시간대</div>
@@ -1055,12 +1064,13 @@ body {
     </div>
   </div>
 
-  <!-- 광고 시청 중 마감 초과 시뮬 -->
+  <!-- 광고 예외 시뮬 (마감 초과 / 로딩 실패) -->
   <div id="pn-tg-ad-overrun" style="margin-bottom:10px;transition:opacity .15s">
-    <div style="font-size:10px;font-weight:700;color:var(--text4);letter-spacing:0.4px;margin-bottom:5px">광고 마감 초과</div>
-    <div style="display:flex;gap:4px">
-      <button onclick="simulatePnAdDeadlineOverrun('next')" style="flex:1;font-size:10px;font-weight:600;padding:4px 0;border-radius:6px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:inherit">1·2회차 마감</button>
-      <button onclick="simulatePnAdDeadlineOverrun('end')"  style="flex:1;font-size:10px;font-weight:600;padding:4px 0;border-radius:6px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:inherit">3회차 마감</button>
+    <div style="font-size:10px;font-weight:700;color:var(--text4);letter-spacing:0.4px;margin-bottom:5px">광고 예외</div>
+    <div style="display:flex;flex-wrap:wrap;gap:4px">
+      <button onclick="simulatePnAdDeadlineOverrun('next')" style="flex:1;min-width:78px;font-size:10px;font-weight:600;padding:4px 0;border-radius:6px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:inherit">1·2회차 마감</button>
+      <button onclick="simulatePnAdDeadlineOverrun('end')"  style="flex:1;min-width:78px;font-size:10px;font-weight:600;padding:4px 0;border-radius:6px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:inherit">3회차 마감</button>
+      <button onclick="simulatePnAdLoadFail()"              style="flex:1;min-width:78px;font-size:10px;font-weight:600;padding:4px 0;border-radius:6px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:inherit">로딩 실패</button>
     </div>
   </div>
 
@@ -4974,6 +4984,76 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
 
     <!-- 뷰어 토글은 좌측 외부 패널 #pn-dev-panel 로 이동됨 (등락예측 화면에서만 노출) -->
 
+    <!-- ═══ 첫 참여자 이벤트 소개 페이지 (누적 참여 이력 없는 회원에게만 노출) ═══ -->
+    <div id="pn-intro" style="display:none;padding:18px 14px 14px">
+
+      <!-- 히어로 카드 -->
+      <div style="background:linear-gradient(135deg, var(--pp-brand-soft) 0%, #FFF5F5 100%);border-radius:16px;padding:22px 18px 18px;text-align:center;margin-bottom:14px">
+        <div style="width:62px;height:62px;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;box-shadow:0 4px 12px rgba(255, 45, 45, 0.18)">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--pp-brand)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <div style="font-size:19px;font-weight:800;color:var(--pp-ink);letter-spacing:-0.4px;margin-bottom:6px">등락 예측 이벤트</div>
+        <div style="font-size:12px;color:var(--pp-ink-2);font-weight:500;line-height:1.6">PCI 시세 등락을 예측하고<br>적중하면 <strong style="color:var(--pp-brand)">PCI를 받아가세요</strong></div>
+      </div>
+
+      <!-- 이벤트 규칙 -->
+      <div style="background:var(--pp-card);border:1px solid var(--pp-line);border-radius:14px;padding:14px;margin-bottom:14px">
+        <div style="font-size:11px;font-weight:800;color:var(--pp-muted);letter-spacing:0.5px;margin-bottom:10px">이벤트 규칙</div>
+
+        <!-- 1. 3회차 -->
+        <div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--pp-line)">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--pp-brand-soft);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--pp-brand);flex-shrink:0">1</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:700;color:var(--pp-ink);margin-bottom:2px">하루 3회차 참여</div>
+            <div style="font-size:10.5px;color:var(--pp-ink-2);line-height:1.5">1회차 결과 09:00 / 2회차 15:00 / 3회차 21:00</div>
+          </div>
+        </div>
+
+        <!-- 2. 기준가 -->
+        <div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--pp-line)">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--pp-brand-soft);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--pp-brand);flex-shrink:0">2</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:700;color:var(--pp-ink);margin-bottom:2px">내 기준가는 참여 순간 가격</div>
+            <div style="font-size:10.5px;color:var(--pp-ink-2);line-height:1.5">탭한 순간의 CMC 현재가가 내 기준가로 기록돼요</div>
+          </div>
+        </div>
+
+        <!-- 3. 적중 -->
+        <div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--pp-line)">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--pp-brand-soft);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--pp-brand);flex-shrink:0">3</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:700;color:var(--pp-ink);margin-bottom:2px">적중 시 PCI 적립</div>
+            <div style="font-size:10.5px;color:var(--pp-ink-2);line-height:1.5">이달 누적 PCI는 다음 달 일괄 지급돼요</div>
+          </div>
+        </div>
+
+        <!-- 4. 선택 변경 -->
+        <div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--pp-line)">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--pp-brand-soft);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--pp-brand);flex-shrink:0">4</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:700;color:var(--pp-ink);margin-bottom:2px">광고 1회 시청으로 선택 변경 가능</div>
+            <div style="font-size:10.5px;color:var(--pp-ink-2);line-height:1.5">마감 전까지 1번에 한해 변경할 수 있어요</div>
+          </div>
+        </div>
+
+        <!-- 5. 무효 -->
+        <div style="display:flex;gap:10px;padding:9px 0 0">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--pp-brand-soft);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--pp-brand);flex-shrink:0">5</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:700;color:var(--pp-ink);margin-bottom:2px">기준가 = 결과 종가는 무효</div>
+            <div style="font-size:10.5px;color:var(--pp-ink-2);line-height:1.5">변동이 없는 경우 보상은 지급되지 않아요</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 시작하기 버튼 -->
+      <button onclick="setPnUserType('returning')" style="width:100%;padding:14px 16px;background:var(--pp-ink);border:none;border-radius:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:800;color:#fff;letter-spacing:-0.3px;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 10px rgba(15, 17, 21, 0.18)">
+        <span>시작하기</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--pp-muted)">시작하기를 누르면 첫 회차 참여 화면이 열려요</div>
+    </div>
+
     <!-- 회차 배지 (컴팩트) -->
     <div id="pn-round-card" style="margin:10px 14px 0;display:flex;align-items:center;gap:7px;padding:8px 11px;background:var(--pp-brand-soft);border-radius:10px">
       <span id="pn-rdot" style="width:7px;height:7px;border-radius:50%;background:var(--pp-brand);flex-shrink:0"></span>
@@ -5615,6 +5695,22 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
       <div style="font-size:10px;color:var(--text4);background:#EEF2FF;border-radius:8px;padding:9px 12px;margin-bottom:12px;line-height:1.6;text-align:center">⚠️ 무효 처리 시 보상 미지급 · 재참여 불가</div>
       <button id="pn-result-void-btn" class="btn btn-primary" style="background:var(--text);margin-bottom:8px">다음 회차 참여하기 →</button>
       <button class="btn btn-ghost" style="font-size:11px" onclick="closeModal('pn-result-void')">닫기</button>
+    </div>
+  </div>
+
+  <!-- ═══ 광고 로딩 실패 모달 (네트워크 등) ═══ -->
+  <div class="overlay" id="pn-ad-load-fail-modal" style="align-items:center;justify-content:center">
+    <div class="modal" style="max-width:300px">
+      <div class="modal-handle"></div>
+      <div style="text-align:center;margin-bottom:14px">
+        <div style="width:64px;height:64px;border-radius:50%;background:#FFFBEB;display:flex;align-items:center;justify-content:center;margin:0 auto 14px">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#92400E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </div>
+        <div style="font-size:17px;font-weight:800;color:var(--text);margin-bottom:6px;letter-spacing:-0.3px">광고를 불러오지 못했어요</div>
+        <div style="font-size:11.5px;color:var(--text3);line-height:1.6">잠시 후 다시 시도해 주세요<br>기존 선택은 그대로 유지돼요</div>
+      </div>
+      <button class="btn btn-primary" style="background:var(--text);margin-bottom:8px" onclick="closeModal('pn-ad-load-fail-modal');showModal('pn-ad-warn-modal')">다시 시도</button>
+      <button class="btn btn-ghost" style="font-size:12px" onclick="closeModal('pn-ad-load-fail-modal')">닫기</button>
     </div>
   </div>
 
@@ -11560,22 +11656,26 @@ function setPnParticipated(on) {
 function _pnUpdateToggleStates() {
   var slot = window._pnCurSlot || '1';
   var participated = !!window._pnParticipated;
+  var userType = window._pnUserType || 'returning';
   var isEnd  = slot === 'end';
   var is1R   = slot === '1';
+  var isFirst = userType === 'first';
 
   /* 그룹별 비활성 조건 매핑
-     원칙: 종료 시간대(S6)에서는 시간대 토글 외 모든 그룹 비활성.
+     원칙: 첫 참여자(소개 화면)일 때는 사용자 유형 외 모든 그룹 비활성.
+            종료 시간대(S6)에서는 시간대 토글 외 모든 그룹 비활성.
             1회차 시간대에서는 '직전 회차 시뮬·결과 모달' 비활성.
-            광고 변경·마감 초과는 S2(참여 완료) 일 때만 활성. */
+            광고 변경·예외는 S2(참여 완료) 일 때만 활성. */
   var disabledMap = {
-    'pn-tg-part':       isEnd,                  /* 종료에서 참여 토글 무의미 */
-    'pn-tg-prev':       isEnd || is1R,          /* 1회차·종료에서는 직전 회차 시뮬 불필요 */
-    'pn-tg-cd':         isEnd,                  /* 종료에서는 카운트다운 카드 없음 */
-    'pn-tg-px':         isEnd,                  /* 종료에서는 가격 카드 없음 */
-    'pn-tg-cmc':        isEnd,                  /* 종료에서는 가격 카드 없음 */
-    'pn-tg-ad-label':   !participated || isEnd, /* 광고 변경은 S2(참여 완료)에서만 */
-    'pn-tg-ad-overrun': !participated || isEnd, /* 광고 마감 초과도 S2에서만 */
-    'pn-tg-result':     isEnd || is1R           /* 1회차·종료에서는 결과 모달 노출 불필요 */
+    'pn-tg-slot':       isFirst,                          /* 첫 참여자는 시간대 토글도 비활성 */
+    'pn-tg-part':       isFirst || isEnd,
+    'pn-tg-prev':       isFirst || isEnd || is1R,
+    'pn-tg-cd':         isFirst || isEnd,
+    'pn-tg-px':         isFirst || isEnd,
+    'pn-tg-cmc':        isFirst || isEnd,
+    'pn-tg-ad-label':   isFirst || !participated || isEnd,
+    'pn-tg-ad-overrun': isFirst || !participated || isEnd,
+    'pn-tg-result':     isFirst || isEnd || is1R
   };
   Object.keys(disabledMap).forEach(function(gid){
     var g = document.getElementById(gid);
@@ -11584,6 +11684,62 @@ function _pnUpdateToggleStates() {
     g.style.opacity = off ? '0.35' : '';
     g.style.pointerEvents = off ? 'none' : '';
   });
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   사용자 유형 토글 — returning(기존 회원) / first(첫 참여자)
+   첫 참여자: 이벤트 소개 페이지(#pn-intro) 노출, 그 외 화면 모두 숨김.
+   기존 회원: 시간대·내 참여 상태에 따라 S1/S2/S6 노출.
+   ══════════════════════════════════════════════════════════════════ */
+function setPnUserType(type) {
+  window._pnUserType = type;
+  var intro = document.getElementById('pn-intro');
+  var roundCard = document.getElementById('pn-round-card');
+  var chipWrap = document.getElementById('pn-prev-round-chip-wrap');
+  var s1 = document.getElementById('pn-s1');
+  var s2 = document.getElementById('pn-s2');
+  var s6 = document.getElementById('pn-s6');
+  if (type === 'first') {
+    /* 소개 화면만 노출 */
+    if (intro) intro.style.display = 'block';
+    if (roundCard) roundCard.style.display = 'none';
+    if (chipWrap) chipWrap.style.display = 'none';
+    if (s1) s1.style.display = 'none';
+    if (s2) s2.style.display = 'none';
+    if (s6) s6.style.display = 'none';
+  } else {
+    /* 기존 흐름 복원 — 현재 시간대·참여 상태에 따라 화면 결정 */
+    if (intro) intro.style.display = 'none';
+    var slot = window._pnCurSlot || '1';
+    if (slot === 'end') {
+      setPnState('s6');
+    } else {
+      setPnState(window._pnParticipated ? 's2' : 's1');
+    }
+  }
+  /* 토글 버튼 활성화 */
+  ['returning','first'].forEach(function(k){
+    var b = document.getElementById('pn-user-' + k + '-btn');
+    if (!b) return;
+    if (k === type) {
+      b.style.background = 'var(--primary-l)'; b.style.color = 'var(--primary)'; b.style.border = '1px solid #BFDBFE';
+    } else {
+      b.style.background = 'var(--card2)'; b.style.color = 'var(--text3)'; b.style.border = '1px solid var(--border)';
+    }
+  });
+  _pnUpdateToggleStates();
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   광고 로딩 실패 시뮬 — 사전 안내 모달 → 광고 시청 시작 → 1초 후 로딩 실패
+   ══════════════════════════════════════════════════════════════════ */
+function simulatePnAdLoadFail() {
+  /* 사전 안내 모달 표시 후 잠시 뒤 실패 모달로 전환 (실제: 광고 SDK 로딩 시도 → 실패) */
+  showModal('pn-ad-warn-modal');
+  setTimeout(function(){
+    closeModal('pn-ad-warn-modal');
+    showModal('pn-ad-load-fail-modal');
+  }, 800);
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -14049,7 +14205,8 @@ document.addEventListener('DOMContentLoaded', function() {
       _p2MakeWiz('p2w1','1회차');
       _p2MakeWiz('p2w3','3회차');
       setPred2State(3);
-      /* 등락예측: 초기 시뮬 — 1회차(00~07) · 미참여 · 직전 회차 없음 · 카운트다운 정상 · 가격 5초 갱신 */
+      /* 등락예측: 초기 시뮬 — 기존 회원 · 1회차(00~07) · 미참여 · 직전 회차 없음 · 카운트다운 정상 · 가격 5초 갱신 */
+      if (typeof setPnUserType         === 'function') setPnUserType('returning');
       if (typeof setPnTimeSlot         === 'function') setPnTimeSlot('1');
       if (typeof setPnParticipated     === 'function') setPnParticipated(false);
       if (typeof setPnPrevRoundResult  === 'function') setPnPrevRoundResult('none');
