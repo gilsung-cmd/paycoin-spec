@@ -4972,9 +4972,10 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
 <!-- ═══════════════ PREDICTION (확정 정책 · 현재가 기준 · 3회차) ═══════════════ -->
 <div class="screen" id="sc-prediction">
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
-  <div style="flex-shrink:0;display:flex;align-items:center;padding:14px 18px 10px">
-    <span style="flex:1;font-size:18px;font-weight:800;color:var(--text);letter-spacing:-0.3px">등락예측</span>
-    <button onclick="showModal('pn-guide-modal')" title="안내" style="width:28px;height:28px;border-radius:50%;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;color:var(--text3);font-family:'Noto Sans KR',sans-serif">
+  <div class="back-header">
+    <span class="back-btn" onclick="history.back()">‹</span>
+    <span class="back-title">등락예측</span>
+    <button onclick="showModal('pn-guide-modal')" title="안내" style="position:absolute;right:14px;width:28px;height:28px;border-radius:50%;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;color:var(--text3);font-family:'Noto Sans KR',sans-serif">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
     </button>
   </div>
