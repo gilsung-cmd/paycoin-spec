@@ -1090,7 +1090,6 @@ body {
       <button id="pn-ad-off" onclick="setPnAdWarn('off', {showModal:true})" style="font-size:10px;font-weight:600;padding:4px 8px;border-radius:6px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:inherit">평시</button>
       <button id="pn-ad-t2"  onclick="setPnAdWarn('t2',  {showModal:true})" style="font-size:10px;font-weight:600;padding:4px 8px;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">2분</button>
       <button id="pn-ad-t1"  onclick="setPnAdWarn('t1',  {showModal:true})" style="font-size:10px;font-weight:600;padding:4px 8px;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">1분</button>
-      <button id="pn-ad-t0"  onclick="setPnAdWarn('t0',  {showModal:true})" style="font-size:10px;font-weight:600;padding:4px 8px;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">곧 마감</button>
     </div>
   </div>
 
@@ -11299,7 +11298,7 @@ async function submitPolicyA(id) {
    상태:      S1 미참여 / S2 결과대기 / S6 당일종료 / S7 다음날대기
    라운드:    1R(~07시) / 2R(~13시) / 3R(~19시)
    CMC 폴백:  ok / err (기준가 카드 + 투표 버튼 비활성화)
-   광고 변경: off / t2 (2분 전) / t1 (1분 전) / t0 (곧 마감)
+   광고 변경: off / t2 (2분 전) / t1 (1분 전)  ※ 't0 곧 마감'은 v2.2에서 제거됨
    ═════════════════════════════════════════════════════════════════ */
 function setPnState(s) {
   /* 단순화: s1(미참여) / s2(참여 완료) / s6(다음날 대기) 3종만.
@@ -11934,8 +11933,10 @@ function setPnCmc(mode) {
   }
 }
 function setPnAdWarn(tier, opts) {
-  /* tier: 'off' / 't2' / 't1' / 't0' — 마감 임박 라벨 단계
+  /* tier: 'off' / 't2' / 't1' — 마감 임박 라벨 단계 (3단계로 단순화, '곧 마감' 제거)
      opts.showModal: true 면 토글 누른 직후 사전 안내 모달을 즉시 노출 (시뮬 편의) */
+  /* 하위호환: 't0'(곧 마감)는 't1'으로 폴백 */
+  if (tier === 't0') tier = 't1';
   var btn  = document.getElementById('pn-ad-warn-btn');
   var icn  = document.getElementById('pn-aw-icon');
   var tit  = document.getElementById('pn-aw-title');
@@ -11943,8 +11944,7 @@ function setPnAdWarn(tier, opts) {
   var cfg = {
     'off': {show:false, icon:'📺', title:'광고 시청하고 선택을 바꿀까요?', desc:'광고 시청 후 마감 전까지<br>선택을 변경할 수 있어요.'},
     't2' : {label:'마감 2분 전', bg:'#FFFBEB', color:'#92400E', border:'#FDE68A', icon:'⏰', title:'참여 마감이 얼마 남지 않았어요', desc:'<strong>마감 2분 전</strong>입니다.<br>광고 시청 중 참여 마감 시간을 초과하면<br>변경이 불가합니다.'},
-    't1' : {label:'1분 전',      bg:'#FED7AA', color:'#9A3412', border:'#FB923C', icon:'⏰', title:'참여 마감 1분 전이에요',          desc:'<strong>1분 전</strong>입니다.<br>광고 시청 중 참여 마감 시간을 초과하면<br>변경이 불가합니다.'},
-    't0' : {label:'곧 마감',     bg:'#FEF2F2', color:'#991B1B', border:'#FCA5A5', icon:'🚨', title:'곧 마감됩니다',                    desc:'<strong>1분 미만</strong> 남았어요.<br>광고 시청 중 참여 마감 시간을 초과하면<br>변경이 불가합니다.'}
+    't1' : {label:'1분 전',      bg:'#FED7AA', color:'#9A3412', border:'#FB923C', icon:'⏰', title:'참여 마감 1분 전이에요',          desc:'<strong>1분 전</strong>입니다.<br>광고 시청 중 참여 마감 시간을 초과하면<br>변경이 불가합니다.'}
   };
   var c = cfg[tier] || cfg.off;
   if (btn) {
@@ -11962,7 +11962,7 @@ function setPnAdWarn(tier, opts) {
   if (tit && c.title) tit.textContent  = c.title;
   if (desc && c.desc) desc.innerHTML   = c.desc;
   /* 토글 버튼 활성화 표시 */
-  ['off','t2','t1','t0'].forEach(function(k){
+  ['off','t2','t1'].forEach(function(k){
     var b = document.getElementById('pn-ad-' + k);
     if (!b) return;
     if (k === tier) {
