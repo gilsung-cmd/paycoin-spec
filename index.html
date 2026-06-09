@@ -1074,12 +1074,13 @@ body {
     </div>
   </div>
 
-  <!-- 기준가 (CMC) -->
+  <!-- 기준가 (CMC) — 정상 / 통신 오류 (재시도) / 장애 (캐시 사용) 3-mode -->
   <div id="pn-tg-cmc" style="margin-bottom:10px;transition:opacity .15s">
     <div style="font-size:10px;font-weight:700;color:var(--text4);letter-spacing:0.4px;margin-bottom:5px">기준가</div>
     <div style="display:flex;gap:4px">
-      <button id="pn-cmc-ok"  onclick="setPnCmc('ok')"  style="flex:1;font-size:10px;font-weight:600;padding:4px 0;border-radius:6px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:inherit">정상</button>
-      <button id="pn-cmc-err" onclick="setPnCmc('err')" style="flex:1;font-size:10px;font-weight:600;padding:4px 0;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">CMC 오류</button>
+      <button id="pn-cmc-ok"       onclick="setPnCmc('ok')"           style="flex:1;font-size:10px;font-weight:600;padding:4px 0;border-radius:6px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:inherit">정상</button>
+      <button id="pn-cmc-err"      onclick="setPnCmc('err-retry')"    style="flex:1;font-size:10px;font-weight:600;padding:4px 0;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">통신 오류</button>
+      <button id="pn-cmc-fallback" onclick="setPnCmc('err-fallback')" style="flex:1;font-size:10px;font-weight:600;padding:4px 0;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">장애·캐시</button>
     </div>
   </div>
 
@@ -5091,10 +5092,40 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
             <span style="font-size:11px;color:var(--pp-ink-2);font-weight:500;line-height:1.5">지금 참여하면 이 가격이 내 기준가가 돼요.</span>
           </div>
         </div>
-        <div class="pn-base-err" style="display:none;text-align:center;padding:6px 0">
-          <div style="font-size:22px;margin-bottom:4px">⏳</div>
-          <div style="font-size:13px;font-weight:800;color:var(--pp-ink);margin-bottom:3px">기준가 확인중</div>
-          <div style="font-size:10.5px;color:var(--pp-ink-2);line-height:1.55">CoinMarketCap 환율을 가져오는 중이에요<br>잠시 후 다시 확인해 주세요</div>
+        <!-- 오류 케이스 ① — 일반 통신 오류 (재시도 가능) — -->
+        <div class="pn-base-err-retry" style="display:none;text-align:center;padding:8px 0 4px">
+          <div style="width:42px;height:42px;border-radius:50%;background:#FFFBEB;display:flex;align-items:center;justify-content:center;margin:0 auto 8px">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--pp-warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div style="font-size:13px;font-weight:800;color:var(--pp-ink);margin-bottom:3px">기준가 정보를 불러오지 못했습니다</div>
+          <div style="font-size:10.5px;color:var(--pp-ink-2);line-height:1.55;margin-bottom:10px">잠시 후 다시 시도해 주세요</div>
+          <button onclick="setPnCmc('ok');showToast && showToast('기준가 다시 불러오는 중…')" style="padding:7px 16px;background:var(--pp-ink);border:none;border-radius:8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:11.5px;font-weight:700;color:#fff;display:inline-flex;align-items:center;gap:5px">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            <span>다시 시도</span>
+          </button>
+        </div>
+        <!-- 오류 케이스 ② — CMC 장애 (캐시된 최근값 사용, 참여 가능) — -->
+        <div class="pn-base-err-fallback" style="display:none">
+          <div style="display:flex;align-items:center;gap:6px;padding:7px 9px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;margin-bottom:10px">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--pp-warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span style="font-size:10.5px;color:#92400E;font-weight:600;line-height:1.4">CMC 장애로 최근 저장된 가격을 사용합니다</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:11px;color:var(--pp-muted);font-weight:600;letter-spacing:0.3px">최근 PCI 가격 · CMC 캐시</span>
+            <span style="display:inline-flex;align-items:center;gap:3px;background:var(--pp-bg);color:var(--pp-muted);padding:3px 7px;border-radius:999px;font-size:9.5px;font-weight:700">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>10분 전 기준</span>
+            </span>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:5px;margin-top:6px">
+            <span style="font-size:22px;font-weight:800;color:var(--pp-ink);letter-spacing:-0.5px;line-height:1">₩ 82.45</span>
+            <span style="font-size:11px;font-weight:600;color:var(--pp-muted);padding-bottom:3px">KRW</span>
+          </div>
+          <div style="height:1px;background:var(--pp-line);margin:10px 0"></div>
+          <div style="display:flex;gap:6px;align-items:flex-start">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--pp-ink-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            <span style="font-size:11px;color:var(--pp-ink-2);font-weight:500;line-height:1.5">지금 참여하면 이 가격이 내 기준가가 돼요.</span>
+          </div>
         </div>
       </div>
 
@@ -11898,20 +11929,31 @@ function simulatePnAdDeadlineOverrun(mode) {
   }, 1000);
 }
 
+/* CMC 데이터 상태 3-mode
+   mode: 'ok'           — 정상 (LIVE 갱신)
+         'err-retry'    — 일반 통신 오류 → 재시도 버튼 / 투표 비활성화
+         'err-fallback' — 장애로 캐시 사용 → 최근 저장값 + 안내 / 투표 활성화 (참여 가능)
+   하위호환: 'err' → 'err-retry' */
 function setPnCmc(mode) {
-  var isErr = mode === 'err';
+  if (mode === 'err') mode = 'err-retry';
+  var isOk       = mode === 'ok';
+  var isRetry    = mode === 'err-retry';
+  var isFallback = mode === 'err-fallback';
   var card = document.getElementById('pn-base-card');
   if (card) {
-    var ok  = card.querySelector('.pn-base-ok');
-    var err = card.querySelector('.pn-base-err');
-    if (ok)  ok.style.display  = isErr ? 'none'   : '';
-    if (err) err.style.display = isErr ? 'block'  : 'none';
+    var ok       = card.querySelector('.pn-base-ok');
+    var errRetry = card.querySelector('.pn-base-err-retry');
+    var errFall  = card.querySelector('.pn-base-err-fallback');
+    if (ok)       ok.style.display       = isOk       ? '' : 'none';
+    if (errRetry) errRetry.style.display = isRetry    ? 'block' : 'none';
+    if (errFall)  errFall.style.display  = isFallback ? 'block' : 'none';
   }
-  /* 투표 버튼 비활성화 (CMC 오류 시 기준가 기록 불가) */
+  /* 투표 버튼 — 재시도 케이스에서만 비활성화 (장애-캐시 케이스는 참여 가능) */
+  var voteDisabled = isRetry;
   ['pn-vote-up','pn-vote-down'].forEach(function(id){
     var b = document.getElementById(id);
     if (!b) return;
-    if (isErr) {
+    if (voteDisabled) {
       b.disabled = true;
       b.style.opacity = '0.4';
       b.style.cursor = 'not-allowed';
@@ -11921,17 +11963,23 @@ function setPnCmc(mode) {
       b.style.cursor = '';
     }
   });
-  /* 토글 버튼 활성화 */
-  var btnOk  = document.getElementById('pn-cmc-ok');
-  var btnErr = document.getElementById('pn-cmc-err');
-  if (btnOk && btnErr) {
-    btnOk.style.background  = isErr ? 'var(--card2)'      : 'var(--primary-l)';
-    btnOk.style.color       = isErr ? 'var(--text3)'      : 'var(--primary)';
-    btnOk.style.border      = isErr ? '1px solid var(--border)' : '1px solid #BFDBFE';
-    btnErr.style.background = isErr ? '#FFFBEB'           : 'var(--card2)';
-    btnErr.style.color      = isErr ? '#92400E'           : 'var(--text3)';
-    btnErr.style.border     = isErr ? '1px solid #FDE68A' : '1px solid var(--border)';
+  /* 가격 자동 갱신 — 오류 케이스에서는 일시 정지 (정상 복귀 시 재가동은 setPnCmc('ok') 호출자가 처리) */
+  if (!isOk && window._pnPriceTimer) {
+    clearInterval(window._pnPriceTimer);
+    window._pnPriceTimer = null;
   }
+  /* 토글 버튼 활성화 표시 */
+  var ACTIVE  = { bg:'var(--primary-l)', color:'var(--primary)', border:'1px solid #BFDBFE' };
+  var INACTIVE = { bg:'var(--card2)', color:'var(--text3)', border:'1px solid var(--border)' };
+  function paint(id, on) {
+    var b = document.getElementById(id);
+    if (!b) return;
+    var s = on ? ACTIVE : INACTIVE;
+    b.style.background = s.bg; b.style.color = s.color; b.style.border = s.border;
+  }
+  paint('pn-cmc-ok',       isOk);
+  paint('pn-cmc-err',      isRetry);
+  paint('pn-cmc-fallback', isFallback);
 }
 function setPnAdWarn(tier, opts) {
   /* tier: 'off' / 't2' / 't1' — 마감 임박 라벨 단계 (3단계로 단순화, '곧 마감' 제거)
