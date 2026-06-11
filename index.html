@@ -1014,7 +1014,7 @@ body {
       <button id="pn-slot-2-btn"   onclick="setPnTimeSlot('2')"   style="flex:1;min-width:54px;font-size:10px;font-weight:600;padding:5px 4px;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit;line-height:1.2">2회차<br><span style="font-size:8px;opacity:0.7">07~13</span></button>
       <button id="pn-slot-3-btn"   onclick="setPnTimeSlot('3')"   style="flex:1;min-width:54px;font-size:10px;font-weight:600;padding:5px 4px;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit;line-height:1.2">3회차<br><span style="font-size:8px;opacity:0.7">13~19</span></button>
       <button id="pn-slot-3c-btn"  onclick="setPnTimeSlot('3c')"  style="flex:1;min-width:54px;font-size:10px;font-weight:600;padding:5px 4px;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit;line-height:1.2">3종료<br><span style="font-size:8px;opacity:0.7">19~21</span></button>
-      <button id="pn-slot-end-btn" onclick="setPnTimeSlot('end')" style="flex:1;min-width:54px;font-size:10px;font-weight:600;padding:5px 4px;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit;line-height:1.2">S6<br><span style="font-size:8px;opacity:0.7">21~24</span></button>
+      <button id="pn-slot-end-btn" onclick="setPnTimeSlot('end')" style="flex:1;min-width:54px;font-size:10px;font-weight:600;padding:5px 4px;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit;line-height:1.2">당일 종료<br><span style="font-size:8px;opacity:0.7">21~24</span></button>
     </div>
   </div>
 
@@ -11372,7 +11372,8 @@ function setPnState(s) {
     rdot.style.background = 'var(--pp-brand)';
     rbadge.style.color = 'var(--pp-brand)';
     rbadge.innerHTML = '<span id="pn-rname">' + (rname ? rname.textContent : '1회차') + '</span> 진행 중';
-    rlabel.textContent = '결과 발표 오늘 ' + (document.getElementById('pn-rctd-time-base')?.textContent || '09:00');
+    var _rtMap = {1:'09:00', 2:'15:00', 3:'21:00'};
+    rlabel.textContent = '결과 발표 오늘 ' + (_rtMap[window._pnCurRound] || '09:00');
   } else if (s === 's2' && rdot && rbadge && rlabel) {
     /* 회색 톤 — 참여 완료 */
     roundCard.style.background = 'var(--pp-bg)';
@@ -11517,19 +11518,31 @@ function _pnApplyClosedState(isClose) {
   ['pn-vote-up','pn-vote-down'].forEach(function(id){
     var b = document.getElementById(id);
     if (!b) return;
-    b.style.opacity      = isClose ? '0.35' : '';
+    b.style.opacity       = isClose ? '0.35' : '';
     b.style.pointerEvents = isClose ? 'none' : '';
-    b.style.cursor       = isClose ? 'not-allowed' : '';
+    b.style.cursor        = isClose ? 'not-allowed' : '';
   });
   /* 질문 카드 문구 */
   var refMsg = document.getElementById('pn-ref-msg');
-  if (refMsg) refMsg.textContent = isClose ? '오늘 모든 회차가 마감됐습니다' : ('오늘 ' + (window._pnRoundInfo ? window._pnRoundInfo.result : '21:00') + ' 종가, 지금보다 오를까요?');
+  if (refMsg) refMsg.textContent = isClose ? '오늘 모든 회차가 마감됐습니다' : ('오늘 21:00 종가, 지금보다 오를까요?');
   /* 마감 안내 배너 */
   var banner = document.getElementById('pn-s1-closed-banner');
   if (banner) banner.style.display = isClose ? 'flex' : 'none';
   /* 카운트다운 레이블 */
   var rcta = document.getElementById('pn-rcta');
   if (rcta) rcta.textContent = isClose ? '결과 발표까지' : '참여 마감까지';
+  /* 3종료 — 회차 배지 '진행 중' → '종료' + 뮤트 톤으로 전환 */
+  var roundCard = document.getElementById('pn-round-card');
+  var rdot      = document.getElementById('pn-rdot');
+  var rbadge    = document.getElementById('pn-rbadge-text');
+  var rlabel    = document.getElementById('pn-rresult-label');
+  if (isClose && rbadge) {
+    if (roundCard) roundCard.style.background = 'var(--pp-bg)';
+    if (rdot)     rdot.style.background       = 'var(--pp-muted)';
+    rbadge.style.color = 'var(--pp-muted)';
+    rbadge.innerHTML   = '<span id="pn-rname">3회차</span> 종료';
+    if (rlabel) rlabel.textContent = '결과 발표 오늘 21:00';
+  }
 }
 
 /* 카운트다운 마감 도달 시 [다음 회차 참여하기] 버튼이 호출.
