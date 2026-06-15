@@ -116,6 +116,9 @@ body {
 .nav-btn.nav-sub { padding-left: 26px; font-size: 12px; color: var(--text4); }
 .nav-btn.nav-sub:hover { color: var(--text2); background: var(--card2); }
 .nav-btn.nav-sub.active { color: var(--primary); border-left-color: var(--primary); background: var(--primary-l); font-weight: 700; }
+.nav-phase { display: flex; align-items: center; gap: 6px; padding: 10px 14px 3px; }
+.nav-phase span { font-size: 9px; font-weight: 800; color: var(--primary); background: var(--primary-l); padding: 1px 7px; border-radius: 10px; letter-spacing: 0.03em; white-space: nowrap; }
+.nav-phase::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 .nav-docs { flex-shrink: 0; padding: 8px 10px 12px; border-top: 1px solid var(--border); }
 .nav-docs-title { font-size: 9px; font-weight: 700; color: var(--text4); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; padding-left: 4px; }
 .nav-doc-btn { display: flex; align-items: center; gap: 6px; width: 100%; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--card); color: var(--text2); font-size: 11px; font-family: inherit; cursor: pointer; text-decoration: none; margin-bottom: 4px; transition: background 0.15s, border-color 0.15s; }
@@ -929,32 +932,31 @@ body {
   <div class="nav-screens" id="nav-screens">
     <button class="nav-btn" onclick="nav('policy')" id="nav-btn-policy">📑 정책 및 기타</button>
     <div style="height:1px;background:var(--border);margin:4px 10px 6px"></div>
-    <button class="nav-btn active" onclick="nav('home')">🏠 메인 홈</button>
-    <button class="nav-btn nav-sub" onclick="nav('home-old')">↳ 메인 홈 (구, 최초작성 - 참고용)</button>
 
+    <div class="nav-phase"><span>Phase 1</span></div>
     <button class="nav-btn" onclick="nav('wallet')">👛 지갑 (연결됨)</button>
     <button class="nav-btn nav-sub" onclick="nav('wallet-empty')">↳ 지갑 (미연결)</button>
     <button class="nav-btn nav-sub" onclick="nav('wallet-manage')">↳ 지갑 관리</button>
     <button class="nav-btn nav-sub" onclick="nav('wallet-pci')">↳ 지갑상세 (PCI)</button>
     <button class="nav-btn nav-sub" onclick="nav('wallet-other')">↳ 지갑상세 (WC)</button>
-
-    <button class="nav-btn" onclick="nav('asset')">📊 자산현황</button>
-    <button class="nav-btn" onclick="nav('pci-info')">🪙 오늘의 PCI</button>
-    <button class="nav-btn" onclick="nav('token-detail')">🏦 토큰 상세</button>
     <button class="nav-btn" onclick="nav('benefits')">🎁 혜택</button>
     <button class="nav-btn" onclick="nav('prediction')">🔮 등락 예측</button>
     <button class="nav-btn nav-sub" onclick="nav('prediction-legacy')">↳ 등락 예측 v2 (기존)</button>
     <!-- 메뉴 노출 보류 (시안/구버전 — 화면/skeleton/policy 정의는 그대로 유지) -->
     <!-- <button class="nav-btn nav-sub" onclick="nav('prediction2')">↳ 등락 예측 v2 Beta</button> -->
     <!-- <button class="nav-btn nav-sub" onclick="nav('prediction3')">↳ 등락 예측 v3 (시안A·현재가)</button> -->
-
-    <button class="nav-btn" onclick="nav('news')">📰 최근 소식</button>
-    <button class="nav-btn nav-sub" onclick="nav('news-detail')">↳ 소식 상세</button>
-
     <button class="nav-btn" onclick="nav('payment')">💳 결제</button>
     <button class="nav-btn nav-sub" onclick="nav('payment-wc')">↳ 결제 (WC 미연결)</button>
-
+    <button class="nav-btn" onclick="nav('news')">📰 최근 소식</button>
+    <button class="nav-btn nav-sub" onclick="nav('news-detail')">↳ 소식 상세</button>
     <button class="nav-btn" onclick="nav('tx-history')">📋 거래내역</button>
+
+    <div class="nav-phase"><span>Phase 2</span></div>
+    <button class="nav-btn active" onclick="nav('home')">🏠 메인 홈</button>
+    <button class="nav-btn nav-sub" onclick="nav('home-old')">↳ 메인 홈 (구, 최초작성 - 참고용)</button>
+    <button class="nav-btn" onclick="nav('asset')">📊 자산현황</button>
+    <button class="nav-btn" onclick="nav('pci-info')">🪙 오늘의 PCI</button>
+    <button class="nav-btn" onclick="nav('token-detail')">🏦 토큰 상세</button>
   </div>
   </div><!-- /nav-screens -->
   </div><!-- /nav-screens-wrap -->
