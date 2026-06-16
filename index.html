@@ -5290,17 +5290,17 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
           <span style="font-size:11px;color:var(--pp-muted);font-weight:700;letter-spacing:0.5px">오늘 회차</span>
         </div>
         <div style="display:flex;gap:6px">
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px;background:var(--pp-warn-soft);border:1px solid var(--pp-line);border-radius:8px">
+          <div id="pn-s2-rbox-1" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px;background:var(--pp-warn-soft);border:1px solid var(--pp-line);border-radius:8px">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pp-warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg>
             <span style="font-size:10px;font-weight:700;color:var(--pp-warn);line-height:1">1회차</span>
             <span style="font-size:9px;font-weight:500;color:var(--pp-warn);opacity:0.75;line-height:1">결과 09:00</span>
           </div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px;background:var(--pp-bg);border:1px solid var(--pp-line);border-radius:8px">
+          <div id="pn-s2-rbox-2" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px;background:var(--pp-bg);border:1px solid var(--pp-line);border-radius:8px">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pp-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
             <span style="font-size:10px;font-weight:700;color:var(--pp-muted);line-height:1">2회차</span>
             <span style="font-size:9px;font-weight:500;color:var(--pp-muted);opacity:0.75;line-height:1">결과 15:00</span>
           </div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px;background:var(--pp-bg);border:1px solid var(--pp-line);border-radius:8px">
+          <div id="pn-s2-rbox-3" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px;background:var(--pp-bg);border:1px solid var(--pp-line);border-radius:8px">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pp-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
             <span style="font-size:10px;font-weight:700;color:var(--pp-muted);line-height:1">3회차</span>
             <span style="font-size:9px;font-weight:500;color:var(--pp-muted);opacity:0.75;line-height:1">결과 21:00</span>
@@ -11396,6 +11396,62 @@ function setPnState(s) {
     /* 그 외는 setPnPrevRoundResult 에 위임 */
   }
 }
+/* ══════════════════════════════════════════════════════════════════
+   예측 카운트다운 1초 tick — S1(pn-rctd) + S2(pn-s2-countdown) 공용
+   ══════════════════════════════════════════════════════════════════ */
+window._pnCdTimer = null;
+window._pnCdSecs  = 0;
+
+function _pnFmtCd(s) {
+  if (s < 0) s = 0;
+  var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), ss = s % 60;
+  return (h<10?'0':'')+h+' : '+(m<10?'0':'')+m+' : '+(ss<10?'0':'')+ss;
+}
+function _pnParseCd(str) {
+  var p = str.split(':').map(function(x){ return parseInt(x,10)||0; });
+  return p[0]*3600 + p[1]*60 + (p[2]||0);
+}
+function _pnStartCd(secs) {
+  if (window._pnCdTimer) { clearInterval(window._pnCdTimer); window._pnCdTimer = null; }
+  window._pnCdSecs = secs;
+  function _render(s) {
+    var str = _pnFmtCd(s);
+    var e1 = document.getElementById('pn-rctd');
+    var e2 = document.getElementById('pn-s2-countdown');
+    if (e1) e1.textContent = str;
+    if (e2) e2.textContent = str;
+  }
+  _render(secs);
+  if (secs <= 0) { setPnCountdownMode('end'); return; }
+  setPnCountdownMode(secs <= 10 ? 'soon' : 'normal');
+  window._pnCdTimer = setInterval(function(){
+    window._pnCdSecs--;
+    _render(window._pnCdSecs);
+    if (window._pnCdSecs <= 0) {
+      clearInterval(window._pnCdTimer); window._pnCdTimer = null;
+      setPnCountdownMode('end');
+    } else if (window._pnCdSecs <= 10) {
+      setPnCountdownMode('soon');
+    }
+  }, 1000);
+}
+
+/* 오늘 회차 박스 — 현재 회차(r)만 참여 스타일(warm), 나머지 미참여(muted) */
+function _pnUpdateRoundBoxes(r) {
+  var SVG_HG = '<path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>';
+  var SVG_DS = '<line x1="5" y1="12" x2="19" y2="12"/>';
+  for (var k = 1; k <= 3; k++) {
+    var box = document.getElementById('pn-s2-rbox-' + k);
+    if (!box) continue;
+    var act = (k === r);
+    box.style.background = act ? 'var(--pp-warn-soft)' : 'var(--pp-bg)';
+    var svg = box.querySelector('svg');
+    if (svg) { svg.setAttribute('stroke', act ? 'var(--pp-warn)' : 'var(--pp-muted)'); svg.innerHTML = act ? SVG_HG : SVG_DS; }
+    var spans = box.querySelectorAll('span');
+    for (var j = 0; j < spans.length; j++) spans[j].style.color = act ? 'var(--pp-warn)' : 'var(--pp-muted)';
+  }
+}
+
 function setPnRound(r) {
   var info = {
     1: {name:'1회차', result:'오전 9시'},
@@ -11467,9 +11523,10 @@ function setPnRound(r) {
   if (vt) vt.textContent = i.voteTime;
   var bt = document.getElementById('pn-s2-base-time');
   if (bt) bt.textContent = i.voteTime;
-  /* S2 카운트다운 (mock) */
-  var cd = document.getElementById('pn-s2-countdown');
-  if (cd) cd.textContent = i.countdown;
+  /* 카운트다운 1초 tick 시작 (S1 pn-rctd + S2 pn-s2-countdown 공용) */
+  _pnStartCd(_pnParseCd(i.countdown));
+  /* 오늘 회차 박스 — 현재 회차(r)만 참여 스타일 */
+  _pnUpdateRoundBoxes(r);
   /* ── 결과 모달 — 안내 + 액션 버튼 ──
      새 정책: 결과 발표 시각(09/15/21시)에는 이미 다음 회차가 시작된 상태.
      따라서 모달이 보여주는 결과는 직전 회차(prevR)의 것이고,
