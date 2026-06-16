@@ -5268,7 +5268,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
       </div>
 
       <!-- 광고 시청 변경 카드 (컴팩트) -->
-      <div style="margin:8px 14px 0;padding:12px 13px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:14px">
+      <div id="pn-s2-ad-change-card" style="margin:8px 14px 0;padding:12px 13px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:14px">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--pp-ink-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
           <span style="font-size:12.5px;font-weight:700;color:var(--pp-ink)">선택을 바꾸고 싶다면</span>
@@ -11361,6 +11361,11 @@ function setPnState(s) {
   }
   /* 현재 상태 기억 (가격 갱신·자동 모달 등에서 참조) */
   window._pnCurState = s;
+  /* S2 진입 시 광고 변경 카드 항상 복원 — 3c 참여 완료 경로에서 이후 별도로 숨김 */
+  if (s === 's2') {
+    var _adCard = document.getElementById('pn-s2-ad-change-card');
+    if (_adCard) _adCard.style.display = '';
+  }
   /* 회차 배지 — S6 (다음날 대기) 에서는 통째로 숨김 / 그 외 상태별 라벨·톤 갱신 */
   var roundCard = document.getElementById('pn-round-card');
   var rdot      = document.getElementById('pn-rdot');
@@ -11694,6 +11699,8 @@ function setPnTimeSlot(slot) {
     if (participated3c) {
       _pnApplyClosedState(false);
       setPnState('s2');
+      var _ac3c = document.getElementById('pn-s2-ad-change-card');
+      if (_ac3c) _ac3c.style.display = 'none';
     } else {
       setPnState('s1');
       _pnApplyClosedState(true);
@@ -11738,6 +11745,8 @@ function setPnParticipated(on) {
     if (on) {
       _pnApplyClosedState(false);
       setPnState('s2');
+      var _ac = document.getElementById('pn-s2-ad-change-card');
+      if (_ac) _ac.style.display = 'none';
     } else {
       setPnState('s1');
       _pnApplyClosedState(true);
