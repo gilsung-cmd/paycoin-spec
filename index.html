@@ -11403,9 +11403,9 @@ function setPnRound(r) {
     3: {name:'3회차', result:'밤 9시'}
   };
   var info2 = {
-    1: {name:'1회차', result:'09:00', resultK:'오전 9시', voteTime:'06:14', countdown:'02 : 46 : 00'},
-    2: {name:'2회차', result:'15:00', resultK:'오후 3시', voteTime:'11:23', countdown:'03 : 37 : 12'},
-    3: {name:'3회차', result:'21:00', resultK:'밤 9시',   voteTime:'17:33', countdown:'03 : 27 : 42'}
+    1: {name:'1회차', result:'09:00', resultK:'오전 9시', close:'07:00', voteTime:'06:14', countdown:'02 : 46 : 00'},
+    2: {name:'2회차', result:'15:00', resultK:'오후 3시', close:'13:00', voteTime:'11:23', countdown:'03 : 37 : 12'},
+    3: {name:'3회차', result:'21:00', resultK:'밤 9시',   close:'19:00', voteTime:'17:33', countdown:'03 : 27 : 42'}
   };
   var i = info2[r] || info2[1];
   /* 현재 회차 기억 — 결과 모달 액션 버튼 등에서 참조 */
@@ -11459,9 +11459,9 @@ function setPnRound(r) {
     }
   }
   /* ── 회차별 동적 텍스트 갱신 ── */
-  /* S2 광고 카드 마감 시각 (예: 09:00 / 15:00 / 21:00) */
+  /* S2 광고 카드 마감 시각 — 회차 종료 시각 (07:00 / 13:00 / 19:00) */
   var ed = document.getElementById('pn-s2-ad-deadline');
-  if (ed) ed.textContent = i.result;
+  if (ed) ed.textContent = i.close;
   /* S2 내 예측 시각·기준가 고정 시각 (mock) */
   var vt = document.getElementById('pn-s2-vote-time');
   if (vt) vt.textContent = i.voteTime;
