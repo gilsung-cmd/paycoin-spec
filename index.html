@@ -2729,7 +2729,7 @@ body {
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
   <div class="aheader"><div class="htitle">지갑</div><div class="hicons"><div class="icon-btn" onclick="showModal('noti-modal')">🔔</div><div class="icon-btn" onclick="showModal('mmm-wallet')">☰</div></div></div>
   <!-- 비밀문구 백업 안내 띠 (최상단 고정) -->
-  <div id="mnemonic-notice" style="flex-shrink:0;background:var(--primary-l);border-bottom:1px solid #BFDBFE;padding:8px 16px;margin-bottom:4px;display:flex;align-items:center;gap:8px">
+  <div id="mnemonic-notice" data-zone="wallet-mnemonic-alert" style="flex-shrink:0;background:var(--primary-l);border-bottom:1px solid #BFDBFE;padding:8px 16px;margin-bottom:4px;display:flex;align-items:center;gap:8px">
     <div style="flex:1;font-size:11px;color:var(--primary);line-height:1.5">주기적으로 <strong>비밀 문구를 백업</strong>해 주세요.</div>
     <button onclick="nav('wallet-pci')" style="font-size:10px;font-weight:700;color:var(--primary);background:none;border:none;cursor:pointer;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;flex-shrink:0">백업하기 ›</button>
     <button onclick="document.getElementById('mnemonic-notice').style.display='none'" style="font-size:12px;color:#93C5FD;background:none;border:none;cursor:pointer;flex-shrink:0;padding:0;font-family:'Noto Sans KR',sans-serif;line-height:1">✕</button>
@@ -2763,11 +2763,11 @@ body {
         <div class="chip"        id="wchip-coinone" onclick="walletTab('coinone')">코인원</div>
         <div class="chip"        id="wchip-korbit"  onclick="walletTab('korbit')">코빗</div>
       </div>
-      <button onclick="nav('wallet-manage')" title="지갑 관리"
+      <button onclick="nav('wallet-manage')" title="지갑 관리" data-zone="wallet-manage-btn"
         style="flex-shrink:0;width:30px;height:30px;border-radius:8px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;box-shadow:var(--shadow-sm);transition:background .12s;">⚙️</button>
     </div>
     <!-- 연결 만료 예정 안내 -->
-    <div style="margin:6px 14px 4px;padding:10px 13px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;display:flex;align-items:center;gap:9px;cursor:pointer" onclick="showToast('기존 만료 예정 거래소 리스트 페이지로 이동')">
+    <div data-zone="wallet-auth-alert" style="margin:6px 14px 4px;padding:10px 13px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;display:flex;align-items:center;gap:9px;cursor:pointer" onclick="showToast('기존 만료 예정 거래소 리스트 페이지로 이동')">
       <span style="font-size:14px;flex-shrink:0">⚠️</span>
       <div style="flex:1;font-size:11px;color:#92400E;line-height:1.5"><strong>코빗</strong> 연결 정보가 곧 만료됩니다.</div>
       <span style="font-size:11px;font-weight:700;color:#92400E;white-space:nowrap">갱신하기 ›</span>
@@ -2781,7 +2781,7 @@ body {
     <div id="wt-list" data-zone="wallet-list"></div>
   </div>
   <!-- 디지털자산보호재단 플로팅 배너 (이관 대상자만 노출) -->
-  <div id="daf-banner" style="position:absolute;bottom:76px;left:12px;right:12px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border:1px solid #C7D2FE;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(99,102,241,.15);z-index:40">
+  <div id="daf-banner" data-zone="wallet-protection" style="position:absolute;bottom:76px;left:12px;right:12px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);border:1px solid #C7D2FE;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(99,102,241,.15);z-index:40">
     <div style="flex:1">
       <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:2px">디지털자산보호재단으로 이전된 자산 확인</div>
       <div style="font-size:10px;color:var(--text3)">이관된 자산이 있습니다. 확인해 보세요.</div>
@@ -3479,7 +3479,7 @@ body {
          XRP → "Destination Tag"
          XLM, EOS 등 → "Memo"
          그 외 → 카드 미표시 -->
-    <div class="card">
+    <div class="card" data-zone="wother-memo">
       <div style="display:flex;align-items:baseline;gap:5px;margin-bottom:6px">
         <span style="font-size:11px;color:var(--text4);font-weight:600">메모</span>
         <span style="font-size:10px;color:var(--text4);font-weight:400">(XRP인 경우 Destination Tag 로 표기)</span>
@@ -3490,14 +3490,14 @@ body {
       </div>
       <div style="font-size:10px;color:var(--text4);margin-top:6px;line-height:1.5">입금 시 메모를 함께 입력하지 않으면 자산이 손실될 수 있어요.</div>
     </div>
-    <div class="card">
+    <div class="card" data-zone="wother-price-info">
       <div style="font-size:11px;color:var(--text4);margin-bottom:10px;font-weight:600;letter-spacing:.5px">시세 정보</div>
       <div class="info-row"><span class="ilbl">현재 시세</span><span class="ival">93,450,000원</span></div>
       <div class="info-row"><span class="ilbl">24h 고가</span><span class="ival up">95,200,000원</span></div>
       <div class="info-row"><span class="ilbl">24h 저가</span><span class="ival dn">91,800,000원</span></div>
     </div>
     <!-- 연결 정보 카드 (WalletConnect 연결 지갑 공통) -->
-    <div class="card">
+    <div class="card" data-zone="wd-pci-ex">
       <div style="font-size:11px;color:var(--text4);margin-bottom:10px;font-weight:600;letter-spacing:.5px">연결 정보</div>
       <div class="info-row"><span class="ilbl">네트워크</span><span class="ival">Paycoin</span></div>
       <div class="info-row"><span class="ilbl">지갑 정보</span><span class="ival">코인원 (Korbit)</span></div>
@@ -3551,7 +3551,7 @@ body {
     </div>
 
     <!-- ① 미입력: 배너만 -->
-    <div id="ob3-empty">
+    <div id="ob3-empty" data-zone="asset-onboarding">
       <div style="margin:0 14px 12px;padding:11px 13px;background:var(--card2);border-radius:11px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px">
         <div style="min-width:0">
           <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px">수익 · 달성률 확인</div>
@@ -3567,7 +3567,7 @@ body {
     <!-- ② 목표만 등록: 목표 달성률 풀카드 + 수익 분석 미니 프롬프트 -->
     <div id="ob3-goal-only" style="display:none">
       <!-- 수익 분석 미니 프롬프트 -->
-      <div class="stitle">투자 수익 분석</div>
+      <div class="stitle" data-zone="asset-profit">투자 수익 분석</div>
       <div class="card" style="padding:11px 13px">
         <div style="display:flex;align-items:center;justify-content:space-between">
           <div style="font-size:11px;color:var(--text3);line-height:1.6">평균 매수가를 입력하면<br>거래소별 수익을 확인할 수 있어요</div>
@@ -3575,7 +3575,7 @@ body {
         </div>
       </div>
       <!-- 목표 달성률 풀카드 -->
-      <div class="stitle">
+      <div class="stitle" data-zone="asset-goal">
         <span>목표 자산 달성률</span>
         <button onclick="showModal('goal-modal')" style="font-size:9px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:5px;padding:2px 8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">목표 수정</button>
       </div>
@@ -3603,7 +3603,7 @@ body {
     <!-- ③ 매수가만 등록: 수익 분석 풀카드 + 목표 달성률 미니 프롬프트 -->
     <div id="ob3-profit-only" style="display:none">
       <!-- 수익 분석 풀카드 -->
-      <div class="stitle">
+      <div class="stitle" data-zone="asset-profit">
         <span>투자 수익 분석</span>
         <button onclick="openProfitModal()" style="font-size:9px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:5px;padding:2px 8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">매수가 수정</button>
       </div>
@@ -3636,7 +3636,7 @@ body {
         </table>
       </div>
       <!-- 목표 달성률 미니 프롬프트 -->
-      <div class="stitle">목표 자산 달성률</div>
+      <div class="stitle" data-zone="asset-goal">목표 자산 달성률</div>
       <div class="card" style="padding:11px 13px">
         <div style="display:flex;align-items:center;justify-content:space-between">
           <div style="font-size:11px;color:var(--text3);line-height:1.6">목표 금액을 설정하면<br>달성률을 확인할 수 있어요</div>
@@ -3647,14 +3647,14 @@ body {
 
     <!-- ④ 둘 다 등록 (라이브 데이터) -->
     <div id="ob3-both" style="display:none">
-      <div class="stitle">
+      <div class="stitle" data-zone="asset-profit">
         <span>투자 수익 분석</span>
         <button onclick="openProfitModal()" id="profit-btn" style="font-size:9px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:5px;padding:2px 8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">입력/수정</button>
       </div>
       <div class="card" style="padding:10px 13px" id="profit-card">
         <div id="profit-body"><!-- JS 렌더링 --></div>
       </div>
-      <div class="stitle">
+      <div class="stitle" data-zone="asset-goal">
         <span>목표 자산 달성률</span>
         <button onclick="showModal('goal-modal')" id="goal-btn" style="font-size:9px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:5px;padding:2px 8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">목표 수정</button>
       </div>
@@ -4182,7 +4182,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
 -->
 <div class="screen" id="sc-pci-info">
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
-  <div class="back-header"><span class="back-btn" onclick="nav('home')">‹</span><span class="back-title">오늘의 PCI</span></div>
+  <div class="back-header" data-zone="pci-structure"><span class="back-btn" onclick="nav('home')">‹</span><span class="back-title">오늘의 PCI</span></div>
   <div class="sbody">
 
     <!-- ① 알림 설정 유도 (미설정 사용자만 노출) -->
@@ -4989,7 +4989,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
     <!-- 뷰어 토글은 좌측 외부 패널 #pn-dev-panel 로 이동됨 (등락예측 화면에서만 노출) -->
 
     <!-- ═══ 첫 참여자 이벤트 소개 페이지 (누적 참여 이력 없는 회원에게만 노출) ═══ -->
-    <div id="pn-intro" style="display:none;padding:18px 14px 14px">
+    <div id="pn-intro" data-zone="intro-impl" style="display:none;padding:18px 14px 14px">
 
       <!-- 히어로 카드 -->
       <div style="background:linear-gradient(135deg, var(--pp-brand-soft) 0%, #FFF5F5 100%);border-radius:16px;padding:22px 18px 18px;text-align:center;margin-bottom:14px">
@@ -5385,7 +5385,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
     <!-- ═══ 참여 내역 탭 ═══ -->
     <div id="pn-history">
       <!-- 통계 카드 -->
-      <div style="margin:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;box-shadow:var(--shadow-sm)">
+      <div data-zone="history-reward" style="margin:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px;box-shadow:var(--shadow-sm)">
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;text-align:center">
           <div><div style="font-size:9px;color:var(--text4);margin-bottom:2px">당월 PCI</div><div style="font-size:16px;font-weight:800;color:var(--green)">42.50</div></div>
           <div><div style="font-size:9px;color:var(--text4);margin-bottom:2px">정답률</div><div style="font-size:16px;font-weight:800">68%</div></div>
@@ -5400,7 +5400,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
 
       <!-- 전월/당월 탭 + 달력 -->
       <div data-zone="pred-calendar" style="padding:0 14px;margin-bottom:10px">
-        <div style="display:flex;gap:6px;margin-bottom:12px">
+        <div data-zone="pred-history-month" style="display:flex;gap:6px;margin-bottom:12px">
           <button id="pn-cal-tab-prev" onclick="switchPnCalTab('prev')" style="flex:1;padding:7px 0;font-size:12px;font-weight:600;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .18s">
             전월 <span style="font-size:10px;font-weight:400;color:var(--text4)">(2026년 4월)</span>
           </button>
@@ -6063,7 +6063,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         </div>
 
         <!-- 어제 결과 링크 -->
-        <div style="margin:6px 14px 0;display:flex;justify-content:flex-end">
+        <div data-zone="pred-yesterday" style="margin:6px 14px 0;display:flex;justify-content:flex-end">
           <button onclick="showModal('pred-result-modal')" style="font-size:10px;color:var(--text4);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;padding:0">어제 결과 확인하기 ›</button>
         </div>
 
@@ -7887,7 +7887,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
 EWS DETAIL ═══════════════ -->
 <div class="screen" id="sc-news-detail">
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
-  <div class="back-header"><span class="back-btn" onclick="nav('news')">‹</span><span class="back-title">소식</span></div>
+  <div class="back-header" data-zone="newsdet-back"><span class="back-btn" onclick="nav('news')">‹</span><span class="back-title">소식</span></div>
   <div class="sbody">
     <div data-zone="newsdet-header" style="padding:0 14px 16px">
       <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:8px">📄 보도자료</div>
@@ -7899,7 +7899,7 @@ EWS DETAIL ═══════════════ -->
         </div>
         <a href="#" onclick="alert('연합뉴스 원문으로 이동')" style="font-size:11px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;padding:5px 10px;border-radius:7px;text-decoration:none;display:flex;align-items:center;gap:3px">원문 보기 ↗</a>
       </div>
-      <div style="font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:16px">
+      <div data-zone="news-content" style="font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:16px">
         <p style="margin-bottom:12px">페이코인(대표 한정수)이 2026년 1분기 결제 거래량이 전년 동기 대비 230% 성장했다고 30일 밝혔다. 이는 온라인 결제 가맹점 확대와 오프라인 결제 활성화에 따른 결과다.</p>
         <p style="margin-bottom:12px">페이코인 관계자는 "올해 들어 주요 편의점 체인과 외식 프랜차이즈를 중심으로 가맹점이 빠르게 확대되고 있으며, PCI 토큰 결제의 편의성을 경험한 사용자들의 재이용률이 높게 나타나고 있다"고 말했다.</p>
         <p>회사 측은 2026년 하반기까지 가맹점 3만 개소 확대를 목표로 마케팅 투자를 지속할 계획이라고 밝혔다. PCI 토큰 시세도 이번 발표에 힘입어 소폭 상승세를 보였다.</p>
@@ -13805,18 +13805,18 @@ function generateAppsScriptCode() {
   var zoneMapObj = {
     'home':         ['', 'home-header','home-asset','home-banner','home-tiles','home-news'],
     'home-old':     ['', 'home-header','home-asset','home-banner','home-tiles','home-news'],
-    'wallet':       ['', 'wallet-summary','wallet-tabs','wallet-pred-banner','wallet-list','wallet-empty-connect'],
+    'wallet':       ['', 'wallet-summary','wallet-tabs','wallet-pred-banner','wallet-list','wallet-empty-connect','wallet-mnemonic-alert','wallet-manage-btn','wallet-auth-alert','wallet-protection'],
     'wallet-empty': ['', 'wallet-empty-connect'],
     'wallet-manage':['', 'wm-notice-banner','wm-order-btn','wm-bithumb','wm-coinone','wm-korbit'],
     'wallet-pci':   ['', 'wpci-header','wpci-actions','wpci-address','wpci-price','wpci-txlist'],
-    'wallet-other': ['', 'wother-header','wother-actions','wother-txguide'],
-    'asset':        ['', 'asset-summary','asset-distribution','asset-list'],
-    'pci-info':     ['', 'pci-price', 'pci-exchanges'],
+    'wallet-other': ['', 'wother-header','wother-actions','wother-txguide','wother-memo','wother-price-info','wd-pci-ex'],
+    'asset':        ['', 'asset-summary','asset-distribution','asset-list','asset-onboarding','asset-profit','asset-goal'],
+    'pci-info':     ['', 'pci-price', 'pci-exchanges','pci-structure'],
     'token-detail': ['', 'token-header','token-price','token-wallet'],
     'benefits':     ['', 'ben-banner','ben-daily','ben-referral','ben-payment'],
-    'prediction':   ['', 'pred-yesterday','pred-base-price','pred-stats-bar','pred-vote-btns','pred-tabs','pred-calendar','pred-ranking-table'],
+    'prediction':   ['', 'pred-yesterday','pred-base-price','pred-stats-bar','pred-vote-btns','pred-tabs','pred-calendar','pred-ranking-table','pred-streak','pred-history-month','history-reward','intro-impl'],
     'news':         ['', 'news-search','news-list','news-more'],
-    'news-detail':  ['', 'newsdet-header','newsdet-nav'],
+    'news-detail':  ['', 'newsdet-header','newsdet-nav','newsdet-back','news-content'],
     'payment':      ['', 'pay-summary','pay-buttons','pay-event-banner','pay-merchants','pay-recent'],
     'payment-wc':   ['', 'paywc-hero','paywc-coin-list','paywc-pci-row','paywc-btc-row','paywc-eth-row','paywc-cta'],
     'tx-history':   ['', 'tx-tabs','tx-filter','tx-list'],
