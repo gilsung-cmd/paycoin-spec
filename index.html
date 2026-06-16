@@ -11753,6 +11753,18 @@ function setPnParticipated(on) {
     }
     var _sl = document.getElementById('pn-slot-3c-sublabel');
     if (_sl) _sl.textContent = on ? '참여 완료' : '미참여';
+    /* 버튼 포커스 스타일 갱신 — 3c 분기도 동일하게 처리 */
+    var onBtn3c  = document.getElementById('pn-part-on-btn');
+    var offBtn3c = document.getElementById('pn-part-off-btn');
+    if (onBtn3c && offBtn3c) {
+      if (on) {
+        onBtn3c.style.background  = 'var(--primary-l)'; onBtn3c.style.color  = 'var(--primary)'; onBtn3c.style.border = '1px solid #BFDBFE';
+        offBtn3c.style.background = 'var(--card2)';     offBtn3c.style.color = 'var(--text3)';   offBtn3c.style.border = '1px solid var(--border)';
+      } else {
+        offBtn3c.style.background = 'var(--primary-l)'; offBtn3c.style.color = 'var(--primary)'; offBtn3c.style.border = '1px solid #BFDBFE';
+        onBtn3c.style.background  = 'var(--card2)';     onBtn3c.style.color  = 'var(--text3)';   onBtn3c.style.border = '1px solid var(--border)';
+      }
+    }
     _pnUpdateToggleStates();
     return;
   }
