@@ -1015,7 +1015,7 @@ body {
       <button id="pn-slot-1-btn"   onclick="setPnTimeSlot('1')"   style="flex:1;min-width:54px;font-size:10px;font-weight:600;padding:5px 4px;border-radius:6px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:inherit;line-height:1.2">1회차<br><span style="font-size:8px;opacity:0.7">00~07</span></button>
       <button id="pn-slot-2-btn"   onclick="setPnTimeSlot('2')"   style="flex:1;min-width:54px;font-size:10px;font-weight:600;padding:5px 4px;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit;line-height:1.2">2회차<br><span style="font-size:8px;opacity:0.7">07~13</span></button>
       <button id="pn-slot-3-btn"   onclick="setPnTimeSlot('3')"   style="flex:1;min-width:54px;font-size:10px;font-weight:600;padding:5px 4px;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit;line-height:1.2">3회차<br><span style="font-size:8px;opacity:0.7">13~19</span></button>
-      <button id="pn-slot-3c-btn"  onclick="setPnTimeSlot('3c')"  style="flex:1;min-width:54px;font-size:10px;font-weight:600;padding:5px 4px;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit;line-height:1.2">3종료<br><span style="font-size:8px;opacity:0.7">미참여</span></button>
+      <button id="pn-slot-3c-btn"  onclick="setPnTimeSlot('3c')"  style="flex:1;min-width:54px;font-size:10px;font-weight:600;padding:5px 4px;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit;line-height:1.2">3종료<br><span id="pn-slot-3c-sublabel" style="font-size:8px;opacity:0.7">미참여</span></button>
       <button id="pn-slot-end-btn" onclick="setPnTimeSlot('end')" style="flex:1;min-width:54px;font-size:10px;font-weight:600;padding:5px 4px;border-radius:6px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit;line-height:1.2">당일 종료<br><span style="font-size:8px;opacity:0.7">21~24</span></button>
     </div>
   </div>
@@ -11698,6 +11698,8 @@ function setPnTimeSlot(slot) {
       setPnState('s1');
       _pnApplyClosedState(true);
     }
+    var _sl3c = document.getElementById('pn-slot-3c-sublabel');
+    if (_sl3c) _sl3c.textContent = participated3c ? '참여 완료' : '미참여';
     _pnUpdateResultModalActions(/*thisR=*/3, /*prevR=*/2, /*isEnd=*/false);
   } else {
     /* 회차 토글 + 내 참여 상태가 미참여면 S1, 참여 완료면 S2 */
@@ -11740,6 +11742,8 @@ function setPnParticipated(on) {
       setPnState('s1');
       _pnApplyClosedState(true);
     }
+    var _sl = document.getElementById('pn-slot-3c-sublabel');
+    if (_sl) _sl.textContent = on ? '참여 완료' : '미참여';
     _pnUpdateToggleStates();
     return;
   }
