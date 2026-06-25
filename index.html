@@ -5179,9 +5179,12 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
       <div id="pn-s1-cd-card" style="margin:8px 14px 0;padding:10px 12px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:12px;display:flex;align-items:center;justify-content:space-between">
         <!-- 정상 모드 -->
         <div class="pn-cd-normal" style="display:flex;align-items:center;justify-content:space-between;width:100%">
-          <div style="display:flex;align-items:center;gap:5px">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--pp-ink-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15" y2="11"/><circle cx="12" cy="14" r="8"/></svg>
-            <span id="pn-rcta" style="font-size:11px;color:var(--pp-ink-2);font-weight:600">참여 마감까지</span>
+          <div style="display:flex;align-items:flex-start;gap:5px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--pp-ink-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-top:2px;flex-shrink:0"><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15" y2="11"/><circle cx="12" cy="14" r="8"/></svg>
+            <div>
+              <div id="pn-rcta" style="font-size:11px;color:var(--pp-ink-2);font-weight:600">참여 마감까지</div>
+              <div id="pn-deadline-time" style="font-size:10px;color:var(--pp-muted);font-weight:600;margin-top:1px">07:00 마감</div>
+            </div>
           </div>
           <span id="pn-rctd" style="font-size:15px;font-weight:800;color:var(--pp-ink);font-family:'JetBrains Mono',monospace;letter-spacing:-0.3px">02 : 47 : 13</span>
         </div>
@@ -11540,6 +11543,9 @@ function setPnRound(r) {
   if (vt) vt.textContent = i.voteTime;
   var bt = document.getElementById('pn-s2-base-time');
   if (bt) bt.textContent = i.voteTime;
+  /* S1 카운트다운 카드 — 회차 마감 시각 */
+  var dt = document.getElementById('pn-deadline-time');
+  if (dt) dt.textContent = i.close + ' 마감';
   /* 카운트다운 1초 tick 시작 (S1 pn-rctd + S2 pn-s2-countdown 공용) */
   _pnStartCd(_pnParseCd(i.countdown));
   /* 오늘 회차 박스 — 현재 회차(r)만 참여 스타일 */
