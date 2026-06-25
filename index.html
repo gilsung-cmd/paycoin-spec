@@ -5306,8 +5306,11 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
 
       <!-- 오늘 회차 (컴팩트) — 각 회차 박스 안에 결과 발표 시각 동봉 -->
       <div style="margin:8px 14px 0;padding:11px 12px;background:var(--pp-card);border:1px solid var(--pp-line);border-radius:12px">
-        <div style="margin-bottom:7px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
           <span style="font-size:11px;color:var(--pp-muted);font-weight:700;letter-spacing:0.5px">오늘 회차</span>
+          <button onclick="showModal('pn-schedule-modal')" style="background:none;border:none;cursor:pointer;padding:2px;display:flex;align-items:center;line-height:1">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--pp-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </button>
         </div>
         <div style="display:flex;gap:6px">
           <div id="pn-s2-rbox-1" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px;background:var(--pp-warn-soft);border:1px solid var(--pp-line);border-radius:8px">
@@ -5843,6 +5846,44 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         <span style="font-size:15px;font-weight:800;display:flex;align-items:center;gap:4px"><span style="font-size:12px">🪙</span> +32 PCI</span>
       </div>
       <button class="btn btn-primary" style="background:var(--text)" onclick="closeModal('pn-result-summary')">닫기</button>
+    </div>
+  </div>
+
+  <!-- ═══ 회차별 참여 안내 모달 ═══ -->
+  <div class="overlay" id="pn-schedule-modal" style="align-items:flex-end;justify-content:center">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:16px">회차별 참여 안내</div>
+      <!-- 헤더 라벨 -->
+      <div style="display:flex;gap:8px;padding:0 4px;margin-bottom:6px">
+        <span style="font-size:10px;color:var(--text4);font-weight:600;min-width:36px">회차</span>
+        <span style="font-size:10px;color:var(--text4);font-weight:600;flex:1">참여 가능 시간</span>
+        <span style="font-size:10px;color:var(--text4);font-weight:600;min-width:56px;text-align:right">결과 발표</span>
+      </div>
+      <!-- 1회차 -->
+      <div style="display:flex;gap:8px;align-items:center;padding:10px 12px;background:var(--card2);border-radius:10px;margin-bottom:6px">
+        <span style="font-size:12px;font-weight:700;color:var(--text);min-width:36px">1회차</span>
+        <span style="font-size:12px;font-weight:600;color:var(--text2);flex:1">00:00 ~ 07:00</span>
+        <span style="font-size:12px;font-weight:700;color:var(--text3);min-width:56px;text-align:right">오전 09:00</span>
+      </div>
+      <!-- 2회차 -->
+      <div style="display:flex;gap:8px;align-items:center;padding:10px 12px;background:var(--card2);border-radius:10px;margin-bottom:6px">
+        <span style="font-size:12px;font-weight:700;color:var(--text);min-width:36px">2회차</span>
+        <span style="font-size:12px;font-weight:600;color:var(--text2);flex:1">07:00 ~ 13:00</span>
+        <span style="font-size:12px;font-weight:700;color:var(--text3);min-width:56px;text-align:right">오후 03:00</span>
+      </div>
+      <!-- 3회차 -->
+      <div style="display:flex;gap:8px;align-items:center;padding:10px 12px;background:var(--card2);border-radius:10px;margin-bottom:14px">
+        <span style="font-size:12px;font-weight:700;color:var(--text);min-width:36px">3회차</span>
+        <span style="font-size:12px;font-weight:600;color:var(--text2);flex:1">13:00 ~ 19:00</span>
+        <span style="font-size:12px;font-weight:700;color:var(--text3);min-width:56px;text-align:right">밤 09:00</span>
+      </div>
+      <!-- 유의사항 -->
+      <div style="font-size:10.5px;color:var(--text4);line-height:1.7;margin-bottom:16px">
+        · 마감 시간 이후에는 참여가 불가해요.<br>
+        · 결과는 마감 후 약 2시간 뒤에 발표돼요.
+      </div>
+      <button class="btn btn-ghost" style="font-size:13px" onclick="closeModal('pn-schedule-modal')">닫기</button>
     </div>
   </div>
 
