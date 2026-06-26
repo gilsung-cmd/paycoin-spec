@@ -5795,7 +5795,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         <div id="pn-ad-overrun-desc" style="font-size:11.5px;color:var(--text3);line-height:1.6">기존 선택은 그대로 유지돼요<br>다음 회차에 새로운 예측에 참여해보세요</div>
       </div>
       <button id="pn-ad-overrun-next-btn" class="btn btn-primary" style="background:var(--text);margin-bottom:8px">다음 회차 참여하기 →</button>
-      <button class="btn btn-ghost" style="font-size:12px" onclick="closeModal('pn-ad-overrun-modal')">닫기</button>
+      <button id="pn-ad-overrun-close-btn" class="btn btn-ghost" style="font-size:12px;display:none" onclick="closeModal('pn-ad-overrun-modal')">닫기</button>
     </div>
   </div>
 
@@ -12127,27 +12127,28 @@ function simulatePnAdDeadlineOverrun(mode) {
         closeModal('pn-ad-playing-modal');
         /* 변경 권한 미부여 → S2 그대로 유지, 광고 라벨 평시로 복귀 */
         setPnAdWarn && setPnAdWarn('off');
-        var titleEl = document.getElementById('pn-ad-overrun-title');
-        var descEl  = document.getElementById('pn-ad-overrun-desc');
-        var btn     = document.getElementById('pn-ad-overrun-next-btn');
+        var titleEl   = document.getElementById('pn-ad-overrun-title');
+        var descEl    = document.getElementById('pn-ad-overrun-desc');
+        var btn       = document.getElementById('pn-ad-overrun-next-btn');
+        var closeBtn  = document.getElementById('pn-ad-overrun-close-btn');
         if (mode === 'end') {
-          /* 3회차 마감 → 오늘 회차 종료 */
+          /* 3회차 마감 → 오늘 회차 종료: primary 숨기고 닫기만 표시 */
           if (titleEl) titleEl.innerHTML = '이번 회차가 마감되어<br>선택을 변경할 수 없어요';
           if (descEl)  descEl.innerHTML  = '기존 선택은 그대로 유지돼요<br>내일 1회차에 다시 도전해보세요';
-          if (btn) {
-            btn.textContent = '내일 1회차 대기 →';
-            btn.setAttribute('onclick', "closeModal('pn-ad-overrun-modal');setPnTimeSlot('end')");
-          }
+          if (btn)      btn.style.display      = 'none';
+          if (closeBtn) closeBtn.style.display = '';
         } else {
-          /* 1·2회차 마감 → 다음 회차 시작 */
+          /* 1·2회차 마감 → 다음 회차 시작: 닫기 숨기고 다음 회차 버튼만 표시 */
           var curR = window._pnCurRound || 1;
           var nextR = curR < 3 ? curR + 1 : 2;
           if (titleEl) titleEl.innerHTML = '다음 회차가 시작되어<br>선택을 변경할 수 없어요';
           if (descEl)  descEl.innerHTML  = '기존 선택은 그대로 유지돼요<br>다음 회차에 새로운 예측에 참여해보세요';
           if (btn) {
+            btn.style.display = '';
             btn.textContent = nextR + '회차 참여하기 →';
             btn.setAttribute('onclick', "closeModal('pn-ad-overrun-modal');setPnTimeSlot('" + nextR + "');setPnParticipated(false)");
           }
+          if (closeBtn) closeBtn.style.display = 'none';
         }
         showModal('pn-ad-overrun-modal');
       }, 600);
