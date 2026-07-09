@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -2338,21 +2338,27 @@ body {
             <div><div style="font-size:13px;font-weight:600;color:var(--text)">서비스 참여 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">참여 가능한 활동 알림</div></div>
             <div class="noti-toggle off" onclick="toggleServiceNoti(this)"><div class="knob"></div></div>
           </div>
-          <!-- 출석 룰렛 (하위) -->
-          <div class="service-noti-child" style="display:flex;align-items:center;justify-content:space-between;padding:11px 18px 11px 32px;border-bottom:1px solid var(--border);background:var(--card2)">
+          <!-- 출석 룰렛 (하위) — 이번 개발 범위 제외 -->
+          <div class="service-noti-child" style="display:flex;align-items:center;justify-content:space-between;padding:11px 18px 11px 32px;border-bottom:1px solid var(--border);background:var(--card2);opacity:0.4;pointer-events:none">
             <div style="display:flex;align-items:center;gap:6px">
               <span style="font-size:11px;color:var(--text4)">└</span>
-              <div><div style="font-size:12px;font-weight:600;color:var(--text)">출석 룰렛</div><div style="font-size:10px;color:var(--text4);margin-top:1px">매일 출석 체크 알림</div></div>
+              <div>
+                <div style="display:flex;align-items:center;gap:5px"><span style="font-size:12px;font-weight:600;color:var(--text)">출석 룰렛</span><span style="font-size:9px;font-weight:600;color:var(--text4);background:var(--bg-root);border:1px solid var(--border);border-radius:4px;padding:1px 5px">개발 예정</span></div>
+                <div style="font-size:10px;color:var(--text4);margin-top:1px">매일 출석 체크 알림</div>
+              </div>
             </div>
-            <div class="noti-toggle off service-child-toggle" onclick="toggleChildNoti(this)"><div class="knob"></div></div>
+            <div class="noti-toggle off service-child-toggle"><div class="knob"></div></div>
           </div>
-          <!-- 등락 예측 (하위) -->
-          <div class="service-noti-child" style="display:flex;align-items:center;justify-content:space-between;padding:11px 18px 11px 32px;border-bottom:1px solid var(--border);background:var(--card2)">
+          <!-- 등락 예측 (하위) — 이번 개발 범위 제외 -->
+          <div class="service-noti-child" style="display:flex;align-items:center;justify-content:space-between;padding:11px 18px 11px 32px;border-bottom:1px solid var(--border);background:var(--card2);opacity:0.4;pointer-events:none">
             <div style="display:flex;align-items:center;gap:6px">
               <span style="font-size:11px;color:var(--text4)">└</span>
-              <div><div style="font-size:12px;font-weight:600;color:var(--text)">등락 예측</div><div style="font-size:10px;color:var(--text4);margin-top:1px">참여 가능 시간 및 결과 알림</div></div>
+              <div>
+                <div style="display:flex;align-items:center;gap:5px"><span style="font-size:12px;font-weight:600;color:var(--text)">등락 예측</span><span style="font-size:9px;font-weight:600;color:var(--text4);background:var(--bg-root);border:1px solid var(--border);border-radius:4px;padding:1px 5px">개발 예정</span></div>
+                <div style="font-size:10px;color:var(--text4);margin-top:1px">참여 가능 시간 및 결과 알림</div>
+              </div>
             </div>
-            <div class="noti-toggle off service-child-toggle" onclick="toggleChildNoti(this)"><div class="knob"></div></div>
+            <div class="noti-toggle off service-child-toggle"><div class="knob"></div></div>
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px">
             <div><div style="font-size:13px;font-weight:600;color:var(--text)">PCI 상승/하락 알림</div><div style="font-size:11px;color:var(--text4);margin-top:2px">전일 대비 5% 이상 변동 시 알림</div></div>
