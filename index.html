@@ -4241,7 +4241,11 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
     <!-- ② 가격 차트 -->
     <div class="card" style="padding:12px;margin-bottom:10px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div style="font-size:12px;font-weight:700;color:var(--text)">가격 추이</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="font-size:12px;font-weight:700;color:var(--text)">가격 추이</div>
+          <button id="pci-chart-ok" onclick="setPciChart('ok')" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정상</button>
+          <button id="pci-chart-partial" onclick="setPciChart('partial')" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">데이터 공백</button>
+        </div>
         <div style="display:flex;gap:4px" id="pci-chart-tabs">
           <div class="chip active" style="font-size:10px;padding:2px 8px;cursor:pointer" onclick="pciChartSwitch('1D')">1D</div>
           <div class="chip" style="font-size:10px;padding:2px 8px;cursor:pointer" onclick="pciChartSwitch('1W')">1W</div>
@@ -4260,6 +4264,10 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
           <path id="pci-chart-line" class="cline" d="M0,62 C20,56 35,68 55,48 S90,20 130,30 S175,54 210,34 S255,14 300,18" fill="none" stroke="#1A56DB" stroke-width="2" stroke-linecap="round"/>
           <circle id="pci-chart-high" cx="255" cy="14" r="3" fill="#EF4444"/>
           <circle id="pci-chart-low" cx="35" cy="68" r="3" fill="#3B82F6"/>
+          <!-- 데이터 공백 구간 (기본 숨김) -->
+          <rect id="pci-chart-gray" x="115" y="0" width="185" height="80" fill="rgba(128,128,128,0.1)" display="none"/>
+          <line id="pci-chart-dash" x1="115" y1="0" x2="115" y2="80" stroke-width="1" stroke-dasharray="3,3" stroke="var(--text4)" display="none"/>
+          <circle id="pci-chart-lastdot" cx="115" cy="30" r="3.5" fill="#1A56DB" display="none"/>
         </svg>
         <div style="display:flex;justify-content:space-between;margin-top:4px" id="pci-chart-labels">
           <div style="font-size:9px;color:var(--text4)">00:00</div>
@@ -4268,6 +4276,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
           <div style="font-size:9px;color:var(--text4)">18:00</div>
           <div style="font-size:9px;color:var(--text4)">24:00</div>
         </div>
+        <div id="pci-chart-caption" style="display:none;font-size:9px;color:var(--text4);margin-top:3px;text-align:right">데이터 수신이 원활하지 않아 일부 구간이 표시되지 않습니다.</div>
       </div>
     </div>
 
@@ -11079,6 +11088,36 @@ function pciChartSwitch(period) {
   var tabs = document.querySelectorAll('#pci-chart-tabs .chip');
   tabs.forEach(function(t){ t.classList.remove('active'); });
   tabs.forEach(function(t){ if(t.textContent===period) t.classList.add('active'); });
+}
+
+function setPciChart(mode) {
+  var isPartial = mode === 'partial';
+  var NORMAL_LINE = 'M0,62 C20,56 35,68 55,48 S90,20 130,30 S175,54 210,34 S255,14 300,18';
+  var NORMAL_FILL = 'M0,62 C20,56 35,68 55,48 S90,20 130,30 S175,54 210,34 S255,14 300,18 L300,80 L0,80Z';
+  var PARTIAL_LINE = 'M0,62 C20,56 35,68 55,48 S90,20 115,30';
+  var PARTIAL_FILL = 'M0,62 C20,56 35,68 55,48 S90,20 115,30 L115,80 L0,80Z';
+  var fill    = document.getElementById('pci-chart-fill');
+  var line    = document.getElementById('pci-chart-line');
+  var gray    = document.getElementById('pci-chart-gray');
+  var dash    = document.getElementById('pci-chart-dash');
+  var lastdot = document.getElementById('pci-chart-lastdot');
+  var caption = document.getElementById('pci-chart-caption');
+  var high    = document.getElementById('pci-chart-high');
+  var low     = document.getElementById('pci-chart-low');
+  if (fill)    fill.setAttribute('d', isPartial ? PARTIAL_FILL : NORMAL_FILL);
+  if (line)    line.setAttribute('d', isPartial ? PARTIAL_LINE : NORMAL_LINE);
+  if (gray)    gray.setAttribute('display',    isPartial ? '' : 'none');
+  if (dash)    dash.setAttribute('display',    isPartial ? '' : 'none');
+  if (lastdot) lastdot.setAttribute('display', isPartial ? '' : 'none');
+  if (high)    high.setAttribute('display',    isPartial ? 'none' : '');
+  if (low)     low.setAttribute('display',     isPartial ? 'none' : '');
+  if (caption) caption.style.display = isPartial ? 'block' : 'none';
+  var ACTIVE   = { bg:'var(--primary-l)', color:'var(--primary)', border:'1px solid #BFDBFE' };
+  var INACTIVE = { bg:'var(--card2)',     color:'var(--text3)',   border:'1px solid var(--border)' };
+  var GRAY_ACT = { bg:'#F3F4F6',         color:'#374151',        border:'1px solid #D1D5DB' };
+  function paintChart(id, s) { var b=document.getElementById(id); if(!b) return; b.style.background=s.bg; b.style.color=s.color; b.style.border=s.border; }
+  paintChart('pci-chart-ok',      isPartial ? INACTIVE : ACTIVE);
+  paintChart('pci-chart-partial', isPartial ? GRAY_ACT : INACTIVE);
 }
 
 /* ══ ASSET DISTRIBUTION ══ */
