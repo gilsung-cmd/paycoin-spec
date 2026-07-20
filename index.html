@@ -4247,9 +4247,9 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
           <button id="pci-chart-partial" onclick="setPciChart('partial')" style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">데이터 공백</button>
         </div>
         <div style="display:flex;gap:4px" id="pci-chart-tabs">
-          <div class="chip active" style="font-size:10px;padding:2px 8px;cursor:pointer" onclick="pciChartSwitch('1D')">1D</div>
-          <div class="chip" style="font-size:10px;padding:2px 8px;cursor:pointer" onclick="pciChartSwitch('1W')">1W</div>
-          <div class="chip" style="font-size:10px;padding:2px 8px;cursor:pointer" onclick="pciChartSwitch('1M')">1M</div>
+          <div class="chip active" data-period="1D" style="font-size:10px;padding:2px 8px;cursor:pointer" onclick="pciChartSwitch('1D')">1일</div>
+          <div class="chip" data-period="1W" style="font-size:10px;padding:2px 8px;cursor:pointer" onclick="pciChartSwitch('1W')">7일</div>
+          <div class="chip" data-period="1M" style="font-size:10px;padding:2px 8px;cursor:pointer" onclick="pciChartSwitch('1M')">30일</div>
         </div>
       </div>
       <div style="position:relative">
@@ -11087,7 +11087,7 @@ function pciChartSwitch(period) {
   /* 탭 활성 표시 */
   var tabs = document.querySelectorAll('#pci-chart-tabs .chip');
   tabs.forEach(function(t){ t.classList.remove('active'); });
-  tabs.forEach(function(t){ if(t.textContent===period) t.classList.add('active'); });
+  tabs.forEach(function(t){ if(t.dataset.period===period) t.classList.add('active'); });
 }
 
 function setPciChart(mode) {
