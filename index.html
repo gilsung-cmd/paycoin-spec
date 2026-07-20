@@ -1110,56 +1110,6 @@ body {
   </div>
 </div>
 
-<!-- ═══ 오늘의PCI 상장거래소 dev 토글 패널 (phone-panel 외부 · 오늘의PCI 화면에서만 노출) ═══ -->
-<div id="pci-exch-dev-panel" style="display:none;position:fixed;left:260px;top:110px;width:210px;z-index:60;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-md);padding:14px;font-family:'Noto Sans KR',sans-serif;max-height:calc(100vh - 140px);overflow-y:auto">
-  <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-    <span style="font-size:12px;font-weight:800;color:var(--text);letter-spacing:-0.2px">상장거래소 API 상태</span>
-  </div>
-  <div style="font-size:9px;color:var(--text4);margin-bottom:10px;line-height:1.4">거래소별 개별 API — 각 거래소 상태를 독립적으로 전환할 수 있어요</div>
-
-  <div style="margin-bottom:9px">
-    <div style="font-size:10px;font-weight:700;color:var(--text4);letter-spacing:0.3px;margin-bottom:4px">빗썸</div>
-    <div style="display:flex;gap:3px">
-      <button id="pci-exch-bithumb-ok"    onclick="setPciExch('bithumb','ok')"    style="flex:1;font-size:9px;font-weight:600;padding:4px 0;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:inherit">정상</button>
-      <button id="pci-exch-bithumb-err"   onclick="setPciExch('bithumb','err')"   style="flex:1;font-size:9px;font-weight:600;padding:4px 0;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">오류</button>
-      <button id="pci-exch-bithumb-cache" onclick="setPciExch('bithumb','cache')" style="flex:1;font-size:9px;font-weight:600;padding:4px 0;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">캐시</button>
-    </div>
-  </div>
-  <div style="margin-bottom:9px">
-    <div style="font-size:10px;font-weight:700;color:var(--text4);letter-spacing:0.3px;margin-bottom:4px">코인원</div>
-    <div style="display:flex;gap:3px">
-      <button id="pci-exch-coinone-ok"    onclick="setPciExch('coinone','ok')"    style="flex:1;font-size:9px;font-weight:600;padding:4px 0;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:inherit">정상</button>
-      <button id="pci-exch-coinone-err"   onclick="setPciExch('coinone','err')"   style="flex:1;font-size:9px;font-weight:600;padding:4px 0;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">오류</button>
-      <button id="pci-exch-coinone-cache" onclick="setPciExch('coinone','cache')" style="flex:1;font-size:9px;font-weight:600;padding:4px 0;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">캐시</button>
-    </div>
-  </div>
-  <div style="margin-bottom:9px">
-    <div style="font-size:10px;font-weight:700;color:var(--text4);letter-spacing:0.3px;margin-bottom:4px">코빗</div>
-    <div style="display:flex;gap:3px">
-      <button id="pci-exch-korbit-ok"    onclick="setPciExch('korbit','ok')"    style="flex:1;font-size:9px;font-weight:600;padding:4px 0;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:inherit">정상</button>
-      <button id="pci-exch-korbit-err"   onclick="setPciExch('korbit','err')"   style="flex:1;font-size:9px;font-weight:600;padding:4px 0;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">오류</button>
-      <button id="pci-exch-korbit-cache" onclick="setPciExch('korbit','cache')" style="flex:1;font-size:9px;font-weight:600;padding:4px 0;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">캐시</button>
-    </div>
-  </div>
-  <div style="margin-bottom:9px">
-    <div style="font-size:10px;font-weight:700;color:var(--text4);letter-spacing:0.3px;margin-bottom:4px">Bitget</div>
-    <div style="display:flex;gap:3px">
-      <button id="pci-exch-bitget-ok"    onclick="setPciExch('bitget','ok')"    style="flex:1;font-size:9px;font-weight:600;padding:4px 0;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:inherit">정상</button>
-      <button id="pci-exch-bitget-err"   onclick="setPciExch('bitget','err')"   style="flex:1;font-size:9px;font-weight:600;padding:4px 0;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">오류</button>
-      <button id="pci-exch-bitget-cache" onclick="setPciExch('bitget','cache')" style="flex:1;font-size:9px;font-weight:600;padding:4px 0;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">캐시</button>
-    </div>
-  </div>
-  <div>
-    <div style="font-size:10px;font-weight:700;color:var(--text4);letter-spacing:0.3px;margin-bottom:4px">HTX</div>
-    <div style="display:flex;gap:3px">
-      <button id="pci-exch-htx-ok"    onclick="setPciExch('htx','ok')"    style="flex:1;font-size:9px;font-weight:600;padding:4px 0;border-radius:5px;background:var(--primary-l);color:var(--primary);border:1px solid #BFDBFE;cursor:pointer;font-family:inherit">정상</button>
-      <button id="pci-exch-htx-err"   onclick="setPciExch('htx','err')"   style="flex:1;font-size:9px;font-weight:600;padding:4px 0;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">오류</button>
-      <button id="pci-exch-htx-cache" onclick="setPciExch('htx','cache')" style="flex:1;font-size:9px;font-weight:600;padding:4px 0;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:inherit">캐시</button>
-    </div>
-  </div>
-</div>
-
 <div class="phone-panel">
   <div class="phone-label">MOBILE PREVIEW · 375 × 780</div>
   <div class="phone-frame">
@@ -4371,87 +4321,100 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
       </div>
     </div>
 
-    <!-- ⑤ 거래소별 시세 (거래소별 개별 API — 오류/캐시 상태 독립 표시) -->
+    <!-- ⑤ 거래소별 시세 (거래소별 개별 API — 정상/일시적 오류/거래소 점검 3-mode, 자산현황 보유자산과 동일 패턴) -->
     <div data-zone="pci-exchanges" class="stitle">상장 거래소</div>
+    <!-- 거래소 API 상태 (뷰어 토글 예시 — 빗썸 · 코인원 2곳만 시연, 나머지 거래소도 동일 구조) -->
+    <div style="display:flex;align-items:center;gap:5px;padding:4px 14px 2px;justify-content:flex-end;flex-wrap:wrap">
+      <span style="font-size:9px;color:var(--text4);margin-right:2px">빗썸</span>
+      <button onclick="setPciExch('bithumb','ok')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정상</button>
+      <button onclick="setPciExch('bithumb','err')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">일시적 오류</button>
+      <button onclick="setPciExch('bithumb','maint')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">거래소 점검</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:5px;padding:2px 14px 6px;justify-content:flex-end;flex-wrap:wrap">
+      <span style="font-size:9px;color:var(--text4);margin-right:2px">코인원</span>
+      <button onclick="setPciExch('coinone','ok')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정상</button>
+      <button onclick="setPciExch('coinone','err')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">일시적 오류</button>
+      <button onclick="setPciExch('coinone','maint')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">거래소 점검</button>
+    </div>
     <div class="exch-row" data-exch="bithumb" onclick="navTokenDetail('pci-info','PCI','빗썸','빗')">
       <div class="exch-logo-box" style="background:#FFF3E0">빗</div>
       <div style="flex:1">
-        <div style="display:flex;align-items:center;gap:5px;margin-bottom:2px">
-          <span class="exch-name" style="margin-bottom:0">빗썸</span>
-          <span class="exch-badge-err" style="display:none;font-size:9px;font-weight:600;color:var(--red);background:#FEF2F2;border:1px solid #FCA5A5;border-radius:4px;padding:1px 5px">오류</span>
-          <span class="exch-badge-cache" style="display:none;font-size:9px;font-weight:600;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:4px;padding:1px 5px">캐시</span>
-        </div>
+        <div class="exch-name">빗썸</div>
         <div class="exch-ok exch-vol">거래량 1,249,500 PCI</div>
-        <div class="exch-err exch-vol" style="display:none;color:var(--text4)">거래량 —</div>
-        <div class="exch-cache exch-vol" style="display:none;opacity:.65">거래량 1,249,500 PCI</div>
       </div>
       <div class="exch-ok exch-right"><div class="exch-price">82.12원</div><div class="up" style="font-size:10px">▲ 4.91%</div></div>
-      <div class="exch-err exch-right" style="display:none"><div style="font-size:14px;font-weight:700;color:var(--text4)">—</div></div>
-      <div class="exch-cache exch-right" style="display:none;opacity:.65"><div class="exch-price">82.12원</div><div class="up" style="font-size:10px">▲ 4.91%</div></div>
+      <div class="exch-err exch-right" style="display:none;flex-direction:column;align-items:flex-end">
+        <div style="font-size:11px;color:var(--red);font-weight:600">불러오기 실패</div>
+        <button onclick="event.stopPropagation();showToast('시세 재조회 중...')" style="font-size:10px;color:var(--primary);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;padding:0;margin-top:2px">↻ 재시도</button>
+      </div>
+      <div class="exch-maint exch-right" style="display:none;flex-direction:column;align-items:flex-end">
+        <div style="font-size:11px;color:#92400E;font-weight:600">조회 불가</div>
+        <div style="font-size:10px;color:var(--text4);margin-top:2px">빗썸 점검중</div>
+      </div>
     </div>
     <div class="exch-row" data-exch="coinone" onclick="navTokenDetail('pci-info','PCI','코인원','원')">
       <div class="exch-logo-box" style="background:#E3F2FD">원</div>
       <div style="flex:1">
-        <div style="display:flex;align-items:center;gap:5px;margin-bottom:2px">
-          <span class="exch-name" style="margin-bottom:0">코인원</span>
-          <span class="exch-badge-err" style="display:none;font-size:9px;font-weight:600;color:var(--red);background:#FEF2F2;border:1px solid #FCA5A5;border-radius:4px;padding:1px 5px">오류</span>
-          <span class="exch-badge-cache" style="display:none;font-size:9px;font-weight:600;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:4px;padding:1px 5px">캐시</span>
-        </div>
+        <div class="exch-name">코인원</div>
         <div class="exch-ok exch-vol">거래량 882,000 PCI</div>
-        <div class="exch-err exch-vol" style="display:none;color:var(--text4)">거래량 —</div>
-        <div class="exch-cache exch-vol" style="display:none;opacity:.65">거래량 882,000 PCI</div>
       </div>
       <div class="exch-ok exch-right"><div class="exch-price">82.67원</div><div class="up" style="font-size:10px">▲ 5.42%</div></div>
-      <div class="exch-err exch-right" style="display:none"><div style="font-size:14px;font-weight:700;color:var(--text4)">—</div></div>
-      <div class="exch-cache exch-right" style="display:none;opacity:.65"><div class="exch-price">82.67원</div><div class="up" style="font-size:10px">▲ 5.42%</div></div>
+      <div class="exch-err exch-right" style="display:none;flex-direction:column;align-items:flex-end">
+        <div style="font-size:11px;color:var(--red);font-weight:600">불러오기 실패</div>
+        <button onclick="event.stopPropagation();showToast('시세 재조회 중...')" style="font-size:10px;color:var(--primary);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;padding:0;margin-top:2px">↻ 재시도</button>
+      </div>
+      <div class="exch-maint exch-right" style="display:none;flex-direction:column;align-items:flex-end">
+        <div style="font-size:11px;color:#92400E;font-weight:600">조회 불가</div>
+        <div style="font-size:10px;color:var(--text4);margin-top:2px">코인원 점검중</div>
+      </div>
     </div>
     <div class="exch-row" data-exch="korbit" onclick="navTokenDetail('pci-info','PCI','코빗','빗')">
       <div class="exch-logo-box" style="background:#F3E8FF">빗</div>
       <div style="flex:1">
-        <div style="display:flex;align-items:center;gap:5px;margin-bottom:2px">
-          <span class="exch-name" style="margin-bottom:0">코빗</span>
-          <span class="exch-badge-err" style="display:none;font-size:9px;font-weight:600;color:var(--red);background:#FEF2F2;border:1px solid #FCA5A5;border-radius:4px;padding:1px 5px">오류</span>
-          <span class="exch-badge-cache" style="display:none;font-size:9px;font-weight:600;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:4px;padding:1px 5px">캐시</span>
-        </div>
+        <div class="exch-name">코빗</div>
         <div class="exch-ok exch-vol">거래량 220,500 PCI</div>
-        <div class="exch-err exch-vol" style="display:none;color:var(--text4)">거래량 —</div>
-        <div class="exch-cache exch-vol" style="display:none;opacity:.65">거래량 220,500 PCI</div>
       </div>
       <div class="exch-ok exch-right"><div class="exch-price">82.30원</div><div class="dn" style="font-size:10px">▼ 0.21%</div></div>
-      <div class="exch-err exch-right" style="display:none"><div style="font-size:14px;font-weight:700;color:var(--text4)">—</div></div>
-      <div class="exch-cache exch-right" style="display:none;opacity:.65"><div class="exch-price">82.30원</div><div class="dn" style="font-size:10px">▼ 0.21%</div></div>
+      <div class="exch-err exch-right" style="display:none;flex-direction:column;align-items:flex-end">
+        <div style="font-size:11px;color:var(--red);font-weight:600">불러오기 실패</div>
+        <button onclick="event.stopPropagation();showToast('시세 재조회 중...')" style="font-size:10px;color:var(--primary);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;padding:0;margin-top:2px">↻ 재시도</button>
+      </div>
+      <div class="exch-maint exch-right" style="display:none;flex-direction:column;align-items:flex-end">
+        <div style="font-size:11px;color:#92400E;font-weight:600">조회 불가</div>
+        <div style="font-size:10px;color:var(--text4);margin-top:2px">코빗 점검중</div>
+      </div>
     </div>
     <div class="exch-row" data-exch="bitget" onclick="navTokenDetail('pci-info','PCI','Bitget','BG')">
       <div class="exch-logo-box" style="background:#E6FFFA;color:#0D9488;font-size:10px">BG</div>
       <div style="flex:1">
-        <div style="display:flex;align-items:center;gap:5px;margin-bottom:2px">
-          <span class="exch-name" style="margin-bottom:0">Bitget</span>
-          <span class="exch-badge-err" style="display:none;font-size:9px;font-weight:600;color:var(--red);background:#FEF2F2;border:1px solid #FCA5A5;border-radius:4px;padding:1px 5px">오류</span>
-          <span class="exch-badge-cache" style="display:none;font-size:9px;font-weight:600;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:4px;padding:1px 5px">캐시</span>
-        </div>
+        <div class="exch-name">Bitget</div>
         <div class="exch-ok exch-vol">거래량 73,500 PCI</div>
-        <div class="exch-err exch-vol" style="display:none;color:var(--text4)">거래량 —</div>
-        <div class="exch-cache exch-vol" style="display:none;opacity:.65">거래량 73,500 PCI</div>
       </div>
       <div class="exch-ok exch-right"><div class="exch-price">82.05원</div><div class="dn" style="font-size:10px">▼ 0.35%</div></div>
-      <div class="exch-err exch-right" style="display:none"><div style="font-size:14px;font-weight:700;color:var(--text4)">—</div></div>
-      <div class="exch-cache exch-right" style="display:none;opacity:.65"><div class="exch-price">82.05원</div><div class="dn" style="font-size:10px">▼ 0.35%</div></div>
+      <div class="exch-err exch-right" style="display:none;flex-direction:column;align-items:flex-end">
+        <div style="font-size:11px;color:var(--red);font-weight:600">불러오기 실패</div>
+        <button onclick="event.stopPropagation();showToast('시세 재조회 중...')" style="font-size:10px;color:var(--primary);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;padding:0;margin-top:2px">↻ 재시도</button>
+      </div>
+      <div class="exch-maint exch-right" style="display:none;flex-direction:column;align-items:flex-end">
+        <div style="font-size:11px;color:#92400E;font-weight:600">조회 불가</div>
+        <div style="font-size:10px;color:var(--text4);margin-top:2px">Bitget 점검중</div>
+      </div>
     </div>
     <div class="exch-row" data-exch="htx" onclick="navTokenDetail('pci-info','PCI','HTX','HTX')">
       <div class="exch-logo-box" style="background:#FCE7F3;color:#BE185D;font-size:9px">HTX</div>
       <div style="flex:1">
-        <div style="display:flex;align-items:center;gap:5px;margin-bottom:2px">
-          <span class="exch-name" style="margin-bottom:0">HTX</span>
-          <span class="exch-badge-err" style="display:none;font-size:9px;font-weight:600;color:var(--red);background:#FEF2F2;border:1px solid #FCA5A5;border-radius:4px;padding:1px 5px">오류</span>
-          <span class="exch-badge-cache" style="display:none;font-size:9px;font-weight:600;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:4px;padding:1px 5px">캐시</span>
-        </div>
+        <div class="exch-name">HTX</div>
         <div class="exch-ok exch-vol">거래량 24,500 PCI</div>
-        <div class="exch-err exch-vol" style="display:none;color:var(--text4)">거래량 —</div>
-        <div class="exch-cache exch-vol" style="display:none;opacity:.65">거래량 24,500 PCI</div>
       </div>
       <div class="exch-ok exch-right"><div class="exch-price">82.20원</div><div class="up" style="font-size:10px">▲ 0.12%</div></div>
-      <div class="exch-err exch-right" style="display:none"><div style="font-size:14px;font-weight:700;color:var(--text4)">—</div></div>
-      <div class="exch-cache exch-right" style="display:none;opacity:.65"><div class="exch-price">82.20원</div><div class="up" style="font-size:10px">▲ 0.12%</div></div>
+      <div class="exch-err exch-right" style="display:none;flex-direction:column;align-items:flex-end">
+        <div style="font-size:11px;color:var(--red);font-weight:600">불러오기 실패</div>
+        <button onclick="event.stopPropagation();showToast('시세 재조회 중...')" style="font-size:10px;color:var(--primary);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-weight:600;padding:0;margin-top:2px">↻ 재시도</button>
+      </div>
+      <div class="exch-maint exch-right" style="display:none;flex-direction:column;align-items:flex-end">
+        <div style="font-size:11px;color:#92400E;font-weight:600">조회 불가</div>
+        <div style="font-size:10px;color:var(--text4);margin-top:2px">HTX 점검중</div>
+      </div>
     </div>
 
     <!-- ⑥ 거래소별 거래 비중 -->
@@ -10101,10 +10064,6 @@ function nav(key) {
   /* ── 등락예측 dev 토글 패널: sc-prediction 화면에서만 노출 ── */
   var pnDevPanel = document.getElementById('pn-dev-panel');
   if (pnDevPanel) pnDevPanel.style.display = (cfg.sc === 'sc-prediction') ? 'block' : 'none';
-
-  /* ── 오늘의PCI 상장거래소 dev 토글 패널: sc-pci-info 화면에서만 노출 ── */
-  var pciExchDevPanel = document.getElementById('pci-exch-dev-panel');
-  if (pciExchDevPanel) pciExchDevPanel.style.display = (cfg.sc === 'sc-pci-info') ? 'block' : 'none';
 }
 
 /* ══ MODAL ══ */
@@ -12342,33 +12301,21 @@ function simulatePnAdDeadlineOverrun(mode) {
   }, 1000);
 }
 
-/* 오늘의PCI 상장거래소 — 거래소별 개별 API 상태 (정상/오류/캐시)
-   각 거래소는 독립된 API에서 데이터를 가져오므로 거래소별로 상태가 다를 수 있음
+/* 오늘의PCI 상장거래소 — 거래소별 개별 API 상태 (정상/일시적 오류/거래소 점검)
+   자산현황 보유자산 섹션과 동일한 3-mode 패턴. 각 거래소는 독립된 API에서
+   데이터를 가져오므로 거래소별로 상태가 다를 수 있음 (버튼은 빗썸·코인원만 예시로 노출)
    mode: 'ok'    — 정상
-         'err'   — 일시적 오류 (해당 거래소만 데이터 미수신)
-         'cache' — 장애·캐시 (해당 거래소만 최근 확인값 표시) */
+         'err'   — 일시적 오류 (재조회 가능)
+         'maint' — 거래소 점검 (해당 거래소 자체 문제로 조회 불가) */
 function setPciExch(exchKey, mode) {
   var row = document.querySelector('.exch-row[data-exch="' + exchKey + '"]');
   if (!row) return;
   var isOk    = mode === 'ok';
   var isErr   = mode === 'err';
-  var isCache = mode === 'cache';
+  var isMaint = mode === 'maint';
   row.querySelectorAll('.exch-ok').forEach(function(el)    { el.style.display = isOk    ? '' : 'none'; });
-  row.querySelectorAll('.exch-err').forEach(function(el)   { el.style.display = isErr   ? '' : 'none'; });
-  row.querySelectorAll('.exch-cache').forEach(function(el) { el.style.display = isCache ? '' : 'none'; });
-  var badgeErr   = row.querySelector('.exch-badge-err');
-  var badgeCache = row.querySelector('.exch-badge-cache');
-  if (badgeErr)   badgeErr.style.display   = isErr   ? 'inline-block' : 'none';
-  if (badgeCache) badgeCache.style.display = isCache ? 'inline-block' : 'none';
-  /* 토글 버튼 활성화 표시 */
-  var ACTIVE    = { bg:'var(--primary-l)', color:'var(--primary)', border:'1px solid #BFDBFE' };
-  var INACTIVE  = { bg:'var(--card2)',     color:'var(--text3)',   border:'1px solid var(--border)' };
-  var ERR_ACT   = { bg:'#FEF2F2',          color:'var(--red)',     border:'1px solid #FCA5A5' };
-  var CACHE_ACT = { bg:'#FFFBEB',          color:'#92400E',        border:'1px solid #FDE68A' };
-  function paint(id, s) { var b = document.getElementById(id); if (!b) return; b.style.background = s.bg; b.style.color = s.color; b.style.border = s.border; }
-  paint('pci-exch-' + exchKey + '-ok',    isOk    ? ACTIVE    : INACTIVE);
-  paint('pci-exch-' + exchKey + '-err',   isErr   ? ERR_ACT   : INACTIVE);
-  paint('pci-exch-' + exchKey + '-cache', isCache ? CACHE_ACT : INACTIVE);
+  row.querySelectorAll('.exch-err').forEach(function(el)   { el.style.display = isErr   ? 'flex' : 'none'; });
+  row.querySelectorAll('.exch-maint').forEach(function(el) { el.style.display = isMaint ? 'flex' : 'none'; });
 }
 function setPnCmc(mode) {
   if (mode === 'err') mode = 'err-retry';
