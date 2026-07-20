@@ -4323,18 +4323,11 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
 
     <!-- ⑤ 거래소별 시세 (거래소별 개별 API — 정상/일시적 오류/거래소 점검 3-mode, 자산현황 보유자산과 동일 패턴) -->
     <div data-zone="pci-exchanges" class="stitle">상장 거래소</div>
-    <!-- 거래소 API 상태 (뷰어 토글 예시 — 빗썸 · 코인원 2곳만 시연, 나머지 거래소도 동일 구조) -->
+    <!-- 거래소 API 상태 (뷰어 토글 예시 — 아래 두 거래소 행에만 시연용 토글 배치, 나머지 거래소도 동일 구조) -->
     <div style="display:flex;align-items:center;gap:5px;padding:4px 14px 2px;justify-content:flex-end;flex-wrap:wrap">
-      <span style="font-size:9px;color:var(--text4);margin-right:2px">빗썸</span>
       <button onclick="setPciExch('bithumb','ok')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정상</button>
       <button onclick="setPciExch('bithumb','err')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">일시적 오류</button>
       <button onclick="setPciExch('bithumb','maint')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">거래소 점검</button>
-    </div>
-    <div style="display:flex;align-items:center;gap:5px;padding:2px 14px 6px;justify-content:flex-end;flex-wrap:wrap">
-      <span style="font-size:9px;color:var(--text4);margin-right:2px">코인원</span>
-      <button onclick="setPciExch('coinone','ok')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정상</button>
-      <button onclick="setPciExch('coinone','err')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">일시적 오류</button>
-      <button onclick="setPciExch('coinone','maint')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">거래소 점검</button>
     </div>
     <div class="exch-row" data-exch="bithumb" onclick="navTokenDetail('pci-info','PCI','빗썸','빗')">
       <div class="exch-logo-box" style="background:#FFF3E0">빗</div>
@@ -4351,6 +4344,11 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         <div style="font-size:11px;color:#92400E;font-weight:600">조회 불가</div>
         <div style="font-size:10px;color:var(--text4);margin-top:2px">빗썸 점검중</div>
       </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:5px;padding:4px 14px 2px;justify-content:flex-end;flex-wrap:wrap">
+      <button onclick="setPciExch('coinone','ok')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">정상</button>
+      <button onclick="setPciExch('coinone','err')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">일시적 오류</button>
+      <button onclick="setPciExch('coinone','maint')" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FFFBEB;color:#92400E;border:1px solid #FDE68A;cursor:pointer;font-family:'Noto Sans KR',sans-serif">거래소 점검</button>
     </div>
     <div class="exch-row" data-exch="coinone" onclick="navTokenDetail('pci-info','PCI','코인원','원')">
       <div class="exch-logo-box" style="background:#E3F2FD">원</div>
