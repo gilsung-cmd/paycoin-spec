@@ -3574,16 +3574,22 @@ body {
       <button onclick="setOb3State('both')"        id="ob3-btn-both"        style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">둘 다</button>
     </div>
 
-    <!-- ① 미입력: 배너만 -->
+    <!-- ① 미입력: 투자 수익 분석 + 목표 달성률 각각 독립 카드 -->
     <div id="ob3-empty" data-zone="asset-onboarding">
-      <div style="margin:0 14px 12px;padding:11px 13px;background:var(--card2);border-radius:11px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px">
-        <div style="min-width:0">
-          <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px">수익 · 달성률 확인</div>
-          <div style="font-size:10px;color:var(--text4);line-height:1.5">매수가·목표를 설정하면<br>수익률과 달성률을 볼 수 있어요</div>
+      <!-- 투자 수익 분석 미입력 카드 -->
+      <div class="stitle" data-zone="asset-profit">투자 수익 분석</div>
+      <div class="card" style="padding:11px 13px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:11px;color:var(--text3);line-height:1.6">평균 매수가를 입력하면<br>거래소별 수익을 확인할 수 있어요</div>
+          <button onclick="openProfitModal()" style="flex-shrink:0;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:7px 12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-left:10px">입력하기 →</button>
         </div>
-        <div style="display:flex;gap:5px;flex-shrink:0">
-          <button onclick="showModal('goal-modal')" style="font-size:10px;font-weight:600;color:var(--text2);background:var(--card);border:1px solid var(--border);border-radius:7px;padding:5px 9px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap">목표 설정</button>
-          <button onclick="openProfitModal()" style="font-size:10px;font-weight:600;color:#fff;background:var(--primary);border:none;border-radius:7px;padding:5px 9px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap">매수가 입력</button>
+      </div>
+      <!-- 목표 자산 달성률 미입력 카드 -->
+      <div class="stitle" data-zone="asset-goal">목표 자산 달성률</div>
+      <div class="card" style="padding:11px 13px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:11px;color:var(--text3);line-height:1.6">목표 금액을 설정하면<br>달성률을 확인할 수 있어요</div>
+          <button onclick="showModal('goal-modal')" style="flex-shrink:0;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:7px 12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-left:10px">설정하기 →</button>
         </div>
       </div>
     </div><!-- /ob3-empty -->
