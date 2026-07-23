@@ -955,6 +955,8 @@ body {
 
     <button class="nav-btn" onclick="nav('payment')">💳 결제 <span class="nav-phase-tag">P1</span></button>
     <button class="nav-btn nav-sub" onclick="nav('payment-wc')">↳ 결제 (WC 미연결)</button>
+    <button class="nav-btn nav-sub" onclick="nav('payment-intro')">↳ 결제 안내</button>
+    <button class="nav-btn nav-sub" onclick="nav('payment-withdraw-consent')">↳ 출금이체 동의</button>
 
     <button class="nav-btn" onclick="nav('tx-history')">📋 거래내역</button>
   </div>
@@ -9004,6 +9006,139 @@ EWS DETAIL ═══════════════ -->
   </div>
 </div>
 
+<!-- ═══════════════ PAYMENT INTRO (결제 안내) ═══════════════ -->
+<div class="screen" id="sc-payment-intro">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="back-header"><span class="back-btn" onclick="nav('payment')">‹</span><span class="back-title">결제 안내</span></div>
+  <div class="sbody" style="display:flex;flex-direction:column;background:#fff">
+    <div style="flex:1;overflow-y:auto">
+      <div data-zone="payintro-heading" style="padding:22px 20px 4px">
+        <div style="font-size:19px;font-weight:800;color:var(--text);line-height:1.4;letter-spacing:-.3px">페이코인 앱 결제를 위해<br>준비해 주세요.</div>
+      </div>
+      <div data-zone="payintro-steps" class="card" style="margin:20px 14px 12px;padding:18px">
+        <!-- STEP 1 -->
+        <div style="margin-bottom:20px">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;flex-wrap:wrap">
+            <span style="font-size:11px;font-weight:800;color:var(--primary);letter-spacing:.3px">STEP 1</span>
+            <span style="font-size:14px;font-weight:800;color:var(--text)">거래소 지갑 연동</span>
+          </div>
+          <div style="font-size:12.5px;color:var(--text3);line-height:1.65">결제 지원 거래소 선택 후 PCI, BTC, ETH 중 하나 이상의 자산을 연동해 주세요.</div>
+        </div>
+        <!-- STEP 2 -->
+        <div style="margin-bottom:20px">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;flex-wrap:wrap">
+            <span style="font-size:11px;font-weight:800;color:var(--primary);letter-spacing:.3px">STEP 2</span>
+            <span style="font-size:14px;font-weight:800;color:var(--text)">출금이체 ARS 동의</span>
+            <span style="font-size:11.5px;color:var(--text4)">(최초 1회 진행)</span>
+          </div>
+          <div style="font-size:12.5px;color:var(--text3);line-height:1.65">거래소에 등록된 은행 계좌와 동일한 계좌로 출금이체 동의를 진행해 주세요.</div>
+        </div>
+        <!-- STEP 3 -->
+        <div>
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;flex-wrap:wrap">
+            <span style="font-size:11px;font-weight:800;color:var(--primary);letter-spacing:.3px">STEP 3</span>
+            <span style="font-size:14px;font-weight:800;color:var(--text)">거래소 지원 인증서 발급</span>
+          </div>
+          <div style="font-size:12.5px;color:var(--text3);line-height:1.65;margin-bottom:10px">거래소에서 지원하는 인증서를 미리 발급 해주세요.<br>인증서가 있는 경우, 추가 발급은 필요 없습니다.</div>
+          <div style="font-size:12.5px;color:var(--text2);line-height:1.7">
+            <strong>[코빗 거래소 지원 인증서]</strong><br>
+            <strong style="color:#03C75A">네이버</strong> 또는 <strong style="color:#0046FF">신한 인증서</strong> 중 1개 이상 발급 필수
+          </div>
+        </div>
+      </div>
+      <div data-zone="payintro-dots" style="display:flex;justify-content:center;gap:6px;margin:4px 0 8px">
+        <div style="width:7px;height:7px;border-radius:50%;background:var(--primary)"></div>
+        <div style="width:7px;height:7px;border-radius:50%;background:var(--border2)"></div>
+      </div>
+    </div>
+    <div data-zone="payintro-footer" style="flex-shrink:0;padding:4px 20px 20px">
+      <div id="payintro-check-row" onclick="
+          var box=document.getElementById('payintro-checkbox');
+          var on=box.dataset.checked==='1';
+          box.dataset.checked = on ? '0' : '1';
+          box.style.background = on ? 'var(--card2)' : 'var(--primary)';
+          box.style.borderColor = on ? 'var(--border2)' : 'var(--primary)';
+          box.querySelector('span').style.opacity = on ? '0' : '1';
+        " style="display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 0 14px;cursor:pointer">
+        <div id="payintro-checkbox" data-checked="1" style="width:20px;height:20px;border-radius:6px;background:var(--primary);border:1.5px solid var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s">
+          <span style="color:#fff;font-size:12px;font-weight:800;line-height:1">✓</span>
+        </div>
+        <span style="font-size:13px;color:var(--text2);font-weight:500">다음부터 이 페이지 보지 않기</span>
+      </div>
+      <button class="btn btn-primary" onclick="nav('payment')">다음</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PAYMENT WITHDRAW CONSENT (출금이체 동의) ═══════════════ -->
+<div class="screen" id="sc-payment-withdraw-consent">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="back-header"><span class="back-btn" onclick="nav('payment')">‹</span><span class="back-title">출금이체 동의</span></div>
+  <div class="sbody" style="background:#fff">
+    <div data-zone="wc-heading" style="padding:22px 20px 8px">
+      <div style="font-size:18px;font-weight:800;color:var(--text);line-height:1.4;letter-spacing:-.3px;margin-bottom:10px">결제 대금 지급을 위한<br>출금이체 동의를 진행해주세요.</div>
+      <div style="font-size:12.5px;color:var(--text3);line-height:1.65">등록 과정은 최초 한 번만 진행되며, 계좌 정보가 변경될 경우 다시 등록 과정을 거쳐야 합니다.</div>
+    </div>
+
+    <div data-zone="wc-steps" class="card" style="margin:14px 14px 10px;padding:0">
+      <!-- STEP 1: 계좌인증 -->
+      <div style="padding:18px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div id="wc-step1-circle" style="width:24px;height:24px;border-radius:50%;background:#111827;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+          <div style="font-size:14px;font-weight:800;color:var(--text)">계좌인증</div>
+        </div>
+        <div id="wc-step1-form">
+          <div style="font-size:12px;color:var(--text3);line-height:1.6;margin:0 0 14px 34px">코빗 거래소에 등록된 신한은행 계좌 번호 입력 후 계좌 인증을 진행해 주세요.</div>
+          <div style="margin:0 0 12px 34px">
+            <div style="font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:6px">은행명</div>
+            <div style="display:flex;align-items:center;gap:8px;padding:11px 13px;background:var(--card2);border:1px solid var(--border2);border-radius:10px">
+              <div style="width:20px;height:20px;border-radius:50%;background:#0046FF;color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">S</div>
+              <span style="font-size:13px;font-weight:600;color:var(--text2)">신한은행</span>
+            </div>
+          </div>
+          <div style="margin:0 0 8px 34px">
+            <div style="font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:6px">계좌번호(-없이 입력)</div>
+            <input id="wc-account-input" class="app-input" type="text" inputmode="numeric" placeholder="계좌번호를 입력해 주세요"
+              oninput="
+                var btn=document.getElementById('wc-step1-verify-btn');
+                var has=this.value.trim().length>0;
+                btn.disabled=!has;
+                btn.style.background = has ? '#111827' : '#E5E7EB';
+                btn.style.color = has ? '#fff' : '#9CA3AF';
+                btn.style.cursor = has ? 'pointer' : 'not-allowed';
+              ">
+          </div>
+          <div style="font-size:11px;color:var(--primary);margin:0 0 14px 34px">코빗 거래소에 등록된 실명계좌와 일치해야 합니다.</div>
+          <div style="margin:0 0 0 34px">
+            <button id="wc-step1-verify-btn" class="btn" disabled style="background:#E5E7EB;color:#9CA3AF;cursor:not-allowed" onclick="pciWithdrawVerifyAccount()">계좌인증</button>
+          </div>
+        </div>
+        <div id="wc-step1-done" style="display:none;align-items:center;gap:8px;margin-left:34px">
+          <span style="font-size:13px;font-weight:700;color:var(--green)">✓ 계좌인증이 완료되었습니다</span>
+        </div>
+      </div>
+
+      <div style="height:1px;background:var(--border);margin:0 18px"></div>
+
+      <!-- STEP 2: ARS 인증 -->
+      <div id="wc-step2-wrap" style="padding:18px;opacity:.5;pointer-events:none;transition:opacity .2s">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div id="wc-step2-circle" style="width:24px;height:24px;border-radius:50%;background:var(--card2);color:var(--text4);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border)">2</div>
+          <div style="font-size:14px;font-weight:800;color:var(--text)">ARS 인증</div>
+        </div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.6;margin:0 0 14px 34px">계좌 인증 완료 후 휴대폰 본인 명의 번호로 ARS 인증을 진행해 주세요.</div>
+        <div id="wc-ars-request-btn" style="margin:0 0 0 34px">
+          <button class="btn" style="background:#111827;color:#fff" onclick="pciWithdrawRequestArs()">인증번호 요청하기</button>
+        </div>
+        <div id="wc-ars-code-wrap" style="display:none;margin:0 0 0 34px">
+          <input id="wc-ars-code-input" class="app-input" type="text" inputmode="numeric" placeholder="인증번호 6자리 입력" style="margin-bottom:10px">
+          <button class="btn" style="background:#111827;color:#fff" onclick="pciWithdrawConfirmArs()">동의 완료</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════ WALLET MANAGE ═══════════════ -->
 <div class="screen" id="sc-wallet-manage">
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
@@ -9670,6 +9805,22 @@ EWS DETAIL ═══════════════ -->
   </div>
 </div>
 
+<div class="policy-section" id="pol-payment-intro" data-screen="payment-intro">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_PAYMENT_INTRO <span class="ptag p1">P1</span></div>
+    <div class="policy-title">결제 안내</div>
+    <div class="policy-desc">결제 최초 이용 전 준비 사항 3단계(① 거래소 지갑 연동 ② 출금이체 ARS 동의(최초 1회) ③ 거래소 지원 인증서 발급)를 안내하는 온보딩 화면. "다음부터 이 페이지 보지 않기" 체크 시 재노출하지 않음. "다음" 탭 시 결제 화면으로 이동.</div>
+  </div>
+</div>
+
+<div class="policy-section" id="pol-payment-withdraw-consent" data-screen="payment-withdraw-consent">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_PAYMENT_WITHDRAW_CONSENT <span class="ptag p1">P1</span></div>
+    <div class="policy-title">결제 — 출금이체 동의</div>
+    <div class="policy-desc">결제 대금 지급을 위한 출금이체 동의 등록 화면. 최초 1회만 진행하며 계좌 정보 변경 시 재등록 필요. 1단계 계좌인증(거래소 등록 은행 계좌 입력 후 인증) 완료 전까지 2단계 ARS 인증은 비활성화. 계좌인증 완료 시 2단계 활성화, ARS 인증번호 확인 완료 시 동의 완료 처리 후 결제 화면으로 복귀.</div>
+  </div>
+</div>
+
 <!-- ── WALLET MANAGE ── -->
 <div class="policy-section" id="pol-wallet-manage" data-screen="wallet-manage">
   <div class="policy-header">
@@ -9857,6 +10008,8 @@ EWS DETAIL ═══════════════ -->
 <tr><td><span class="key">news-detail</span><button class="guide-copy-btn" onclick="copyText('news-detail')">복사</button></td><td>소식 상세</td></tr>
 <tr><td><span class="key">payment</span><button class="guide-copy-btn" onclick="copyText('payment')">복사</button></td><td>결제</td></tr>
 <tr><td><span class="key">payment-wc</span><button class="guide-copy-btn" onclick="copyText('payment-wc')">복사</button></td><td>결제(WC 미연결)</td></tr>
+<tr><td><span class="key">payment-intro</span><button class="guide-copy-btn" onclick="copyText('payment-intro')">복사</button></td><td>결제 안내</td></tr>
+<tr><td><span class="key">payment-withdraw-consent</span><button class="guide-copy-btn" onclick="copyText('payment-withdraw-consent')">복사</button></td><td>출금이체 동의</td></tr>
 <tr><td><span class="key">wallet-manage</span><button class="guide-copy-btn" onclick="copyText('wallet-manage')">복사</button></td><td>지갑 관리</td></tr>
 <tr><td><span class="key">policy</span><button class="guide-copy-btn" onclick="copyText('policy')">복사</button></td><td>정책 및 기타 <span style="font-size:9px;color:var(--text4)">(Policy 시트에서 관리)</span></td></tr>
           </table>
@@ -10025,6 +10178,8 @@ const SCREEN_MAP = {
   'news-detail':  { sc:'sc-news-detail',  pol:'pol-news-detail',  ni:10 },
   'payment':      { sc:'sc-payment',      pol:'pol-payment',      ni:11 },
   'payment-wc':   { sc:'sc-payment-wc',   pol:'pol-payment-wc',   ni:11 },
+  'payment-intro':             { sc:'sc-payment-intro',             pol:'pol-payment-intro',             ni:11 },
+  'payment-withdraw-consent':  { sc:'sc-payment-withdraw-consent',  pol:'pol-payment-withdraw-consent',  ni:11 },
   'wallet-manage':{ sc:'sc-wallet-manage', pol:'pol-wallet-manage', ni:12 },
   'tx-history':   { sc:'sc-tx-history',   pol:'pol-tx-history',   ni:13 },
   'prediction2':  { sc:'sc-prediction2',  pol:'pol-prediction2',  ni:14 },
@@ -12710,6 +12865,34 @@ function navTokenDetail(from, ticker, exchName, exchLabel) {
   nav('token-detail');
 }
 
+/* ══ 출금이체 동의 — 계좌인증 → ARS 인증 2단계 플로우 ══ */
+function pciWithdrawVerifyAccount() {
+  var btn = document.getElementById('wc-step1-verify-btn');
+  if (btn.disabled) return;
+  showToast('계좌 인증이 완료되었습니다.');
+  document.getElementById('wc-step1-form').style.display = 'none';
+  document.getElementById('wc-step1-done').style.display = 'flex';
+  document.getElementById('wc-step1-circle').style.background = 'var(--green)';
+  var step2 = document.getElementById('wc-step2-wrap');
+  step2.style.opacity = '1';
+  step2.style.pointerEvents = '';
+  var circle2 = document.getElementById('wc-step2-circle');
+  circle2.style.background = '#111827';
+  circle2.style.color = '#fff';
+  circle2.style.border = 'none';
+}
+function pciWithdrawRequestArs() {
+  document.getElementById('wc-ars-request-btn').style.display = 'none';
+  document.getElementById('wc-ars-code-wrap').style.display = 'block';
+  showToast('ARS 인증 전화가 발신되었습니다.');
+}
+function pciWithdrawConfirmArs() {
+  var code = document.getElementById('wc-ars-code-input').value.trim();
+  if (!code) { showToast('인증번호를 입력해 주세요.'); return; }
+  showToast('출금이체 동의가 완료되었습니다.');
+  nav('payment');
+}
+
 /* ══ 지갑 잔액 조회 오류 상태 토글 ══ */
 function setWalletError(state) {
   var isErr = (state !== 'none');
@@ -13216,7 +13399,7 @@ const QNA = {
   apiUrl: '',
   filter: 'all',
   items: [],
-  LABELS: {'home':'메인 홈','home-old':'메인 홈 (구)','wallet':'지갑','wallet-empty':'지갑(미연결)','wallet-pci':'지갑상세(PCI)','wallet-other':'지갑 상세 (WC 지갑)','asset':'자산현황','pci-info':'오늘의 PCI','token-detail':'토큰 상세','benefits':'혜택','prediction':'등락 예측','news':'최근 소식','news-detail':'소식 상세','payment':'결제','wallet-manage':'지갑 관리','tx-history':'거래내역'},
+  LABELS: {'home':'메인 홈','home-old':'메인 홈 (구)','wallet':'지갑','wallet-empty':'지갑(미연결)','wallet-pci':'지갑상세(PCI)','wallet-other':'지갑 상세 (WC 지갑)','asset':'자산현황','pci-info':'오늘의 PCI','token-detail':'토큰 상세','benefits':'혜택','prediction':'등락 예측','news':'최근 소식','news-detail':'소식 상세','payment':'결제','payment-wc':'결제(WC 미연결)','payment-intro':'결제 안내','payment-withdraw-consent':'출금이체 동의','wallet-manage':'지갑 관리','tx-history':'거래내역'},
   curScreen: function(){ var s=document.querySelector('.screen.active'); return s?s.id.replace('sc-',''):'home'; },
   curLabel: function(){ return this.LABELS[this.curScreen()]||this.curScreen(); },
   init: function(){ try{ this.apiUrl=localStorage.getItem('qna_api')||''; }catch(e){} }
