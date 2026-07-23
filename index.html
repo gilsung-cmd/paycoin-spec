@@ -9020,8 +9020,8 @@ EWS DETAIL ═══════════════ -->
       <button id="pci-consent-done-off" onclick="setPciConsentDone(false)" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;cursor:pointer;font-family:'Noto Sans KR',sans-serif">미완료</button>
       <button id="pci-consent-done-on" onclick="setPciConsentDone(true)" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">완료</button>
     </div>
-    <div style="display:flex;align-items:center;gap:5px;padding:2px 14px 4px;justify-content:flex-end;flex-wrap:wrap">
-      <span style="font-size:9px;color:var(--text4);margin-right:2px">계좌</span>
+    <div id="pci-acct-match-row" style="display:flex;align-items:center;gap:5px;padding:2px 14px 4px;justify-content:flex-end;flex-wrap:wrap;opacity:.35;pointer-events:none;transition:opacity .15s">
+      <span style="font-size:9px;color:var(--text4);margin-right:2px">계좌<span style="opacity:.7">(동의완료 시)</span></span>
       <button id="pci-acct-match-ok" onclick="setPciAccountMatch(true)" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--green-l);color:var(--green);border:1px solid #A7F3D0;cursor:pointer;font-family:'Noto Sans KR',sans-serif">일치</button>
       <button id="pci-acct-match-mismatch" onclick="setPciAccountMatch(false)" style="font-size:9px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--card2);color:var(--text3);border:1px solid var(--border);cursor:pointer;font-family:'Noto Sans KR',sans-serif">불일치</button>
     </div>
@@ -13085,6 +13085,10 @@ function setPciConsentDone(done) {
   var offBtn = document.getElementById('pci-consent-done-off');
   if (onBtn)  { onBtn.style.background  = done ? 'var(--green-l)' : 'var(--card2)'; onBtn.style.color  = done ? 'var(--green)' : 'var(--text3)'; onBtn.style.border  = done ? '1px solid #A7F3D0' : '1px solid var(--border)'; }
   if (offBtn) { offBtn.style.background = !done ? '#FEF2F2' : 'var(--card2)';      offBtn.style.color = !done ? 'var(--red)'   : 'var(--text3)'; offBtn.style.border = !done ? '1px solid #FCA5A5' : '1px solid var(--border)'; }
+  /* 동의가 없으면 대조할 계좌 자체가 없으므로 "계좌 일치" 토글은 의미가 없음 — 비활성화 */
+  var acctRow = document.getElementById('pci-acct-match-row');
+  if (acctRow) { acctRow.style.opacity = done ? '1' : '.35'; acctRow.style.pointerEvents = done ? '' : 'none'; }
+  if (!done) { setPciAccountMatch(true); }
 }
 
 function setPciAccountMatch(match) {
