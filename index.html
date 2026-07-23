@@ -957,6 +957,7 @@ body {
     <button class="nav-btn nav-sub" onclick="nav('payment-wc')">↳ 결제 (WC 미연결)</button>
     <button class="nav-btn nav-sub" onclick="nav('payment-intro')">↳ 결제 안내</button>
     <button class="nav-btn nav-sub" onclick="nav('payment-withdraw-consent')">↳ 출금이체 동의</button>
+    <button class="nav-btn nav-sub" onclick="nav('payment-charge-complete')">↳ 오프라인 충전완료</button>
 
     <button class="nav-btn" onclick="nav('tx-history')">📋 거래내역</button>
   </div>
@@ -9139,6 +9140,43 @@ EWS DETAIL ═══════════════ -->
   </div>
 </div>
 
+<!-- ═══════════════ PAYMENT CHARGE COMPLETE (오프라인 충전완료) ═══════════════ -->
+<div class="screen" id="sc-payment-charge-complete">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="sbody" style="background:#fff;display:flex;flex-direction:column">
+    <div style="flex:1;overflow-y:auto">
+      <div data-zone="chgdone-hero" style="display:flex;flex-direction:column;align-items:center;padding:48px 24px 24px;text-align:center">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:16px;flex-shrink:0">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div style="font-size:16px;font-weight:800;color:var(--text)">충전이 완료되었습니다.</div>
+      </div>
+
+      <div data-zone="chgdone-detail" class="card" style="margin:8px 14px 14px;padding:0;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 18px">
+          <span style="font-size:13px;font-weight:700;color:var(--text2)">충전 금액</span>
+          <span style="font-size:17px;font-weight:800;color:var(--text)">34,000원</span>
+        </div>
+        <div style="background:var(--card2);padding:16px 18px;border-top:1px solid var(--border)">
+          <div style="font-size:12px;font-weight:700;color:var(--text3);margin-bottom:10px">상세 정보</div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--text3)">충전 수단</span><span style="font-size:12px;font-weight:600;color:var(--text2)">PCI</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--text3)">충전 금액</span><span style="font-size:12px;font-weight:600;color:var(--text2)">55,000원</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--text3)">매도 수량</span><span style="font-size:12px;font-weight:600;color:var(--text2)">236.82746289 PCI</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--text3)">충전 시간</span><span style="font-size:12px;font-weight:600;color:var(--text2)">2025.05.09 12:01:24</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--text3)">충전 후 잔액</span><span style="font-size:12px;font-weight:700;color:var(--primary)">51,000원</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--text3)">충전 계좌</span><span style="font-size:12px;font-weight:600;color:var(--text2)">신한은행 110-***-***516 (홍*동)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div data-zone="chgdone-actions" style="flex-shrink:0;display:flex;gap:8px;padding:4px 14px 20px">
+      <button class="btn btn-secondary" style="flex:1" onclick="nav('home')">처음으로</button>
+      <button class="btn btn-primary" style="flex:1" onclick="nav('payment')">바로 결제하기</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════ WALLET MANAGE ═══════════════ -->
 <div class="screen" id="sc-wallet-manage">
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
@@ -9821,6 +9859,14 @@ EWS DETAIL ═══════════════ -->
   </div>
 </div>
 
+<div class="policy-section" id="pol-payment-charge-complete" data-screen="payment-charge-complete">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_PAYMENT_CHARGE_COMPLETE <span class="ptag p1">P1</span></div>
+    <div class="policy-title">결제 — 오프라인 충전완료</div>
+    <div class="policy-desc">오프라인 충전(PCI 매도 후 원화 충전) 완료 결과 화면. 충전 금액 요약 + 상세 정보(충전 수단·충전 금액·매도 수량·충전 시간·충전 후 잔액·충전 계좌)를 표시. 뒤로가기 없이 "처음으로"(메인 홈 이동) 또는 "바로 결제하기"(결제 화면 이동) 중 선택.</div>
+  </div>
+</div>
+
 <!-- ── WALLET MANAGE ── -->
 <div class="policy-section" id="pol-wallet-manage" data-screen="wallet-manage">
   <div class="policy-header">
@@ -10010,6 +10056,7 @@ EWS DETAIL ═══════════════ -->
 <tr><td><span class="key">payment-wc</span><button class="guide-copy-btn" onclick="copyText('payment-wc')">복사</button></td><td>결제(WC 미연결)</td></tr>
 <tr><td><span class="key">payment-intro</span><button class="guide-copy-btn" onclick="copyText('payment-intro')">복사</button></td><td>결제 안내</td></tr>
 <tr><td><span class="key">payment-withdraw-consent</span><button class="guide-copy-btn" onclick="copyText('payment-withdraw-consent')">복사</button></td><td>출금이체 동의</td></tr>
+<tr><td><span class="key">payment-charge-complete</span><button class="guide-copy-btn" onclick="copyText('payment-charge-complete')">복사</button></td><td>오프라인 충전완료</td></tr>
 <tr><td><span class="key">wallet-manage</span><button class="guide-copy-btn" onclick="copyText('wallet-manage')">복사</button></td><td>지갑 관리</td></tr>
 <tr><td><span class="key">policy</span><button class="guide-copy-btn" onclick="copyText('policy')">복사</button></td><td>정책 및 기타 <span style="font-size:9px;color:var(--text4)">(Policy 시트에서 관리)</span></td></tr>
           </table>
@@ -10180,6 +10227,7 @@ const SCREEN_MAP = {
   'payment-wc':   { sc:'sc-payment-wc',   pol:'pol-payment-wc',   ni:11 },
   'payment-intro':             { sc:'sc-payment-intro',             pol:'pol-payment-intro',             ni:11 },
   'payment-withdraw-consent':  { sc:'sc-payment-withdraw-consent',  pol:'pol-payment-withdraw-consent',  ni:11 },
+  'payment-charge-complete':   { sc:'sc-payment-charge-complete',   pol:'pol-payment-charge-complete',   ni:11 },
   'wallet-manage':{ sc:'sc-wallet-manage', pol:'pol-wallet-manage', ni:12 },
   'tx-history':   { sc:'sc-tx-history',   pol:'pol-tx-history',   ni:13 },
   'prediction2':  { sc:'sc-prediction2',  pol:'pol-prediction2',  ni:14 },
@@ -13399,7 +13447,7 @@ const QNA = {
   apiUrl: '',
   filter: 'all',
   items: [],
-  LABELS: {'home':'메인 홈','home-old':'메인 홈 (구)','wallet':'지갑','wallet-empty':'지갑(미연결)','wallet-pci':'지갑상세(PCI)','wallet-other':'지갑 상세 (WC 지갑)','asset':'자산현황','pci-info':'오늘의 PCI','token-detail':'토큰 상세','benefits':'혜택','prediction':'등락 예측','news':'최근 소식','news-detail':'소식 상세','payment':'결제','payment-wc':'결제(WC 미연결)','payment-intro':'결제 안내','payment-withdraw-consent':'출금이체 동의','wallet-manage':'지갑 관리','tx-history':'거래내역'},
+  LABELS: {'home':'메인 홈','home-old':'메인 홈 (구)','wallet':'지갑','wallet-empty':'지갑(미연결)','wallet-pci':'지갑상세(PCI)','wallet-other':'지갑 상세 (WC 지갑)','asset':'자산현황','pci-info':'오늘의 PCI','token-detail':'토큰 상세','benefits':'혜택','prediction':'등락 예측','news':'최근 소식','news-detail':'소식 상세','payment':'결제','payment-wc':'결제(WC 미연결)','payment-intro':'결제 안내','payment-withdraw-consent':'출금이체 동의','payment-charge-complete':'오프라인 충전완료','wallet-manage':'지갑 관리','tx-history':'거래내역'},
   curScreen: function(){ var s=document.querySelector('.screen.active'); return s?s.id.replace('sc-',''):'home'; },
   curLabel: function(){ return this.LABELS[this.curScreen()]||this.curScreen(); },
   init: function(){ try{ this.apiUrl=localStorage.getItem('qna_api')||''; }catch(e){} }
