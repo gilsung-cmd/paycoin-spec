@@ -9322,7 +9322,7 @@ EWS DETAIL ═══════════════ -->
       </div>
       <!-- 코인 목록 (정상) -->
       <!-- 코인 행 — 코인명 고정, 수량만 오류 상태별 교체 -->
-      <div style="border-top:1px solid var(--border)">
+      <div id="wm-bithumb-list" style="border-top:1px solid var(--border)">
         <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border)">
           <div style="width:28px;height:28px;border-radius:50%;background:#EEF2FF;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">🪙</div>
           <div style="flex:1"><span style="font-size:13px;font-weight:600;color:var(--text)">페이코인</span><span style="font-size:11px;color:var(--text4);margin-left:4px">PCI</span></div>
@@ -9341,7 +9341,7 @@ EWS DETAIL ═══════════════ -->
         </div>
       </div>
       <!-- 접어두기 -->
-      <div style="padding:11px 14px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--text3)">
+      <div onclick="wmToggleCollapse('wm-bithumb-list', this)" style="padding:11px 14px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--text3)">
         ∧ 접어두기
       </div>
     </div>
@@ -9355,7 +9355,7 @@ EWS DETAIL ═══════════════ -->
         <div style="font-size:14px;font-weight:700;color:var(--text);flex:1">코인원</div>
         <button style="font-size:11px;font-weight:600;color:var(--text2);background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:4px 11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap">+ 지갑 추가</button>
       </div>
-      <div style="border-top:1px solid var(--border)">
+      <div id="wm-coinone-list" style="border-top:1px solid var(--border)">
         <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border)">
           <div style="width:28px;height:28px;border-radius:50%;background:#EEF2FF;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">🪙</div>
           <div style="flex:1">
@@ -9365,7 +9365,7 @@ EWS DETAIL ═══════════════ -->
           <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'JetBrains Mono',monospace">0.77000001</div>
         </div>
       </div>
-      <div style="padding:11px 14px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--text3)">
+      <div onclick="wmToggleCollapse('wm-coinone-list', this)" style="padding:11px 14px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--text3)">
         ∧ 접어두기
       </div>
     </div>
@@ -9379,7 +9379,7 @@ EWS DETAIL ═══════════════ -->
         <div style="font-size:14px;font-weight:700;color:var(--text);flex:1">코빗</div>
         <button style="font-size:11px;font-weight:600;color:var(--text2);background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:4px 11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap">+ 지갑 추가</button>
       </div>
-      <div style="border-top:1px solid var(--border)">
+      <div id="wm-korbit-list" style="border-top:1px solid var(--border)">
         <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border)">
           <div style="width:28px;height:28px;border-radius:50%;background:#EEF2FF;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0">Ξ</div>
           <div style="flex:1">
@@ -9413,7 +9413,7 @@ EWS DETAIL ═══════════════ -->
           <div style="font-size:13px;font-weight:600;color:var(--text);font-family:'JetBrains Mono',monospace">0</div>
         </div>
       </div>
-      <div style="padding:11px 14px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--text3)">
+      <div onclick="wmToggleCollapse('wm-korbit-list', this)" style="padding:11px 14px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--text3)">
         ∧ 접어두기
       </div>
     </div>
@@ -13159,6 +13159,15 @@ function pciChargeSubmit() {
   var btn = document.getElementById('charge-next-btn');
   if (btn.disabled) return;
   nav('payment-charge-done');
+}
+
+/* ══ 지갑 관리 — 거래소 코인목록 접어두기/펼치기 ══ */
+function wmToggleCollapse(listId, btnEl) {
+  var list = document.getElementById(listId);
+  if (!list) return;
+  var collapsed = list.style.display === 'none';
+  list.style.display = collapsed ? '' : 'none';
+  btnEl.textContent = collapsed ? '∧ 접어두기' : '⌄ 펼치기';
 }
 
 /* ══ 지갑 잔액 조회 오류 상태 토글 ══ */
