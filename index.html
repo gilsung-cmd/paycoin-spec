@@ -8210,7 +8210,10 @@ EWS DETAIL ═══════════════ -->
         <!-- API 오류 상태 -->
         <div id="pay-balance-error" style="display:none">
           <div style="font-size:17px;font-weight:800;color:var(--text3);letter-spacing:-.5px">--</div>
-          <div style="font-size:10px;color:var(--text4);margin-top:2px">잔액 조회 실패 · 결제는 정상 진행돼요</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:3px">
+            <div style="font-size:10px;color:var(--text4)">잔액 조회 실패</div>
+            <button onclick="showToast('예상 잔액 재조회 중...')" style="font-size:10px;font-weight:700;color:var(--primary);background:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;padding:0">↻ 재시도</button>
+          </div>
         </div>
         <div id="pay-balance-tip" style="display:none;position:absolute;bottom:calc(100% + 8px);left:14px;width:230px;padding:10px 12px;background:#1F2937;border-radius:10px;font-size:10px;color:#fff;line-height:1.8;z-index:50;box-shadow:0 4px 16px rgba(0,0,0,.2)">
           결제하고 남은 금액을 합산한 예상 잔액이에요. 실제 잔액과 차이가 있을 수 있어요.
