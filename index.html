@@ -4763,7 +4763,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
 -->
 <div class="screen" id="sc-token-detail">
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
-  <div class="back-header"><span class="back-btn" onclick="nav('pci-info')">‹</span><span class="back-title">{코인명} 상세</span><!-- 개발: 진입한 코인명으로 동적 치환 --></div>
+  <div class="back-header"><span class="back-btn" onclick="nav('pci-info')">‹</span><span class="back-title">{코인명} 정보</span><!-- 개발: 진입한 코인명으로 동적 치환 --></div>
   <div class="sbody">
     <div data-zone="token-header" style="padding:14px 14px 10px">
       <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:12px;display:flex;align-items:center;gap:12px">
@@ -13036,7 +13036,7 @@ function navTokenDetail(from, ticker, exchName, exchLabel) {
   var coinName = coinNames[ticker] || ticker;
 
   var titleEl = document.getElementById('token-back-title');
-  if (titleEl) titleEl.textContent = coinName + ' 상세';
+  if (titleEl) titleEl.textContent = coinName + ' 정보';
 
   var nameEl = document.getElementById('token-coin-name');
   if (nameEl) nameEl.innerHTML = coinName + ' <span style="font-size:12px;font-weight:500;color:var(--text4)">(' + ticker + ')</span>';
