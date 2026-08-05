@@ -3687,23 +3687,29 @@ body {
         <span>목표 자산 달성률</span>
         <button onclick="showModal('goal-modal')" id="goal-btn" style="font-size:9px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:5px;padding:2px 8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">목표 수정</button>
       </div>
-      <div class="card" style="padding:13px">
-        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:7px">
-          <div>
-            <div style="font-size:10px;color:var(--text4);margin-bottom:2px">현재 자산</div>
-            <div style="font-size:15px;font-weight:800;color:var(--text);letter-spacing:-0.5px"><span id="asset-goal-current">12,345,678</span><span style="font-size:11px;font-weight:500;color:var(--text3)"> 원</span></div>
+      <div class="card" style="padding:13px" id="goal-card">
+        <div id="goal-body-filled">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:7px">
+            <div>
+              <div style="font-size:10px;color:var(--text4);margin-bottom:2px">현재 자산</div>
+              <div style="font-size:15px;font-weight:800;color:var(--text);letter-spacing:-0.5px"><span id="asset-goal-current">12,345,678</span><span style="font-size:11px;font-weight:500;color:var(--text3)"> 원</span></div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:10px;color:var(--text4);margin-bottom:2px">목표 자산</div>
+              <div id="goal-target-amt" style="font-size:13px;font-weight:700;color:var(--text3);letter-spacing:-0.5px">20,000,000<span style="font-size:10px;font-weight:500"> 원</span></div>
+            </div>
           </div>
-          <div style="text-align:right">
-            <div style="font-size:10px;color:var(--text4);margin-bottom:2px">목표 자산</div>
-            <div id="goal-target-amt" style="font-size:13px;font-weight:700;color:var(--text3);letter-spacing:-0.5px">20,000,000<span style="font-size:10px;font-weight:500"> 원</span></div>
+          <div class="prog-wrap" style="margin-bottom:6px">
+            <div id="goal-prog-bar" class="prog-bar" style="width:61.7%;background:linear-gradient(90deg,var(--primary),#3B82F6)"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div id="goal-remaining" style="font-size:10px;color:var(--text4)">7,654,322원 남음</div>
+            <div id="goal-pct-text" style="font-size:12px;font-weight:800;color:var(--primary)">61.7%</div>
           </div>
         </div>
-        <div class="prog-wrap" style="margin-bottom:6px">
-          <div id="goal-prog-bar" class="prog-bar" style="width:61.7%;background:linear-gradient(90deg,var(--primary),#3B82F6)"></div>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div id="goal-remaining" style="font-size:10px;color:var(--text4)">7,654,322원 남음</div>
-          <div id="goal-pct-text" style="font-size:12px;font-weight:800;color:var(--primary)">61.7%</div>
+        <div id="goal-body-empty" style="display:none;align-items:center;justify-content:space-between">
+          <div style="font-size:11px;color:var(--text3);line-height:1.6">목표 금액을 설정하면<br>달성률을 확인할 수 있어요</div>
+          <button onclick="showModal('goal-modal')" style="flex-shrink:0;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:8px;padding:7px 12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-left:10px">설정하기 →</button>
         </div>
       </div>
     </div><!-- /ob3-both -->
@@ -3954,6 +3960,37 @@ body {
       </div>
       <button onclick="saveGoal()" class="btn btn-primary" style="margin-bottom:8px">저장</button>
       <button onclick="closeModal('goal-modal')" class="btn btn-ghost">취소</button>
+      <div style="text-align:center;margin-top:10px">
+        <span onclick="showModal('delete-goal-modal')" style="font-size:11px;color:var(--text4);text-decoration:underline;cursor:pointer">목표 삭제</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 매수가 삭제 확인 팝업 -->
+  <div class="overlay" id="delete-avgbuy-modal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div style="text-align:center;margin-bottom:18px">
+        <div style="font-size:36px;margin-bottom:8px">🗑️</div>
+        <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px"><span id="delete-avgbuy-coin">PCI</span> 매수가를 삭제할까요?</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.7">삭제하면 해당 코인의 수익 정보가<br>더 이상 표시되지 않아요.<br>언제든 다시 입력할 수 있어요.</div>
+      </div>
+      <button class="btn btn-danger" style="margin-bottom:8px" onclick="confirmDeleteAvgBuy()">삭제</button>
+      <button class="btn btn-ghost" onclick="closeModal('delete-avgbuy-modal')">취소</button>
+    </div>
+  </div>
+
+  <!-- 목표 삭제 확인 팝업 -->
+  <div class="overlay" id="delete-goal-modal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div style="text-align:center;margin-bottom:18px">
+        <div style="font-size:36px;margin-bottom:8px">🗑️</div>
+        <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px">목표를 삭제할까요?</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.7">목표 금액을 삭제하면<br>달성률 정보가 더 이상 표시되지 않아요.<br>언제든 다시 설정할 수 있어요.</div>
+      </div>
+      <button class="btn btn-danger" style="margin-bottom:8px" onclick="confirmDeleteGoal()">삭제</button>
+      <button class="btn btn-ghost" onclick="closeModal('delete-goal-modal')">취소</button>
     </div>
   </div>
 </div>
@@ -10473,11 +10510,16 @@ function closeModal(id) { document.getElementById(id).classList.remove('show'); 
         var isLast = i === g.wallets.length - 1;
         var qtyLabel = (w.coin==='BTC'||w.coin==='ETH') ? fmtDec(w.getQty(),6)+' '+w.coin : fmt(w.getQty())+' '+w.coin;
         var saved = _avgBuy[w.key] != null ? _avgBuy[w.key] : '';
+        var delBtn = saved !== '' ?
+          '<button onclick="promptDeleteAvgBuy(\''+w.key+'\',\''+w.coin+'\')" title="매수가 삭제" style="width:20px;height:20px;flex-shrink:0;border-radius:50%;background:var(--card2);border:1px solid var(--border);font-size:10px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text4)">🗑</button>' : '';
         html +=
           '<div style="'+(isLast?'':'margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);')+'">' +
             '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">' +
               '<span style="font-size:11px;font-weight:700;color:var(--text)">'+w.coin+'</span>' +
-              '<span style="font-size:10px;color:var(--text4)">보유 '+qtyLabel+'</span>' +
+              '<div style="display:flex;align-items:center;gap:6px">' +
+                '<span style="font-size:10px;color:var(--text4)">보유 '+qtyLabel+'</span>' +
+                delBtn +
+              '</div>' +
             '</div>' +
             '<div style="display:flex;align-items:center;gap:8px">' +
               '<div style="flex:1"><div style="font-size:9px;color:var(--text4);margin-bottom:3px">평균 매수가 (원)</div>' +
@@ -10504,6 +10546,25 @@ function closeModal(id) { document.getElementById(id).classList.remove('show'); 
     setProfitView('filled');
     closeModal('profit-modal');
     showToast('저장되었습니다 ✓');
+  };
+
+  /* 코인별 매수가 개별 삭제 */
+  var _deleteAvgBuyKey = null;
+  window.promptDeleteAvgBuy = function(key, coinLabel) {
+    _deleteAvgBuyKey = key;
+    var coinEl = document.getElementById('delete-avgbuy-coin');
+    if(coinEl) coinEl.textContent = coinLabel;
+    showModal('delete-avgbuy-modal');
+  };
+  window.confirmDeleteAvgBuy = function() {
+    if(_deleteAvgBuyKey) {
+      _avgBuy[_deleteAvgBuyKey] = null;
+      _deleteAvgBuyKey = null;
+    }
+    closeModal('delete-avgbuy-modal');
+    renderProfitCard();
+    openProfitModal();
+    showToast('매수가가 삭제되었습니다');
   };
 
   /* 카드 렌더링 */
@@ -10627,6 +10688,7 @@ function updateGoalPreview() {
 function saveGoal() {
   const val = parseInt(document.getElementById('goal-input').value);
   if (!val || val <= 0) { showToast('올바른 금액을 입력해주세요'); return; }
+  setGoalView('filled');
   _goalAmount = val;
   const pct = Math.min((_CURRENT_ASSET / val) * 100, 100);
   const remaining = Math.max(val - _CURRENT_ASSET, 0);
@@ -10645,6 +10707,13 @@ function saveGoal() {
   document.getElementById('goal-preview').style.display = 'none';
   closeModal('goal-modal');
   showToast('목표 자산이 설정되었습니다 🎯');
+}
+
+function confirmDeleteGoal() {
+  setGoalView('empty');
+  closeModal('delete-goal-modal');
+  closeModal('goal-modal');
+  showToast('목표가 삭제되었습니다');
 }
 document.addEventListener('click', e => {
   if (e.target.classList.contains('overlay')) e.target.classList.remove('show');
