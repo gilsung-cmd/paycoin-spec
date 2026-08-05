@@ -3971,11 +3971,11 @@ body {
     <div class="modal">
       <div class="modal-handle"></div>
       <div style="text-align:center;margin-bottom:18px">
-        <div style="font-size:36px;margin-bottom:8px">🗑️</div>
-        <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px"><span id="delete-avgbuy-coin">PCI</span> 매수가를 삭제할까요?</div>
-        <div style="font-size:12px;color:var(--text3);line-height:1.7">삭제하면 해당 코인의 수익 정보가<br>더 이상 표시되지 않아요.<br>언제든 다시 입력할 수 있어요.</div>
+        <div style="font-size:36px;margin-bottom:8px">🔓</div>
+        <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px"><span id="delete-avgbuy-coin">PCI</span> 매수가를 해제할까요?</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.7">해제하면 등록된 매수가가 사라지고<br>이 코인의 수익 정보를 더 이상<br>확인할 수 없어요. 언제든 다시 등록할 수 있어요.</div>
       </div>
-      <button class="btn btn-danger" style="margin-bottom:8px" onclick="confirmDeleteAvgBuy()">삭제</button>
+      <button class="btn btn-danger" style="margin-bottom:8px" onclick="confirmDeleteAvgBuy()">해제</button>
       <button class="btn btn-ghost" onclick="closeModal('delete-avgbuy-modal')">취소</button>
     </div>
   </div>
@@ -10510,19 +10510,20 @@ function closeModal(id) { document.getElementById(id).classList.remove('show'); 
         var isLast = i === g.wallets.length - 1;
         var qtyLabel = (w.coin==='BTC'||w.coin==='ETH') ? fmtDec(w.getQty(),6)+' '+w.coin : fmt(w.getQty())+' '+w.coin;
         var saved = _avgBuy[w.key] != null ? _avgBuy[w.key] : '';
-        var delBtn = saved !== '' ?
-          '<button onclick="promptDeleteAvgBuy(\''+w.key+'\',\''+w.coin+'\')" title="매수가 삭제" style="width:20px;height:20px;flex-shrink:0;border-radius:50%;background:var(--card2);border:1px solid var(--border);font-size:10px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text4)">🗑</button>' : '';
+        var releaseLink = saved !== '' ?
+          '<span onclick="promptDeleteAvgBuy(\''+w.key+'\',\''+w.coin+'\')" style="font-size:9px;color:var(--text4);text-decoration:underline;cursor:pointer">매수가 해제</span>' : '';
         html +=
           '<div style="'+(isLast?'':'margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);')+'">' +
             '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">' +
               '<span style="font-size:11px;font-weight:700;color:var(--text)">'+w.coin+'</span>' +
-              '<div style="display:flex;align-items:center;gap:6px">' +
-                '<span style="font-size:10px;color:var(--text4)">보유 '+qtyLabel+'</span>' +
-                delBtn +
-              '</div>' +
+              '<span style="font-size:10px;color:var(--text4)">보유 '+qtyLabel+'</span>' +
             '</div>' +
             '<div style="display:flex;align-items:center;gap:8px">' +
-              '<div style="flex:1"><div style="font-size:9px;color:var(--text4);margin-bottom:3px">평균 매수가 (원)</div>' +
+              '<div style="flex:1">' +
+                '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">' +
+                  '<span style="font-size:9px;color:var(--text4)">평균 매수가 (원)</span>' +
+                  releaseLink +
+                '</div>' +
                 '<input data-key="'+w.key+'" type="number" placeholder="매수가 입력" value="'+saved+'" ' +
                   'style="width:100%;box-sizing:border-box;padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:\'Noto Sans KR\',sans-serif;color:var(--text);background:var(--card);outline:none" ' +
                   'onfocus="this.style.borderColor=\'var(--primary)\'" onblur="this.style.borderColor=\'var(--border)\'"></div>' +
@@ -10548,7 +10549,7 @@ function closeModal(id) { document.getElementById(id).classList.remove('show'); 
     showToast('저장되었습니다 ✓');
   };
 
-  /* 코인별 매수가 개별 삭제 */
+  /* 코인별 매수가 개별 해제 */
   var _deleteAvgBuyKey = null;
   window.promptDeleteAvgBuy = function(key, coinLabel) {
     _deleteAvgBuyKey = key;
@@ -10564,7 +10565,7 @@ function closeModal(id) { document.getElementById(id).classList.remove('show'); 
     closeModal('delete-avgbuy-modal');
     renderProfitCard();
     openProfitModal();
-    showToast('매수가가 삭제되었습니다');
+    showToast('매수가가 해제되었습니다');
   };
 
   /* 카드 렌더링 */
