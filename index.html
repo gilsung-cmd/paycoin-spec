@@ -5237,7 +5237,8 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         <span>시작하기</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
-      <div style="text-align:center;margin-top:8px;font-size:10px;color:var(--pp-muted)">시작하기를 누르면 첫 회차 참여 화면이 열려요</div>
+      <!-- 개인정보 처리 동의 안내 (동의 간주 방식) — 버튼과 인접 배치 필수, 분리 금지 -->
+      <div data-zone="intro-consent" style="text-align:center;margin-top:8px;font-size:10px;color:var(--pp-muted);line-height:1.6">시작하기를 누르면 리워드 지급을 위한 MYCODE 처리에 동의하게 돼요</div>
     </div>
 
     <!-- 회차 배지 (컴팩트) -->
@@ -14715,7 +14716,7 @@ function generateAppsScriptCode() {
     'pci-info':     ['', 'pci-price', 'pci-exchanges','pci-structure'],
     'token-detail': ['', 'token-header','token-price','token-wallet'],
     'benefits':     ['', 'ben-banner','ben-daily','ben-referral','ben-payment'],
-    'prediction':   ['', 'pred-yesterday','pred-base-price','pred-stats-bar','pred-vote-btns','pred-tabs','pred-calendar','pred-ranking-table','pred-streak','pred-history-month','history-reward','intro-impl'],
+    'prediction':   ['', 'pred-yesterday','pred-base-price','pred-stats-bar','pred-vote-btns','pred-tabs','pred-calendar','pred-ranking-table','pred-streak','pred-history-month','history-reward','intro-impl','intro-consent'],
     'news':         ['', 'news-search','news-list','news-more'],
     'news-detail':  ['', 'newsdet-header','newsdet-nav','newsdet-back','news-content'],
     'events':       ['', 'event-list','event-empty'],
