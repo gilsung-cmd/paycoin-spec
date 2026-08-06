@@ -513,6 +513,14 @@ body {
 /* ══ NEWS CARD ══ */
 .news-card { margin: 0 14px 8px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 13px; cursor: pointer; box-shadow: var(--shadow-sm); transition: box-shadow .15s; }
 .news-card:active { box-shadow: var(--shadow-md); }
+
+/* ══ EVENT CARD ══ */
+.event-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; cursor: pointer; box-shadow: var(--shadow-sm); transition: box-shadow .15s; }
+.event-card:active { box-shadow: var(--shadow-md); }
+.event-thumb { height: 128px; display: flex; align-items: center; justify-content: center; font-size: 36px; }
+.event-meta { padding: 12px 14px 14px; }
+.event-name { font-size: 14px; font-weight: 800; color: var(--text); line-height: 1.4; margin-bottom: 4px; }
+.event-period { font-size: 11px; color: var(--text4); }
 .news-cat { font-size: 10px; font-weight: 700; color: var(--primary); margin-bottom: 5px; }
 .news-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; line-height: 1.35; color: var(--text); }
 .news-preview { font-size: 11px; color: var(--text3); line-height: 1.45; margin-bottom: 7px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -952,6 +960,9 @@ body {
 
     <button class="nav-btn" onclick="nav('news')">📰 최근 소식 <span class="nav-phase-tag">P1</span></button>
     <button class="nav-btn nav-sub" onclick="nav('news-detail')">↳ 소식 상세</button>
+
+    <button class="nav-btn" onclick="nav('events')">📅 이벤트</button>
+    <button class="nav-btn nav-sub" onclick="nav('event-detail')">↳ 이벤트 상세</button>
 
     <button class="nav-btn" onclick="nav('payment')">💳 결제 <span class="nav-phase-tag">P1</span></button>
     <button class="nav-btn nav-sub" onclick="nav('payment-wc')">↳ 결제 (WC 미연결)</button>
@@ -2399,7 +2410,7 @@ body {
       </div>
       <!-- 바로가기 3개 -->
       <div style="display:flex;border-bottom:1px solid var(--border)">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-home')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-home');nav('events')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-home')"><span style="font-size:18px">🔔</span><span style="font-size:10px;color:var(--text3)">공지사항</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer" onclick="closeModal('mmm-home')"><span style="font-size:18px">❓</span><span style="font-size:10px;color:var(--text3)">고객지원</span></div>
       </div>
@@ -2700,7 +2711,7 @@ body {
       </div>
       <!-- 바로가기 3개 -->
       <div style="display:flex;border-bottom:1px solid var(--border)">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-home')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-home');nav('events')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-home')"><span style="font-size:18px">🔔</span><span style="font-size:10px;color:var(--text3)">공지사항</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer" onclick="closeModal('mmm-home')"><span style="font-size:18px">❓</span><span style="font-size:10px;color:var(--text3)">고객지원</span></div>
       </div>
@@ -2924,7 +2935,7 @@ body {
         <button style="font-size:10px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:7px;padding:5px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">✏️ 내 정보</button>
       </div>
       <div style="display:flex;border-bottom:1px solid var(--border)">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-wallet')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-wallet');nav('events')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-wallet')"><span style="font-size:18px">🔔</span><span style="font-size:10px;color:var(--text3)">공지사항</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer" onclick="closeModal('mmm-wallet')"><span style="font-size:18px">❓</span><span style="font-size:10px;color:var(--text3)">고객지원</span></div>
       </div>
@@ -4210,7 +4221,7 @@ body {
         <button style="font-size:10px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:7px;padding:5px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">✏️ 내 정보</button>
       </div>
       <div style="display:flex;border-bottom:1px solid var(--border)">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-wallet-empty')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-wallet-empty');nav('events')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-wallet-empty')"><span style="font-size:18px">🔔</span><span style="font-size:10px;color:var(--text3)">공지사항</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer" onclick="closeModal('mmm-wallet-empty')"><span style="font-size:18px">❓</span><span style="font-size:10px;color:var(--text3)">고객지원</span></div>
       </div>
@@ -4763,7 +4774,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         <button style="font-size:10px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:7px;padding:5px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">✏️ 내 정보</button>
       </div>
       <div style="display:flex;border-bottom:1px solid var(--border)">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-asset')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-asset');nav('events')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-asset')"><span style="font-size:18px">🔔</span><span style="font-size:10px;color:var(--text3)">공지사항</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer" onclick="closeModal('mmm-asset')"><span style="font-size:18px">❓</span><span style="font-size:10px;color:var(--text3)">고객지원</span></div>
       </div>
@@ -5095,7 +5106,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         <button style="font-size:10px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:7px;padding:5px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">✏️ 내 정보</button>
       </div>
       <div style="display:flex;border-bottom:1px solid var(--border)">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-pci-info')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-pci-info');nav('events')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-pci-info')"><span style="font-size:18px">🔔</span><span style="font-size:10px;color:var(--text3)">공지사항</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer" onclick="closeModal('mmm-pci-info')"><span style="font-size:18px">❓</span><span style="font-size:10px;color:var(--text3)">고객지원</span></div>
       </div>
@@ -8069,7 +8080,7 @@ der (뒤로가기 → 진입 이전 화면으로 복귀)
         <button style="font-size:10px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:7px;padding:5px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">✏️ 내 정보</button>
       </div>
       <div style="display:flex;border-bottom:1px solid var(--border)">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-benefits')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-benefits');nav('events')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-benefits')"><span style="font-size:18px">🔔</span><span style="font-size:10px;color:var(--text3)">공지사항</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer" onclick="closeModal('mmm-benefits')"><span style="font-size:18px">❓</span><span style="font-size:10px;color:var(--text3)">고객지원</span></div>
       </div>
@@ -8133,6 +8144,69 @@ EWS DETAIL ═══════════════ -->
           <span style="font-size:13px">☰</span><span style="font-size:13px;font-weight:600;color:var(--text2)">목록으로</span>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ EVENTS ═══════════════ -->
+<div class="screen" id="sc-events">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="back-header"><span class="back-btn" onclick="history.back()">‹</span><span class="back-title">이벤트</span></div>
+  <div class="sbody">
+    <div data-zone="event-list" style="padding:0 14px 14px;display:flex;flex-direction:column;gap:14px">
+
+      <div class="event-card" onclick="navEventDetail('pred')">
+        <div class="event-thumb" style="background:linear-gradient(150deg,#1A56DB,#3B82F6)">🎯</div>
+        <div class="event-meta">
+          <div class="event-name">PCI 등락 예측 이벤트</div>
+          <div class="event-period">2025.11.03 ~ 2026.12.31</div>
+        </div>
+      </div>
+
+      <div class="event-card" onclick="navEventDetail('spring')">
+        <div class="event-thumb" style="background:linear-gradient(150deg,#EC4899,#8B5CF6)">🌸</div>
+        <div class="event-meta">
+          <div class="event-name">봄맞이 PCI 에어드랍</div>
+          <div class="event-period">2025.11.03 ~ 2025.12.31</div>
+        </div>
+      </div>
+
+      <div class="event-card" onclick="navEventDetail('welcome')">
+        <div class="event-thumb" style="background:linear-gradient(150deg,#059669,#10B981)">🎟️</div>
+        <div class="event-meta">
+          <div class="event-name">신규가입 웰컴 이벤트</div>
+          <div class="event-period">2025.10.01 ~ 2026.09.30</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 빈 상태 (뷰어 전용 · 등록된 이벤트가 없을 때) -->
+    <div data-zone="event-empty" id="event-empty" style="display:none;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:8px">
+      <div style="font-size:32px">📅</div>
+      <div style="font-size:13px;font-weight:700;color:var(--text3)">진행 중인 이벤트가 없어요</div>
+      <div style="font-size:11px;color:var(--text4)">새로운 이벤트가 열리면 알려드릴게요</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ EVENT DETAIL ═══════════════ -->
+<div class="screen" id="sc-event-detail">
+  <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
+  <div class="back-header" data-zone="evdet-back"><span class="back-btn" onclick="nav('events')">‹</span><span class="back-title">이벤트</span></div>
+  <div class="sbody" style="background:var(--card)">
+    <div data-zone="evdet-header" style="padding:6px 18px 18px;border-bottom:1px solid var(--border)">
+      <div id="evdet-title" style="font-size:19px;font-weight:800;color:var(--text);line-height:1.4;margin-bottom:10px">봄맞이 PCI 에어드랍</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="flex-shrink:0;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-l);border-radius:6px;padding:3px 8px">이벤트 기간</span>
+        <span id="evdet-period" style="font-size:12px;font-weight:600;color:var(--text2)">2025.11.03 ~ 2025.12.31</span>
+      </div>
+    </div>
+    <!-- 본문: 어드민 등록 콘텐츠(이미지 · 텍스트 자유 구성) 원본 그대로 노출 -->
+    <div data-zone="evdet-body" id="evdet-body" style="min-height:340px;background:var(--screen-bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;padding:40px 20px">
+      <div style="font-size:30px">🖼️</div>
+      <div style="font-size:13px;font-weight:700;color:var(--text3)">본문 영역</div>
+      <div style="font-size:11px;color:var(--text4);text-align:center;line-height:1.7">이미지 · 텍스트 자유 구성<br>어드민 등록 콘텐츠 그대로 노출<br>(가로 100% · 세로 가변 · 스크롤)</div>
     </div>
   </div>
 </div>
@@ -8694,7 +8768,7 @@ EWS DETAIL ═══════════════ -->
         <button style="font-size:10px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:7px;padding:5px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">✏️ 내 정보</button>
       </div>
       <div style="display:flex;border-bottom:1px solid var(--border)">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-prediction')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-prediction');nav('events')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-prediction')"><span style="font-size:18px">🔔</span><span style="font-size:10px;color:var(--text3)">공지사항</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer" onclick="closeModal('mmm-prediction')"><span style="font-size:18px">❓</span><span style="font-size:10px;color:var(--text3)">고객지원</span></div>
       </div>
@@ -8884,7 +8958,7 @@ EWS DETAIL ═══════════════ -->
         <button style="font-size:10px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:7px;padding:5px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">✏️ 내 정보</button>
       </div>
       <div style="display:flex;border-bottom:1px solid var(--border)">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-payment-wc')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-payment-wc');nav('events')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-payment-wc')"><span style="font-size:18px">🔔</span><span style="font-size:10px;color:var(--text3)">공지사항</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer" onclick="closeModal('mmm-payment-wc')"><span style="font-size:18px">❓</span><span style="font-size:10px;color:var(--text3)">고객지원</span></div>
       </div>
@@ -9027,7 +9101,7 @@ EWS DETAIL ═══════════════ -->
         <button style="font-size:10px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:7px;padding:5px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">✏️ 내 정보</button>
       </div>
       <div style="display:flex;border-bottom:1px solid var(--border)">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-payment')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-payment');nav('events')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-payment')"><span style="font-size:18px">🔔</span><span style="font-size:10px;color:var(--text3)">공지사항</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer" onclick="closeModal('mmm-payment')"><span style="font-size:18px">❓</span><span style="font-size:10px;color:var(--text3)">고객지원</span></div>
       </div>
@@ -9589,7 +9663,7 @@ EWS DETAIL ═══════════════ -->
         <button style="font-size:10px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:7px;padding:5px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">✏️ 내 정보</button>
       </div>
       <div style="display:flex;border-bottom:1px solid var(--border)">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-wallet-manage')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-wallet-manage');nav('events')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-wallet-manage')"><span style="font-size:18px">🔔</span><span style="font-size:10px;color:var(--text3)">공지사항</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer" onclick="closeModal('mmm-wallet-manage')"><span style="font-size:18px">❓</span><span style="font-size:10px;color:var(--text3)">고객지원</span></div>
       </div>
@@ -9732,7 +9806,7 @@ EWS DETAIL ═══════════════ -->
         <button style="font-size:10px;font-weight:600;color:var(--primary);background:var(--primary-l);border:1px solid #BFDBFE;border-radius:7px;padding:5px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">✏️ 내 정보</button>
       </div>
       <div style="display:flex;border-bottom:1px solid var(--border)">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-news')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-news');nav('events')"><span style="font-size:18px">📅</span><span style="font-size:10px;color:var(--text3)">이벤트</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer;border-right:1px solid var(--border)" onclick="closeModal('mmm-news')"><span style="font-size:18px">🔔</span><span style="font-size:10px;color:var(--text3)">공지사항</span></div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;cursor:pointer" onclick="closeModal('mmm-news')"><span style="font-size:18px">❓</span><span style="font-size:10px;color:var(--text3)">고객지원</span></div>
       </div>
@@ -9973,6 +10047,26 @@ EWS DETAIL ═══════════════ -->
     <div class="policy-screen-id">SCREEN_NEWS_DETAIL <span class="ptag p2">P2</span></div>
     <div class="policy-title">소식 상세</div>
     <div class="policy-desc">최근 소식 개별 게시글 상세 화면입니다.</div>
+  </div>
+</div>
+
+
+<!-- ── EVENTS ── -->
+<div class="policy-section" id="pol-events" data-screen="events">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_EVENT_LIST <span class="ptag p2">P2</span></div>
+    <div class="policy-title">이벤트</div>
+    <div class="policy-desc">진행 중인 이벤트 목록. 어드민에서 등록·관리하며, 종료된 이벤트는 목록에서 제외됩니다.</div>
+  </div>
+</div>
+
+
+<!-- ── EVENT DETAIL ── -->
+<div class="policy-section" id="pol-event-detail" data-screen="event-detail">
+  <div class="policy-header">
+    <div class="policy-screen-id">SCREEN_EVENT_DETAIL <span class="ptag p2">P2</span></div>
+    <div class="policy-title">이벤트 상세</div>
+    <div class="policy-desc">개별 이벤트 상세 화면. 제목·기간은 고정 영역, 본문은 어드민 등록 콘텐츠를 그대로 노출합니다.</div>
   </div>
 </div>
 
@@ -10278,6 +10372,11 @@ EWS DETAIL ═══════════════ -->
 <tr><td><span class="key">news-more</span><button class="guide-copy-btn" onclick="copyText('news-more')">복사</button></td><td>소식 — 더보기</td></tr>
 <tr><td><span class="key">newsdet-header</span><button class="guide-copy-btn" onclick="copyText('newsdet-header')">복사</button></td><td>소식상세 — 헤더</td></tr>
 <tr><td><span class="key">newsdet-nav</span><button class="guide-copy-btn" onclick="copyText('newsdet-nav')">복사</button></td><td>소식상세 — 이전다음</td></tr>
+<tr><td><span class="key">event-list</span><button class="guide-copy-btn" onclick="copyText('event-list')">복사</button></td><td>이벤트 — 목록</td></tr>
+<tr><td><span class="key">event-empty</span><button class="guide-copy-btn" onclick="copyText('event-empty')">복사</button></td><td>이벤트 — 빈 상태</td></tr>
+<tr><td><span class="key">evdet-header</span><button class="guide-copy-btn" onclick="copyText('evdet-header')">복사</button></td><td>이벤트상세 — 제목·기간</td></tr>
+<tr><td><span class="key">evdet-body</span><button class="guide-copy-btn" onclick="copyText('evdet-body')">복사</button></td><td>이벤트상세 — 본문</td></tr>
+<tr><td><span class="key">evdet-back</span><button class="guide-copy-btn" onclick="copyText('evdet-back')">복사</button></td><td>이벤트상세 — 뒤로가기</td></tr>
 <tr><td><span class="key">pay-summary</span><button class="guide-copy-btn" onclick="copyText('pay-summary')">복사</button></td><td>결제 — 현황</td></tr>
 <tr><td><span class="key">pay-buttons</span><button class="guide-copy-btn" onclick="copyText('pay-buttons')">복사</button></td><td>결제 — 버튼</td></tr>
 <tr><td><span class="key">pay-event-banner</span><button class="guide-copy-btn" onclick="copyText('pay-event-banner')">복사</button></td><td>결제 — 배너</td></tr>
@@ -10395,6 +10494,8 @@ const SCREEN_MAP = {
   'prediction-legacy':  { sc:'sc-prediction-legacy', pol:'pol-prediction-legacy', ni:8 },
   'news':         { sc:'sc-news',         pol:'pol-news',         ni:9 },
   'news-detail':  { sc:'sc-news-detail',  pol:'pol-news-detail',  ni:10 },
+  'events':       { sc:'sc-events',       pol:'pol-events',       ni:10 },
+  'event-detail': { sc:'sc-event-detail', pol:'pol-event-detail', ni:10 },
   'payment':      { sc:'sc-payment',      pol:'pol-payment',      ni:11 },
   'payment-wc':   { sc:'sc-payment-wc',   pol:'pol-payment-wc',   ni:11 },
   'payment-intro':             { sc:'sc-payment-intro',             pol:'pol-payment-intro',             ni:11 },
@@ -10445,6 +10546,22 @@ function nav(key) {
 /* ══ MODAL ══ */
 function showModal(id) { document.getElementById(id).classList.add('show'); }
 function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+/* ══ EVENT DETAIL ══ */
+/* 리스트에서 선택한 이벤트의 제목·기간을 상세 화면에 반영 (본문은 어드민 등록 콘텐츠 영역) */
+var EVENTS = {
+  'pred':    { title:'PCI 등락 예측 이벤트', period:'2025.11.03 ~ 2026.12.31' },
+  'spring':  { title:'봄맞이 PCI 에어드랍',  period:'2025.11.03 ~ 2025.12.31' },
+  'welcome': { title:'신규가입 웰컴 이벤트', period:'2025.10.01 ~ 2026.09.30' }
+};
+function navEventDetail(key) {
+  var ev = EVENTS[key] || EVENTS['spring'];
+  var t = document.getElementById('evdet-title');
+  var p = document.getElementById('evdet-period');
+  if (t) t.textContent = ev.title;
+  if (p) p.textContent = ev.period;
+  nav('event-detail');
+}
 
 /* ══ PROFIT TRACKER ══ */
 (function(){
@@ -13770,7 +13887,7 @@ const QNA = {
   apiUrl: '',
   filter: 'all',
   items: [],
-  LABELS: {'home':'메인 홈','home-old':'메인 홈 (구)','wallet':'지갑','wallet-empty':'지갑(미연결)','wallet-pci':'지갑상세(PCI)','wallet-other':'지갑 상세 (WC 지갑)','asset':'자산현황','pci-info':'오늘의 PCI','token-detail':'토큰 상세','benefits':'혜택','prediction':'등락 예측','news':'최근 소식','news-detail':'소식 상세','payment':'결제','payment-wc':'결제(WC 미연결)','payment-intro':'결제 안내','payment-withdraw-consent':'출금이체 동의','payment-charge':'충전','payment-charge-done':'충전완료(단독)','payment-charge-complete':'오프라인 충전완료','wallet-manage':'지갑 관리','tx-history':'거래내역'},
+  LABELS: {'home':'메인 홈','home-old':'메인 홈 (구)','wallet':'지갑','wallet-empty':'지갑(미연결)','wallet-pci':'지갑상세(PCI)','wallet-other':'지갑 상세 (WC 지갑)','asset':'자산현황','pci-info':'오늘의 PCI','token-detail':'토큰 상세','benefits':'혜택','prediction':'등락 예측','news':'최근 소식','news-detail':'소식 상세','events':'이벤트','event-detail':'이벤트 상세','payment':'결제','payment-wc':'결제(WC 미연결)','payment-intro':'결제 안내','payment-withdraw-consent':'출금이체 동의','payment-charge':'충전','payment-charge-done':'충전완료(단독)','payment-charge-complete':'오프라인 충전완료','wallet-manage':'지갑 관리','tx-history':'거래내역'},
   curScreen: function(){ var s=document.querySelector('.screen.active'); return s?s.id.replace('sc-',''):'home'; },
   curLabel: function(){ return this.LABELS[this.curScreen()]||this.curScreen(); },
   init: function(){ try{ this.apiUrl=localStorage.getItem('qna_api')||''; }catch(e){} }
@@ -14601,6 +14718,8 @@ function generateAppsScriptCode() {
     'prediction':   ['', 'pred-yesterday','pred-base-price','pred-stats-bar','pred-vote-btns','pred-tabs','pred-calendar','pred-ranking-table','pred-streak','pred-history-month','history-reward','intro-impl'],
     'news':         ['', 'news-search','news-list','news-more'],
     'news-detail':  ['', 'newsdet-header','newsdet-nav','newsdet-back','news-content'],
+    'events':       ['', 'event-list','event-empty'],
+    'event-detail': ['', 'evdet-header','evdet-body','evdet-back'],
     'payment':      ['', 'pay-summary','pay-buttons','pay-event-banner','pay-merchants','pay-recent'],
     'payment-wc':   ['', 'paywc-hero','paywc-coin-list','paywc-pci-row','paywc-btc-row','paywc-eth-row','paywc-cta'],
     'tx-history':   ['', 'tx-tabs','tx-filter','tx-list'],
@@ -14633,7 +14752,8 @@ function generateAppsScriptCode() {
     'const ALLOWED_SCREENS = [',
     '  \'home\', \'wallet\', \'wallet-empty\', \'wallet-pci\', \'wallet-other\',',
     '  \'asset\', \'pci-info\', \'token-detail\', \'benefits\', \'prediction\',',
-    '  \'news\', \'news-detail\', \'payment\', \'payment-wc\', \'wallet-manage\'',
+    '  \'news\', \'news-detail\', \'events\', \'event-detail\',',
+    '  \'payment\', \'payment-wc\', \'wallet-manage\'',
     '];',
     '',
     '// ── screen_key → zone_id 매핑 ────────────────────────',
@@ -14652,6 +14772,8 @@ function generateAppsScriptCode() {
     '  \'prediction\':    [\'\', \'pred-yesterday\', \'pred-base-price\', \'pred-stats-bar\', \'pred-vote-btns\', \'pred-tabs\', \'pred-calendar\', \'pred-ranking-table\'],',
     '  \'news\':          [\'\', \'news-search\', \'news-list\', \'news-more\'],',
     '  \'news-detail\':   [\'\', \'newsdet-header\', \'newsdet-nav\'],',
+    '  \'events\':        [\'\', \'event-list\', \'event-empty\'],',
+    '  \'event-detail\':  [\'\', \'evdet-header\', \'evdet-body\'],',
     '  \'payment\':       [\'\', \'pay-summary\', \'pay-buttons\', \'pay-event-banner\', \'pay-merchants\', \'pay-recent\'],',
     '  \'payment-wc\':    [\'\', \'paywc-hero\', \'paywc-coin-list\', \'paywc-pci-row\', \'paywc-btc-row\', \'paywc-eth-row\', \'paywc-cta\'],',
     '};',
