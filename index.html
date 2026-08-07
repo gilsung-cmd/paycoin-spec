@@ -8154,7 +8154,14 @@ EWS DETAIL ═══════════════ -->
   <div class="sbar"><span style="margin-top:6px">9:41</span><span style="margin-top:6px">●●● 🔋</span></div>
   <div class="back-header"><span class="back-btn" onclick="history.back()">‹</span><span class="back-title">이벤트</span></div>
   <div class="sbody">
-    <div data-zone="event-list" style="padding:0 14px 14px;display:flex;flex-direction:column;gap:14px">
+    <!-- ── 뷰어 전용: 상태 토글 ── -->
+    <div style="display:flex;align-items:center;gap:4px;padding:0 14px 8px">
+      <span style="font-size:9px;color:var(--text4);white-space:nowrap;margin-right:2px">상태:</span>
+      <button onclick="setEventsState('list')"  id="ev-btn-list"  style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;border:1px solid var(--primary);background:var(--primary);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif">이벤트 있음</button>
+      <button onclick="setEventsState('empty')" id="ev-btn-empty" style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-family:'Noto Sans KR',sans-serif">이벤트 없음</button>
+    </div>
+
+    <div data-zone="event-list" id="event-list" style="padding:0 14px 14px;display:flex;flex-direction:column;gap:14px">
 
       <div class="event-card" onclick="navEventDetail('pred')">
         <div class="event-thumb" style="background:linear-gradient(150deg,#1A56DB,#3B82F6)">🎯</div>
@@ -10547,6 +10554,25 @@ function nav(key) {
 /* ══ MODAL ══ */
 function showModal(id) { document.getElementById(id).classList.add('show'); }
 function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+/* ══ EVENTS ══ */
+/* 뷰어 전용: 이벤트 리스트 / 빈 상태 전환 */
+function setEventsState(state) {
+  var list  = document.getElementById('event-list');
+  var empty = document.getElementById('event-empty');
+  var bList = document.getElementById('ev-btn-list');
+  var bEmpty= document.getElementById('ev-btn-empty');
+  var isEmpty = (state === 'empty');
+  if (list)  list.style.display  = isEmpty ? 'none' : 'flex';
+  if (empty) empty.style.display = isEmpty ? 'flex' : 'none';
+  [[bList, !isEmpty], [bEmpty, isEmpty]].forEach(function(p) {
+    var btn = p[0], on = p[1];
+    if (!btn) return;
+    btn.style.background  = on ? 'var(--primary)' : 'var(--card2)';
+    btn.style.color       = on ? '#fff' : 'var(--text3)';
+    btn.style.borderColor = on ? 'var(--primary)' : 'var(--border)';
+  });
+}
 
 /* ══ EVENT DETAIL ══ */
 /* 리스트에서 선택한 이벤트의 제목·기간을 상세 화면에 반영 (본문은 어드민 등록 콘텐츠 영역) */
